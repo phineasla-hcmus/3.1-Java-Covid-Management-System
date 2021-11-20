@@ -5,6 +5,7 @@ module com.seasidechachacha.client {
     requires javafx.fxml;
 
     opens com.seasidechachacha.client to javafx.fxml;
+    opens com.seasidechachacha.client.controllers to javafx.fxml;
 
     exports com.seasidechachacha.client;
 }

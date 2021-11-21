@@ -8,4 +8,6 @@ module com.seasidechachacha.client {
     opens com.seasidechachacha.client.controllers to javafx.fxml;
 
     exports com.seasidechachacha.client;
+    requires com.jfoenix;
+    requires org.kordamp.bootstrapfx.core;
 }

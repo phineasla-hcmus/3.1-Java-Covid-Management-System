@@ -4,10 +4,10 @@ import com.seasidechachacha.client.App;
 import java.io.IOException;
 import javafx.fxml.FXML;
 
-public class SecondaryController {
-
+public class ViewListUserController {
+    
     @FXML
-    private void switchToPrimary() throws IOException {
-        App.setRoot("view/primary");
+    private void switchToSecondary() throws IOException {
+        App.setRoot("view/secondary");
     }
 }

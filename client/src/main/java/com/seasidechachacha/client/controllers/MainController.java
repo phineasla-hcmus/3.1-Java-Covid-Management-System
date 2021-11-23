@@ -9,11 +9,15 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import com.jfoenix.controls.JFXButton;
 import com.seasidechachacha.client.App;
+import javafx.scene.control.ScrollPane;
 
 public class MainController {
 
     @FXML
-    private Pane pn_all, pn_core, pn_xeom, pn_atom;
+    private ScrollPane pn_all;
+    
+    @FXML
+    private Pane pn_core, pn_xeom, pn_atom;
 
     @FXML
     private JFXButton btn_all, btn_core, btn_xeom, btn_atom;
@@ -21,7 +25,7 @@ public class MainController {
     @FXML
     private void handleButtonAction(ActionEvent event) throws IOException {
         if (event.getSource() == btn_all) {
-            App.setCurrentPane("pn_all");
+            App.setCurrentPane("pn_all", "view/ViewListUser", null);
             pn_all.toFront();
         } else if (event.getSource() == btn_core) {
             pn_core.toFront();

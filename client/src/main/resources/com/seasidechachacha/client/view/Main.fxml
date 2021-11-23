@@ -2,11 +2,12 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 
-<AnchorPane id="AnchorPane" prefHeight="430.0" prefWidth="1050.0" style="-fx-background-color: #fff;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.seasidechachacha.client.controllers.MainController">
+<AnchorPane id="AnchorPane" prefHeight="800.0" prefWidth="1050.0" style="-fx-background-color: #fff;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.seasidechachacha.client.controllers.MainController">
    <children>
       <AnchorPane layoutX="250.0" prefHeight="430.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="250.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <effect>
@@ -16,8 +17,12 @@
             <FontAwesomeIconView glyphName="CLOSE" layoutX="470.0" layoutY="18.0" size="15" />
             <Pane fx:id="pn_atom" layoutX="8.0" layoutY="-1.0" prefHeight="430.0" prefWidth="490.0" style="-fx-background-color: #fff;" AnchorPane.bottomAnchor="0.6000000000000227" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="-1.0" />
             <Pane fx:id="pn_core" layoutX="8.0" layoutY="-1.0" prefHeight="430.0" prefWidth="490.0" style="-fx-background-color: #fff;" AnchorPane.bottomAnchor="0.6000000000000227" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="-1.0" />
-            <Pane fx:id="pn_all" layoutX="8.0" layoutY="-1.0" prefHeight="430.0" prefWidth="490.0" style="-fx-background-color: #fff;" AnchorPane.bottomAnchor="0.6000000000000227" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="-1.0" />
             <Pane fx:id="pn_xeom" layoutX="8.0" layoutY="-1.0" prefHeight="430.0" prefWidth="490.0" style="-fx-background-color: #fff;" AnchorPane.bottomAnchor="0.6000000000000227" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="-1.0" />
+            <ScrollPane fx:id="pn_all" prefHeight="800.0" prefWidth="800.0" style="-fx-background: #fff;" AnchorPane.bottomAnchor="0.6" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="-1.0">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
+              </content>
+            </ScrollPane>
          </children>
       </AnchorPane>
       <AnchorPane prefHeight="430.0" prefWidth="250.0" style="-fx-background-color: #F0F7FF;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">

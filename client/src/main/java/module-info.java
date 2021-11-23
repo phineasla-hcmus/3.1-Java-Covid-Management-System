@@ -10,4 +10,5 @@ module com.seasidechachacha.client {
     exports com.seasidechachacha.client;
     requires com.jfoenix;
     requires org.kordamp.bootstrapfx.core;
+    requires java.base;
 }

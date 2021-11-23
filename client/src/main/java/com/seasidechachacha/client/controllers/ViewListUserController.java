@@ -34,10 +34,20 @@ public class ViewListUserController {
     @FXML
     private TableView<UserAccount> table;
     private static TableColumn numberCol, fullNameCol, birthYearCol, addressCol, statusCol, actionCol;
+    
+    @FXML
+    private Button btnAdd;
 
     @FXML
     private void initialize() {
         setTable(table, data);
+        btnAdd.setOnAction(event -> {
+            try {
+                App.setCurrentPane("pn_all", "view/AddNewUser", null);
+            } catch (IOException ex) {
+                Logger.getLogger(ViewListUserController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
     }
 
     private <T> TableColumn<T, ?> getTableColumnByName(TableView<T> tableView, String name) {

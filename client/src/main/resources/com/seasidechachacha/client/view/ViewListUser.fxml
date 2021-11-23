@@ -37,7 +37,7 @@
             </AnchorPane>
             
             <Pane HBox.hgrow="ALWAYS" />
-            <Button style="-fx-background-color: #0098f1;" text="Thêm mới người dùng" textFill="WHITE">
+            <Button fx:id="btnAdd" style="-fx-background-color: #0098f1;" text="Thêm mới người dùng" textFill="WHITE">
                 <font>
                     <Font name="System Bold" size="13.0" />
                 </font>

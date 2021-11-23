@@ -54,7 +54,6 @@ public class App extends Application {
             Pane newLoadedPane = (Pane) fxmlLoader.load();
             if (fxml.equals("view/ViewPersonalInfo")) {
                 ViewPersonalInfoController controller = fxmlLoader.<ViewPersonalInfoController>getController();
-                System.out.println("user" + user.getFullName());
                 controller.setup(user);
             }
             pn_all.setContent(newLoadedPane);

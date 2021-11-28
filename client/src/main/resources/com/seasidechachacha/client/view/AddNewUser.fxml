@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="800.0" style="-fx-background-color: #fff;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.seasidechachacha.client.controllers.AddNewUserController">
+    <children>
+        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="main-label" text="Thêm mới người liên quan Covid19">
+            <VBox.margin>
+                <Insets top="30.0" />
+            </VBox.margin>
+        </Label>
+        <AnchorPane prefHeight="322.0" prefWidth="699.0">
+            <VBox.margin>
+                <Insets left="50.0" right="50.0" top="40.0" />
+            </VBox.margin>
+            <children>
+                <TextField fx:id="tfFullName" layoutY="34.0" prefHeight="26.0" prefWidth="330.0" promptText="Nhập họ tên" />
+                <TextField fx:id="tfIdentityCard" layoutX="350.0" layoutY="34.0" prefHeight="26.0" prefWidth="330.0" promptText="Nhập CMND/Căn cước công dân" />
+                <TextField fx:id="tfBirthYear" layoutY="100.0" prefHeight="26.0" prefWidth="330.0" promptText="Nhập năm sinh" />
+                <Label styleClass="sub-label" text="Họ Tên">
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </Label>
+                <Label layoutX="350.0" layoutY="4.0" styleClass="sub-label" text="CMND/Căn cước công dân">
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </Label>
+                <Label layoutY="69.0" styleClass="sub-label" text="Năm sinh">
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </Label>
+                <Label layoutX="350.0" layoutY="69.0" styleClass="sub-label" text="Trạng thái hiện tại">
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </Label>
+                <ComboBox fx:id="cbCurrentStatus" layoutX="350.0" layoutY="101.0" prefWidth="150.0" style="-fx-background-color: transparent; -fx-border-color: #006abc;" />
+                <Label layoutY="141.0" styleClass="sub-label" text="Địa chỉ nơi ở">
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </Label>
+                <ComboBox fx:id="cbCity" layoutY="209.0" prefWidth="150.0" style="-fx-background-color: transparent; -fx-border-color: #006abc;" />
+                <ComboBox fx:id="cbDistrict" layoutX="275.0" layoutY="209.0" prefWidth="150.0" style="-fx-background-color: transparent; -fx-border-color: #006abc;" />
+                <ComboBox fx:id="cbWard" layoutX="529.0" layoutY="209.0" prefWidth="150.0" style="-fx-background-color: transparent; -fx-border-color: #006abc;" />
+                <Label layoutY="179.0" text="Tỉnh/Thành phố" textFill="#006abc">
+                    <font>
+                        <Font size="13.0" />
+                    </font>
+                </Label>
+                <Label layoutX="275.0" layoutY="179.0" text="Quận/Huyện" textFill="#006abc">
+                    <font>
+                        <Font size="13.0" />
+                    </font>
+                </Label>
+                <Label layoutX="529.0" layoutY="179.0" text="Phường/Xã" textFill="#006abc">
+                    <font>
+                        <Font size="13.0" />
+                    </font>
+                </Label>
+                <Label layoutY="251.0" styleClass="sub-label" text="Người liên quan Covid19">
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </Label>
+            <ComboBox fx:id="cbRelated" layoutY="278.0" prefWidth="150.0" style="-fx-background-color: transparent; -fx-border-color: #006abc;" />
+            </children>
+        </AnchorPane>
+    </children>
+    <stylesheets>
+        <URL value="@../css/style.css" />
+    </stylesheets>
+</VBox>

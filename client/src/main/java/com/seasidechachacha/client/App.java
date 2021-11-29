@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 import com.seasidechachacha.database.DatabaseConfig;
+import javafx.application.Platform;
 
 /**
  * JavaFX App
@@ -19,7 +20,8 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("view/primary"), 640, 480);
+        scene = new Scene(loadFXML("view/Firstlogin"), 600, 400);
+     
         stage.setScene(scene);
         stage.show();
     }
@@ -32,7 +34,11 @@ public class App extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
         return fxmlLoader.load();
     }
-
+    
+    public static void close() {
+        Platform.exit();
+    }
+    
     public static void main(String[] args) {
         System.out.println(DatabaseConfig.getUrl());
         launch();

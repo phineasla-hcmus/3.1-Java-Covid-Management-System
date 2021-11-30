@@ -4,7 +4,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import com.seasidechachacha.database.DatabaseConfig;
-import com.seasidechachacha.database.DbConn;
+import com.seasidechachacha.database.BasicConnection;
 
 public class Human {
 	protected static Connection db;
@@ -12,7 +12,7 @@ public class Human {
 	Human() {
 		// db connection
 		try {
-			db = DbConn.connection(DatabaseConfig.getUrl(), DatabaseConfig.getUsername(), DatabaseConfig.getPassword());
+			db = BasicConnection.connection(DatabaseConfig.getUrl(), DatabaseConfig.getUsername(), DatabaseConfig.getPassword());
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}

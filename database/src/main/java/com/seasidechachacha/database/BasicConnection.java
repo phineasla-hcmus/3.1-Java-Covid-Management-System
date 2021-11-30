@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class DbConn {
+public class BasicConnection {
 	public static Connection connection(String url, String userName, String password) throws ClassNotFoundException {
 		Connection conn = null;
 		try {

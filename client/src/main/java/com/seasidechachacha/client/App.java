@@ -1,6 +1,8 @@
 package com.seasidechachacha.client;
 
 import com.seasidechachacha.client.controllers.ViewPersonalInfoController;
+import com.seasidechachacha.client.utils.PasswordAuthenticator;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -31,17 +33,18 @@ public class App extends Application {
         pn_atom = (Pane) scene.lookup("#pn_atom");
 
         Pane newLoadedPane = FXMLLoader.load(getClass().getResource("view/ViewListUser.fxml"));
-//        pn_all.getChildren().add(newLoadedPane);
-//        pn_all.toFront();
+        // pn_all.getChildren().add(newLoadedPane);
+        // pn_all.toFront();
         pn_all.setContent(newLoadedPane);
         pn_all.toFront();
 
         // config infoPane
-//        infoPane = FXMLLoader.load(getClass().getResource("view/ViewPersonalInfo.fxml"));
-//        infoTable = (TableView<UserAccount>) infoPane.lookup("table");
-//        setTable(infoTable, data);
-//        table = (TableView<UserAccount>) newLoadedPane.lookup("#table");
-//        setTable(table, data);
+        // infoPane =
+        // FXMLLoader.load(getClass().getResource("view/ViewPersonalInfo.fxml"));
+        // infoTable = (TableView<UserAccount>) infoPane.lookup("table");
+        // setTable(infoTable, data);
+        // table = (TableView<UserAccount>) newLoadedPane.lookup("#table");
+        // setTable(table, data);
         stage.setScene(scene);
         stage.show();
     }
@@ -50,7 +53,7 @@ public class App extends Application {
         if (pane.equals("pn_all")) {
             FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
 
-//            ScrollPane newLoadedPane = (ScrollPane) fxmlLoader.load();
+            // ScrollPane newLoadedPane = (ScrollPane) fxmlLoader.load();
             Pane newLoadedPane = (Pane) fxmlLoader.load();
             if (fxml.equals("view/ViewPersonalInfo")) {
                 ViewPersonalInfoController controller = fxmlLoader.<ViewPersonalInfoController>getController();
@@ -58,8 +61,8 @@ public class App extends Application {
             }
             pn_all.setContent(newLoadedPane);
 
-//            table = (TableView<UserAccount>) newLoadedPane.lookup("#table");
-//            setTable(table, data);
+            // table = (TableView<UserAccount>) newLoadedPane.lookup("#table");
+            // setTable(table, data);
         }
     }
 
@@ -73,7 +76,12 @@ public class App extends Application {
     }
 
     public static void main(String[] args) {
-        System.out.println(DatabaseConfig.getUrl());
+        PasswordAuthenticator pwdAuth = new PasswordAuthenticator();
+        String login = pwdAuth.authenticate("1ixrvSfjhPqd".toCharArray(),
+                "$31$16$VKx6w7TTTyO8H504Ajxk6BOW034fSyZYhuayMVsf2P8")
+                        ? "Welcome"
+                        : "GET OUT";
+        System.out.println(login);
         launch();
     }
 

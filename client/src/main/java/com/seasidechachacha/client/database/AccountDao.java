@@ -16,28 +16,26 @@ public class AccountDao {
 
     /**
      * 
-     * @param username
+     * @param userId
      * @param password
      * @return Account if username and password is correct, else null
      */
-    public Account login(String username, String password) {
+    public Account login(String userId, String password) {
         String query = "SELECT * FROM account WHERE userID=?";
-        Account acc = new Account();
+        Account acc = null;
 
         try (Connection c = BasicConnection.getConnection();
                 PreparedStatement ps = c.prepareStatement(query)) {
-            ps.setString(1, username);
+            ps.setString(1, userId);
             try (ResultSet rs = ps.executeQuery()) {
                 PasswordAuthenticator pwdAuth = new PasswordAuthenticator();
                 if (rs.next() && pwdAuth.authenticate(password.toCharArray(), rs.getString("pwd"))) {
-                    acc.setUserId(rs.getString("userID"));
-                    acc.setRoleId(rs.getInt("roleID"));
-                } else {
-                    return null;
+                    acc = new Account(rs.getString("userID"), rs.getInt("roleID"));
                 }
             }
         } catch (SQLException e) {
             logger.error(e);
+            return null;
         }
 
         return acc;
@@ -55,6 +53,7 @@ public class AccountDao {
             rowAffected = ps.executeUpdate() > 0;
         } catch (SQLException e) {
             logger.error(e);
+            return false;
         }
         return rowAffected;
     }

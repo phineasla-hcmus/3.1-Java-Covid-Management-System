@@ -47,9 +47,9 @@ public class AccountDao {
 
         try (Connection c = BasicConnection.getConnection();
                 PreparedStatement ps = c.prepareStatement(query)) {
-            ps.setString(1, acc.getUserId());
-            ps.setString(2, acc.getPassword());
-            ps.setInt(3, acc.getRoleId());
+//            ps.setString(1, acc.getUserId());
+//            ps.setString(2, acc.getPassword());
+//            ps.setInt(3, acc.getRoleId());
             rowAffected = ps.executeUpdate() > 0;
         } catch (SQLException e) {
             logger.error(e);

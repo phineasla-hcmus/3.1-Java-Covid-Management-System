@@ -10,8 +10,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-
-import com.seasidechachacha.database.DatabaseConfig;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Pane;
 import org.kordamp.bootstrapfx.BootstrapFX;

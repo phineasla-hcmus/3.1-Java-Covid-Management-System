@@ -1,6 +1,6 @@
 module com.seasidechachacha.client {
     requires java.base;
-    requires lombok;
+//    requires lombok;
     requires transitive javafx.controls;
     requires javafx.fxml;
     requires org.apache.logging.log4j;

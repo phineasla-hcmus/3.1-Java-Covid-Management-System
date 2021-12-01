@@ -1,5 +1,6 @@
 package com.seasidechachacha.database;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
@@ -26,7 +27,7 @@ public class DatabaseConfig {
                 username = p.getProperty(usernameKey);
                 password = p.getProperty(passwordKey);
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             // Ignored
         }
     }

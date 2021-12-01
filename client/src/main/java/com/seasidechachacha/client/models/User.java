@@ -1,14 +1,5 @@
 package com.seasidechachacha.client.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class User {
     private String userId;
     private String name;
@@ -17,4 +8,14 @@ public class User {
     private int debt;
     private String wardId;
     private String address;
+
+    public User(String userId, String name, int birthYear, String relatedId, int debt, String wardId, String address) {
+        this.userId = userId; 
+        this.name = name;
+        this.birthYear = birthYear;
+        this.relatedId = relatedId;
+        this.debt = debt;
+        this.wardId = wardId;
+        this.address = address;
+    }
 }

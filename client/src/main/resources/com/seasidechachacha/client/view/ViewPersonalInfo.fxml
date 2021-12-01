@@ -12,8 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.seasidechachacha.client.controllers.ViewPersonalInfoController">
+<VBox xmlns="http://javafx.com/javafx/13" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.seasidechachacha.client.controllers.ViewPersonalInfoController">
     <children>
         <Label alignment="TOP_CENTER" prefHeight="30.0" prefWidth="803.0" styleClass="main-label" text="Thông tin cá nhân">
         </Label>
@@ -41,7 +40,7 @@
                         <Insets top="20.0" />
                     </padding>
                 </HBox>
-                <HBox prefWidth="398.0" spacing="30.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="46.0">
+                <HBox layoutY="55.0" prefHeight="20.0" prefWidth="464.0" spacing="30.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="299.0" AnchorPane.topAnchor="55.0">
                     <children>
                         <Label alignment="TOP_RIGHT" prefHeight="20.0" prefWidth="200.0" text="CMND/Căn cước công dân" textFill="#006abc">
                             <font>
@@ -55,7 +54,7 @@
                         </Label>
                     </children>
                 </HBox>
-                <HBox prefWidth="398.0" spacing="30.0" AnchorPane.topAnchor="72.0">
+                <HBox layoutY="87.0" prefWidth="398.0" spacing="30.0" AnchorPane.topAnchor="87.0">
                     <children>
                         <Label alignment="TOP_RIGHT" prefHeight="20.0" prefWidth="215.0" text="Năm sinh" textFill="#006abc">
                             <font>
@@ -69,7 +68,7 @@
                         </Label>
                     </children>
                 </HBox>
-                <HBox prefWidth="398.0" spacing="30.0" AnchorPane.topAnchor="98.0">
+                <HBox layoutY="118.0" prefWidth="398.0" spacing="30.0" AnchorPane.topAnchor="118.0">
                     <children>
                         <Label alignment="TOP_RIGHT" prefHeight="20.0" prefWidth="215.0" text="Địa chỉ nơi ở" textFill="#006abc">
                             <font>
@@ -83,32 +82,45 @@
                         </Label>
                     </children>
                 </HBox>
-                <HBox prefWidth="398.0" spacing="30.0" AnchorPane.topAnchor="124.0">
+                <HBox layoutY="148.0" prefWidth="398.0" spacing="30.0" AnchorPane.topAnchor="148.0">
                     <children>
-                        <Label alignment="TOP_RIGHT" prefHeight="20.0" prefWidth="215.0" text="Trạng thái hiện tại" textFill="#006abc">
+                        <Label alignment="TOP_RIGHT" prefHeight="20.0" prefWidth="216.0" text="Trạng thái hiện tại" textFill="#006abc">
                             <font>
                                 <Font name="System Bold" size="14.0" />
                             </font>
                         </Label>
-                        <Label fx:id="labelStatus" text="">
+                        <Label fx:id="labelStatus" prefHeight="20.0" prefWidth="87.0" text="">
                             <font>
                                 <Font size="14.0" />
                             </font>
                         </Label>
+                  <Button fx:id="btnChangeStatus" mnemonicParsing="false" prefHeight="20.0" prefWidth="31.0">
+                     <graphic>
+                        <FontAwesomeIconView fill="WHITE" glyphName="EDIT" />
+                     </graphic>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </Button>
                     </children>
                 </HBox>
-                <HBox prefWidth="398.0" spacing="30.0" AnchorPane.topAnchor="150.0">
+                <HBox layoutY="179.0" prefWidth="398.0" spacing="30.0" AnchorPane.topAnchor="179.0">
                     <children>
                         <Label alignment="TOP_RIGHT" prefHeight="20.0" prefWidth="215.0" text="Nơi đang điều trị/cách ly" textFill="#006abc">
                             <font>
                                 <Font name="System Bold" size="14.0" />
                             </font>
                         </Label>
-                        <Label fx:id="labelTreatmentPlace" text="">
+                        <Label fx:id="labelTreatmentPlace" prefHeight="20.0" prefWidth="88.0" text="">
                             <font>
                                 <Font size="14.0" />
                             </font>
                         </Label>
+                  <Button fx:id="btnChangePlace" mnemonicParsing="false">
+                     <graphic>
+                        <FontAwesomeIconView  fill="WHITE" glyphName="EDIT" />
+                     </graphic>
+                  </Button>
                     </children>
                 </HBox>
             </children>

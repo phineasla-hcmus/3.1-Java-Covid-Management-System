@@ -9,4 +9,16 @@ public class Account {
         this.userId = userId;
         this.roleId = roleId;
     }
+    
+    public String getUserId() {
+		return this.userId;
+    }
+    
+    public String getPassword() {
+    	return this.password;
+    }
+    
+    public int getRoleId() {
+    	return this.roleId;
+    }
 }

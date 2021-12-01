@@ -3,6 +3,7 @@ package com.seasidechachacha.client.controllers;
 import com.seasidechachacha.client.App;
 import com.seasidechachacha.client.UserAccount;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -11,6 +12,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -30,21 +34,25 @@ public class ViewPersonalInfoController {
             );
     @FXML
     private TableView<UserAccount> table;
-    
+
     @FXML
     private TableColumn numberCol, fullNameCol, birthYearCol, addressCol, statusCol;
-    
+
     @FXML
     private TableColumn dateCol, currentStatusCol, currentPlaceCol;
-    
+
     @FXML
     private Label labelFullName, labelIdentityCard, labelBirthYear, labelAddress, labelStatus, labelTreatmentPlace;
 
     @FXML
+    private Button btnChangeStatus, btnChangePlace;
+
+    @FXML
     private void initialize() {
         setTable(table, relatedData);
+
     }
-    
+
     public void setup(UserAccount user) {
         labelFullName.setText(user.getFullName());
         labelIdentityCard.setText("123456789");
@@ -52,6 +60,52 @@ public class ViewPersonalInfoController {
         labelAddress.setText(user.getAddress());
         labelStatus.setText(user.getStatus());
         labelTreatmentPlace.setText("abc");
+
+        String defaultStatus = user.getStatus();
+        String status[] = {"F0", "F1", "F2", "F3"};
+
+        ChoiceDialog<String> statusDialog = new ChoiceDialog(defaultStatus, status);
+        statusDialog.setResultConverter((ButtonType type)
+                -> {
+            ButtonBar.ButtonData data = type == null ? null : type.getButtonData();
+            if (data == ButtonBar.ButtonData.OK_DONE) {
+                return statusDialog.getSelectedItem();
+            } else {
+                return null;
+            }
+        });
+
+        btnChangeStatus.setOnAction(event -> {
+            statusDialog.setTitle("Thay đổi trạng thái");
+            statusDialog.setHeaderText("Trạng thái hiện tại");
+            Optional<String> result = statusDialog.showAndWait();
+            if (result.isPresent()) {
+                labelStatus.setText(result.get());
+            }
+        });
+
+        String defaultPlace = "abc";
+        String place[] = {"abc", "xyz", "ohi"};
+
+        ChoiceDialog<String> placeDialog = new ChoiceDialog(defaultPlace, place);
+        placeDialog.setResultConverter((ButtonType type)
+                -> {
+            ButtonBar.ButtonData data = type == null ? null : type.getButtonData();
+            if (data == ButtonBar.ButtonData.OK_DONE) {
+                return placeDialog.getSelectedItem();
+            } else {
+                return null;
+            }
+        });
+
+        btnChangePlace.setOnAction(event -> {
+            placeDialog.setTitle("Thay đổi nơi điều trị/cách ly");
+            placeDialog.setHeaderText("Nơi điều trị/cách ly hiện tại");
+            Optional<String> result = placeDialog.showAndWait();
+            if (result.isPresent()) {
+                labelTreatmentPlace.setText(result.get());
+            }
+        });
     }
 
     @FXML

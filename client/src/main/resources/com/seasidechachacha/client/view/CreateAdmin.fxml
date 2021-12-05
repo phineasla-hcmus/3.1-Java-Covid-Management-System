@@ -16,7 +16,7 @@
          <children>
             <ImageView fx:id="logo" fitHeight="105.0" fitWidth="110.0" layoutX="661.0" layoutY="285.0" pickOnBounds="true" preserveRatio="true" VBox.vgrow="ALWAYS">
                <image>
-                  <Image url="@logo2.png" />
+                  <Image url="@../img/logo2.png" />
                </image>
             </ImageView>
             <Text fill="#183486" layoutX="317.0" layoutY="232.0" strokeType="OUTSIDE" strokeWidth="0.0" text="KHỞI TẠO TÀI KHOẢN ADMIN" textAlignment="CENTER" wrappingWidth="265.1875" VBox.vgrow="ALWAYS">

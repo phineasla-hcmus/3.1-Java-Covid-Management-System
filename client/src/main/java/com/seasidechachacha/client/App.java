@@ -11,7 +11,6 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-import com.seasidechachacha.database.DatabaseConfig;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Pane;
 import org.kordamp.bootstrapfx.BootstrapFX;
@@ -69,12 +68,12 @@ public class App extends Application {
     }
     
     public static void main(String[] args) {
-        PasswordAuthenticator pwdAuth = new PasswordAuthenticator();
-        String login = pwdAuth.authenticate("1ixrvSfjhPqd".toCharArray(),
-                "$31$16$VKx6w7TTTyO8H504Ajxk6BOW034fSyZYhuayMVsf2P8")
-                        ? "Welcome"
-                        : "GET OUT";
-        System.out.println(login);
+        // PasswordAuthenticator pwdAuth = new PasswordAuthenticator();
+        // String login = pwdAuth.authenticate("1ixrvSfjhPqd".toCharArray(),
+        //         "$31$16$VKx6w7TTTyO8H504Ajxk6BOW034fSyZYhuayMVsf2P8")
+        //                 ? "Welcome"
+        //                 : "GET OUT";
+        // System.out.println(login);
         launch();
     }
 

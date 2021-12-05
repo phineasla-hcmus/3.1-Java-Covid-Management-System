@@ -14,7 +14,6 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
@@ -29,11 +28,10 @@ public class ViewListUserController {
                     new UserAccount("Nguyễn Văn D", "1950", "abc", "F2"),
                     new UserAccount("Nguyễn Văn E", "1950", "abc", "F2")
             );
-    private ViewPersonalInfoController infoController;
     
     @FXML
     private TableView<UserAccount> table;
-    private static TableColumn numberCol, fullNameCol, birthYearCol, addressCol, statusCol, actionCol;
+    private static TableColumn<UserAccount, String> numberCol, fullNameCol, birthYearCol, addressCol, statusCol, actionCol;
     
     @FXML
     private Button btnAdd;
@@ -50,10 +48,10 @@ public class ViewListUserController {
         });
     }
 
-    private <T> TableColumn<T, ?> getTableColumnByName(TableView<T> tableView, String name) {
-        for (TableColumn<T, ?> col : tableView.getColumns()) {
+    private TableColumn<UserAccount, String> getTableColumnByName(TableView<UserAccount> tableView, String name) {
+        for (TableColumn<UserAccount, ?> col : tableView.getColumns()) {
             if (col.getText().equals(name)) {
-                return col;
+                return (TableColumn<UserAccount, String>) col;
             }
         }
         return null;
@@ -61,16 +59,17 @@ public class ViewListUserController {
 
     public void setColumns(TableView<UserAccount> table, TableColumn numberCol, TableColumn fullNameCol, TableColumn birthYearCol, TableColumn addressCol, TableColumn statusCol, TableColumn actionCol) {
         numberCol = getTableColumnByName(table, "STT");
-        numberCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<UserAccount, UserAccount>, ObservableValue<UserAccount>>() {
+        numberCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<UserAccount, String>, ObservableValue<UserAccount>>() {
             @Override
-            public ObservableValue<UserAccount> call(TableColumn.CellDataFeatures<UserAccount, UserAccount> p) {
+            public ObservableValue<UserAccount> call(TableColumn.CellDataFeatures<UserAccount, String> p) {
                 return new ReadOnlyObjectWrapper(p.getValue());
             }
         });
 
-        numberCol.setCellFactory(new Callback<TableColumn<UserAccount, UserAccount>, TableCell<UserAccount, UserAccount>>() {
-            public TableCell<UserAccount, UserAccount> call(TableColumn<UserAccount, UserAccount> param) {
-                return new TableCell<UserAccount, UserAccount>() {
+        numberCol.setCellFactory(new Callback<TableColumn<String, UserAccount>, TableCell<String, UserAccount>>() {
+            @Override
+            public TableCell<String, UserAccount> call(TableColumn<String, UserAccount> param) {
+                return new TableCell<String, UserAccount>() {
                     @Override
                     protected void updateItem(UserAccount item, boolean empty) {
                         super.updateItem(item, empty);

@@ -24,20 +24,20 @@ import javafx.util.Callback;
 
 public class ViewPersonalInfoController {
 
-    private static final ObservableList<UserAccount> relatedData
-            = FXCollections.observableArrayList(
-                    new UserAccount("Nguyễn Văn A", "1950", "abc", "F2"),
-                    new UserAccount("Nguyễn Văn A", "1950", "abc", "F2"),
-                    new UserAccount("Nguyễn Văn A", "1950", "abc", "F2"),
-                    new UserAccount("Nguyễn Văn A", "1950", "abc", "F2"),
-                    new UserAccount("Nguyễn Văn A", "1950", "abc", "F2")
-            );
+    private static final ObservableList<UserAccount> relatedData = FXCollections.observableArrayList(
+            new UserAccount("Nguyễn Văn A", "1950", "abc", "F2"),
+            new UserAccount("Nguyễn Văn A", "1950", "abc", "F2"),
+            new UserAccount("Nguyễn Văn A", "1950", "abc", "F2"),
+            new UserAccount("Nguyễn Văn A", "1950", "abc", "F2"),
+            new UserAccount("Nguyễn Văn A", "1950", "abc", "F2"));
     @FXML
     private TableView<UserAccount> table;
-
+    // TODO: TableColumn is a raw type. References to generic type TableColumn<S,T>
+    // should be parameterized
     @FXML
     private TableColumn numberCol, fullNameCol, birthYearCol, addressCol, statusCol;
-
+    // TODO: TableColumn is a raw type. References to generic type TableColumn<S,T>
+    // should be parameterized
     @FXML
     private TableColumn dateCol, currentStatusCol, currentPlaceCol;
 
@@ -62,11 +62,10 @@ public class ViewPersonalInfoController {
         labelTreatmentPlace.setText("abc");
 
         String defaultStatus = user.getStatus();
-        String status[] = {"F0", "F1", "F2", "F3"};
+        String status[] = { "F0", "F1", "F2", "F3" };
 
         ChoiceDialog<String> statusDialog = new ChoiceDialog<String>(defaultStatus, status);
-        statusDialog.setResultConverter((ButtonType type)
-                -> {
+        statusDialog.setResultConverter((ButtonType type) -> {
             ButtonBar.ButtonData data = type == null ? null : type.getButtonData();
             if (data == ButtonBar.ButtonData.OK_DONE) {
                 return statusDialog.getSelectedItem();
@@ -85,11 +84,10 @@ public class ViewPersonalInfoController {
         });
 
         String defaultPlace = "abc";
-        String place[] = {"abc", "xyz", "ohi"};
+        String place[] = { "abc", "xyz", "ohi" };
 
         ChoiceDialog<String> placeDialog = new ChoiceDialog<String>(defaultPlace, place);
-        placeDialog.setResultConverter((ButtonType type)
-                -> {
+        placeDialog.setResultConverter((ButtonType type) -> {
             ButtonBar.ButtonData data = type == null ? null : type.getButtonData();
             if (data == ButtonBar.ButtonData.OK_DONE) {
                 return placeDialog.getSelectedItem();
@@ -128,31 +126,37 @@ public class ViewPersonalInfoController {
 
     public void setColumns(TableView<UserAccount> table) {
         numberCol = getTableColumnByName(table, "STT");
-//        numberCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<UserAccount, String>, ObservableValue<String>>() {
-//            @Override
-//            public ObservableValue<String> call(TableColumn.CellDataFeatures<UserAccount, String> p) {
-//                return new ReadOnlyObjectWrapper(table.getItems().indexOf(p.getValue()) + 1));
-//            }
-//        });
+        // numberCol.setCellValueFactory(new
+        // Callback<TableColumn.CellDataFeatures<UserAccount, String>,
+        // ObservableValue<String>>() {
+        // @Override
+        // public ObservableValue<String> call(TableColumn.CellDataFeatures<UserAccount,
+        // String> p) {
+        // return new ReadOnlyObjectWrapper(table.getItems().indexOf(p.getValue()) +
+        // 1));
+        // }
+        // });
 
-//        numberCol.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<String>(
-//                table.getItems().indexOf(cellData.getValue()) + 1));
-//        numberCol.setCellFactory(new Callback<TableColumn<UserAccount, String>, TableCell<UserAccount, String>>() {
-//            public TableCell<UserAccount, String> call(TableColumn<UserAccount, String> param) {
-//                return new TableCell<UserAccount, String>() {
-//                    @Override
-//                    protected void updateItem(String item, boolean empty) {
-//                        super.updateItem(item, empty);
-//
-//                        if (this.getTableRow() != null && item != null) {
-//                            setText(this.getTableRow().getIndex() + 1 + "");
-//                        } else {
-//                            setText("");
-//                        }
-//                    }
-//                };
-//            }
-//        });
+        // numberCol.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<String>(
+        // table.getItems().indexOf(cellData.getValue()) + 1));
+        // numberCol.setCellFactory(new Callback<TableColumn<UserAccount, String>,
+        // TableCell<UserAccount, String>>() {
+        // public TableCell<UserAccount, String> call(TableColumn<UserAccount, String>
+        // param) {
+        // return new TableCell<UserAccount, String>() {
+        // @Override
+        // protected void updateItem(String item, boolean empty) {
+        // super.updateItem(item, empty);
+        //
+        // if (this.getTableRow() != null && item != null) {
+        // setText(this.getTableRow().getIndex() + 1 + "");
+        // } else {
+        // setText("");
+        // }
+        // }
+        // };
+        // }
+        // });
         numberCol.setCellValueFactory(new Callback<CellDataFeatures<UserAccount, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(CellDataFeatures<UserAccount, String> p) {

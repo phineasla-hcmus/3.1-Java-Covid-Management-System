@@ -18,6 +18,7 @@ import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
@@ -64,7 +65,7 @@ public class ViewPersonalInfoController {
         String defaultStatus = user.getStatus();
         String status[] = {"F0", "F1", "F2", "F3"};
 
-        ChoiceDialog<String> statusDialog = new ChoiceDialog(defaultStatus, status);
+        ChoiceDialog<String> statusDialog = new ChoiceDialog<String>(defaultStatus, status);
         statusDialog.setResultConverter((ButtonType type)
                 -> {
             ButtonBar.ButtonData data = type == null ? null : type.getButtonData();
@@ -87,7 +88,7 @@ public class ViewPersonalInfoController {
         String defaultPlace = "abc";
         String place[] = {"abc", "xyz", "ohi"};
 
-        ChoiceDialog<String> placeDialog = new ChoiceDialog(defaultPlace, place);
+        ChoiceDialog<String> placeDialog = new ChoiceDialog<String>(defaultPlace, place);
         placeDialog.setResultConverter((ButtonType type)
                 -> {
             ButtonBar.ButtonData data = type == null ? null : type.getButtonData();
@@ -128,42 +129,50 @@ public class ViewPersonalInfoController {
 
     public void setColumns(TableView<UserAccount> table) {
         numberCol = getTableColumnByName(table, "STT");
-        numberCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<UserAccount, UserAccount>, ObservableValue<UserAccount>>() {
+//        numberCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<UserAccount, String>, ObservableValue<String>>() {
+//            @Override
+//            public ObservableValue<String> call(TableColumn.CellDataFeatures<UserAccount, String> p) {
+//                return new ReadOnlyObjectWrapper(table.getItems().indexOf(p.getValue()) + 1));
+//            }
+//        });
+
+//        numberCol.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<String>(
+//                table.getItems().indexOf(cellData.getValue()) + 1));
+//        numberCol.setCellFactory(new Callback<TableColumn<UserAccount, String>, TableCell<UserAccount, String>>() {
+//            public TableCell<UserAccount, String> call(TableColumn<UserAccount, String> param) {
+//                return new TableCell<UserAccount, String>() {
+//                    @Override
+//                    protected void updateItem(String item, boolean empty) {
+//                        super.updateItem(item, empty);
+//
+//                        if (this.getTableRow() != null && item != null) {
+//                            setText(this.getTableRow().getIndex() + 1 + "");
+//                        } else {
+//                            setText("");
+//                        }
+//                    }
+//                };
+//            }
+//        });
+        numberCol.setCellValueFactory(new Callback<CellDataFeatures<UserAccount, String>, ObservableValue<String>>() {
             @Override
-            public ObservableValue<UserAccount> call(TableColumn.CellDataFeatures<UserAccount, UserAccount> p) {
-                return new ReadOnlyObjectWrapper(p.getValue());
-            }
-        });
-
-        numberCol.setCellFactory(new Callback<TableColumn<UserAccount, UserAccount>, TableCell<UserAccount, UserAccount>>() {
-            public TableCell<UserAccount, UserAccount> call(TableColumn<UserAccount, UserAccount> param) {
-                return new TableCell<UserAccount, UserAccount>() {
-                    @Override
-                    protected void updateItem(UserAccount item, boolean empty) {
-                        super.updateItem(item, empty);
-
-                        if (this.getTableRow() != null && item != null) {
-                            setText(this.getTableRow().getIndex() + 1 + "");
-                        } else {
-                            setText("");
-                        }
-                    }
-                };
+            public ObservableValue<String> call(CellDataFeatures<UserAccount, String> p) {
+                return new ReadOnlyObjectWrapper(table.getItems().indexOf(p.getValue()) + 1 + "");
             }
         });
         numberCol.setSortable(false);
 
         fullNameCol = getTableColumnByName(table, "Họ tên");
-        fullNameCol.setCellValueFactory(new PropertyValueFactory<>("fullName"));
+        fullNameCol.setCellValueFactory(new PropertyValueFactory<UserAccount, String>("fullName"));
 
         birthYearCol = getTableColumnByName(table, "Năm sinh");
-        birthYearCol.setCellValueFactory(new PropertyValueFactory<>("birthYear"));
+        birthYearCol.setCellValueFactory(new PropertyValueFactory<UserAccount, String>("birthYear"));
 
         addressCol = getTableColumnByName(table, "Địa chỉ");
-        addressCol.setCellValueFactory(new PropertyValueFactory<>("address"));
+        addressCol.setCellValueFactory(new PropertyValueFactory<UserAccount, String>("address"));
 
         statusCol = getTableColumnByName(table, "Trạng thái");
-        statusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
+        statusCol.setCellValueFactory(new PropertyValueFactory<UserAccount, String>("status"));
     }
 
     public void setTable(TableView<UserAccount> table, ObservableList<UserAccount> data) {

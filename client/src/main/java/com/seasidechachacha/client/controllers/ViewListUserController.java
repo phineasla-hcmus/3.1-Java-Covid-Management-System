@@ -57,49 +57,56 @@ public class ViewListUserController {
         return null;
     }
 
-    public void setColumns(TableView<UserAccount> table, TableColumn numberCol, TableColumn fullNameCol, TableColumn birthYearCol, TableColumn addressCol, TableColumn statusCol, TableColumn actionCol) {
+    public void setColumns(TableView<UserAccount> table) {
         numberCol = getTableColumnByName(table, "STT");
-        numberCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<UserAccount, String>, ObservableValue<UserAccount>>() {
+//        numberCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<UserAccount, String>, ObservableValue<String>>() {
+//            @Override
+//            public ObservableValue<String> call(TableColumn.CellDataFeatures<UserAccount, String> p) {
+//                return new ReadOnlyObjectWrapper(p.getValue());
+//            }
+//        });
+
+//        numberCol.setCellFactory(new Callback<TableColumn<UserAccount, String>, TableCell<UserAccount, String>>() {
+//            @Override
+//            public TableCell<UserAccount, String> call(TableColumn<UserAccount, String> param) {
+//                return new TableCell<UserAccount, String>() {
+//                    @Override
+//                    protected void updateItem(String item, boolean empty) {
+//                        super.updateItem(item, empty);
+//
+//                        if (this.getTableRow() != null && item != null) {
+//                            setText(this.getTableRow().getIndex() + 1 + "");
+//                        } else {
+//                            setText("");
+//                        }
+//                    }
+//                };
+//            }
+//        });
+        numberCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<UserAccount, String>, ObservableValue<String>>() {
             @Override
-            public ObservableValue<UserAccount> call(TableColumn.CellDataFeatures<UserAccount, String> p) {
-                return new ReadOnlyObjectWrapper(p.getValue());
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<UserAccount, String> p) {
+                return new ReadOnlyObjectWrapper(table.getItems().indexOf(p.getValue()) + 1 + "");
             }
         });
-
-        numberCol.setCellFactory(new Callback<TableColumn<String, UserAccount>, TableCell<String, UserAccount>>() {
-            @Override
-            public TableCell<String, UserAccount> call(TableColumn<String, UserAccount> param) {
-                return new TableCell<String, UserAccount>() {
-                    @Override
-                    protected void updateItem(UserAccount item, boolean empty) {
-                        super.updateItem(item, empty);
-
-                        if (this.getTableRow() != null && item != null) {
-                            setText(this.getTableRow().getIndex() + 1 + "");
-                        } else {
-                            setText("");
-                        }
-                    }
-                };
-            }
-        });
+        
         numberCol.setSortable(false);
 
         fullNameCol = getTableColumnByName(table, "Họ tên");
-        fullNameCol.setCellValueFactory(new PropertyValueFactory<>("fullName"));
+        fullNameCol.setCellValueFactory(new PropertyValueFactory<UserAccount, String>("fullName"));
 
         birthYearCol = getTableColumnByName(table, "Năm sinh");
-        birthYearCol.setCellValueFactory(new PropertyValueFactory<>("birthYear"));
+        birthYearCol.setCellValueFactory(new PropertyValueFactory<UserAccount, String>("birthYear"));
 
         addressCol = getTableColumnByName(table, "Địa chỉ");
-        addressCol.setCellValueFactory(new PropertyValueFactory<>("address"));
+        addressCol.setCellValueFactory(new PropertyValueFactory<UserAccount, String>("address"));
 
         statusCol = getTableColumnByName(table, "Trạng thái");
-        statusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
+        statusCol.setCellValueFactory(new PropertyValueFactory<UserAccount, String>("status"));
     }
 
     public void setTable(TableView<UserAccount> table, ObservableList<UserAccount> data) {
-        setColumns(table, numberCol, fullNameCol, birthYearCol, addressCol, statusCol, actionCol);
+        setColumns(table);
         actionCol = getTableColumnByName(table, "#");
         actionCol.setCellValueFactory(new PropertyValueFactory<>(""));
         Callback<TableColumn<UserAccount, String>, TableCell<UserAccount, String>> cellFactory

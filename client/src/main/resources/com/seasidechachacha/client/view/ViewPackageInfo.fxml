@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.seasidechachacha.client.controllers.ViewPackageInfoController">
+    <children>
+        <Label alignment="TOP_CENTER" prefHeight="30.0" prefWidth="803.0" styleClass="main-label" text="Thông tin nhu yếu phẩm">
+        </Label>
+        <AnchorPane prefHeight="199.0" prefWidth="703.0" style="-fx-border-color: lightblue; -fx-background-radius: 30; -fx-border-radius: 20; -fx-border-width: 5;">
+            <children>
+                <HBox prefWidth="398.0" spacing="30.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <children>
+                        <Label alignment="TOP_RIGHT" contentDisplay="RIGHT" maxWidth="1.7976931348623157E308" prefHeight="20.0" prefWidth="200.0" text="Tên gói" textAlignment="RIGHT" textFill="#006abc">
+                            <font>
+                                <Font name="System Bold" size="14.0" />
+                            </font>
+                        </Label>
+                        <Label fx:id="labelName" prefWidth="78.0" text="">
+                            <font>
+                                <Font size="14.0" />
+                            </font>
+                        </Label>
+                  <Button fx:id="btnChangeName" mnemonicParsing="false">
+                     <graphic>
+                        <FontAwesomeIconView fill="WHITE" glyphName="EDIT" />
+                     </graphic>
+                  </Button>
+                    </children>
+                    <padding>
+                        <Insets top="20.0" />
+                    </padding>
+                </HBox>
+                <HBox layoutY="55.0" prefHeight="20.0" prefWidth="464.0" spacing="30.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="299.0" AnchorPane.topAnchor="55.0">
+                    <children>
+                        <Label alignment="TOP_RIGHT" prefHeight="20.0" prefWidth="200.0" text="Mức giới hạn cho mỗi người" textFill="#006abc">
+                            <font>
+                                <Font name="System Bold" size="14.0" />
+                            </font>
+                        </Label>
+                        <Label fx:id="labelLimit" prefHeight="20.0" prefWidth="78.0" text="">
+                            <font>
+                                <Font size="14.0" />
+                            </font>
+                        </Label>
+                  <Button fx:id="btnChangeLimit" mnemonicParsing="false">
+                     <graphic>
+                        <FontAwesomeIconView fill="WHITE" glyphName="EDIT" />
+                     </graphic>
+                  </Button>
+                    </children>
+                </HBox>
+                <HBox layoutY="87.0" prefWidth="398.0" spacing="30.0" AnchorPane.topAnchor="87.0">
+                    <children>
+                        <Label alignment="TOP_RIGHT" prefHeight="20.0" prefWidth="215.0" text="Thời gian giới hạn" textFill="#006abc">
+                            <font>
+                                <Font name="System Bold" size="14.0" />
+                            </font>
+                        </Label>
+                        <Label fx:id="labelDay" prefHeight="20.0" prefWidth="78.0" text="">
+                            <font>
+                                <Font size="14.0" />
+                            </font>
+                        </Label>
+                  <Button fx:id="btnChangeDay" mnemonicParsing="false">
+                     <graphic>
+                        <FontAwesomeIconView fill="WHITE" glyphName="EDIT" />
+                     </graphic>
+                  </Button>
+                    </children>
+                </HBox>
+                <HBox layoutY="118.0" prefWidth="398.0" spacing="30.0" AnchorPane.topAnchor="118.0">
+                    <children>
+                        <Label alignment="TOP_RIGHT" prefHeight="20.0" prefWidth="215.0" text="Đơn giá" textFill="#006abc">
+                            <font>
+                                <Font name="System Bold" size="14.0" />
+                            </font>
+                        </Label>
+                        <Label fx:id="labelPrice" prefHeight="20.0" prefWidth="78.0" text="">
+                            <font>
+                                <Font size="14.0" />
+                            </font>
+                        </Label>
+                  <Button fx:id="btnChangePrice" mnemonicParsing="false" prefHeight="20.0" prefWidth="31.0">
+                     <graphic>
+                        <FontAwesomeIconView fill="WHITE" glyphName="EDIT" />
+                     </graphic>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </Button>
+                    </children>
+                </HBox>
+            </children>
+            <VBox.margin>
+                <Insets left="50.0" right="50.0" />
+            </VBox.margin>
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            </padding>
+        </AnchorPane>
+      <Button fx:id="btnBack" mnemonicParsing="false" onAction="#goBack" text="Quay lại">
+         <VBox.margin>
+            <Insets left="50.0" top="20.0" />
+         </VBox.margin>
+         <graphic>
+            <FontAwesomeIconView fill="WHITE" glyphName="ARROW_LEFT" />
+         </graphic>
+      </Button>
+    </children>
+    <stylesheets>
+        <URL value="@../css/style.css" />
+    </stylesheets>
+</VBox>

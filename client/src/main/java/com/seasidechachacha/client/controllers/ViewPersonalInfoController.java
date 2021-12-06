@@ -64,7 +64,7 @@ public class ViewPersonalInfoController {
         String defaultStatus = user.getStatus();
         String status[] = {"F0", "F1", "F2", "F3"};
 
-        ChoiceDialog<String> statusDialog = new ChoiceDialog(defaultStatus, status);
+        ChoiceDialog<String> statusDialog = new ChoiceDialog<>(defaultStatus, status);
         statusDialog.setResultConverter((ButtonType type)
                 -> {
             ButtonBar.ButtonData data = type == null ? null : type.getButtonData();
@@ -87,7 +87,7 @@ public class ViewPersonalInfoController {
         String defaultPlace = "abc";
         String place[] = {"abc", "xyz", "ohi"};
 
-        ChoiceDialog<String> placeDialog = new ChoiceDialog(defaultPlace, place);
+        ChoiceDialog<String> placeDialog = new ChoiceDialog<>(defaultPlace, place);
         placeDialog.setResultConverter((ButtonType type)
                 -> {
             ButtonBar.ButtonData data = type == null ? null : type.getButtonData();

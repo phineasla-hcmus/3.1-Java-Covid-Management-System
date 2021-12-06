@@ -2,18 +2,18 @@ package com.seasidechachacha.client;
 
 import javafx.beans.property.SimpleStringProperty;
 
-public class Package {
+public class MyPackage {
 
     private final SimpleStringProperty name = new SimpleStringProperty("");
     private final SimpleStringProperty limitPerPerson = new SimpleStringProperty("");
     private final SimpleStringProperty dayCooldown = new SimpleStringProperty("");
     private final SimpleStringProperty unitPrice = new SimpleStringProperty("");
 
-    public Package() {
+    public MyPackage() {
         this("", "", "", "");
     }
 
-    public Package(String name, String limitPerPerson, String dayCooldown, String unitPrice) {
+    public MyPackage(String name, String limitPerPerson, String dayCooldown, String unitPrice) {
         setName(name);
         setLimitPerPerson(limitPerPerson);
         setDayCooldown(dayCooldown);

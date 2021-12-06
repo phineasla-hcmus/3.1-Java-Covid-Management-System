@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
@@ -75,7 +76,12 @@
                     </font>
                 </Label>
             <ComboBox fx:id="cbRelated" layoutY="278.0" prefWidth="150.0" style="-fx-background-color: transparent; -fx-border-color: #006abc;" />
-            <Button fx:id="btnAddNewPerson" layoutY="322.0" mnemonicParsing="false" text="Thêm mới" />
+            <Button fx:id="btnAddNewPerson" alignment="CENTER" contentDisplay="CENTER" layoutX="339.0" layoutY="322.0" mnemonicParsing="false" text="Thêm mới" textAlignment="CENTER" />
+            <Button fx:id="btnBack" layoutY="322.0" mnemonicParsing="false" onAction="#goBack" text="Quay lại">
+               <graphic>
+                  <FontAwesomeIconView fill="WHITE" glyphName="ARROW_LEFT" />
+               </graphic>
+            </Button>
             </children>
         </AnchorPane>
     </children>

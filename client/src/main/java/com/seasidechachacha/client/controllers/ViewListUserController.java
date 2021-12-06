@@ -107,7 +107,7 @@ public class ViewListUserController {
                 new Callback<TableColumn<UserAccount, String>, TableCell<UserAccount, String>>() {
             @Override
             public TableCell call(final TableColumn<UserAccount, String> param) {
-                final TableCell<UserAccount, String> cell = new TableCell<UserAccount, String>() {
+                final TableCell<Object, String> cell = new TableCell<Object, String>() {
                     final Button btn = new Button("Xem chi tiết");
 
                     @Override
@@ -119,8 +119,7 @@ public class ViewListUserController {
                         } else {
                             btn.setOnAction(event -> {
                                 try {
-                                    UserAccount row = getTableRow().getItem();
-                                    App.setCurrentPane("pn_all", "view/ViewPersonalInfo", row);
+                                    App.setCurrentPane("pn_all", "view/ViewPersonalInfo", getTableRow());
                                 } catch (IOException ex) {
                                     Logger.getLogger(ViewListUserController.class.getName()).log(Level.SEVERE, null, ex);
                                 }

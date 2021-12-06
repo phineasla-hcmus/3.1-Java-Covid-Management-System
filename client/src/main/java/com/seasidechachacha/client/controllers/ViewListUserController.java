@@ -60,35 +60,6 @@ public class ViewListUserController {
 
     public void setColumns(TableView<UserAccount> table) {
         numberCol = getTableColumnByName(table, "STT");
-        // numberCol.setCellValueFactory(new
-        // Callback<TableColumn.CellDataFeatures<UserAccount, String>,
-        // ObservableValue<String>>() {
-        // @Override
-        // public ObservableValue<String> call(TableColumn.CellDataFeatures<UserAccount,
-        // String> p) {
-        // return new ReadOnlyObjectWrapper(p.getValue());
-        // }
-        // });
-
-        // numberCol.setCellFactory(new Callback<TableColumn<UserAccount, String>,
-        // TableCell<UserAccount, String>>() {
-        // @Override
-        // public TableCell<UserAccount, String> call(TableColumn<UserAccount, String>
-        // param) {
-        // return new TableCell<UserAccount, String>() {
-        // @Override
-        // protected void updateItem(String item, boolean empty) {
-        // super.updateItem(item, empty);
-        //
-        // if (this.getTableRow() != null && item != null) {
-        // setText(this.getTableRow().getIndex() + 1 + "");
-        // } else {
-        // setText("");
-        // }
-        // }
-        // };
-        // }
-        // });
         numberCol.setCellValueFactory(
                 new Callback<TableColumn.CellDataFeatures<UserAccount, String>, ObservableValue<String>>() {
                     @Override
@@ -121,7 +92,7 @@ public class ViewListUserController {
                     // TODO: TableCell is a raw type. References to generic type TableCell<S,T>
                     // should be parameterized
                     @Override
-                    public TableCell call(final TableColumn<UserAccount, String> param) {
+                    public TableCell<UserAccount, String> call(final TableColumn<UserAccount, String> param) {
                         final TableCell<UserAccount, String> cell = new TableCell<UserAccount, String>() {
                             final Button btn = new Button("Xem chi tiết");
 

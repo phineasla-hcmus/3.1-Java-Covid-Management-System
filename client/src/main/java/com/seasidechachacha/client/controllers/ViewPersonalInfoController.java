@@ -32,14 +32,9 @@ public class ViewPersonalInfoController {
             new UserAccount("Nguyễn Văn A", "1950", "abc", "F2"));
     @FXML
     private TableView<UserAccount> table;
-    // TODO: TableColumn is a raw type. References to generic type TableColumn<S,T>
-    // should be parameterized
+
     @FXML
-    private TableColumn numberCol, fullNameCol, birthYearCol, addressCol, statusCol;
-    // TODO: TableColumn is a raw type. References to generic type TableColumn<S,T>
-    // should be parameterized
-    @FXML
-    private TableColumn dateCol, currentStatusCol, currentPlaceCol;
+    private TableColumn<UserAccount, String> numberCol, fullNameCol, birthYearCol, addressCol, statusCol;
 
     @FXML
     private Label labelFullName, labelIdentityCard, labelBirthYear, labelAddress, labelStatus, labelTreatmentPlace;
@@ -115,10 +110,10 @@ public class ViewPersonalInfoController {
         }
     }
 
-    private <T> TableColumn<T, ?> getTableColumnByName(TableView<T> tableView, String name) {
-        for (TableColumn<T, ?> col : tableView.getColumns()) {
+    private TableColumn<UserAccount, String> getTableColumnByName(TableView<UserAccount> tableView, String name) {
+        for (TableColumn<UserAccount, ?> col : tableView.getColumns()) {
             if (col.getText().equals(name)) {
-                return col;
+                return (TableColumn<UserAccount, String>) col;
             }
         }
         return null;
@@ -126,37 +121,6 @@ public class ViewPersonalInfoController {
 
     public void setColumns(TableView<UserAccount> table) {
         numberCol = getTableColumnByName(table, "STT");
-        // numberCol.setCellValueFactory(new
-        // Callback<TableColumn.CellDataFeatures<UserAccount, String>,
-        // ObservableValue<String>>() {
-        // @Override
-        // public ObservableValue<String> call(TableColumn.CellDataFeatures<UserAccount,
-        // String> p) {
-        // return new ReadOnlyObjectWrapper(table.getItems().indexOf(p.getValue()) +
-        // 1));
-        // }
-        // });
-
-        // numberCol.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<String>(
-        // table.getItems().indexOf(cellData.getValue()) + 1));
-        // numberCol.setCellFactory(new Callback<TableColumn<UserAccount, String>,
-        // TableCell<UserAccount, String>>() {
-        // public TableCell<UserAccount, String> call(TableColumn<UserAccount, String>
-        // param) {
-        // return new TableCell<UserAccount, String>() {
-        // @Override
-        // protected void updateItem(String item, boolean empty) {
-        // super.updateItem(item, empty);
-        //
-        // if (this.getTableRow() != null && item != null) {
-        // setText(this.getTableRow().getIndex() + 1 + "");
-        // } else {
-        // setText("");
-        // }
-        // }
-        // };
-        // }
-        // });
         numberCol.setCellValueFactory(new Callback<CellDataFeatures<UserAccount, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(CellDataFeatures<UserAccount, String> p) {

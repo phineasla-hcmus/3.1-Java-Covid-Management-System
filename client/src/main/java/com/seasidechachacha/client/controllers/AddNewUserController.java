@@ -14,7 +14,7 @@ public class AddNewUserController {
     private TextField tfFullName, tfBirthYear, tfIdentityCard;
     
     @FXML
-    private ComboBox cbCurrentStatus, cbCity, cbDistrict, cbWard;
+    private ComboBox<String> cbCurrentStatus, cbCity, cbDistrict, cbWard;
     
     @FXML
     private void initialize() {

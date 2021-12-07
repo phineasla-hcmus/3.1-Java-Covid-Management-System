@@ -6,44 +6,74 @@ public class User {
 	private int birthYear;
 	private String relatedId;
 	private int debt;
-	private String wardId;
 	private String address;
-
+	private FullAddress fullAddress;
+	
 	public User(String userId, String name, int birthYear, String relateId, int debt, String wardId, String address) {
 		this.userId = userId;
 		this.name = name;
 		this.birthYear = birthYear;
 		this.relatedId = relateId;
 		this.debt = debt;
-		this.wardId = wardId;
 		this.address = address;
+		this.fullAddress = new FullAddress(wardId);
 	}
-	
+
 	public String getUserId() {
-		return this.userId;
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
 	public String getName() {
-		return this.name;
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public int getBirthYear() {
-		return this.birthYear;
+		return birthYear;
+	}
+
+	public void setBirthYear(int birthYear) {
+		this.birthYear = birthYear;
 	}
 
 	public String getRelatedId() {
-		return this.relatedId;
+		return relatedId;
+	}
+
+	public void setRelatedId(String relatedId) {
+		this.relatedId = relatedId;
 	}
 
 	public int getDebt() {
-		return this.debt;
+		return debt;
 	}
 
-	public String getWardId() {
-		return this.wardId;
+	public void setDebt(int debt) {
+		this.debt = debt;
 	}
 
 	public String getAddress() {
-		return this.address;
+		return address;
 	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public FullAddress getFullAddress() {
+		return fullAddress;
+	}
+
+	public void setFullAddress(FullAddress fullAddress) {
+		this.fullAddress = fullAddress;
+	}
+	
+
 }

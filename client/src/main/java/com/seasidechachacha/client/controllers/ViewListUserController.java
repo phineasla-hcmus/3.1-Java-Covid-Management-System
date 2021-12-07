@@ -92,8 +92,8 @@ public class ViewListUserController {
                     // TODO: TableCell is a raw type. References to generic type TableCell<S,T>
                     // should be parameterized
                     @Override
-                    public TableCell<UserAccount, String> call(final TableColumn<UserAccount, String> param) {
-                        final TableCell<UserAccount, String> cell = new TableCell<UserAccount, String>() {
+                    public TableCell call(final TableColumn<UserAccount, String> param) {
+                        final TableCell<Object, String> cell = new TableCell<Object, String>() {
                             final Button btn = new Button("Xem chi tiết");
 
                             @Override
@@ -105,8 +105,7 @@ public class ViewListUserController {
                                 } else {
                                     btn.setOnAction(event -> {
                                         try {
-                                            UserAccount row = getTableRow().getItem();
-                                            App.setCurrentPane("pn_all", "view/ViewPersonalInfo", row);
+                                           App.setCurrentPane("pn_all", "view/ViewPersonalInfo", getTableRow());
                                         } catch (IOException ex) {
                                             Logger.getLogger(ViewListUserController.class.getName()).log(Level.SEVERE,
                                                     null, ex);

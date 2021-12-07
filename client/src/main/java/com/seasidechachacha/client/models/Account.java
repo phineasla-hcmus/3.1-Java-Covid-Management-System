@@ -1,6 +1,18 @@
 package com.seasidechachacha.client.models;
 
+//import lombok.AllArgsConstructor;
+//import lombok.Getter;
+//import lombok.NoArgsConstructor;
+//import lombok.NonNull;
+//import lombok.Setter;
+//
+//
+//@Getter
+//@Setter
+//@NoArgsConstructor
+//@AllArgsConstructor
 public class Account {
+
     String userId;
     String password;
     int roleId;
@@ -9,16 +21,16 @@ public class Account {
         this.userId = userId;
         this.roleId = roleId;
     }
-    
+
     public String getUserId() {
-		return this.userId;
+        return this.userId;
     }
-    
+
     public String getPassword() {
-    	return this.password;
+        return this.password;
     }
-    
+
     public int getRoleId() {
-    	return this.roleId;
+        return this.roleId;
     }
 }

@@ -28,7 +28,8 @@ public class MainController {
             App.setCurrentPane("pn_all", "view/ViewListUser", null);
             pn_all.toFront();
         } else if (event.getSource() == btn_core) {
-            pn_core.toFront();
+            App.setCurrentPane("pn_all", "view/ViewListPackage", null);
+//            pn_core.toFront();
         } else if (event.getSource() == btn_xeom) {
             pn_xeom.toFront();
         } else if (event.getSource() == btn_atom) {

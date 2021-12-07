@@ -1,20 +1,20 @@
 package com.seasidechachacha.client;
 
+import com.seasidechachacha.client.controllers.ViewPackageInfoController;
 import com.seasidechachacha.client.controllers.ViewPersonalInfoController;
 import com.seasidechachacha.client.utils.PasswordAuthenticator;
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
 import java.io.IOException;
-
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Pane;
 import org.kordamp.bootstrapfx.BootstrapFX;
 import javafx.application.Platform;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableRow;
 
 public class App extends Application {
 
@@ -24,7 +24,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("view/Firstlogin"), 1050, 800);
+        scene = new Scene(loadFXML("view/FirstLogin"), 1050, 800);
         stage.setScene(scene);
         stage.show();
     }
@@ -42,13 +42,19 @@ public class App extends Application {
         pn_all.toFront();
     }
 
-    public static void setCurrentPane(String pane, String fxml, UserAccount user) throws IOException {
+    public static void setCurrentPane(String pane, String fxml, TableRow<Object> tableRow) throws IOException {
         if (pane.equals("pn_all")) {
             FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
             Pane newLoadedPane = (Pane) fxmlLoader.load();
             if (fxml.equals("view/ViewPersonalInfo")) {
+                UserAccount user = (UserAccount)tableRow.getItem();
                 ViewPersonalInfoController controller = fxmlLoader.<ViewPersonalInfoController>getController();
                 controller.setup(user);
+            }
+            else if (fxml.equals("view/ViewPackageInfo")) {
+                MyPackage pack = (MyPackage)tableRow.getItem();
+                ViewPackageInfoController controller = fxmlLoader.<ViewPackageInfoController>getController();
+                controller.setup(pack);
             }
             pn_all.setContent(newLoadedPane);
         }

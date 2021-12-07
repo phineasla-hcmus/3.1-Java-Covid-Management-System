@@ -57,10 +57,11 @@ public class ViewPersonalInfoController {
         labelTreatmentPlace.setText("abc");
 
         String defaultStatus = user.getStatus();
-        String status[] = { "F0", "F1", "F2", "F3" };
+        String status[] = {"F0", "F1", "F2", "F3"};
 
         ChoiceDialog<String> statusDialog = new ChoiceDialog<String>(defaultStatus, status);
         statusDialog.setResultConverter((ButtonType type) -> {
+
             ButtonBar.ButtonData data = type == null ? null : type.getButtonData();
             if (data == ButtonBar.ButtonData.OK_DONE) {
                 return statusDialog.getSelectedItem();
@@ -79,10 +80,11 @@ public class ViewPersonalInfoController {
         });
 
         String defaultPlace = "abc";
-        String place[] = { "abc", "xyz", "ohi" };
+        String place[] = {"abc", "xyz", "ohi"};
 
         ChoiceDialog<String> placeDialog = new ChoiceDialog<String>(defaultPlace, place);
         placeDialog.setResultConverter((ButtonType type) -> {
+
             ButtonBar.ButtonData data = type == null ? null : type.getButtonData();
             if (data == ButtonBar.ButtonData.OK_DONE) {
                 return placeDialog.getSelectedItem();
@@ -102,6 +104,7 @@ public class ViewPersonalInfoController {
     }
 
     @FXML
+
     private void goBack() {
         try {
             App.setCurrentPane("pn_all", "view/ViewListUser", null);

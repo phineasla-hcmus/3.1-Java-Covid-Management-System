@@ -1,4 +1,4 @@
-package com.seasidechachacha.client.controllers.Login;
+package com.seasidechachacha.client.controllers;
 
 import com.seasidechachacha.client.App;
 import java.io.IOException;

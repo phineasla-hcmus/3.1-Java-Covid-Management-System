@@ -32,14 +32,14 @@ public class App extends Application {
     }
     
     public static void initializeMainScreen() throws IOException {
-        setRoot("view/Main");
+        setRoot("view/MainAdmin");
         scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
         pn_all = (ScrollPane) scene.lookup("#pn_all");
         pn_core = (Pane) scene.lookup("#pn_core");
         pn_xeom = (Pane) scene.lookup("#pn_xeom");
         pn_atom = (Pane) scene.lookup("#pn_atom");
 
-        Pane newLoadedPane = FXMLLoader.load(App.class.getResource("view/ViewListUser.fxml"));
+        Pane newLoadedPane = FXMLLoader.load(App.class.getResource("view/AddNewModerator.fxml"));
         pn_all.setContent(newLoadedPane);
         pn_all.toFront();
     }

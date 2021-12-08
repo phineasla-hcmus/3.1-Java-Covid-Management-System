@@ -1,8 +1,10 @@
 package com.seasidechachacha.client.controllers;
 
 import com.seasidechachacha.client.App;
-import com.seasidechachacha.client.UserAccount;
+import static com.seasidechachacha.client.database.UserDao.getUserList;
+import com.seasidechachacha.client.models.User;
 import java.io.IOException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -19,17 +21,12 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
 
 public class ViewListUserController {
-
-    private static final ObservableList<UserAccount> data = FXCollections.observableArrayList(
-            new UserAccount("Nguyễn Văn A", "1950", "abc", "F2"),
-            new UserAccount("Nguyễn Văn B", "1950", "abc", "F2"),
-            new UserAccount("Nguyễn Văn C", "1950", "abc", "F2"),
-            new UserAccount("Nguyễn Văn D", "1950", "abc", "F2"),
-            new UserAccount("Nguyễn Văn E", "1950", "abc", "F2"));
+    
+    private static List<User> data;
 
     @FXML
-    private TableView<UserAccount> table;
-    private static TableColumn<UserAccount, String> numberCol, fullNameCol, birthYearCol, addressCol, statusCol,
+    private TableView<User> table;
+    private static TableColumn<User, String> numberCol, fullNameCol, birthYearCol, addressCol, statusCol,
             actionCol;
 
     @FXML
@@ -37,7 +34,8 @@ public class ViewListUserController {
 
     @FXML
     private void initialize() {
-        setTable(table, data);
+        data = getUserList(5, 0);
+        setTable(table, FXCollections.observableList(data));
         btnAdd.setOnAction(event -> {
             try {
                 App.setCurrentPane("pn_all", "view/AddNewUser", null);
@@ -47,23 +45,23 @@ public class ViewListUserController {
         });
     }
 
-    private TableColumn<UserAccount, String> getTableColumnByName(TableView<UserAccount> tableView, String name) {
-        for (TableColumn<UserAccount, ?> col : tableView.getColumns()) {
+    private TableColumn<User, String> getTableColumnByName(TableView<User> tableView, String name) {
+        for (TableColumn<User, ?> col : tableView.getColumns()) {
             if (col.getText().equals(name)) {
-                // TODO: Type safety: Unchecked cast from TableColumn<UserAccount,capture#2-of
-                // ?> to TableColumn<UserAccount,String>
-                return (TableColumn<UserAccount, String>) col;
+                // TODO: Type safety: Unchecked cast from TableColumn<User,capture#2-of
+                // ?> to TableColumn<User,String>
+                return (TableColumn<User, String>) col;
             }
         }
         return null;
     }
 
-    public void setColumns(TableView<UserAccount> table) {
+    public void setColumns(TableView<User> table) {
         numberCol = getTableColumnByName(table, "STT");
         numberCol.setCellValueFactory(
-                new Callback<TableColumn.CellDataFeatures<UserAccount, String>, ObservableValue<String>>() {
+                new Callback<TableColumn.CellDataFeatures<User, String>, ObservableValue<String>>() {
                     @Override
-                    public ObservableValue<String> call(TableColumn.CellDataFeatures<UserAccount, String> p) {
+                    public ObservableValue<String> call(TableColumn.CellDataFeatures<User, String> p) {
                         return new ReadOnlyObjectWrapper(table.getItems().indexOf(p.getValue()) + 1 + "");
                     }
                 });
@@ -71,28 +69,28 @@ public class ViewListUserController {
         numberCol.setSortable(false);
 
         fullNameCol = getTableColumnByName(table, "Họ tên");
-        fullNameCol.setCellValueFactory(new PropertyValueFactory<UserAccount, String>("fullName"));
+        fullNameCol.setCellValueFactory(new PropertyValueFactory<User, String>("name"));
 
         birthYearCol = getTableColumnByName(table, "Năm sinh");
-        birthYearCol.setCellValueFactory(new PropertyValueFactory<UserAccount, String>("birthYear"));
+        birthYearCol.setCellValueFactory(new PropertyValueFactory<User, String>("birthYear"));
 
         addressCol = getTableColumnByName(table, "Địa chỉ");
-        addressCol.setCellValueFactory(new PropertyValueFactory<UserAccount, String>("address"));
+        addressCol.setCellValueFactory(new PropertyValueFactory<User, String>("address"));
 
-        statusCol = getTableColumnByName(table, "Trạng thái");
-        statusCol.setCellValueFactory(new PropertyValueFactory<UserAccount, String>("status"));
+//        statusCol = getTableColumnByName(table, "Trạng thái");
+//        statusCol.setCellValueFactory(new PropertyValueFactory<User, String>("status"));
     }
 
-    public void setTable(TableView<UserAccount> table, ObservableList<UserAccount> data) {
+    public void setTable(TableView<User> table, ObservableList<User> data) {
         setColumns(table);
         actionCol = getTableColumnByName(table, "#");
         actionCol.setCellValueFactory(new PropertyValueFactory<>(""));
-        Callback<TableColumn<UserAccount, String>, TableCell<UserAccount, String>> cellFactory = //
-                new Callback<TableColumn<UserAccount, String>, TableCell<UserAccount, String>>() {
+        Callback<TableColumn<User, String>, TableCell<User, String>> cellFactory = //
+                new Callback<TableColumn<User, String>, TableCell<User, String>>() {
                     // TODO: TableCell is a raw type. References to generic type TableCell<S,T>
                     // should be parameterized
                     @Override
-                    public TableCell call(final TableColumn<UserAccount, String> param) {
+                    public TableCell call(final TableColumn<User, String> param) {
                         final TableCell<Object, String> cell = new TableCell<Object, String>() {
                             final Button btn = new Button("Xem chi tiết");
 

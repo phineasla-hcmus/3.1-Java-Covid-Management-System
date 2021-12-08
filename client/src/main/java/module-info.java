@@ -10,6 +10,7 @@ module com.seasidechachacha.client {
 
     opens com.seasidechachacha.client to javafx.fxml;
     opens com.seasidechachacha.client.controllers to javafx.fxml;
+    opens com.seasidechachacha.client.models to javafx.base;
 
     exports com.seasidechachacha.client;
 }

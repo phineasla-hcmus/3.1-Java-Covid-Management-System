@@ -1,7 +1,7 @@
 package com.seasidechachacha.client.controllers;
 
 import com.seasidechachacha.client.App;
-import com.seasidechachacha.client.UserAccount;
+import com.seasidechachacha.client.models.User;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -24,17 +24,17 @@ import javafx.util.Callback;
 
 public class ViewPersonalInfoController {
 
-    private static final ObservableList<UserAccount> relatedData = FXCollections.observableArrayList(
-            new UserAccount("Nguyễn Văn A", "1950", "abc", "F2"),
-            new UserAccount("Nguyễn Văn A", "1950", "abc", "F2"),
-            new UserAccount("Nguyễn Văn A", "1950", "abc", "F2"),
-            new UserAccount("Nguyễn Văn A", "1950", "abc", "F2"),
-            new UserAccount("Nguyễn Văn A", "1950", "abc", "F2"));
+//    private static final ObservableList<User> relatedData = FXCollections.observableArrayList(
+//            new User("Nguyễn Văn A", "1950", "abc", "F2"),
+//            new User("Nguyễn Văn A", "1950", "abc", "F2"),
+//            new User("Nguyễn Văn A", "1950", "abc", "F2"),
+//            new User("Nguyễn Văn A", "1950", "abc", "F2"),
+//            new User("Nguyễn Văn A", "1950", "abc", "F2"));
     @FXML
-    private TableView<UserAccount> table;
+    private TableView<User> table;
 
     @FXML
-    private TableColumn<UserAccount, String> numberCol, fullNameCol, birthYearCol, addressCol, statusCol;
+    private TableColumn<User, String> numberCol, fullNameCol, birthYearCol, addressCol, statusCol;
 
     @FXML
     private Label labelFullName, labelIdentityCard, labelBirthYear, labelAddress, labelStatus, labelTreatmentPlace;
@@ -44,19 +44,20 @@ public class ViewPersonalInfoController {
 
     @FXML
     private void initialize() {
-        setTable(table, relatedData);
+//        setTable(table, relatedData);
 
     }
 
-    public void setup(UserAccount user) {
-        labelFullName.setText(user.getFullName());
-        labelIdentityCard.setText("123456789");
-        labelBirthYear.setText(user.getBirthYear());
+    public void setup(User user) {
+        labelFullName.setText(user.getName());
+        labelIdentityCard.setText(user.getUserId());
+        labelBirthYear.setText(String.valueOf(user.getBirthYear()));
         labelAddress.setText(user.getAddress());
-        labelStatus.setText(user.getStatus());
-        labelTreatmentPlace.setText("abc");
+//        labelStatus.setText(user.getStatus());
+//        labelTreatmentPlace.setText("abc");
 
-        String defaultStatus = user.getStatus();
+//        String defaultStatus = user.getStatus();
+        String defaultStatus = "F2";
         String status[] = {"F0", "F1", "F2", "F3"};
 
         ChoiceDialog<String> statusDialog = new ChoiceDialog<String>(defaultStatus, status);
@@ -113,39 +114,39 @@ public class ViewPersonalInfoController {
         }
     }
 
-    private TableColumn<UserAccount, String> getTableColumnByName(TableView<UserAccount> tableView, String name) {
-        for (TableColumn<UserAccount, ?> col : tableView.getColumns()) {
+    private TableColumn<User, String> getTableColumnByName(TableView<User> tableView, String name) {
+        for (TableColumn<User, ?> col : tableView.getColumns()) {
             if (col.getText().equals(name)) {
-                return (TableColumn<UserAccount, String>) col;
+                return (TableColumn<User, String>) col;
             }
         }
         return null;
     }
 
-    public void setColumns(TableView<UserAccount> table) {
+    public void setColumns(TableView<User> table) {
         numberCol = getTableColumnByName(table, "STT");
-        numberCol.setCellValueFactory(new Callback<CellDataFeatures<UserAccount, String>, ObservableValue<String>>() {
+        numberCol.setCellValueFactory(new Callback<CellDataFeatures<User, String>, ObservableValue<String>>() {
             @Override
-            public ObservableValue<String> call(CellDataFeatures<UserAccount, String> p) {
+            public ObservableValue<String> call(CellDataFeatures<User, String> p) {
                 return new ReadOnlyObjectWrapper(table.getItems().indexOf(p.getValue()) + 1 + "");
             }
         });
         numberCol.setSortable(false);
 
         fullNameCol = getTableColumnByName(table, "Họ tên");
-        fullNameCol.setCellValueFactory(new PropertyValueFactory<UserAccount, String>("fullName"));
+        fullNameCol.setCellValueFactory(new PropertyValueFactory<User, String>("fullName"));
 
         birthYearCol = getTableColumnByName(table, "Năm sinh");
-        birthYearCol.setCellValueFactory(new PropertyValueFactory<UserAccount, String>("birthYear"));
+        birthYearCol.setCellValueFactory(new PropertyValueFactory<User, String>("birthYear"));
 
         addressCol = getTableColumnByName(table, "Địa chỉ");
-        addressCol.setCellValueFactory(new PropertyValueFactory<UserAccount, String>("address"));
+        addressCol.setCellValueFactory(new PropertyValueFactory<User, String>("address"));
 
         statusCol = getTableColumnByName(table, "Trạng thái");
-        statusCol.setCellValueFactory(new PropertyValueFactory<UserAccount, String>("status"));
+        statusCol.setCellValueFactory(new PropertyValueFactory<User, String>("status"));
     }
 
-    public void setTable(TableView<UserAccount> table, ObservableList<UserAccount> data) {
+    public void setTable(TableView<User> table, ObservableList<User> data) {
         setColumns(table);
         table.setItems(data);
 

@@ -1,8 +1,10 @@
 package com.seasidechachacha.client.controllers;
 
 import com.seasidechachacha.client.App;
-import com.seasidechachacha.client.MyPackage;
+import static com.seasidechachacha.client.database.ManagerDao.getPackageList;
+import com.seasidechachacha.client.models.Package;
 import java.io.IOException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -20,25 +22,19 @@ import javafx.util.Callback;
 
 public class ViewListPackageController {
 
-    private static final ObservableList<MyPackage> data
-            = FXCollections.observableArrayList(new MyPackage("Panadol extra", "1", "30", "135000"),
-                    new MyPackage("Khẩu trang than hoạt tính 4 lớp Pharmacity", "1", "30", "89000"),
-                    new MyPackage("Bộ xét nghiệm nhanh COVID-19 tại nhà Humasis COVID-19 Ag Home Tes", "1", "30", "610000"),
-                    new MyPackage("Siro điều trị viêm đường hô hấp kèm theo ho Prospa", "2", "7", "68000"),
-                    new MyPackage("Dầu gió Khuynh Diệp OPC", "2", "15", "62900")
-            );
-//    private ViewPersonalInfoController infoController;
+    private static List<Package> data;
 
     @FXML
-    private TableView<MyPackage> table;
-    private static TableColumn<MyPackage, String> numberCol, nameCol, limitCol, dayCol, priceCol, editCol, deleteCol;
+    private TableView<Package> table;
+    private static TableColumn<Package, String> numberCol, nameCol, limitCol, dayCol, priceCol, editCol, deleteCol;
 
     @FXML
     private Button btnAdd;
 
     @FXML
     private void initialize() {
-        setTable(table, data);
+        data = getPackageList(6, 0);
+        setTable(table, FXCollections.observableList(data));
         btnAdd.setOnAction(event -> {
             try {
                 App.setCurrentPane("pn_all", "view/AddNewPackage", null);
@@ -48,21 +44,21 @@ public class ViewListPackageController {
         });
     }
 
-    private TableColumn<MyPackage, String> getTableColumnByName(TableView<MyPackage> tableView, String name) {
-        for (TableColumn<MyPackage, ?> col : tableView.getColumns()) {
+    private TableColumn<Package, String> getTableColumnByName(TableView<Package> tableView, String name) {
+        for (TableColumn<Package, ?> col : tableView.getColumns()) {
             if (col.getText().equals(name)) {
-                return (TableColumn<MyPackage, String>) col;
+                return (TableColumn<Package, String>) col;
             }
         }
         return null;
     }
 
-    public void setColumns(TableView<MyPackage> table) {
+    public void setColumns(TableView<Package> table) {
         numberCol = getTableColumnByName(table, "STT");
         numberCol.setCellValueFactory(
-                new Callback<TableColumn.CellDataFeatures<MyPackage, String>, ObservableValue<String>>() {
+                new Callback<TableColumn.CellDataFeatures<Package, String>, ObservableValue<String>>() {
             @Override
-            public ObservableValue<String> call(TableColumn.CellDataFeatures<MyPackage, String> p) {
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<Package, String> p) {
                 return new ReadOnlyObjectWrapper(table.getItems().indexOf(p.getValue()) + 1 + "");
             }
         });
@@ -79,18 +75,18 @@ public class ViewListPackageController {
         dayCol.setCellValueFactory(new PropertyValueFactory<>("dayCooldown"));
 
         priceCol = getTableColumnByName(table, "Đơn giá");
-        priceCol.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
+        priceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
     }
 
-    public void setTable(TableView<MyPackage> table, ObservableList<MyPackage> data) {
+    public void setTable(TableView<Package> table, ObservableList<Package> data) {
         setColumns(table);
         editCol = getTableColumnByName(table, "#1");
         editCol.setCellValueFactory(new PropertyValueFactory<>(""));
-        Callback<TableColumn<MyPackage, String>, TableCell<MyPackage, String>> cellFactory
+        Callback<TableColumn<Package, String>, TableCell<Package, String>> cellFactory
                 = //
-                new Callback<TableColumn<MyPackage, String>, TableCell<MyPackage, String>>() {
+                new Callback<TableColumn<Package, String>, TableCell<Package, String>>() {
             @Override
-            public TableCell call(final TableColumn<MyPackage, String> param) {
+            public TableCell call(final TableColumn<Package, String> param) {
                 final TableCell<Object, String> cell = new TableCell<Object, String>() {
                     final Button btn = new Button("Sửa");
 
@@ -122,12 +118,12 @@ public class ViewListPackageController {
 
         deleteCol = getTableColumnByName(table, "#2");
         deleteCol.setCellValueFactory(new PropertyValueFactory<>(""));
-        Callback<TableColumn<MyPackage, String>, TableCell<MyPackage, String>> cellFactory1
+        Callback<TableColumn<Package, String>, TableCell<Package, String>> cellFactory1
                 = //
-                new Callback<TableColumn<MyPackage, String>, TableCell<MyPackage, String>>() {
+                new Callback<TableColumn<Package, String>, TableCell<Package, String>>() {
             @Override
-            public TableCell call(final TableColumn<MyPackage, String> param) {
-                final TableCell<MyPackage, String> cell = new TableCell<MyPackage, String>() {
+            public TableCell call(final TableColumn<Package, String> param) {
+                final TableCell<Package, String> cell = new TableCell<Package, String>() {
                     final Button btn = new Button("Xoá");
 
                     @Override

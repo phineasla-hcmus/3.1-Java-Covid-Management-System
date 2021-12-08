@@ -21,7 +21,7 @@ import com.seasidechachacha.client.utils.PasswordAuthenticator;
 public class ManagerDao {
 	private static Logger logger = LogManager.getLogger(ManagerDao.class);
 
-	public static void main(String[] args) throws SQLException {
+//	public static void main(String[] args) throws SQLException {
 //		User user1 = new User("111111111", "DatDat", 1981, "null", 0, "00001", "33/31 Ngo Quyen");
 //		User user2 = new User("222222222", "DatDat", 1982, "111111111", 0, "00001", "33/32 Ngo Quyen");
 //		User user3 = new User("333333333", "DatDat", 1983, "222222222", 0, "00001", "33/33 Ngo Quyen");
@@ -32,14 +32,14 @@ public class ManagerDao {
 //		System.out.println(addNewUser(user3));
 //		System.out.println(addNewUser(user4));
 //		System.out.println(addNewUser(user5));
-
+//
 //		List<TreatmentPlace> treatments = getTreatmentPlaceList(10, 0);
 //		System.out.println(treatments.get(3).getStreet());
 //		System.out.println(treatments.get(3).getFullAddress().getCityName());
-
+//
 //		System.out.println(updatePackagePrice("5SWLVLYvyN", 0));
-		System.out.println(setState("111111111", 2));
-	}
+//		System.out.println(setState("111111111", 2));
+//	}
 
 	private static boolean userIDIsExist(Connection c, String userID) {
 		String query = "SELECT * FROM user WHERE user.userID = ?;";

@@ -5,7 +5,7 @@ use covid_management;
 create table User
 (
 	userID varchar(12),
-    pwd varchar(20),
+    pwd varchar(100),
     roleID tinyint,
     primary key (userID)
 );
@@ -37,7 +37,7 @@ create table ManagedUser
 (
 	idCard varchar(12),
 	fullName nvarchar(50),
-	yob tinyint,
+	yob smallint,
 	relatedPerson varchar(12),
     debt int,
 	wardID char(5),
@@ -75,7 +75,7 @@ create table TreatmentPlace
 create table Package
 (
 	packageID char(10),
-	name nvarchar(50),
+	name nvarchar(100),
 	limitPerPerson tinyint,
 	dayCooldown tinyint,
 	price decimal(10,3),

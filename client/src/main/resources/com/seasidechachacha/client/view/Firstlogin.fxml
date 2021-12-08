@@ -12,22 +12,22 @@
    <children>
       <AnchorPane fx:id="firstlogin" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1050.0" VBox.vgrow="ALWAYS">
          <children>
-            <ImageView fx:id="logo" fitHeight="172.0" fitWidth="471.0" layoutX="273.0" layoutY="177.0" pickOnBounds="true" preserveRatio="true" VBox.vgrow="ALWAYS">
+            <ImageView fx:id="logo" fitHeight="267.0" fitWidth="684.0" layoutX="209.0" layoutY="163.0" pickOnBounds="true" preserveRatio="true" VBox.vgrow="ALWAYS">
                <image>
                   <Image url="@../img/logo1.png" />
                </image>
             </ImageView>
-            <Text fill="#20377c" layoutX="384.0" layoutY="347.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Đây là lần đầu hệ thống được khởi tạo" textAlignment="CENTER" VBox.vgrow="ALWAYS">
+            <Text fill="#20377c" layoutX="427.0" layoutY="428.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Đây là lần đầu hệ thống được khởi tạo" textAlignment="CENTER" VBox.vgrow="ALWAYS">
                <font>
                   <Font name="Tahoma Bold" size="13.0" />
                </font></Text>
-            <Text fill="#20377c" layoutX="394.0" layoutY="372.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Bạn có muốn tạo tài khoản Admin?" textAlignment="CENTER" VBox.vgrow="ALWAYS">
+            <Text fill="#20377c" layoutX="437.0" layoutY="453.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Bạn có muốn tạo tài khoản Admin?" textAlignment="CENTER" VBox.vgrow="ALWAYS">
                <font>
                   <Font name="Tahoma Bold" size="13.0" />
                </font></Text>
-            <Button fx:id="yes" layoutX="524.0" layoutY="400.0" mnemonicParsing="false" onAction="#SwitchtoCreateAdmin" prefHeight="25.0" prefWidth="51.0" text="Có" VBox.vgrow="ALWAYS" />
-            <Button fx:id="no" layoutX="442.0" layoutY="400.0" mnemonicParsing="false" onAction="#ExitApp" text="Không" VBox.vgrow="ALWAYS" />
-            <Text fill="#208379" layoutX="625.0" layoutY="495.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Version 1.0 by Seaside chachacha" VBox.vgrow="ALWAYS" />
+            <Button fx:id="yes" layoutX="567.0" layoutY="481.0" mnemonicParsing="false" onAction="#SwitchtoCreateAdmin" prefHeight="25.0" prefWidth="51.0" text="Có" VBox.vgrow="ALWAYS" />
+            <Button fx:id="no" layoutX="485.0" layoutY="481.0" mnemonicParsing="false" onAction="#ExitApp" text="Không" VBox.vgrow="ALWAYS" />
+            <Text fill="#208379" layoutX="859.0" layoutY="782.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Version 1.0 by Seaside chachacha" VBox.vgrow="ALWAYS" />
          </children>
       </AnchorPane>
    </children>

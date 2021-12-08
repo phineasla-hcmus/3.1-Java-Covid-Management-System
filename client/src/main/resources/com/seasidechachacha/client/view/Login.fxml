@@ -13,9 +13,9 @@
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1050.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.seasidechachacha.client.controllers.LoginController">
    <children>
-      <AnchorPane fx:id="firstlogin" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0">
+      <AnchorPane fx:id="firstlogin" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="602.0" prefWidth="821.0">
          <children>
-            <ImageView fx:id="logo" fitHeight="172.0" fitWidth="471.0" layoutX="65.0" layoutY="73.0" pickOnBounds="true" preserveRatio="true" VBox.vgrow="ALWAYS">
+            <ImageView fx:id="logo" fitHeight="193.0" fitWidth="549.0" layoutX="26.0" layoutY="31.0" pickOnBounds="true" preserveRatio="true" VBox.vgrow="ALWAYS">
                <image>
                   <Image url="@../img/logo1.png" />
                </image>
@@ -31,9 +31,9 @@
                </font>
             </Text>
             <Button fx:id="next" layoutX="264.0" layoutY="338.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="73.0" text="Tiếp tục" VBox.vgrow="ALWAYS" />
-            <Text fill="#208379" layoutX="417.0" layoutY="391.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Version 1.0 by Seaside chachacha" VBox.vgrow="ALWAYS" />
             <TextField fx:id="username" layoutX="259.0" layoutY="249.0" />
             <PasswordField fx:id="pass" layoutX="259.0" layoutY="283.0" />
+            <Text fill="#208379" layoutX="630.0" layoutY="584.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Version 1.0 by Seaside chachacha" />
          </children>
          <VBox.margin>
             <Insets left="230.0" top="200.0" />

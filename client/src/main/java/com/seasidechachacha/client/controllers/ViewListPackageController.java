@@ -31,7 +31,7 @@ public class ViewListPackageController {
 
     @FXML
     private TableView<MyPackage> table;
-    private static TableColumn numberCol, nameCol, limitCol, dayCol, priceCol, editCol, deleteCol;
+    private static TableColumn<MyPackage, String> numberCol, nameCol, limitCol, dayCol, priceCol, editCol, deleteCol;
 
     @FXML
     private Button btnAdd;
@@ -48,10 +48,10 @@ public class ViewListPackageController {
         });
     }
 
-    private <T> TableColumn<T, ?> getTableColumnByName(TableView<T> tableView, String name) {
-        for (TableColumn<T, ?> col : tableView.getColumns()) {
+    private TableColumn<MyPackage, String> getTableColumnByName(TableView<MyPackage> tableView, String name) {
+        for (TableColumn<MyPackage, ?> col : tableView.getColumns()) {
             if (col.getText().equals(name)) {
-                return col;
+                return (TableColumn<MyPackage, String>) col;
             }
         }
         return null;
@@ -59,29 +59,14 @@ public class ViewListPackageController {
 
     public void setColumns(TableView<MyPackage> table) {
         numberCol = getTableColumnByName(table, "STT");
-        numberCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<MyPackage, MyPackage>, ObservableValue<MyPackage>>() {
+        numberCol.setCellValueFactory(
+                new Callback<TableColumn.CellDataFeatures<MyPackage, String>, ObservableValue<String>>() {
             @Override
-            public ObservableValue<MyPackage> call(TableColumn.CellDataFeatures<MyPackage, MyPackage> p) {
-                return new ReadOnlyObjectWrapper(p.getValue());
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<MyPackage, String> p) {
+                return new ReadOnlyObjectWrapper(table.getItems().indexOf(p.getValue()) + 1 + "");
             }
         });
 
-        numberCol.setCellFactory(new Callback<TableColumn<MyPackage, MyPackage>, TableCell<MyPackage, MyPackage>>() {
-            public TableCell<MyPackage, MyPackage> call(TableColumn<MyPackage, MyPackage> param) {
-                return new TableCell<MyPackage, MyPackage>() {
-                    @Override
-                    protected void updateItem(MyPackage item, boolean empty) {
-                        super.updateItem(item, empty);
-
-                        if (this.getTableRow() != null && item != null) {
-                            setText(this.getTableRow().getIndex() + 1 + "");
-                        } else {
-                            setText("");
-                        }
-                    }
-                };
-            }
-        });
         numberCol.setSortable(false);
 
         nameCol = getTableColumnByName(table, "Tên gói");

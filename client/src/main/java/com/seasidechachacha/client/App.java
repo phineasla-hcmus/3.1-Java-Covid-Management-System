@@ -23,7 +23,7 @@ public class App extends Application {
     private static Scene scene;
     private static ScrollPane pn_all;
     private static Pane pn_core, pn_xeom, pn_atom, infoPane;
-    private static String role = "moderator";
+    private static String role = "user";
 
     @Override
     public void start(Stage stage) throws IOException {

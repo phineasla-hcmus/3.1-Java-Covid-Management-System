@@ -11,7 +11,7 @@ import com.jfoenix.controls.JFXButton;
 import com.seasidechachacha.client.App;
 import javafx.scene.control.ScrollPane;
 
-public class AdminScreenController {
+public class UserScreenController {
 
     @FXML
     private ScrollPane pn_all;
@@ -25,13 +25,13 @@ public class AdminScreenController {
     @FXML
     private void handleButtonAction(ActionEvent event) throws IOException {
         if (event.getSource() == btn_all) {
-            App.setCurrentPane("pn_all", "view/AddNewModerator1", null);
+            App.setCurrentPane("pn_all", "", null);
             pn_all.toFront();
         } else if (event.getSource() == btn_core) {
-            App.setCurrentPane("pn_all", "view/ManageModerator", null);
-            pn_all.toFront();
+            App.setCurrentPane("pn_all", "view/BuyPackage", null);
+            pn_all.toFront();   
         } else if (event.getSource() == btn_xeom) {
-            App.setCurrentPane("pn_all", "view/ViewListTreatmentPlace", null);
+            App.setCurrentPane("pn_all", "", null);
             pn_all.toFront();
         } else if (event.getSource() == btn_atom) {
             pn_atom.toFront();

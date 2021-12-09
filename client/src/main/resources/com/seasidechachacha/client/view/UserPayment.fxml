@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+
+<VBox stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.seasidechachacha.client.controllers.UserPaymentController">
+   <children>
+      <AnchorPane id="AnchorPane" prefHeight="800.0" prefWidth="800.0">
+         <children>
+            <Label layoutX="316.0" layoutY="43.0" styleClass="main-label" text="Thanh toán dư nợ" />
+            <Label layoutX="77.0" layoutY="159.0" styleClass="sub-label" text="Thông tin hoạt động đặt hàng của bạn:" />
+            <TableView fx:id="orderHistory" layoutX="77.0" layoutY="205.0" prefHeight="370.0" prefWidth="647.0">
+              <columns>
+                <TableColumn prefWidth="260.0" text="Tên gói nhu yếu phẩm" />
+                <TableColumn prefWidth="79.0" text="Số lượng" />
+                  <TableColumn prefWidth="130.0" text="Đơn giá" />
+                  <TableColumn prefWidth="175.0" text="Tổng tiền" />
+              </columns>
+            </TableView>
+            <Label layoutX="77.0" layoutY="606.0" styleClass="sub-label" text="Tổng dư nợ tối thiểu phải trả: " />
+            <Label fx:id="totalCost" layoutX="316.0" layoutY="610.0" text="..." />
+            <Button fx:id="payButton" layoutX="356.0" layoutY="688.0" mnemonicParsing="false" onAction="#handleButton" text="Thanh toán" />
+         </children>
+      </AnchorPane>
+   </children>
+</VBox>

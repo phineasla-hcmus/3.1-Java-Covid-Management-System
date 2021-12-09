@@ -31,11 +31,11 @@ public class ModeratorScreenController {
             App.setCurrentPane("pn_all", "view/ViewListPackage", null);
 //            pn_core.toFront();
         } 
-//        else if (event.getSource() == btn_xeom) {
-//            pn_xeom.toFront();
-//        } else if (event.getSource() == btn_atom) {
-//            pn_atom.toFront();
-//        }
+        else if (event.getSource() == btn_xeom) {
+            App.setCurrentPane("pn_all", "view/ModeratorStatistic", null);
+        } else if (event.getSource() == btn_atom) {
+            pn_atom.toFront();
+        }
     }
 
     @FXML

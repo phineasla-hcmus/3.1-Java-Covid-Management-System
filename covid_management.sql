@@ -5,7 +5,7 @@ use covid_management;
 create table User
 (
 	userID varchar(12),
-    pwd varchar(100),
+    pwd char(50),
     roleID tinyint,
     primary key (userID)
 );

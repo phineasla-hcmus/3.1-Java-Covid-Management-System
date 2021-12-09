@@ -4,7 +4,6 @@ import com.seasidechachacha.client.controllers.ViewPackageInfoController;
 import com.seasidechachacha.client.controllers.ViewPersonalInfoController;
 import com.seasidechachacha.client.models.User;
 import com.seasidechachacha.client.models.Package;
-import com.seasidechachacha.client.utils.PasswordAuthenticator;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -15,7 +14,6 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Pane;
 import org.kordamp.bootstrapfx.BootstrapFX;
 import javafx.application.Platform;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableRow;
 
 public class App extends Application {

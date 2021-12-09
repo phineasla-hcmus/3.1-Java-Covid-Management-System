@@ -39,7 +39,7 @@ public class App extends Application {
         pn_xeom = (Pane) scene.lookup("#pn_xeom");
         pn_atom = (Pane) scene.lookup("#pn_atom");
 
-        Pane newLoadedPane = FXMLLoader.load(App.class.getResource("view/AddNewModerator.fxml"));
+        Pane newLoadedPane = FXMLLoader.load(App.class.getResource("view/AddNewModerator1.fxml"));
         pn_all.setContent(newLoadedPane);
         pn_all.toFront();
     }

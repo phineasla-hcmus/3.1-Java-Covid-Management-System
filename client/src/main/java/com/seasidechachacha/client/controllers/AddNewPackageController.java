@@ -1,18 +1,22 @@
 package com.seasidechachacha.client.controllers;
 
 import com.seasidechachacha.client.App;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 
 public class AddNewPackageController {
+    private static final Logger logger = LogManager.getLogger(AddNewPackageController.class);
 
     @FXML
     private TextField tfName, tfLimit, tfPrice;
-    
+
     @FXML
     private ComboBox cbDayCooldown;
 
@@ -21,10 +25,10 @@ public class AddNewPackageController {
         try {
             App.setCurrentPane("pn_all", "view/ViewListPackage", null);
         } catch (IOException ex) {
-            Logger.getLogger(ViewListUserController.class.getName()).log(Level.SEVERE, null, ex);
+            logger.fatal(ex);
         }
     }
-    
+
     @FXML
     public void initialize() {
 

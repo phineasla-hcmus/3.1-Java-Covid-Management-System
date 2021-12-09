@@ -3,10 +3,12 @@ package com.seasidechachacha.client.controllers;
 import com.seasidechachacha.client.App;
 import static com.seasidechachacha.client.database.UserDao.getUserList;
 import com.seasidechachacha.client.models.User;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.IOException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -21,7 +23,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
 
 public class ViewListUserController {
-    
+    private static final Logger logger = LogManager.getLogger(ViewListUserController.class);
     private static List<User> data;
 
     @FXML
@@ -40,7 +42,7 @@ public class ViewListUserController {
             try {
                 App.setCurrentPane("pn_all", "view/AddNewUser", null);
             } catch (IOException ex) {
-                Logger.getLogger(ViewListUserController.class.getName()).log(Level.SEVERE, null, ex);
+                logger.fatal(ex);
             }
         });
     }
@@ -48,8 +50,7 @@ public class ViewListUserController {
     private TableColumn<User, String> getTableColumnByName(TableView<User> tableView, String name) {
         for (TableColumn<User, ?> col : tableView.getColumns()) {
             if (col.getText().equals(name)) {
-                // TODO: Type safety: Unchecked cast from TableColumn<User,capture#2-of
-                // ?> to TableColumn<User,String>
+                // TODO: Type safety: Unchecked cast from TableColumn<User,capture#2-of?> to TableColumn<User,String>
                 return (TableColumn<User, String>) col;
             }
         }
@@ -77,8 +78,9 @@ public class ViewListUserController {
         addressCol = getTableColumnByName(table, "Địa chỉ");
         addressCol.setCellValueFactory(new PropertyValueFactory<User, String>("address"));
 
-//        statusCol = getTableColumnByName(table, "Trạng thái");
-//        statusCol.setCellValueFactory(new PropertyValueFactory<User, String>("status"));
+        // statusCol = getTableColumnByName(table, "Trạng thái");
+        // statusCol.setCellValueFactory(new PropertyValueFactory<User,
+        // String>("status"));
     }
 
     public void setTable(TableView<User> table, ObservableList<User> data) {
@@ -103,10 +105,9 @@ public class ViewListUserController {
                                 } else {
                                     btn.setOnAction(event -> {
                                         try {
-                                           App.setCurrentPane("pn_all", "view/ViewPersonalInfo", getTableRow());
+                                            App.setCurrentPane("pn_all", "view/ViewPersonalInfo", getTableRow());
                                         } catch (IOException ex) {
-                                            Logger.getLogger(ViewListUserController.class.getName()).log(Level.SEVERE,
-                                                    null, ex);
+                                            logger.fatal(ex);
                                         }
                                     });
                                     setGraphic(btn);

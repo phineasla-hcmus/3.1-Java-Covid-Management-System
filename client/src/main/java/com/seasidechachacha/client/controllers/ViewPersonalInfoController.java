@@ -2,10 +2,12 @@ package com.seasidechachacha.client.controllers;
 
 import com.seasidechachacha.client.App;
 import com.seasidechachacha.client.models.User;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.IOException;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -23,13 +25,15 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
 
 public class ViewPersonalInfoController {
+    private static final Logger logger = LogManager.getLogger(ViewListPackageController.class);
 
-//    private static final ObservableList<User> relatedData = FXCollections.observableArrayList(
-//            new User("Nguyễn Văn A", "1950", "abc", "F2"),
-//            new User("Nguyễn Văn A", "1950", "abc", "F2"),
-//            new User("Nguyễn Văn A", "1950", "abc", "F2"),
-//            new User("Nguyễn Văn A", "1950", "abc", "F2"),
-//            new User("Nguyễn Văn A", "1950", "abc", "F2"));
+    // private static final ObservableList<User> relatedData =
+    // FXCollections.observableArrayList(
+    // new User("Nguyễn Văn A", "1950", "abc", "F2"),
+    // new User("Nguyễn Văn A", "1950", "abc", "F2"),
+    // new User("Nguyễn Văn A", "1950", "abc", "F2"),
+    // new User("Nguyễn Văn A", "1950", "abc", "F2"),
+    // new User("Nguyễn Văn A", "1950", "abc", "F2"));
     @FXML
     private TableView<User> table;
 
@@ -44,7 +48,7 @@ public class ViewPersonalInfoController {
 
     @FXML
     private void initialize() {
-//        setTable(table, relatedData);
+        // setTable(table, relatedData);
 
     }
 
@@ -53,12 +57,12 @@ public class ViewPersonalInfoController {
         labelIdentityCard.setText(user.getUserId());
         labelBirthYear.setText(String.valueOf(user.getBirthYear()));
         labelAddress.setText(user.getAddress());
-//        labelStatus.setText(user.getStatus());
-//        labelTreatmentPlace.setText("abc");
+        // labelStatus.setText(user.getStatus());
+        // labelTreatmentPlace.setText("abc");
 
-//        String defaultStatus = user.getStatus();
+        // String defaultStatus = user.getStatus();
         String defaultStatus = "F2";
-        String status[] = {"F0", "F1", "F2", "F3"};
+        String status[] = { "F0", "F1", "F2", "F3" };
 
         ChoiceDialog<String> statusDialog = new ChoiceDialog<String>(defaultStatus, status);
         statusDialog.setResultConverter((ButtonType type) -> {
@@ -81,7 +85,7 @@ public class ViewPersonalInfoController {
         });
 
         String defaultPlace = "abc";
-        String place[] = {"abc", "xyz", "ohi"};
+        String place[] = { "abc", "xyz", "ohi" };
 
         ChoiceDialog<String> placeDialog = new ChoiceDialog<String>(defaultPlace, place);
         placeDialog.setResultConverter((ButtonType type) -> {
@@ -105,12 +109,11 @@ public class ViewPersonalInfoController {
     }
 
     @FXML
-
     private void goBack() {
         try {
             App.setCurrentPane("pn_all", "view/ViewListUser", null);
         } catch (IOException ex) {
-            Logger.getLogger(ViewListUserController.class.getName()).log(Level.SEVERE, null, ex);
+            logger.fatal(ex);
         }
     }
 

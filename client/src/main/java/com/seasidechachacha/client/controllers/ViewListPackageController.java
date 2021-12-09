@@ -3,10 +3,12 @@ package com.seasidechachacha.client.controllers;
 import com.seasidechachacha.client.App;
 import static com.seasidechachacha.client.database.ManagerDao.getPackageList;
 import com.seasidechachacha.client.models.Package;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.IOException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -21,6 +23,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
 
 public class ViewListPackageController {
+    private static final Logger logger = LogManager.getLogger(ViewListPackageController.class);
 
     private static List<Package> data;
 
@@ -39,7 +42,7 @@ public class ViewListPackageController {
             try {
                 App.setCurrentPane("pn_all", "view/AddNewPackage", null);
             } catch (IOException ex) {
-                Logger.getLogger(ViewListPackageController.class.getName()).log(Level.SEVERE, null, ex);
+                logger.fatal(ex);
             }
         });
     }
@@ -57,11 +60,11 @@ public class ViewListPackageController {
         numberCol = getTableColumnByName(table, "STT");
         numberCol.setCellValueFactory(
                 new Callback<TableColumn.CellDataFeatures<Package, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(TableColumn.CellDataFeatures<Package, String> p) {
-                return new ReadOnlyObjectWrapper(table.getItems().indexOf(p.getValue()) + 1 + "");
-            }
-        });
+                    @Override
+                    public ObservableValue<String> call(TableColumn.CellDataFeatures<Package, String> p) {
+                        return new ReadOnlyObjectWrapper(table.getItems().indexOf(p.getValue()) + 1 + "");
+                    }
+                });
 
         numberCol.setSortable(false);
 
@@ -82,74 +85,71 @@ public class ViewListPackageController {
         setColumns(table);
         editCol = getTableColumnByName(table, "#1");
         editCol.setCellValueFactory(new PropertyValueFactory<>(""));
-        Callback<TableColumn<Package, String>, TableCell<Package, String>> cellFactory
-                = //
+        Callback<TableColumn<Package, String>, TableCell<Package, String>> cellFactory = //
                 new Callback<TableColumn<Package, String>, TableCell<Package, String>>() {
-            @Override
-            public TableCell call(final TableColumn<Package, String> param) {
-                final TableCell<Object, String> cell = new TableCell<Object, String>() {
-                    final Button btn = new Button("Sửa");
-
                     @Override
-                    public void updateItem(String item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (empty) {
-                            setGraphic(null);
-                            setText(null);
-                        } else {
-                            btn.setOnAction(event -> {
-                                try {
-                                    App.setCurrentPane("pn_all", "view/ViewPackageInfo", getTableRow());
-                                } catch (IOException ex) {
-                                    Logger.getLogger(ViewListUserController.class.getName()).log(Level.SEVERE, null, ex);
+                    public TableCell call(final TableColumn<Package, String> param) {
+                        final TableCell<Object, String> cell = new TableCell<Object, String>() {
+                            final Button btn = new Button("Sửa");
+
+                            @Override
+                            public void updateItem(String item, boolean empty) {
+                                super.updateItem(item, empty);
+                                if (empty) {
+                                    setGraphic(null);
+                                    setText(null);
+                                } else {
+                                    btn.setOnAction(event -> {
+                                        try {
+                                            App.setCurrentPane("pn_all", "view/ViewPackageInfo", getTableRow());
+                                        } catch (IOException ex) {
+                                            logger.fatal(ex);
+                                        }
+                                    });
+                                    setGraphic(btn);
+                                    setText(null);
                                 }
-                            });
-                            setGraphic(btn);
-                            setText(null);
-                        }
+                            }
+                        };
+                        cell.setAlignment(Pos.CENTER);
+                        return cell;
                     }
                 };
-                cell.setAlignment(Pos.CENTER);
-                return cell;
-            }
-        };
 
         editCol.setCellFactory(cellFactory);
 
         deleteCol = getTableColumnByName(table, "#2");
         deleteCol.setCellValueFactory(new PropertyValueFactory<>(""));
-        Callback<TableColumn<Package, String>, TableCell<Package, String>> cellFactory1
-                = //
+        Callback<TableColumn<Package, String>, TableCell<Package, String>> cellFactory1 = //
                 new Callback<TableColumn<Package, String>, TableCell<Package, String>>() {
-            @Override
-            public TableCell call(final TableColumn<Package, String> param) {
-                final TableCell<Package, String> cell = new TableCell<Package, String>() {
-                    final Button btn = new Button("Xoá");
-
                     @Override
-                    public void updateItem(String item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (empty) {
-                            setGraphic(null);
-                            setText(null);
-                        } else {
-                            btn.setOnAction(event -> {
-//                                try {
-//                                    Package row = getTableRow().getItem();
-//                                    App.setCurrentPane("pn_all", "view/ViewPersonalInfo", row);
-//                                } catch (IOException ex) {
-//                                    Logger.getLogger(ViewListUserController.class.getName()).log(Level.SEVERE, null, ex);
-//                                }
-                            });
-                            setGraphic(btn);
-                            setText(null);
-                        }
+                    public TableCell call(final TableColumn<Package, String> param) {
+                        final TableCell<Package, String> cell = new TableCell<Package, String>() {
+                            final Button btn = new Button("Xoá");
+
+                            @Override
+                            public void updateItem(String item, boolean empty) {
+                                super.updateItem(item, empty);
+                                if (empty) {
+                                    setGraphic(null);
+                                    setText(null);
+                                } else {
+                                    btn.setOnAction(event -> {
+                                        // try {
+                                        // Package row = getTableRow().getItem();
+                                        // App.setCurrentPane("pn_all", "view/ViewPersonalInfo", row);
+                                        // } catch (IOException ex) {
+                                        // }
+                                    });
+                                    setGraphic(btn);
+                                    setText(null);
+                                }
+                            }
+                        };
+                        cell.setAlignment(Pos.CENTER);
+                        return cell;
                     }
                 };
-                cell.setAlignment(Pos.CENTER);
-                return cell;
-            }
-        };
 
         deleteCol.setCellFactory(cellFactory1);
 

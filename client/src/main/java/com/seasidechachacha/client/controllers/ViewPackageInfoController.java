@@ -6,10 +6,13 @@ import static com.seasidechachacha.client.database.ManagerDao.updatePackageLimit
 import static com.seasidechachacha.client.database.ManagerDao.updatePackageName;
 import static com.seasidechachacha.client.database.ManagerDao.updatePackagePrice;
 import com.seasidechachacha.client.models.Package;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.IOException;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Dialog;
@@ -17,6 +20,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextInputDialog;
 
 public class ViewPackageInfoController {
+    private static final Logger logger = LogManager.getLogger(ViewPackageInfoController.class);
 
     @FXML
     private Label labelName, labelLimit, labelDay, labelPrice;
@@ -34,7 +38,7 @@ public class ViewPackageInfoController {
         try {
             App.setCurrentPane("pn_all", "view/ViewListPackage", null);
         } catch (IOException ex) {
-            Logger.getLogger(ViewPackageInfoController.class.getName()).log(Level.SEVERE, null, ex);
+            logger.fatal(ex);
         }
     }
 
@@ -43,7 +47,7 @@ public class ViewPackageInfoController {
         // TODO
         // to get the latest update of package
         // if not, it will show the old value
-//        Package curPack = getPackageById(packageID);
+        // Package curPack = getPackageById(packageID);
         labelName.setText(pack.getName());
         labelLimit.setText(String.valueOf(pack.getLimitPerPerson()));
         labelDay.setText(String.valueOf(pack.getDayCooldown()));

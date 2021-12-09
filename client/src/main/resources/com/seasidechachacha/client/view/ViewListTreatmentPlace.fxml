@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefHeight="600.0" prefWidth="800.0" spacing="20.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.seasidechachacha.client.controllers.ViewListTreatmentPlaceController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+    <children>
+        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="main-label" text="Danh sách địa điểm điều trị/cách ly" textOverrun="CLIP">
+        </Label>
+        <HBox>
+            <Button fx:id="btnAdd" style="-fx-background-color: #0098f1;" text="Thêm mới địa điểm điều trị/cách ly" textFill="WHITE">
+                <font>
+                    <Font name="System Bold" size="13.0" />
+                </font>
+            </Button>    
+        </HBox> 
+        <TableView fx:id="table" prefHeight="373.0" prefWidth="760.0">
+            <columns>
+                <TableColumn fx:id="numberCol" maxWidth="1000.0" prefWidth="69.60000610351562" text="STT" />
+                <TableColumn fx:id="nameCol" maxWidth="6000.0" prefWidth="191.19998168945312" text="Tên địa điểm" />
+                <TableColumn fx:id="capacityCol" maxWidth="2500.0" minWidth="0.0" prefWidth="188.0" text="Sức chứa" />
+                <TableColumn fx:id="receptionCol" minWidth="0.0" prefWidth="188.0" text="Số lượng tiếp nhận hiện tại" />
+                <TableColumn fx:id="editCol" maxWidth="1500.0" prefWidth="150.4000244140625" text="#1" />
+                <TableColumn fx:id="deleteCol" maxWidth="1500.0" prefWidth="150.4000244140625" text="#2" />
+            </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+            </columnResizePolicy>
+        </TableView>
+    </children>
+    <stylesheets>
+        <URL value="@../css/style.css" />
+    </stylesheets>
+</VBox>

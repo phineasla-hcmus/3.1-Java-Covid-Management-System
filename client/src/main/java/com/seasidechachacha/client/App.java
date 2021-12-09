@@ -22,7 +22,8 @@ public class App extends Application {
 
     private static Scene scene;
     private static ScrollPane pn_all;
-    private static Pane pn_core, pn_xeom, pn_atom, infoPane;
+//    private static Pane pn_core, pn_xeom, pn_atom, infoPane;
+    private static String role = "moderator";
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -30,14 +31,23 @@ public class App extends Application {
         stage.setScene(scene);
         stage.show();
     }
-    
+
     public static void initializeMainScreen() throws IOException {
-        setRoot("view/Main");
+        // display screen based on different roles
+        if (role.equals("moderator")) {
+            setRoot("view/ModeratorScreen");
+        }
+        else if (role.equals("admin")) {
+            setRoot("view/AdminScreen");
+        }
+        else {
+            setRoot("view/UserScreen");
+        }
         scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
         pn_all = (ScrollPane) scene.lookup("#pn_all");
-        pn_core = (Pane) scene.lookup("#pn_core");
-        pn_xeom = (Pane) scene.lookup("#pn_xeom");
-        pn_atom = (Pane) scene.lookup("#pn_atom");
+//        pn_core = (Pane) scene.lookup("#pn_core");
+//        pn_xeom = (Pane) scene.lookup("#pn_xeom");
+//        pn_atom = (Pane) scene.lookup("#pn_atom");
 
         Pane newLoadedPane = FXMLLoader.load(App.class.getResource("view/ViewListUser.fxml"));
         pn_all.setContent(newLoadedPane);
@@ -49,12 +59,11 @@ public class App extends Application {
             FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
             Pane newLoadedPane = (Pane) fxmlLoader.load();
             if (fxml.equals("view/ViewPersonalInfo")) {
-                User user = (User)tableRow.getItem();
+                User user = (User) tableRow.getItem();
                 ViewPersonalInfoController controller = fxmlLoader.<ViewPersonalInfoController>getController();
                 controller.setup(user);
-            }
-            else if (fxml.equals("view/ViewPackageInfo")) {
-                Package pack = (Package)tableRow.getItem();
+            } else if (fxml.equals("view/ViewPackageInfo")) {
+                Package pack = (Package) tableRow.getItem();
                 ViewPackageInfoController controller = fxmlLoader.<ViewPackageInfoController>getController();
                 controller.setup(pack);
             }
@@ -70,11 +79,11 @@ public class App extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
         return fxmlLoader.load();
     }
-    
+
     public static void close() {
         Platform.exit();
     }
-    
+
     public static void main(String[] args) {
         // PasswordAuthenticator pwdAuth = new PasswordAuthenticator();
         // String login = pwdAuth.authenticate("1ixrvSfjhPqd".toCharArray(),

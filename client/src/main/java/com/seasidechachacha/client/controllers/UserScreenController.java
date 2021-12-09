@@ -31,7 +31,7 @@ public class UserScreenController {
             App.setCurrentPane("pn_all", "view/BuyPackage", null);
             pn_all.toFront();   
         } else if (event.getSource() == btn_xeom) {
-            App.setCurrentPane("pn_all", "", null);
+            App.setCurrentPane("pn_all", "view/UserPayment", null);
             pn_all.toFront();
         } else if (event.getSource() == btn_atom) {
             pn_atom.toFront();

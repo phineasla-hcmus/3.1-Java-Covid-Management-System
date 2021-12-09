@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+
+<VBox stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.seasidechachacha.client.controllers.StatisticNumberBalanceController">
+   <children>
+      <AnchorPane id="AnchorPane" prefHeight="800.0" prefWidth="800.0">
+         <children>
+            <Label layoutX="323.0" layoutY="27.0" styleClass="main-label" text="Thống kê chi tiết" />
+            <Button fx:id="nextButton" layoutX="635.0" layoutY="129.0" mnemonicParsing="false" onAction="#handleButton" text="Tiếp tục" />
+            <Label layoutX="188.0" layoutY="130.0" styleClass="sub-label" text="Thống kê:" />
+            <ChoiceBox fx:id="statisticType" layoutX="284.0" layoutY="130.0" prefHeight="25.0" prefWidth="281.0" />
+            <Label layoutX="328.0" layoutY="208.0" styleClass="main-label" text="Thống kê dư nợ" />
+            <TableView fx:id="balanceTable" layoutX="51.0" layoutY="278.0" prefHeight="363.0" prefWidth="700.0">
+               <columns>
+                  <TableColumn prefWidth="153.0" text="Thời gian" />
+                  <TableColumn prefWidth="546.0" text="Số dư nợ" />
+               </columns>
+            </TableView>
+            <Button fx:id="allButton" layoutX="305.0" layoutY="709.0" mnemonicParsing="false" onAction="#handleButton" text="Thống kê theo mọi thời gian" />
+         </children>
+      </AnchorPane>
+   </children>
+</VBox>

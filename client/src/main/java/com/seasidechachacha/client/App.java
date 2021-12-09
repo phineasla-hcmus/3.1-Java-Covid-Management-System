@@ -20,8 +20,8 @@ public class App extends Application {
 
     private static Scene scene;
     private static ScrollPane pn_all;
-//    private static Pane pn_core, pn_xeom, pn_atom, infoPane;
-    private static String role = "admin";
+    private static Pane pn_core, pn_xeom, pn_atom, infoPane;
+    private static String role = "moderator";
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -44,9 +44,9 @@ public class App extends Application {
         }
         scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
         pn_all = (ScrollPane) scene.lookup("#pn_all");
-//        pn_core = (Pane) scene.lookup("#pn_core");
-//        pn_xeom = (Pane) scene.lookup("#pn_xeom");
-//        pn_atom = (Pane) scene.lookup("#pn_atom");
+        pn_core = (Pane) scene.lookup("#pn_core");
+        pn_xeom = (Pane) scene.lookup("#pn_xeom");
+        pn_atom = (Pane) scene.lookup("#pn_atom");
 
         Pane newLoadedPane = FXMLLoader.load(App.class.getResource("view/AddNewModerator1.fxml"));
         pn_all.setContent(newLoadedPane);

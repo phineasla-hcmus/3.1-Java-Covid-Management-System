@@ -16,25 +16,39 @@ public class AdminScreenController {
     @FXML
     private ScrollPane pn_all;
     
-//    @FXML
-//    private Pane pn_core, pn_xeom, pn_atom;
+    @FXML
+    private Pane pn_core, pn_xeom, pn_atom;
 
     @FXML
-    private JFXButton btn_all, btn_core;
-//    btn_xeom, btn_atom;
+    private JFXButton btn_all, btn_core, btn_xeom, btn_atom;
 
     @FXML
     private void handleButtonAction(ActionEvent event) throws IOException {
         if (event.getSource() == btn_all) {
-            App.setCurrentPane("pn_all", "view/AddNewModerator", null);
+            App.setCurrentPane("pn_all", "view/AddNewModerator1", null);
             pn_all.toFront();
         } else if (event.getSource() == btn_core) {
+            App.setCurrentPane("pn_all", "view/ManageModerator", null);
+//            pn_core.toFront();
+        } else if (event.getSource() == btn_xeom) {
             App.setCurrentPane("pn_all", "view/ViewListTreatmentPlace", null);
-        } 
+        } else if (event.getSource() == btn_atom) {
+            pn_atom.toFront();
+        }
     }
 
     @FXML
     private BorderPane mainBorderPane;
+
+    @FXML
+    private void handleShowView1(ActionEvent e) {
+        loadFXML(getClass().getResource("ViewListUser.fxml"));
+    }
+
+    @FXML
+    private void handleShowView2(ActionEvent e) {
+        loadFXML(getClass().getResource("secondary.fxml"));
+    }
 
     private void loadFXML(URL url) {
         try {

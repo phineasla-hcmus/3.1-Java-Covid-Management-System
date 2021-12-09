@@ -23,7 +23,7 @@ public class App extends Application {
     private static Scene scene;
     private static ScrollPane pn_all;
 //    private static Pane pn_core, pn_xeom, pn_atom, infoPane;
-    private static String role = "moderator";
+    private static String role = "admin";
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -34,6 +34,7 @@ public class App extends Application {
 
     public static void initializeMainScreen() throws IOException {
         // display screen based on different roles
+    
         if (role.equals("moderator")) {
             setRoot("view/ModeratorScreen");
         }

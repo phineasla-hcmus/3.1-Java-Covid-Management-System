@@ -14,12 +14,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class UserDao {
-	private static Logger logger = LogManager.getLogger(UserDao.class);
-
-//	public static void main(String[] args) throws SQLException {
-//		List<User> user = UserDao.getList(10,0);
-//		System.out.println(user.get(0).getFullAddress().getDistrictName());
-//	}
+	private static final Logger logger = LogManager.getLogger(UserDao.class);
 	
 	public static User getUser(String userId) {
 		String query = "SELECT * FROM manageduser WHERE idCard=?";
@@ -55,7 +50,7 @@ public class UserDao {
 		return users;
 	}
 
-	public List<User> getUserList(int limit, int offset, String orderByLabel, boolean asc) {
+	public static List<User> getUserList(int limit, int offset, String orderByLabel, boolean asc) {
 		String query = "SELECT * FROM manageduser LIMIT ? OFFSET ? ORDER BY ? " + (asc ? "ASC" : "DESC");
 		List<User> users;
 		try (Connection c = BasicConnection.getConnection(); PreparedStatement ps = c.prepareStatement(query)) {

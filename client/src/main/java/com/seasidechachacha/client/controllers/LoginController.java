@@ -24,8 +24,13 @@ public class LoginController {
     private void initialize() {
         next.setOnAction(event -> {
             try {
+                // nếu đăng nhập thành công và database xác nhận là user này mới đăng nhập lần đầu
+                if(true)
+                    App.setRoot("view/CreateUserPassword");
+                
                 // nếu đăng nhập thành công và role là moderator
-                App.initializeMainScreen();
+                else
+                    App.initializeMainScreen();
             } catch (IOException ex) {
                 Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
             }

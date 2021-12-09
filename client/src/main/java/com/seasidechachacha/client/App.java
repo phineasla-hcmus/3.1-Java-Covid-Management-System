@@ -21,7 +21,7 @@ public class App extends Application {
     private static Scene scene;
     private static ScrollPane pn_all;
 //    private static Pane pn_core, pn_xeom, pn_atom, infoPane;
-    private static String role = "moderator";
+    private static String role = "admin";
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -32,6 +32,7 @@ public class App extends Application {
 
     public static void initializeMainScreen() throws IOException {
         // display screen based on different roles
+    
         if (role.equals("moderator")) {
             setRoot("view/ModeratorScreen");
         }
@@ -47,7 +48,7 @@ public class App extends Application {
 //        pn_xeom = (Pane) scene.lookup("#pn_xeom");
 //        pn_atom = (Pane) scene.lookup("#pn_atom");
 
-        Pane newLoadedPane = FXMLLoader.load(App.class.getResource("view/ViewListUser.fxml"));
+        Pane newLoadedPane = FXMLLoader.load(App.class.getResource("view/AddNewModerator1.fxml"));
         pn_all.setContent(newLoadedPane);
         pn_all.toFront();
     }

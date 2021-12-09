@@ -7,40 +7,47 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 
-<AnchorPane id="AnchorPane" prefHeight="800.0" prefWidth="1050.0" style="-fx-background-color: #fff;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.seasidechachacha.client.controllers.AdminScreenController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="803.0" prefWidth="1047.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.seasidechachacha.client.controllers.AdminScreenController">
    <children>
-      <AnchorPane layoutX="250.0" prefHeight="430.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="250.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <effect>
-            <DropShadow />
-         </effect>
+      <AnchorPane id="AnchorPane" prefHeight="800.0" prefWidth="1050.0" style="-fx-background-color: #fff;">
          <children>
-            <FontAwesomeIconView glyphName="CLOSE" layoutX="470.0" layoutY="18.0" size="15" />
-            <Pane fx:id="pn_atom" layoutX="8.0" layoutY="-1.0" prefHeight="430.0" prefWidth="490.0" style="-fx-background-color: #fff;" AnchorPane.bottomAnchor="0.6000000000000227" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="-1.0" />
-            <Pane fx:id="pn_core" layoutX="8.0" layoutY="-1.0" prefHeight="430.0" prefWidth="490.0" style="-fx-background-color: #fff;" AnchorPane.bottomAnchor="0.6000000000000227" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="-1.0" />
-            <Pane fx:id="pn_xeom" layoutX="8.0" layoutY="-1.0" prefHeight="430.0" prefWidth="490.0" style="-fx-background-color: #fff;" AnchorPane.bottomAnchor="0.6000000000000227" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="-1.0" />
-            <ScrollPane fx:id="pn_all" prefHeight="800.0" prefWidth="800.0" style="-fx-background: #fff;" AnchorPane.bottomAnchor="0.6" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="-1.0">
-              <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
-              </content>
-            </ScrollPane>
-         </children>
-      </AnchorPane>
-      <AnchorPane prefHeight="430.0" prefWidth="250.0" style="-fx-background-color: #F0F7FF;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <children>
-            <AnchorPane prefHeight="430.0" prefWidth="40.0" style="-fx-background-color: #fff;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <AnchorPane layoutX="250.0" prefHeight="430.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="250.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <effect>
+                  <DropShadow />
+               </effect>
+               <children>
+                  <FontAwesomeIconView glyphName="CLOSE" layoutX="470.0" layoutY="18.0" size="15" />
+                  <Pane fx:id="pn_atom" layoutX="8.0" layoutY="-1.0" prefHeight="430.0" prefWidth="490.0" style="-fx-background-color: #fff;" AnchorPane.bottomAnchor="0.6000000000000227" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="-1.0" />
+                  <Pane fx:id="pn_core" layoutX="8.0" layoutY="-1.0" prefHeight="430.0" prefWidth="490.0" style="-fx-background-color: #fff;" AnchorPane.bottomAnchor="0.6000000000000227" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="-1.0" />
+                  <Pane fx:id="pn_xeom" layoutX="8.0" layoutY="-1.0" prefHeight="430.0" prefWidth="490.0" style="-fx-background-color: #fff;" AnchorPane.bottomAnchor="0.6000000000000227" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="-1.0" />
+                  <ScrollPane fx:id="pn_all" prefHeight="800.0" prefWidth="800.0" style="-fx-background: #fff;" AnchorPane.bottomAnchor="0.6" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="-1.0">
+                     <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="800.0" prefWidth="800.0" />
+                     </content>
+                  </ScrollPane>
+               </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="430.0" prefWidth="250.0" style="-fx-background-color: #F0F7FF;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <AnchorPane prefHeight="430.0" prefWidth="40.0" style="-fx-background-color: #fff;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <effect>
+                        <DropShadow />
+                     </effect>
+                  </AnchorPane>
+                  <JFXButton fx:id="btn_all" graphicTextGap="35.0" layoutY="71.0" onAction="#handleButtonAction" prefHeight="43.0" prefWidth="250.0" ripplerFill="#1f86da" text="Tạo tài khoản" />
+                  <JFXButton fx:id="btn_core" graphicTextGap="35.0" layoutY="114.0" onAction="#handleButtonAction" prefHeight="43.0" prefWidth="250.0" text="Quản lý thông tin tài khoản" />
+                  <JFXButton fx:id="btn_xeom" graphicTextGap="35.0" layoutY="157.0" onAction="#handleButtonAction" prefHeight="43.0" prefWidth="250.0" text="Quản lý địa điểm" />
+                  <JFXButton fx:id="btn_atom" graphicTextGap="35.0" layoutX="-1.0" layoutY="200.0" onAction="#handleButtonAction" prefHeight="43.0" prefWidth="250.0" text="Khác" />
+                  <FontAwesomeIconView fill="#3c3b3b" glyphName="ADDRESS-BOOK" layoutX="13.0" layoutY="139.0" size="15" text="" />
+                  <FontAwesomeIconView fill="#3c3b3b" glyphName="USER" layoutX="15.0" layoutY="97.0" size="15" text="" />
+                  <FontAwesomeIconView fill="#3c3b3b" glyphName="STAR" layoutX="18.0" layoutY="183.0" size="15" text="" />
+                  <FontAwesomeIconView fill="#3c3b3b" glyphName="SHEKEL" layoutX="15.0" layoutY="225.0" size="15" text="" />
+               </children>
                <effect>
                   <DropShadow />
                </effect>
             </AnchorPane>
-            <JFXButton fx:id="btn_all" graphicTextGap="35.0" layoutY="71.0" onAction="#handleButtonAction" prefHeight="43.0" prefWidth="250.0" ripplerFill="#1f86da" text="       Quản lý người quản lý" />
-            <JFXButton fx:id="btn_core" graphicTextGap="35.0" layoutY="114.0" onAction="#handleButtonAction" prefHeight="43.0" prefWidth="250.0" text="         Quản lý địa điểm điều trị/cách ly" />
-            
-            <FontAwesomeIconView fill="#3c3b3b" glyphName="HOSPITAL_ALT" layoutX="14.0" layoutY="140.0" size="15" />
-            <FontAwesomeIconView fill="#3c3b3b" glyphName="USER" layoutX="15.0" layoutY="97.0" size="15" />
          </children>
-         <effect>
-            <DropShadow />
-         </effect>
       </AnchorPane>
    </children>
 </AnchorPane>

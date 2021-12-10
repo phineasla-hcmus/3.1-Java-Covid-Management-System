@@ -21,7 +21,7 @@ public class App extends Application {
     private static Scene scene;
     private static ScrollPane pn_all;
     private static Pane pn_core, pn_xeom, pn_atom, infoPane;
-    private static String role = "user";
+    private static String role = "moderator";
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -32,23 +32,24 @@ public class App extends Application {
 
     public static void initializeMainScreen() throws IOException {
         // display screen based on different roles
-    
+
+        scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
+//        pn_core = (Pane) scene.lookup("#pn_core");
+//        pn_xeom = (Pane) scene.lookup("#pn_xeom");
+//        pn_atom = (Pane) scene.lookup("#pn_atom");
+        String initialPane = "";
+
         if (role.equals("moderator")) {
             setRoot("view/ModeratorScreen");
-        }
-        else if (role.equals("admin")) {
+            initialPane = "view/ViewListUser.fxml";
+        } else if (role.equals("admin")) {
             setRoot("view/AdminScreen");
-        }
-        else {
+        } else {
             setRoot("view/UserScreen");
         }
-        scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
         pn_all = (ScrollPane) scene.lookup("#pn_all");
-        pn_core = (Pane) scene.lookup("#pn_core");
-        pn_xeom = (Pane) scene.lookup("#pn_xeom");
-        pn_atom = (Pane) scene.lookup("#pn_atom");
 
-        Pane newLoadedPane = FXMLLoader.load(App.class.getResource("view/AddNewModerator1.fxml"));
+        Pane newLoadedPane = FXMLLoader.load(App.class.getResource(initialPane));
         pn_all.setContent(newLoadedPane);
         pn_all.toFront();
     }
@@ -66,6 +67,8 @@ public class App extends Application {
                 ViewPackageInfoController controller = fxmlLoader.<ViewPackageInfoController>getController();
                 controller.setup(pack);
             }
+            pn_all = (ScrollPane) scene.lookup("#pn_all");
+
             pn_all.setContent(newLoadedPane);
         }
     }

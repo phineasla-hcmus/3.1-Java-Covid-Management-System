@@ -7,11 +7,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ScrollPane;
 
 public class ModeratorStatisticController {
-    @FXML
-    private ScrollPane pn_all;
 
     @FXML
     private ChoiceBox statisticType;
@@ -30,21 +27,15 @@ public class ModeratorStatisticController {
     }
 
     @FXML
-    private void handleButton(ActionEvent e) throws IOException {
-        if (statisticType.getSelectionModel().getSelectedItem().toString()
-                .equals("số lượng người ở từng trạng thái theo thời gian")) {
-            App.setCurrentPane("pn_all", "view/StatisticNumberStatus", null);
-            pn_all.toFront();
-        } else if (statisticType.getSelectionModel().getSelectedItem().toString()
-                .equals("số lượng nhu yếu phẩm được tiêu thụ")) {
-            App.setCurrentPane("pn_all", "view/StatisticNumberPackage", null);
-            pn_all.toFront();
-        } else if (statisticType.getSelectionModel().getSelectedItem().toString().equals("số chuyển trạng thái")) {
-            App.setCurrentPane("pn_all", "view/StatisticNumberChangeStatus", null);
-            pn_all.toFront();
-        } else if (statisticType.getSelectionModel().getSelectedItem().toString().equals("số dư nợ")) {
-            App.setCurrentPane("pn_all", "view/StatisticNumberBalance", null);
-            pn_all.toFront();
-        }
+    private void handleButton(ActionEvent e) throws IOException{
+        if (statisticType.getSelectionModel().getSelectedItem().toString().equals("số lượng người ở từng trạng thái theo thời gian")) {
+                App.setCurrentPane("pn_all", "view/StatisticNumberStatus", null);
+            } else if (statisticType.getSelectionModel().getSelectedItem().toString().equals("số lượng nhu yếu phẩm được tiêu thụ")) {
+                App.setCurrentPane("pn_all", "view/StatisticNumberPackage", null);
+            } else if (statisticType.getSelectionModel().getSelectedItem().toString().equals("số chuyển trạng thái")) {
+                App.setCurrentPane("pn_all", "view/StatisticNumberChangeStatus", null);
+            } else if (statisticType.getSelectionModel().getSelectedItem().toString().equals("số dư nợ")) {
+                App.setCurrentPane("pn_all", "view/StatisticNumberBalance", null);
+            }
     }
 }

@@ -1,26 +1,35 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
- */
 package com.seasidechachacha.client.controllers;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-import javafx.fxml.Initializable;
+import com.seasidechachacha.client.App;
+import java.io.IOException;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.TextField;
 
-/**
- * FXML Controller class
- *
- * @author user
- */
-public class AddNewModeratorController implements Initializable {
-
-    /**
-     * Initializes the controller class.
-     */
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }    
+public class AddNewModeratorController {
+    @FXML
+    private TextField user;
     
+    @FXML
+    private TextField pass1;
+    
+    @FXML
+    private TextField pass2;
+    
+  
+    
+    public void createModerator(ActionEvent e) throws IOException{ 
+        if(pass1.getText().compareTo(pass2.getText())!=0){
+            Alert a = new Alert(Alert.AlertType.WARNING);
+            a.setContentText("Mật khẩu giữa 2 lần nhập không giống nhau.\n Xin hãy nhập lại!");
+            a.show();
+        }
+        else
+        { //nhớ lưu vô database dưới dạng bản không rõ nha , thêm phân quyền moderator vô nữa.
+            Alert a = new Alert(Alert.AlertType.INFORMATION);
+            a.setContentText("Thêm mới người quản lý thành công!!!");
+            a.show();
+        }
+    }
 }

@@ -12,6 +12,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 
 public class LoginController {
+
     private static final Logger logger = LogManager.getLogger(LoginController.class);
 
     @FXML
@@ -29,12 +30,18 @@ public class LoginController {
             try {
                 // nếu đăng nhập thành công và database xác nhận là user này mới đăng nhập lần
                 // đầu
-                if (true)
-                    App.setRoot("view/CreateUserPassword");
-
-                // nếu đăng nhập thành công và role là moderator
-                else
-                    App.initializeMainScreen();
+                
+                // là moderator
+                App.setRoot("view/ModeratorScreen");
+//                App.initializeMainScreen();
+                
+                // tạm thời comment để xử lý chia role
+//                if (true) {
+//                    App.setRoot("view/CreateUserPassword");
+//                } // nếu đăng nhập thành công và role là moderator
+//                else {
+//                    App.initializeMainScreen();
+//                }
             } catch (IOException ex) {
                 logger.fatal(ex);
             }

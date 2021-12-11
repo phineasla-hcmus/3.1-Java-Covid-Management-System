@@ -15,7 +15,7 @@
          <children>
             <Label layoutX="284.0" layoutY="30.0" styleClass="main-label" stylesheets="@../css/style.css" text="Thêm mới người quản lý" />
             <Label layoutX="192.0" layoutY="141.0" styleClass="sub-label" text="Tên đăng nhập:" />
-            <TextField fx:id="user" layoutX="349.0" layoutY="141.0" />
+            <TextField fx:id="username" layoutX="349.0" layoutY="141.0" />
             <PasswordField fx:id="pass1" layoutX="349.0" layoutY="194.0" />
             <Label layoutX="234.0" layoutY="194.0" styleClass="sub-label" text="Mật khẩu:" />
             <Button fx:id="btnNext" layoutX="360.0" layoutY="339.0" mnemonicParsing="false" onAction="#createModerator" text="Thêm mới" />

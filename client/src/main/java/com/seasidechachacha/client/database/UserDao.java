@@ -17,9 +17,9 @@ public class UserDao {
 
     /**
      * 
-     * @param userId
-     * @param password
-     * @return Account if username and password is correct, else null
+     * @param userId   a valid userId existed in User table
+     * @param password in plain text
+     * @return Account if username and password are correct, else null
      */
     public static User login(String userId, String password) {
         String query = "SELECT * FROM User WHERE userID=?";
@@ -43,10 +43,10 @@ public class UserDao {
     }
 
     /**
-     * Register new account, this also handle the password hashing for you
+     * Register new account, this also handle the password hashing
      * 
      * @param acc
-     * @return
+     * @return true if insert successful, else false
      */
     public static boolean register(User acc) {
         String query = "INSERT INTO User VALUES (?,?,?)";
@@ -60,6 +60,27 @@ public class UserDao {
             ps.setString(1, acc.getUserId());
             ps.setString(2, hashedPassword);
             ps.setInt(3, acc.getRoleId());
+            rowAffected = ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            logger.error(e);
+            return false;
+        }
+        return rowAffected;
+    }
+
+    /**
+     * Add to NewUser table
+     * 
+     * @param userId a valid userId existed in User table
+     * @return true if insert successful, else false
+     */
+    public static boolean registerFirstLogin(String userId) {
+        String query = "INSERT INTO NewUser VALUES (?)";
+        boolean rowAffected = false;
+
+        try (Connection c = BasicConnection.getConnection();
+                PreparedStatement ps = c.prepareStatement(query)) {
+            ps.setString(1, userId);
             rowAffected = ps.executeUpdate() > 0;
         } catch (SQLException e) {
             logger.error(e);
@@ -92,13 +113,16 @@ public class UserDao {
      * @return true if User exist in NewUser table, else false
      * @throws SQLException
      */
-    public static boolean isFirstLogin() throws SQLException {
-        String query = "SELECT * FROM NewUser";
+    public static boolean isFirstLogin(String userId) throws SQLException {
+        String query = "SELECT * FROM NewUser WHERE userID=?";
         Boolean isFirst = null;
-        try (Connection c = BasicConnection.getConnection(); Statement s = c.createStatement()) {
-            ResultSet rs = s.executeQuery(query);
-            while (rs.next()) {
-                isFirst = rs.getBoolean(1);
+        try (Connection c = BasicConnection.getConnection();
+                PreparedStatement ps = c.prepareStatement(query)) {
+            ps.setString(1, userId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    isFirst = rs.getBoolean(1);
+                }
             }
         }
         return isFirst;

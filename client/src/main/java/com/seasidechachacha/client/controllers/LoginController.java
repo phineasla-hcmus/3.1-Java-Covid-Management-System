@@ -12,15 +12,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 
 public class LoginController {
-
     private static final Logger logger = LogManager.getLogger(LoginController.class);
-
     @FXML
     private TextField username;
-
     @FXML
     private TextField pass;
-
     @FXML
     private Button next;
 
@@ -30,18 +26,18 @@ public class LoginController {
             try {
                 // nếu đăng nhập thành công và database xác nhận là user này mới đăng nhập lần
                 // đầu
-                
+
                 // là moderator
                 App.setRoot("view/ModeratorScreen");
-//                App.initializeMainScreen();
-                
+                // App.initializeMainScreen();
+
                 // tạm thời comment để xử lý chia role
-//                if (true) {
-//                    App.setRoot("view/CreateUserPassword");
-//                } // nếu đăng nhập thành công và role là moderator
-//                else {
-//                    App.initializeMainScreen();
-//                }
+                // if (true) {
+                // App.setRoot("view/CreateUserPassword");
+                // } // nếu đăng nhập thành công và role là moderator
+                // else {
+                // App.initializeMainScreen();
+                // }
             } catch (IOException ex) {
                 logger.fatal(ex);
             }

@@ -11,29 +11,25 @@ import javafx.scene.control.TextField;
 public class CreateUserPasswordController {
     @FXML
     private TextField pass1;
-    
     @FXML
     private TextField pass2;
-    
+
     @FXML
-    private void back() throws IOException{ // khi người dùng ấn button "quay lại"
+    private void back() throws IOException { // khi người dùng ấn button "quay lại"
         App.setRoot("view/Login");
     }
-    
-    
-    public void createPassword(ActionEvent e) throws IOException{ // khi người dùng ấn button "tiếp tục"
-        if(pass1.getText().compareTo(pass2.getText())!=0){
+
+    public void createPassword(ActionEvent e) throws IOException { // khi người dùng ấn button "tiếp tục"
+        if (pass1.getText().compareTo(pass2.getText()) != 0) {
             Alert a = new Alert(Alert.AlertType.WARNING);
             a.setContentText("Mật khẩu giữa 2 lần nhập không giống nhau.\n Xin hãy nhập lại!");
             a.show();
-        }
-        else
-        {
+        } else {
             Alert a = new Alert(Alert.AlertType.INFORMATION);
             a.setContentText("Khởi tạo mật khẩu thành công!!!");
             a.show();
             // khởi tạo thành công, cập nhật database và cho vô screen User
-            App.initializeMainScreen();  // này là screen moderator :))
+            App.initializeMainScreen(); // này là screen moderator :))
         }
     }
 }

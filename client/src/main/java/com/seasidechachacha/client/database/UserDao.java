@@ -69,7 +69,8 @@ public class UserDao {
     }
 
     /**
-     * This function throws because boolean return type
+     * Check if the User table is empty
+     * 
      * @return true if User table is empty, else false
      * @throws SQLException
      */
@@ -83,5 +84,23 @@ public class UserDao {
             }
         }
         return isEmpty;
+    }
+
+    /**
+     * Check if the User is first time loged in
+     * 
+     * @return true if User exist in NewUser table, else false
+     * @throws SQLException
+     */
+    public static boolean isFirstLogin() throws SQLException {
+        String query = "SELECT * FROM NewUser";
+        Boolean isFirst = null;
+        try (Connection c = BasicConnection.getConnection(); Statement s = c.createStatement()) {
+            ResultSet rs = s.executeQuery(query);
+            while (rs.next()) {
+                isFirst = rs.getBoolean(1);
+            }
+        }
+        return isFirst;
     }
 }

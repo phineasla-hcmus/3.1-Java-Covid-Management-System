@@ -75,7 +75,6 @@ public class ManagerDao {
 				ps.execute();
 			} catch (SQLException e1) {
 				logger.error(e1);
-				e1.printStackTrace();
 				return false;
 			}
 			try {

@@ -14,7 +14,7 @@ import com.seasidechachacha.client.models.StateHistory;
 import com.seasidechachacha.client.models.Package;
 import com.seasidechachacha.client.models.TreatmentPlace;
 import com.seasidechachacha.client.models.TreatmentPlaceHistory;
-import com.seasidechachacha.client.models.User;
+import com.seasidechachacha.client.models.ManagedUser;
 import com.seasidechachacha.client.utils.PasswordAuthenticator;
 
 public class ManagerDao {
@@ -58,7 +58,7 @@ public class ManagerDao {
 		return false;
 	}
 
-	public static boolean addNewUser(User user) throws SQLException {
+	public static boolean addNewUser(ManagedUser user) throws SQLException {
 
 		try (Connection c = BasicConnection.getConnection()) {
 			if (userIDIsExist(c, user.getUserId())) {

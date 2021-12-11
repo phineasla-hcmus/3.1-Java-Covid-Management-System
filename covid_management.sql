@@ -45,6 +45,13 @@ create table ManagedUser
 	primary key (idCard)
 );
 
+-- NewUser dùng để check xem ManagedUser có phải là đăng nhập lần đầu, nếu có thì bắt đổi password
+create table NewUser
+(
+	userID varchar(12),
+	primary key (idCard)
+)
+
 create table StateHistory
 (
 	userID varchar(12),

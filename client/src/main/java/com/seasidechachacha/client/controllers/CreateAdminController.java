@@ -1,8 +1,8 @@
 package com.seasidechachacha.client.controllers;
 
 import com.seasidechachacha.client.App;
-import com.seasidechachacha.client.database.AccountDao;
-import com.seasidechachacha.client.models.Account;
+import com.seasidechachacha.client.database.UserDao;
+import com.seasidechachacha.client.models.User;
 
 import java.io.IOException;
 import javafx.event.ActionEvent;
@@ -37,7 +37,7 @@ public class CreateAdminController {
             a.show();
         } else {
             int adminRoleId = 1; // Reminder purpose
-            AccountDao.register(new Account(username.getText(), pass1.getText(), adminRoleId));
+            UserDao.register(new User(username.getText(), pass1.getText(), adminRoleId));
 
             App.setRoot("view/Login"); // này để test màn hình login khi mới tạo tkhoan admin , mốt có database thì cho
                                        // vô admin luôn

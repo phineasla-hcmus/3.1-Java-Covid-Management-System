@@ -1,8 +1,8 @@
 package com.seasidechachacha.client.controllers;
 
 import com.seasidechachacha.client.App;
-import com.seasidechachacha.client.database.AccountDao;
-import com.seasidechachacha.client.models.Account;
+import com.seasidechachacha.client.database.UserDao;
+import com.seasidechachacha.client.models.User;
 
 import java.io.IOException;
 import javafx.event.ActionEvent;
@@ -29,7 +29,7 @@ public class AddNewModeratorController {
             a.show();
         } else {
             int managerRoleId = 2; // Reminder purpose
-            boolean result = AccountDao.register(new Account(username.getText(), pass1.getText(), managerRoleId));
+            boolean result = UserDao.register(new User(username.getText(), pass1.getText(), managerRoleId));
             if (result) {
                 Alert a = new Alert(Alert.AlertType.INFORMATION);
                 a.setContentText("Thêm mới người quản lý thành công!!!");

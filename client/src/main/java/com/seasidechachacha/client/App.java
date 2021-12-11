@@ -2,7 +2,7 @@ package com.seasidechachacha.client;
 
 import com.seasidechachacha.client.controllers.ViewPackageInfoController;
 import com.seasidechachacha.client.controllers.ViewPersonalInfoController;
-import com.seasidechachacha.client.models.User;
+import com.seasidechachacha.client.models.ManagedUser;
 import com.seasidechachacha.client.models.Package;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -59,7 +59,7 @@ public class App extends Application {
             FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
             Pane newLoadedPane = (Pane) fxmlLoader.load();
             if (fxml.equals("view/ViewPersonalInfo")) {
-                User user = (User) tableRow.getItem();
+                ManagedUser user = (ManagedUser) tableRow.getItem();
                 ViewPersonalInfoController controller = fxmlLoader.<ViewPersonalInfoController>getController();
                 controller.setup(user);
             } else if (fxml.equals("view/ViewPackageInfo")) {

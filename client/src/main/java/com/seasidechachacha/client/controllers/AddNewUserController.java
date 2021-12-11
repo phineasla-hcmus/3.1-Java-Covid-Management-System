@@ -4,7 +4,7 @@ package com.seasidechachacha.client.controllers;
 
 import com.seasidechachacha.client.App;
 import static com.seasidechachacha.client.database.ManagerDao.addNewUser;
-import com.seasidechachacha.client.models.User;
+import com.seasidechachacha.client.models.ManagedUser;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -41,7 +41,7 @@ public class AddNewUserController {
     @FXML
     private void initialize() {
         btnAddNewPerson.setOnAction(event -> {
-            User user = new User("123456", tfFullName.getText(), Integer.valueOf(tfBirthYear.getText()), "1", 0,
+            ManagedUser user = new ManagedUser("123456", tfFullName.getText(), Integer.valueOf(tfBirthYear.getText()), "1", 0,
                     "00001", "abc");
             try {
                 if (addNewUser(user)) {

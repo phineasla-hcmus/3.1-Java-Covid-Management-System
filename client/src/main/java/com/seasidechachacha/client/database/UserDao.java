@@ -4,81 +4,84 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.sql.Statement;
 
 import com.seasidechachacha.client.models.User;
+import com.seasidechachacha.client.utils.PasswordAuthenticator;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class UserDao {
-	private static final Logger logger = LogManager.getLogger(UserDao.class);
-	
-	public static User getUser(String userId) {
-		String query = "SELECT * FROM manageduser WHERE idCard=?";
-		User user = null;
+    private static Logger logger = LogManager.getLogger(UserDao.class);
 
-		try (Connection c = BasicConnection.getConnection(); PreparedStatement ps = c.prepareStatement(query)) {
-			ps.setString(1, userId);
-			try (ResultSet rs = ps.executeQuery()) {
-				if (rs.next()) {
-					user = parseUser(rs);
-				}
-			}
-		} catch (SQLException e) {
-			logger.error(e);
-			return null;
-		}
-		return user;
-	}
+    /**
+     * 
+     * @param userId
+     * @param password
+     * @return Account if username and password is correct, else null
+     */
+    public static User login(String userId, String password) {
+        String query = "SELECT * FROM User WHERE userID=?";
+        User acc = null;
 
-	public static List<User> getUserList(int limit, int offset) {
-		String query = "SELECT * FROM manageduser LIMIT ? OFFSET ?;";
-		List<User> users;
-		try (Connection c = BasicConnection.getConnection(); PreparedStatement ps = c.prepareStatement(query)) {
-			ps.setInt(1, limit);
-			ps.setInt(2, offset);
-			try (ResultSet rs = ps.executeQuery()) {
-				users = parseUserList(rs);
-			}
-		} catch (SQLException e) {
-			logger.error(e);
-			return Collections.emptyList();
-		}
-		return users;
-	}
+        try (Connection c = BasicConnection.getConnection();
+                PreparedStatement ps = c.prepareStatement(query)) {
+            ps.setString(1, userId);
+            try (ResultSet rs = ps.executeQuery()) {
+                PasswordAuthenticator pwdAuth = new PasswordAuthenticator();
+                if (rs.next() && pwdAuth.authenticate(password.toCharArray(), rs.getString("pwd"))) {
+                    acc = new User(rs.getString("userID"), rs.getInt("roleID"));
+                }
+            }
+        } catch (SQLException e) {
+            logger.error(e);
+            return null;
+        }
 
-	public static List<User> getUserList(int limit, int offset, String orderByLabel, boolean asc) {
-		String query = "SELECT * FROM manageduser LIMIT ? OFFSET ? ORDER BY ? " + (asc ? "ASC" : "DESC");
-		List<User> users;
-		try (Connection c = BasicConnection.getConnection(); PreparedStatement ps = c.prepareStatement(query)) {
-			ps.setInt(1, limit);
-			ps.setInt(2, offset);
-			ps.setString(3, orderByLabel);
-			try (ResultSet rs = ps.executeQuery()) {
-				users = parseUserList(rs);
-			}
-		} catch (SQLException e) {
-			logger.error(e);
-			return Collections.emptyList();
-		}
-		return users;
-	}
+        return acc;
+    }
 
-	private static List<User> parseUserList(ResultSet rs) throws SQLException {
-		List<User> users = new ArrayList<User>();
-		if (!rs.isBeforeFirst())
-			return Collections.emptyList();
-		while (rs.next()) {
-			users.add(parseUser(rs));
-		}
-		return users;
-	}
+    /**
+     * Register new account, this also handle the password hashing for you
+     * 
+     * @param acc
+     * @return
+     */
+    public static boolean register(User acc) {
+        String query = "INSERT INTO User VALUES (?,?,?)";
+        boolean rowAffected = false;
 
-	private static User parseUser(ResultSet rs) throws SQLException {
-		return new User(rs.getString("idCard"), rs.getString("fullName"), rs.getInt("yob"),
-				rs.getString("relatedPerson"), rs.getInt("debt"), rs.getString("wardID"), rs.getString("street"));
-	}
+        try (Connection c = BasicConnection.getConnection();
+                PreparedStatement ps = c.prepareStatement(query)) {
+            PasswordAuthenticator pwdAuth = new PasswordAuthenticator();
+            String hashedPassword = pwdAuth.hash(acc.getPassword().toCharArray());
+
+            ps.setString(1, acc.getUserId());
+            ps.setString(2, hashedPassword);
+            ps.setInt(3, acc.getRoleId());
+            rowAffected = ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            logger.error(e);
+            return false;
+        }
+        return rowAffected;
+    }
+
+    /**
+     * This function throws because boolean return type
+     * @return true if User table is empty, else false
+     * @throws SQLException
+     */
+    public static boolean isEmpty() throws SQLException {
+        String query = "SELECT EXISTS (SELECT 1 FROM User)";
+        Boolean isEmpty = null;
+        try (Connection c = BasicConnection.getConnection(); Statement s = c.createStatement()) {
+            ResultSet rs = s.executeQuery(query);
+            while (rs.next()) {
+                isEmpty = rs.getBoolean(1);
+            }
+        }
+        return isEmpty;
+    }
 }

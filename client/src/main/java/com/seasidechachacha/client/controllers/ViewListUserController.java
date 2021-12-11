@@ -1,8 +1,8 @@
 package com.seasidechachacha.client.controllers;
 
 import com.seasidechachacha.client.App;
-import static com.seasidechachacha.client.database.UserDao.getUserList;
-import com.seasidechachacha.client.models.User;
+import com.seasidechachacha.client.database.ManagedUserDao;
+import com.seasidechachacha.client.models.ManagedUser;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,11 +24,11 @@ import javafx.util.Callback;
 
 public class ViewListUserController {
     private static final Logger logger = LogManager.getLogger(ViewListUserController.class);
-    private static List<User> data;
+    private static List<ManagedUser> data;
 
     @FXML
-    private TableView<User> table;
-    private static TableColumn<User, String> numberCol, fullNameCol, birthYearCol, addressCol, statusCol,
+    private TableView<ManagedUser> table;
+    private static TableColumn<ManagedUser, String> numberCol, fullNameCol, birthYearCol, addressCol, statusCol,
             actionCol;
 
     @FXML
@@ -36,7 +36,7 @@ public class ViewListUserController {
 
     @FXML
     private void initialize() {
-        data = getUserList(5, 0);
+        data = ManagedUserDao.getList(5, 0);
         setTable(table, FXCollections.observableList(data));
         btnAdd.setOnAction(event -> {
             try {
@@ -47,22 +47,23 @@ public class ViewListUserController {
         });
     }
 
-    private TableColumn<User, String> getTableColumnByName(TableView<User> tableView, String name) {
-        for (TableColumn<User, ?> col : tableView.getColumns()) {
+    private TableColumn<ManagedUser, String> getTableColumnByName(TableView<ManagedUser> tableView, String name) {
+        for (TableColumn<ManagedUser, ?> col : tableView.getColumns()) {
             if (col.getText().equals(name)) {
-                // TODO: Type safety: Unchecked cast from TableColumn<User,capture#2-of?> to TableColumn<User,String>
-                return (TableColumn<User, String>) col;
+                // TODO: Type safety: Unchecked cast from TableColumn<User,capture#2-of?> to
+                // TableColumn<User,String>
+                return (TableColumn<ManagedUser, String>) col;
             }
         }
         return null;
     }
 
-    public void setColumns(TableView<User> table) {
+    public void setColumns(TableView<ManagedUser> table) {
         numberCol = getTableColumnByName(table, "STT");
         numberCol.setCellValueFactory(
-                new Callback<TableColumn.CellDataFeatures<User, String>, ObservableValue<String>>() {
+                new Callback<TableColumn.CellDataFeatures<ManagedUser, String>, ObservableValue<String>>() {
                     @Override
-                    public ObservableValue<String> call(TableColumn.CellDataFeatures<User, String> p) {
+                    public ObservableValue<String> call(TableColumn.CellDataFeatures<ManagedUser, String> p) {
                         return new ReadOnlyObjectWrapper(table.getItems().indexOf(p.getValue()) + 1 + "");
                     }
                 });
@@ -70,29 +71,29 @@ public class ViewListUserController {
         numberCol.setSortable(false);
 
         fullNameCol = getTableColumnByName(table, "Họ tên");
-        fullNameCol.setCellValueFactory(new PropertyValueFactory<User, String>("name"));
+        fullNameCol.setCellValueFactory(new PropertyValueFactory<ManagedUser, String>("name"));
 
         birthYearCol = getTableColumnByName(table, "Năm sinh");
-        birthYearCol.setCellValueFactory(new PropertyValueFactory<User, String>("birthYear"));
+        birthYearCol.setCellValueFactory(new PropertyValueFactory<ManagedUser, String>("birthYear"));
 
         addressCol = getTableColumnByName(table, "Địa chỉ");
-        addressCol.setCellValueFactory(new PropertyValueFactory<User, String>("address"));
+        addressCol.setCellValueFactory(new PropertyValueFactory<ManagedUser, String>("address"));
 
         // statusCol = getTableColumnByName(table, "Trạng thái");
         // statusCol.setCellValueFactory(new PropertyValueFactory<User,
         // String>("status"));
     }
 
-    public void setTable(TableView<User> table, ObservableList<User> data) {
+    public void setTable(TableView<ManagedUser> table, ObservableList<ManagedUser> data) {
         setColumns(table);
         actionCol = getTableColumnByName(table, "#");
         actionCol.setCellValueFactory(new PropertyValueFactory<>(""));
-        Callback<TableColumn<User, String>, TableCell<User, String>> cellFactory = //
-                new Callback<TableColumn<User, String>, TableCell<User, String>>() {
+        Callback<TableColumn<ManagedUser, String>, TableCell<ManagedUser, String>> cellFactory = //
+                new Callback<TableColumn<ManagedUser, String>, TableCell<ManagedUser, String>>() {
                     // TODO: TableCell is a raw type. References to generic type TableCell<S,T>
                     // should be parameterized
                     @Override
-                    public TableCell call(final TableColumn<User, String> param) {
+                    public TableCell call(final TableColumn<ManagedUser, String> param) {
                         final TableCell<Object, String> cell = new TableCell<Object, String>() {
                             final Button btn = new Button("Xem chi tiết");
 

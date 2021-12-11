@@ -1,7 +1,7 @@
 package com.seasidechachacha.client.controllers;
 
 import com.seasidechachacha.client.App;
-import com.seasidechachacha.client.models.User;
+import com.seasidechachacha.client.models.ManagedUser;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,10 +35,10 @@ public class ViewPersonalInfoController {
     // new User("Nguyễn Văn A", "1950", "abc", "F2"),
     // new User("Nguyễn Văn A", "1950", "abc", "F2"));
     @FXML
-    private TableView<User> table;
+    private TableView<ManagedUser> table;
 
     @FXML
-    private TableColumn<User, String> numberCol, fullNameCol, birthYearCol, addressCol, statusCol;
+    private TableColumn<ManagedUser, String> numberCol, fullNameCol, birthYearCol, addressCol, statusCol;
 
     @FXML
     private Label labelFullName, labelIdentityCard, labelBirthYear, labelAddress, labelStatus, labelTreatmentPlace;
@@ -52,7 +52,7 @@ public class ViewPersonalInfoController {
 
     }
 
-    public void setup(User user) {
+    public void setup(ManagedUser user) {
         labelFullName.setText(user.getName());
         labelIdentityCard.setText(user.getUserId());
         labelBirthYear.setText(String.valueOf(user.getBirthYear()));
@@ -117,39 +117,39 @@ public class ViewPersonalInfoController {
         }
     }
 
-    private TableColumn<User, String> getTableColumnByName(TableView<User> tableView, String name) {
-        for (TableColumn<User, ?> col : tableView.getColumns()) {
+    private TableColumn<ManagedUser, String> getTableColumnByName(TableView<ManagedUser> tableView, String name) {
+        for (TableColumn<ManagedUser, ?> col : tableView.getColumns()) {
             if (col.getText().equals(name)) {
-                return (TableColumn<User, String>) col;
+                return (TableColumn<ManagedUser, String>) col;
             }
         }
         return null;
     }
 
-    public void setColumns(TableView<User> table) {
+    public void setColumns(TableView<ManagedUser> table) {
         numberCol = getTableColumnByName(table, "STT");
-        numberCol.setCellValueFactory(new Callback<CellDataFeatures<User, String>, ObservableValue<String>>() {
+        numberCol.setCellValueFactory(new Callback<CellDataFeatures<ManagedUser, String>, ObservableValue<String>>() {
             @Override
-            public ObservableValue<String> call(CellDataFeatures<User, String> p) {
+            public ObservableValue<String> call(CellDataFeatures<ManagedUser, String> p) {
                 return new ReadOnlyObjectWrapper(table.getItems().indexOf(p.getValue()) + 1 + "");
             }
         });
         numberCol.setSortable(false);
 
         fullNameCol = getTableColumnByName(table, "Họ tên");
-        fullNameCol.setCellValueFactory(new PropertyValueFactory<User, String>("fullName"));
+        fullNameCol.setCellValueFactory(new PropertyValueFactory<ManagedUser, String>("fullName"));
 
         birthYearCol = getTableColumnByName(table, "Năm sinh");
-        birthYearCol.setCellValueFactory(new PropertyValueFactory<User, String>("birthYear"));
+        birthYearCol.setCellValueFactory(new PropertyValueFactory<ManagedUser, String>("birthYear"));
 
         addressCol = getTableColumnByName(table, "Địa chỉ");
-        addressCol.setCellValueFactory(new PropertyValueFactory<User, String>("address"));
+        addressCol.setCellValueFactory(new PropertyValueFactory<ManagedUser, String>("address"));
 
         statusCol = getTableColumnByName(table, "Trạng thái");
-        statusCol.setCellValueFactory(new PropertyValueFactory<User, String>("status"));
+        statusCol.setCellValueFactory(new PropertyValueFactory<ManagedUser, String>("status"));
     }
 
-    public void setTable(TableView<User> table, ObservableList<User> data) {
+    public void setTable(TableView<ManagedUser> table, ObservableList<ManagedUser> data) {
         setColumns(table);
         table.setItems(data);
 

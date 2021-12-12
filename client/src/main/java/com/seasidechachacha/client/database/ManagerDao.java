@@ -11,94 +11,92 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.seasidechachacha.client.models.StateHistory;
+import com.seasidechachacha.client.models.User;
 import com.seasidechachacha.client.models.Package;
 import com.seasidechachacha.client.models.TreatmentPlace;
 import com.seasidechachacha.client.models.TreatmentPlaceHistory;
 import com.seasidechachacha.client.models.ManagedUser;
-import com.seasidechachacha.client.utils.PasswordAuthenticator;
+
+
+/**
+ * Manager những operations cần log lại như add, update, delete,...
+ * thì k xài static nha...(do cần getID để log lại)
+ */
+
 
 public class ManagerDao {
-	private static Logger logger = LogManager.getLogger(ManagerDao.class);
+	private String managerID;
 
-//	public static void main(String[] args) throws SQLException {
-//		User user1 = new User("111111111", "DatDat", 1981, "null", 0, "00001", "33/31 Ngo Quyen");
-//		User user2 = new User("222222222", "DatDat", 1982, "111111111", 0, "00001", "33/32 Ngo Quyen");
-//		User user3 = new User("333333333", "DatDat", 1983, "222222222", 0, "00001", "33/33 Ngo Quyen");
-//		User user4 = new User("444444444", "DatDat", 1984, "111111111", 0, "00001", "33/34 Ngo Quyen");
-//		User user5 = new User("555555555", "DatDat", 1985, "333333333", 0, "00001", "33/35 Ngo Quyen");
-//		System.out.println(addNewUser(user1));
-//		System.out.println(addNewUser(user2));
-//		System.out.println(addNewUser(user3));
-//		System.out.println(addNewUser(user4));
-//		System.out.println(addNewUser(user5));
-//
-//		List<TreatmentPlace> treatments = getTreatmentPlaceList(10, 0);
-//		System.out.println(treatments.get(3).getStreet());
-//		System.out.println(treatments.get(3).getFullAddress().getCityName());
-//
-//		System.out.println(updatePackagePrice("5SWLVLYvyN", 0));
-//		System.out.println(setState("111111111", 2));
-//	}
-
-	private static boolean userIDIsExist(Connection c, String userID) {
-		String query = "SELECT * FROM user WHERE user.userID = ?;";
-		try {
-			PreparedStatement ps = c.prepareStatement(query);
-			ps.setString(1, userID);
-			try (ResultSet rs = ps.executeQuery()) {
-				if (rs.next()) {
-					return true;
-				}
-				return false;
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return false;
+	public ManagerDao(String managerID) {
+		this.managerID = managerID;
 	}
 
-	public static boolean addNewUser(ManagedUser user) throws SQLException {
+	public String getManagerID() {
+		return managerID;
+	}
 
+	private static Logger logger = LogManager.getLogger(ManagerDao.class);
+
+	public static void main(String[] args) throws SQLException {
+
+	}
+
+	private boolean addMesssage(String logMsg) {
+		boolean rowAffected = false;
 		try (Connection c = BasicConnection.getConnection()) {
-			if (userIDIsExist(c, user.getUserId())) {
-				return false;
-			}
-			try {
-				String addAccount = "INSERT INTO user(userID, pwd, roleID) VALUES (?,?,?);";
-				PreparedStatement ps = c.prepareStatement(addAccount);
-				ps.setString(1, user.getUserId());
-
-				PasswordAuthenticator pwdAuth = new PasswordAuthenticator();
-				ps.setString(2, pwdAuth.hash(user.getUserId().toCharArray()));
-				ps.setInt(3, 3);
-				ps.execute();
-			} catch (SQLException e1) {
-				logger.error(e1);
-				return false;
-			}
-			try {
-				String addManagedUser = "INSERT INTO manageduser(idCard, fullName, yob, relatedPerson, debt, wardID, street) VALUES(?,?,?,?,?,?,?);";
-				PreparedStatement ps2 = c.prepareStatement(addManagedUser);
-				ps2.setString(1, user.getUserId());
-				ps2.setString(2, user.getName());
-				ps2.setInt(3, user.getBirthYear());
-				ps2.setString(4, "null");
-				if (userIDIsExist(c, user.getRelatedId())) {
-					ps2.setString(4, user.getRelatedId());
-				}
-				ps2.setInt(5, user.getDebt());
-				ps2.setString(6, user.getFullAddress().getWardID());
-				ps2.setString(7, user.getAddress());
-				ps2.execute();
-				c.close();
-			} catch (SQLException e) {
-				logger.error(e);
-				e.printStackTrace();
-				return false;
-			}
+			String query = "INSERT INTO log(userID, logMsg, logTime) VALUES (?,?,NOW());";
+			PreparedStatement ps = c.prepareStatement(query);
+			ps.setString(1, this.getManagerID());
+			ps.setString(2, logMsg);
+			rowAffected = ps.executeUpdate() > 0;
+			c.close();
+		} catch (SQLException e) {
+			logger.error(e);
 		}
-		return true;
+		return rowAffected;
+	}
+
+	private static boolean isUserExist(String userID) {
+		boolean result = false;
+		try (Connection c = BasicConnection.getConnection()) {
+			String query = "SELECT * FROM user WHERE user.userID = ?;";
+			PreparedStatement ps = c.prepareStatement(query);
+			ps.setString(1, userID);
+			ResultSet rs = ps.executeQuery();
+			result = rs.next();
+			c.close();
+		} catch (SQLException e1) {
+			logger.error(e1);
+		}
+		return result;
+	}
+
+	private boolean addManagedUser(ManagedUser user) {
+		boolean result = false;
+		try (Connection c = BasicConnection.getConnection()) {
+			String addManagedUser = "INSERT INTO manageduser(idCard, fullName, yob, relatedPerson, debt, wardID, street) VALUES(?,?,?,?,?,?,?);";
+			PreparedStatement ps = c.prepareStatement(addManagedUser);
+			ps.setString(1, user.getUserId());
+			ps.setString(2, user.getName());
+			ps.setInt(3, user.getBirthYear());
+			ps.setString(4, "null");
+			if (isUserExist(user.getRelatedId())) {
+				ps.setString(4, user.getRelatedId());
+			}
+			ps.setInt(5, user.getDebt());
+			ps.setString(6, user.getFullAddress().getWardID());
+			ps.setString(7, user.getAddress());
+			result = ps.executeUpdate() > 0;
+			c.close();
+		} catch (SQLException e) {
+			logger.error(e);
+		}
+		return result;
+	}
+
+	public boolean addNewUser(ManagedUser user) throws SQLException {
+		return UserDao.register(new User(user.getUserId(), user.getUserId(), 3)) && addManagedUser(user)
+				&& addMesssage("Add new user (userID : " + user.getUserId() + ").");
 	}
 
 	private static StateHistory parseStateHistory(ResultSet rs) throws SQLException {
@@ -256,29 +254,24 @@ public class ManagerDao {
 		return treatmentPlaceList;
 	}
 
-	public static boolean addTreatmentPlaceHistory(String userID, String treatmentID) {
+	public boolean addTreatmentPlaceHistory(String userID, String treatmentID) {
+		boolean result = false;
 		try (Connection c = BasicConnection.getConnection()) {
-			if (!userIDIsExist(c, userID)) {
-				return false;
-			}
 			try {
 				String query = "INSERT INTO treatmentplacehistory(userID, time, treatID) VALUES (?, NOW(), ?);";
 				PreparedStatement ps = c.prepareStatement(query);
 				ps.setString(1, userID);
 				ps.setString(2, treatmentID);
-				ps.execute();
+				result = ps.executeUpdate() > 0;
 				c.close();
 			} catch (SQLException e1) {
 				logger.error(e1);
-				e1.printStackTrace();
-				return false;
 			}
 		} catch (SQLException e) {
 			logger.error(e);
-			e.printStackTrace();
-			return false;
 		}
-		return true;
+		return result
+				&& addMesssage("Add TreatmentPlaceHistory, userID = " + userID + ", treatmentID = " + treatmentID);
 	}
 
 	private static Package parsePackage(ResultSet rs) throws SQLException {
@@ -334,94 +327,70 @@ public class ManagerDao {
 		return packageList;
 	}
 
-	private static boolean packageIsExist(String packageID) {
-		try (Connection c = BasicConnection.getConnection()) {
-			String query = "SELECT * FROM package WHERE package.packageID = ?;";
-			PreparedStatement ps = c.prepareStatement(query);
-			ps.setString(1, packageID);
-			System.out.println(ps.toString());
-			ResultSet rs = ps.executeQuery();
-			c.close();
-			if (rs.next()) {
-				return true;
-			}
-		} catch (SQLException e) {
-			logger.error(e);
-			e.printStackTrace();
-			return false;
-		}
-		return false;
-	}
-
-	public static boolean updatePackageName(String packageID, String name) {
+	public boolean updatePackageName(String packageID, String name) {
+		boolean result = false;
 		try (Connection c = BasicConnection.getConnection()) {
 			String query = "UPDATE package SET name = ? WHERE package.packageID = ?;";
 			PreparedStatement ps = c.prepareStatement(query);
 			ps.setString(1, name);
 			ps.setString(2, packageID);
-			System.out.println(ps.toString());
-			ps.execute();
+			result = ps.executeUpdate() > 0;
 			c.close();
 		} catch (SQLException e) {
 			logger.error(e);
-			e.printStackTrace();
-			return false;
 		}
-		return true;
+		return result && addMesssage("update packageID = " + packageID + " set name = " + name);
 	}
 
-	public static boolean updatePackageLimitPerPerson(String packageID, int limitPerPerson) {
+	public boolean updatePackageLimitPerPerson(String packageID, int limitPerPerson) {
+		boolean result = false;
 		try (Connection c = BasicConnection.getConnection()) {
 			String query = "UPDATE package SET limitPerPerson = ? WHERE package.packageID = ?;";
 			PreparedStatement ps = c.prepareStatement(query);
 			ps.setInt(1, limitPerPerson);
 			ps.setString(2, packageID);
-			System.out.println(ps.toString());
-			ps.execute();
+			result = ps.executeUpdate() > 0;
 			c.close();
 		} catch (SQLException e) {
 			logger.error(e);
-			e.printStackTrace();
-			return false;
 		}
-		return true;
+		return result && addMesssage(
+				"update packageID = " + packageID + " set limitPerPerson = " + Integer.toString(limitPerPerson));
 	}
 
-	public static boolean updatePackageDayCooldown(String packageID, int dayCooldown) {
+	public boolean updatePackageDayCooldown(String packageID, int dayCooldown) {
+		boolean result = false;
 		try (Connection c = BasicConnection.getConnection()) {
 			String query = "UPDATE package SET dayCooldown = ? WHERE package.packageID = ?;";
 			PreparedStatement ps = c.prepareStatement(query);
 			ps.setInt(1, dayCooldown);
 			ps.setString(2, packageID);
-			System.out.println(ps.toString());
-			ps.execute();
+			result = ps.executeUpdate() > 0;
 			c.close();
 		} catch (SQLException e) {
 			logger.error(e);
-			e.printStackTrace();
-			return false;
 		}
-		return true;
+		return result && addMesssage(
+				"update packageID = " + packageID + " set dayCooldown = " + Integer.toString(dayCooldown));
 	}
 
-	public static boolean updatePackagePrice(String packageID, double price) {
+	public boolean updatePackagePrice(String packageID, double price) {
+		boolean result = false;
 		try (Connection c = BasicConnection.getConnection()) {
 			String query = "UPDATE package SET price = ? WHERE package.packageID = ?;";
 			PreparedStatement ps = c.prepareStatement(query);
 			ps.setDouble(1, price);
 			ps.setString(2, packageID);
-			System.out.println(ps.toString());
-			ps.execute();
+			result = ps.executeUpdate() > 0;
 			c.close();
 		} catch (SQLException e) {
 			logger.error(e);
-			e.printStackTrace();
-			return false;
 		}
-		return true;
+		return result && addMesssage("update packageID = " + packageID + " set price = " + String.valueOf(price));
 	}
 
-	public static boolean updatePackage(Package p) {
+	public boolean updatePackage(Package p) {
+		boolean result = false;
 		try (Connection c = BasicConnection.getConnection()) {
 			String query = "UPDATE package SET package.name = ? AND limitPerPerson = ? AND dayCooldown = ? AND price = ? WHERE package.packageID = ?;";
 			PreparedStatement ps = c.prepareStatement(query);
@@ -430,40 +399,108 @@ public class ManagerDao {
 			ps.setInt(3, p.getDayCooldown());
 			ps.setDouble(4, p.getPrice());
 			ps.setString(5, p.getPackageID());
-			System.out.println(ps.toString());
-			ps.execute();
+			result = ps.executeUpdate() > 0;
 			c.close();
 		} catch (SQLException e) {
 			logger.error(e);
-			e.printStackTrace();
-			return false;
 		}
-		return true;
+		return result && addMesssage("update packageID = " + p.getPackageID() + ", set name = " + p.getName()
+				+ ", set limitPerPerson = " + String.valueOf(p.getLimitPerPerson()) + ", set dayCooldown = "
+				+ String.valueOf(p.getDayCooldown()) + ", set price = " + String.valueOf(p.getPrice()));
+	}
+
+	private static boolean isPackageInOrderHistory(String packageID) {
+		try (Connection c = BasicConnection.getConnection()) {
+			String query = "SELECT * FROM orderitem WHERE packageID = ?;";
+			PreparedStatement ps = c.prepareStatement(query);
+			ps.setString(1, packageID);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				c.close();
+				return true;
+			}
+			c.close();
+		} catch (SQLException e) {
+			logger.error(e);
+		}
+		return false;
+	}
+
+	public boolean deletePackage(String packageID) {
+		boolean result = false;
+		if (isPackageInOrderHistory(packageID)) {
+			return result;
+		}
+		try (Connection c = BasicConnection.getConnection()) {
+			String deleteInCartItem = "DELETE FROM cartitem WHERE packageID = ?;";
+			String deleteInPackage = "DELETE FROM package WHERE packageID = ?;";
+			PreparedStatement ps1 = c.prepareStatement(deleteInCartItem);
+			PreparedStatement ps2 = c.prepareStatement(deleteInPackage);
+			ps1.setString(1, packageID);
+			ps2.setString(1, packageID);
+			result = (ps1.executeUpdate() > 0) && (ps2.executeUpdate() > 0);
+			c.close();
+		} catch (SQLException e) {
+			logger.error(e);
+		}
+		return result && addMesssage("delete packageID = " + packageID);
+	}
+
+	public Package getPackageByID(String packageID) {
+		Package p = null;
+		try (Connection c = BasicConnection.getConnection()) {
+			String query = "SELECT * FROM package WHERE packageID = ?;";
+			PreparedStatement ps = c.prepareStatement(query);
+			ps.setString(1, packageID);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				p = new Package(rs.getString("packageID"), rs.getString("name"), rs.getInt("limitPerPerson"),
+						rs.getInt("dayCooldown"), rs.getDouble("price"));
+			}
+			c.close();
+		} catch (SQLException e) {
+			logger.error(e);
+		}
+		return p;
+	}
+
+	public boolean addPackage(Package p) {
+		boolean result = false;
+		try (Connection c = BasicConnection.getConnection()) {
+			String query = "INSERT INTO package(packageID, name, limitPerPerson, dayCooldown, price) VALUES (?,?,?,?,?);";
+			PreparedStatement ps = c.prepareStatement(query);
+			ps.setString(1, p.getPackageID());
+			ps.setString(2, p.getName());
+			ps.setInt(3, p.getLimitPerPerson());
+			ps.setInt(4, p.getDayCooldown());
+			ps.setDouble(5, p.getPrice());
+			result = ps.executeUpdate() > 0;
+			c.close();
+		} catch (SQLException e) {
+			logger.error(e);
+		}
+		return result && addMesssage("Add packageID = " + p.getPackageID() + ", set name = " + p.getName()
+				+ ", set limitPerPerson = " + String.valueOf(p.getLimitPerPerson()) + ", set dayCooldown = "
+				+ String.valueOf(p.getDayCooldown()) + ", set price = " + String.valueOf(p.getPrice()));
 	}
 
 	private static boolean setStateIndividual(String userID, int state) {
+		boolean result = false;
 		try (Connection c = BasicConnection.getConnection()) {
-			if (!userIDIsExist(c, userID)) {
-				return false;
-			}
 			try {
 				String query = "INSERT INTO statehistory(userID, time, state) VALUES (?, NOW(), ?);";
 				PreparedStatement ps = c.prepareStatement(query);
 				ps.setString(1, userID);
 				ps.setInt(2, state);
-				ps.execute();
+				result = ps.executeUpdate() > 0;
 				c.close();
 			} catch (SQLException e1) {
 				logger.error(e1);
-				e1.printStackTrace();
-				return false;
 			}
 		} catch (SQLException e) {
 			logger.error(e);
-			e.printStackTrace();
-			return false;
 		}
-		return true;
+		return result;
 	}
 
 	private static ArrayList<String> getChildrens(String userID) {
@@ -473,7 +510,6 @@ public class ManagerDao {
 			String query = "SELECT * FROM manageduser WHERE relatedPerson = ?;";
 			PreparedStatement ps = c.prepareStatement(query);
 			ps.setString(1, userID);
-			System.out.println(ps.toString());
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				childrens.add(rs.getString("idCard"));
@@ -481,12 +517,12 @@ public class ManagerDao {
 			c.close();
 		} catch (SQLException e) {
 			logger.error(e);
-			e.printStackTrace();
 		}
 		return childrens;
 	}
 
 	private static boolean removeChildren(String userID) {
+		boolean result = false;
 		ArrayList<String> childrens = getChildrens(userID);
 		try (Connection c = BasicConnection.getConnection()) {
 			for (int i = 0; i < childrens.size(); i++) {
@@ -494,20 +530,16 @@ public class ManagerDao {
 					String query = "UPDATE manageduser SET relatedPerson = null WHERE manageduser.idCard = ?;";
 					PreparedStatement ps = c.prepareStatement(query);
 					ps.setString(1, childrens.get(i));
-					ps.execute();
+					result = ps.executeUpdate() > 0;
 				} catch (SQLException e1) {
 					logger.error(e1);
-					e1.printStackTrace();
-					return false;
 				}
 			}
 			c.close();
 		} catch (SQLException e) {
 			logger.error(e);
-			e.printStackTrace();
-			return false;
 		}
-		return true;
+		return result;
 	}
 
 	private static boolean setStateF1(String userID) {
@@ -518,7 +550,7 @@ public class ManagerDao {
 		}
 		return setStateIndividual(userID, 1);
 	}
-	
+
 //	Set -> F0 : 
 //		- Get list các con của F0
 //		- Với mỗi con của F0:
@@ -535,68 +567,54 @@ public class ManagerDao {
 //	
 //		Set -> F2 :
 //		    - Remove Child
-	public static boolean setState(String userID, int state) {
+	public boolean setState(String userID, int state) {
 		switch (state) {
 		case -1: {
-			return setStateIndividual(userID, -1);
+			return setStateIndividual(userID, -1)
+					&& addMesssage("Update userID = " + userID + ", set state = " + String.valueOf(state));
 		}
 		case 0: {
 			ArrayList<String> childrens = getChildrens(userID);
 			for (int i = 0; i < childrens.size(); i++) {
 				setStateF1(childrens.get(i));
 			}
-			return setStateIndividual(userID, 0);
+			return setStateIndividual(userID, 0)
+					&& addMesssage("Update userID = " + userID + ", set state = " + String.valueOf(state));
 		}
 		case 1: {
-			return setStateF1(userID);
+			return setStateF1(userID)
+					&& addMesssage("Update userID = " + userID + ", set state = " + String.valueOf(state));
 		}
 		case 2: {
 			removeChildren(userID);
-			return setStateIndividual(userID, state);
+			return setStateIndividual(userID, state)
+					&& addMesssage("Update userID = " + userID + ", set state = " + String.valueOf(state));
 		}
 		default: {
 			return false;
 		}
 		}
 	}
-	
-	
-	private static boolean isPackageInOrderHistory(String packageID) {
+
+	public int getCurrentState(String userID) {
+		int currentState = -2;
 		try (Connection c = BasicConnection.getConnection()) {
-			String query = "SELECT * FROM orderitem WHERE packageID = ?;";
+			String query = "SELECT * FROM statehistory WHERE userID = ? ORDER BY time DESC LIMIT 1;";
 			PreparedStatement ps = c.prepareStatement(query);
-			ps.setString(1, packageID);
+			ps.setString(1, userID);
 			ResultSet rs = ps.executeQuery();
-			c.close();
 			if (rs.next()) {
-				return true;
+				currentState = rs.getInt("state");
 			}
-		} catch (SQLException e) {
-			logger.error(e);
-			e.printStackTrace();
-		}
-		return false;
-	}
-	
-	public static boolean deletePackage(String packageID) {
-		if(isPackageInOrderHistory(packageID)) {
-			return false;
-		}
-		try (Connection c = BasicConnection.getConnection()) {
-			String deleteInCartItem = "DELETE FROM cartitem WHERE packageID = ?;";
-			String deleteInPackage = "DELETE FROM package WHERE packageID = ?;";
-			PreparedStatement ps1 = c.prepareStatement(deleteInCartItem);
-			PreparedStatement ps2 = c.prepareStatement(deleteInPackage);
-			ps1.setString(1, packageID);
-			ps1.setString(1, packageID);
-			ps1.execute();
-			ps2.execute();
 			c.close();
 		} catch (SQLException e) {
 			logger.error(e);
 			e.printStackTrace();
-			return false;
 		}
-		return true;
+		return currentState;
+	}
+
+	public boolean changePassword(String oldPwd, String newPwd) {
+		return UserDao.changePassword(this.getManagerID(), oldPwd, newPwd);
 	}
 }

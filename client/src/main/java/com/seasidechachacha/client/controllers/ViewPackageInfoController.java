@@ -1,10 +1,12 @@
 package com.seasidechachacha.client.controllers;
 
 import com.seasidechachacha.client.App;
-import static com.seasidechachacha.client.database.ManagerDao.updatePackageDayCooldown;
-import static com.seasidechachacha.client.database.ManagerDao.updatePackageLimitPerPerson;
-import static com.seasidechachacha.client.database.ManagerDao.updatePackageName;
-import static com.seasidechachacha.client.database.ManagerDao.updatePackagePrice;
+import com.seasidechachacha.client.database.ManagerDao;
+import static com.seasidechachacha.client.database.ManagerDao.getPackageByID;
+//import static com.seasidechachacha.client.database.ManagerDao.updatePackageDayCooldown;
+//import static com.seasidechachacha.client.database.ManagerDao.updatePackageLimitPerPerson;
+//import static com.seasidechachacha.client.database.ManagerDao.updatePackageName;
+//import static com.seasidechachacha.client.database.ManagerDao.updatePackagePrice;
 import com.seasidechachacha.client.models.Package;
 
 import org.apache.logging.log4j.LogManager;
@@ -20,6 +22,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextInputDialog;
 
 public class ViewPackageInfoController {
+
     private static final Logger logger = LogManager.getLogger(ViewPackageInfoController.class);
 
     @FXML
@@ -44,59 +47,67 @@ public class ViewPackageInfoController {
 
     public void setup(Package pack) {
         String packageID = pack.getPackageID();
-        // TODO
-        // to get the latest update of package
-        // if not, it will show the old value
-        // Package curPack = getPackageById(packageID);
-        labelName.setText(pack.getName());
-        labelLimit.setText(String.valueOf(pack.getLimitPerPerson()));
-        labelDay.setText(String.valueOf(pack.getDayCooldown()));
-        labelPrice.setText(String.valueOf(pack.getPrice()));
+        Package currentPack = getPackageByID(packageID);
 
+        labelName.setText(currentPack.getName());
+        labelLimit.setText(String.valueOf(currentPack.getLimitPerPerson()));
+        labelDay.setText(String.valueOf(currentPack.getDayCooldown()));
+        labelPrice.setText(String.valueOf(currentPack.getPrice()));
+
+        ManagerDao Tam = new ManagerDao("mod-19127268");
         btnChangeName.setOnAction(event -> {
-            Dialog dialog = new TextInputDialog(pack.getName());
+            Dialog dialog = new TextInputDialog(currentPack.getName());
             dialog.setTitle("Thay đổi tên gói");
             dialog.setHeaderText("Tên gói mới");
             Optional<String> result = dialog.showAndWait();
 
             if (result.isPresent()) {
-                updatePackageName(pack.getPackageID(), result.get());
+                if (Tam.updatePackageName(packageID, result.get())) {
+                    System.out.println("Update successfully");
+                }
                 labelName.setText(result.get());
             }
         });
 
         btnChangeLimit.setOnAction(event -> {
-            Dialog dialog = new TextInputDialog(String.valueOf(pack.getLimitPerPerson()));
+            Dialog dialog = new TextInputDialog(String.valueOf(currentPack.getLimitPerPerson()));
             dialog.setTitle("Thay đổi mức giới hạn");
             dialog.setHeaderText("Mức giới hạn mới");
             Optional<String> result = dialog.showAndWait();
 
             if (result.isPresent()) {
-                updatePackageLimitPerPerson(pack.getPackageID(), Integer.valueOf(result.get()));
+                if (Tam.updatePackageLimitPerPerson(packageID, Integer.valueOf(result.get()))) {
+                    System.out.println("Update successfully");
+                }
+
                 labelLimit.setText(result.get());
             }
         });
 
         btnChangeDay.setOnAction(event -> {
-            Dialog dialog = new TextInputDialog(String.valueOf(pack.getDayCooldown()));
+            Dialog dialog = new TextInputDialog(String.valueOf(currentPack.getDayCooldown()));
             dialog.setTitle("Thay đổi thời gian giới hạn");
             dialog.setHeaderText("Thời gian giới hạn mới");
             Optional<String> result = dialog.showAndWait();
 
             if (result.isPresent()) {
-                updatePackageDayCooldown(pack.getPackageID(), Integer.valueOf(result.get()));
+                if (Tam.updatePackageDayCooldown(packageID, Integer.valueOf(result.get()))) {
+                    System.out.println("Update successfully");
+                }
                 labelDay.setText(result.get());
             }
         });
 
         btnChangePrice.setOnAction(event -> {
-            Dialog dialog = new TextInputDialog(String.valueOf(pack.getPrice()));
+            Dialog dialog = new TextInputDialog(String.valueOf(currentPack.getPrice()));
             dialog.setTitle("Thay đổi đơn giá");
             dialog.setHeaderText("Đơn giá mới");
             Optional<String> result = dialog.showAndWait();
 
             if (result.isPresent()) {
-                updatePackagePrice(pack.getPackageID(), Integer.valueOf(result.get()));
+                if (Tam.updatePackagePrice(packageID, Integer.valueOf(result.get()))) {
+                    System.out.println("Update successfully");
+                }
                 labelPrice.setText(result.get());
             }
         });

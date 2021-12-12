@@ -12,7 +12,7 @@ create table User
 
 create table Log
 (
-	logID char(5),
+	logID int AUTO_INCREMENT,
     userID varchar(12),
     logMsg nvarchar(500),
     logTime datetime,
@@ -64,13 +64,13 @@ create table TreatmentPlaceHistory
 (
 	userID varchar(12),
 	time datetime,
-	treatID char(5),
+	treatID int,
 	primary key (userID, time)
 );
 
 create table TreatmentPlace
 (
-	treatID char(5),
+	treatID int AUTO_INCREMENT,
 	name nvarchar(30),
 	street nvarchar(20),
 	wardID char(5),
@@ -81,7 +81,7 @@ create table TreatmentPlace
 
 create table Package
 (
-	packageID char(10),
+	packageID int AUTO_INCREMENT,
 	name nvarchar(100),
 	limitPerPerson tinyint,
 	dayCooldown tinyint,
@@ -91,7 +91,7 @@ create table Package
 
 create table Cart
 (
-	cartID char(10),
+	cartID int AUTO_INCREMENT,
 	userID varchar(12),
 	checkoutTime datetime,
 	totalCartQuantity tinyint,
@@ -101,8 +101,8 @@ create table Cart
 
 create table CartItem
 (
-	cartID char(10),
-	packageID char(10),
+	cartID int,
+	packageID int,
 	cartItemQuantity tinyint,
 	cartItemPrice decimal(10,3),
 	primary key (cartID, packageID)
@@ -111,7 +111,7 @@ create table CartItem
 
 create table OrderHistory
 (
-	orderID char(10),
+	orderID int AUTO_INCREMENT,
 	userID varchar(12),
 	timeOrder datetime,
 	timeDelivery datetime,
@@ -121,8 +121,8 @@ create table OrderHistory
 
 create table OrderItem
 (
-	orderID char(10),
-	packageID char(10),
+	orderID int,
+	packageID int,
 	orderItemQuantity tinyint,
 	orderItemPrice decimal(10,3),
 	primary key (orderID, packageID)

@@ -3,7 +3,6 @@ package com.seasidechachacha.client.controllers;
 //import java.net.URL;
 
 import com.seasidechachacha.client.App;
-import static com.seasidechachacha.client.database.ManagerDao.addNewUser;
 import com.seasidechachacha.client.models.ManagedUser;
 
 import org.apache.logging.log4j.LogManager;
@@ -43,14 +42,14 @@ public class AddNewUserController {
         btnAddNewPerson.setOnAction(event -> {
             ManagedUser user = new ManagedUser("123456", tfFullName.getText(), Integer.valueOf(tfBirthYear.getText()), "1", 0,
                     "00001", "abc");
-            try {
-                if (addNewUser(user)) {
-                    // TODO
-                    
-                }
-            } catch (SQLException ex) {
-                logger.fatal(ex);
-            }
+//            try {
+//                if (addNewUser(user)) {
+//                    // TODO
+//                    
+//                }
+//            } catch (SQLException ex) {
+//                logger.fatal(ex);
+//            }
         });
         cbCurrentStatus.getItems().addAll("F0", "F1", "F2", "F3");
         cbCity.getItems().addAll("TPHCM", "Hà Nội");

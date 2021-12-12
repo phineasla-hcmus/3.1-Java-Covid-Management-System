@@ -173,21 +173,22 @@ INSERT INTO `user` (`userID`,`pwd`,`roleID`) VALUES ('mod-18127077','pwdFor18127
 INSERT INTO `user` (`userID`,`pwd`,`roleID`) VALUES ('mod-19127203','pwdFor19127203',2);
 INSERT INTO `user` (`userID`,`pwd`,`roleID`) VALUES ('mod-19127268','pwdFor19127268',2);
 INSERT INTO `user` (`userID`,`pwd`,`roleID`) VALUES ('mod-19127511','pwdFor19127511',2);
+INSERT INTO `user` (`userID`,`pwd`,`roleID`) VALUES('079111222333', '123456', 3);
 
-INSERT INTO `package` (`packageID`,`name`,`limitPerPerson`,`dayCooldown`,`price`) VALUES ('5SWLVLYvyN','Siro điều trị viêm đường hô hấp kèm theo ho Prospan (100ml)',2,7,68000.000);
-INSERT INTO `package` (`packageID`,`name`,`limitPerPerson`,`dayCooldown`,`price`) VALUES ('e5m2qMjMZM','Khẩu trang than hoạt tính 4 lớp Pharmacity (50 cái/hộp)',1,30,89000.000);
-INSERT INTO `package` (`packageID`,`name`,`limitPerPerson`,`dayCooldown`,`price`) VALUES ('F0IGntVTPy','Nước biển sâu sạch thông mũi điều trị viêm mũi Xisat (75ml)',1,15,32000.000);
-INSERT INTO `package` (`packageID`,`name`,`limitPerPerson`,`dayCooldown`,`price`) VALUES ('GFQcPYwUoI','Cao sao vàng (4g)',1,1,5900.000);
-INSERT INTO `package` (`packageID`,`name`,`limitPerPerson`,`dayCooldown`,`price`) VALUES ('hX57aBg1Zt','Efferalgan 150mg (Hộp 12 gói)',1,3,33600.000);
-INSERT INTO `package` (`packageID`,`name`,`limitPerPerson`,`dayCooldown`,`price`) VALUES ('JnOQ47tSNC','Dầu gió Khuynh Diệp OPC (25ml)',2,15,62900.000);
-INSERT INTO `package` (`packageID`,`name`,`limitPerPerson`,`dayCooldown`,`price`) VALUES ('r6VyyMqlPp','Panadol extra (12 vỉ/hộp)',1,30,135000.000);
-INSERT INTO `package` (`packageID`,`name`,`limitPerPerson`,`dayCooldown`,`price`) VALUES ('Rm2milXMEj','Bộ xét nghiệm nhanh COVID-19 tại nhà Humasis COVID-19 Ag Home Test (Hộp 5 kit)',1,30,610000.000);
-INSERT INTO `package` (`packageID`,`name`,`limitPerPerson`,`dayCooldown`,`price`) VALUES ('sRQfNi2ERU','Eugica Sirô (Hộp 1 chai 100ml)',2,7,29000.000);
-INSERT INTO `package` (`packageID`,`name`,`limitPerPerson`,`dayCooldown`,`price`) VALUES ('YydGAFToKd','Nước biển sâu sạch thông mũi trẻ em Xisat (75ml)',3,15,27000.000);
+INSERT INTO `package` (`packageID`,`name`,`limitPerPerson`,`dayCooldown`,`price`) VALUES (1,'Siro điều trị viêm đường hô hấp kèm theo ho Prospan (100ml)',2,7,68000.000);
+INSERT INTO `package` (`packageID`,`name`,`limitPerPerson`,`dayCooldown`,`price`) VALUES (2,'Khẩu trang than hoạt tính 4 lớp Pharmacity (50 cái/hộp)',1,30,89000.000);
+INSERT INTO `package` (`packageID`,`name`,`limitPerPerson`,`dayCooldown`,`price`) VALUES (3,'Nước biển sâu sạch thông mũi điều trị viêm mũi Xisat (75ml)',1,15,32000.000);
+INSERT INTO `package` (`packageID`,`name`,`limitPerPerson`,`dayCooldown`,`price`) VALUES (4,'Cao sao vàng (4g)',1,1,5900.000);
+INSERT INTO `package` (`packageID`,`name`,`limitPerPerson`,`dayCooldown`,`price`) VALUES (5,'Efferalgan 150mg (Hộp 12 gói)',1,3,33600.000);
+INSERT INTO `package` (`packageID`,`name`,`limitPerPerson`,`dayCooldown`,`price`) VALUES (6,'Dầu gió Khuynh Diệp OPC (25ml)',2,15,62900.000);
+INSERT INTO `package` (`packageID`,`name`,`limitPerPerson`,`dayCooldown`,`price`) VALUES (7,'Panadol extra (12 vỉ/hộp)',1,30,135000.000);
+INSERT INTO `package` (`packageID`,`name`,`limitPerPerson`,`dayCooldown`,`price`) VALUES (8,'Bộ xét nghiệm nhanh COVID-19 tại nhà Humasis COVID-19 Ag Home Test (Hộp 5 kit)',1,30,610000.000);
+INSERT INTO `package` (`packageID`,`name`,`limitPerPerson`,`dayCooldown`,`price`) VALUES (9,'Eugica Sirô (Hộp 1 chai 100ml)',2,7,29000.000);
+INSERT INTO `package` (`packageID`,`name`,`limitPerPerson`,`dayCooldown`,`price`) VALUES (10,'Nước biển sâu sạch thông mũi trẻ em Xisat (75ml)',3,15,27000.000);
 
-INSERT INTO `manageduser` (`idCard`,`fullName`,`yob`,`relatedPerson`,`debt`,`wardID`,`street`) VALUES ('079111222333','Nguyễn Văn A',1950,'079941055479',0,'30208','5 Đường số 7');
 INSERT INTO `manageduser` (`idCard`,`fullName`,`yob`,`relatedPerson`,`debt`,`wardID`,`street`) VALUES ('079157952250','Hong Du-shik',1990,'',0,'26743','16 Lê Lai');
 INSERT INTO `manageduser` (`idCard`,`fullName`,`yob`,`relatedPerson`,`debt`,`wardID`,`street`) VALUES ('079510193347','Nguyễn Lê Bảo Huyên',1985,'79932368028',0,'26740','69 Lê Lợi');
 INSERT INTO `manageduser` (`idCard`,`fullName`,`yob`,`relatedPerson`,`debt`,`wardID`,`street`) VALUES ('079732769898','Thập Cẩm Đào',2001,'79510193347',0,'26740','69 Lê Lợi');
 INSERT INTO `manageduser` (`idCard`,`fullName`,`yob`,`relatedPerson`,`debt`,`wardID`,`street`) VALUES ('079932368028','Đậu Y Khoa',2002,'',0,'30208','23A Phan Văn Bảy');
 INSERT INTO `manageduser` (`idCard`,`fullName`,`yob`,`relatedPerson`,`debt`,`wardID`,`street`) VALUES ('079941055479','Đỗ Yên Bình',1969,'',0,'30208','5 Đường số 1');
+INSERT INTO `manageduser` (`idCard`,`fullName`,`yob`,`relatedPerson`,`debt`,`wardID`,`street`) VALUES ('079111222333','Nguyễn Văn A',1950,'079941055479',0,'30208','5 Đường số 7');

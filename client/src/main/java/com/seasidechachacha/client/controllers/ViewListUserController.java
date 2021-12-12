@@ -49,6 +49,50 @@ public class ViewListUserController {
     @FXML
     private Pagination pagination;
 
+    @FXML
+    private void initialize() {
+        data = ManagedUserDao.getList(5, 0);
+        if (data.size() % rowsPerPage() == 0) {
+            pagination.setPageCount(data.size() / rowsPerPage());
+
+        } else {
+            pagination.setPageCount(data.size() / rowsPerPage() + 1);
+
+        }
+        pagination.setPageFactory(new Callback<Integer, Node>() {
+            @Override
+            public Node call(Integer pageIndex) {
+                if (pageIndex > data.size() / rowsPerPage()) {
+                    return null;
+                } else {
+                    return createPage(pageIndex);
+                }
+            }
+        });
+
+        btnAdd.setOnAction(event -> {
+            try {
+                App.setCurrentPane("pn_all", "view/AddNewUser", null);
+            } catch (IOException ex) {
+                logger.fatal(ex);
+            }
+        });
+        btnSearch.setOnAction(event -> {
+
+            String keyword = tfSearch.getText();
+
+            //for testing purpose
+            data.remove(3);
+
+            //TODO
+//            table.refresh();
+        });
+        cbSort.getItems().addAll("ID", "Họ tên", "Năm sinh", "Trạng thái");
+        btnSort.setOnAction(event -> {
+            //TODO
+        });
+    }
+
     public int itemsPerPage() {
         return 1;
     }
@@ -106,7 +150,6 @@ public class ViewListUserController {
             });
 
 //            statusCol.setMinWidth(160);
-
             TableColumn actionCol = new TableColumn("");
             actionCol.setCellValueFactory(new PropertyValueFactory<>(""));
             Callback<TableColumn<ManagedUser, String>, TableCell<ManagedUser, String>> cellFactory
@@ -158,61 +201,16 @@ public class ViewListUserController {
         return box;
     }
 
-    @FXML
-    private void initialize() {
-        data = ManagedUserDao.getList(5, 0);
-        if (data.size() % rowsPerPage() == 0) {
-            pagination.setPageCount(data.size() / rowsPerPage());
-
-        } else {
-            pagination.setPageCount(data.size() / rowsPerPage() + 1);
-
-        }
-        pagination.setPageFactory(new Callback<Integer, Node>() {
-            @Override
-            public Node call(Integer pageIndex) {
-                if (pageIndex > data.size() / rowsPerPage()) {
-                    return null;
-                } else {
-                    return createPage(pageIndex);
-                }
-            }
-        });
-
-        btnAdd.setOnAction(event -> {
-            try {
-                App.setCurrentPane("pn_all", "view/AddNewUser", null);
-            } catch (IOException ex) {
-                logger.fatal(ex);
-            }
-        });
-        btnSearch.setOnAction(event -> {
-
-            String keyword = tfSearch.getText();
-
-            //for testing purpose
-            data.remove(3);
-
-            //TODO
-//            table.refresh();
-        });
-        cbSort.getItems().addAll("ID", "Họ tên", "Năm sinh", "Trạng thái");
-        btnSort.setOnAction(event -> {
-            //TODO
-        });
-    }
-
-    private TableColumn<ManagedUser, String> getTableColumnByName(TableView<ManagedUser> tableView, String name) {
-        for (TableColumn<ManagedUser, ?> col : tableView.getColumns()) {
-            if (col.getText().equals(name)) {
-                // TODO: Type safety: Unchecked cast from TableColumn<User,capture#2-of?> to
-                // TableColumn<User,String>
-                return (TableColumn<ManagedUser, String>) col;
-            }
-        }
-        return null;
-    }
-
+//    private TableColumn<ManagedUser, String> getTableColumnByName(TableView<ManagedUser> tableView, String name) {
+//        for (TableColumn<ManagedUser, ?> col : tableView.getColumns()) {
+//            if (col.getText().equals(name)) {
+//                // TODO: Type safety: Unchecked cast from TableColumn<User,capture#2-of?> to
+//                // TableColumn<User,String>
+//                return (TableColumn<ManagedUser, String>) col;
+//            }
+//        }
+//        return null;
+//    }
 //    public void setColumns(TableView<ManagedUser> table) {
 //        numberCol = getTableColumnByName(table, "ID");
 //        numberCol.setCellValueFactory(

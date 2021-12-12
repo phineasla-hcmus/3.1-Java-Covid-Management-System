@@ -446,7 +446,7 @@ public class ManagerDao {
 		return result && addMesssage("delete packageID = " + packageID);
 	}
 
-	public Package getPackageByID(String packageID) {
+	public static Package getPackageByID(String packageID) {
 		Package p = null;
 		try (Connection c = BasicConnection.getConnection()) {
 			String query = "SELECT * FROM package WHERE packageID = ?;";

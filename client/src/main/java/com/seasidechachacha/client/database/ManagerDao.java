@@ -17,6 +17,13 @@ import com.seasidechachacha.client.models.TreatmentPlace;
 import com.seasidechachacha.client.models.TreatmentPlaceHistory;
 import com.seasidechachacha.client.models.ManagedUser;
 
+
+/**
+ * Manager những operations cần log lại như add, update, delete,...
+ * thì k xài static nha...(do cần getID để log lại)
+ */
+
+
 public class ManagerDao {
 	private String managerID;
 

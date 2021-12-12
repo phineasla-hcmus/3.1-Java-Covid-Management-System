@@ -49,8 +49,8 @@ create table ManagedUser
 create table NewUser
 (
 	userID varchar(12),
-	primary key (idCard)
-)
+	primary key (userID)
+);
 
 create table StateHistory
 (

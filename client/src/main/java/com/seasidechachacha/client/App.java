@@ -14,6 +14,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Pane;
 import org.kordamp.bootstrapfx.BootstrapFX;
 import javafx.application.Platform;
+import javafx.scene.control.Pagination;
 import javafx.scene.control.TableRow;
 
 public class App extends Application {
@@ -25,7 +26,9 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("view/FirstLogin"), 1050, 800);
+//                scene = new Scene(loadFXML("view/FirstLogin"), 1050, 800);
+
+        scene = new Scene(loadFXML("view/ModeratorScreen"), 1050, 800);
         stage.setScene(scene);
         stage.show();
     }
@@ -70,8 +73,10 @@ public class App extends Application {
             pn_all = (ScrollPane) scene.lookup("#pn_all");
 
             pn_all.setContent(newLoadedPane);
+
         }
     }
+
 
     public static void setRoot(String fxml) throws IOException {
         scene.setRoot(loadFXML(fxml));

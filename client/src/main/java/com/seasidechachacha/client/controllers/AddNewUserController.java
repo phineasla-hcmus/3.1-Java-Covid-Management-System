@@ -46,6 +46,7 @@ public class AddNewUserController {
             try {
                 if (addNewUser(user)) {
                     // TODO
+                    
                 }
             } catch (SQLException ex) {
                 logger.fatal(ex);

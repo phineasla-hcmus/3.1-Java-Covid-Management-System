@@ -4,7 +4,6 @@
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -42,7 +41,7 @@
                     </font>
                 </Label>
             <Button fx:id="btnAdd" layoutX="310.0" layoutY="166.0" mnemonicParsing="false" text="Thêm mới" />
-            <Button fx:id="btnBack" layoutY="166.0" mnemonicParsing="false" text="Quay lại">
+            <Button fx:id="btnBack" layoutY="166.0" mnemonicParsing="false" onAction="#goBack" text="Quay lại">
                <graphic>
                   <FontAwesomeIconView fill="WHITE" glyphName="ARROW_LEFT" />
                </graphic>

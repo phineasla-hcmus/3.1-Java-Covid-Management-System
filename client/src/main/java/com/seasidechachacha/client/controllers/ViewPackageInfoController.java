@@ -3,10 +3,6 @@ package com.seasidechachacha.client.controllers;
 import com.seasidechachacha.client.App;
 import com.seasidechachacha.client.database.ManagerDao;
 import static com.seasidechachacha.client.database.ManagerDao.getPackageByID;
-//import static com.seasidechachacha.client.database.ManagerDao.updatePackageDayCooldown;
-//import static com.seasidechachacha.client.database.ManagerDao.updatePackageLimitPerPerson;
-//import static com.seasidechachacha.client.database.ManagerDao.updatePackageName;
-//import static com.seasidechachacha.client.database.ManagerDao.updatePackagePrice;
 import com.seasidechachacha.client.models.Package;
 
 import org.apache.logging.log4j.LogManager;

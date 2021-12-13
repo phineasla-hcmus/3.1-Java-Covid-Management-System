@@ -1,69 +1,79 @@
 package com.seasidechachacha.client.models;
 
 public class TreatmentPlace {
-	private String streatID;
-	private String name;
-	private String street;
-	private int capacity;
-	private int currentReception;
-	private FullAddress fullAddress;
 
-	public TreatmentPlace(String streatID, String name, String street, String wardId, int capacity, int currentReception) {
-		this.streatID = streatID;
-		this.name = name;
-		this.street = street;
-		this.capacity = capacity;
-		this.currentReception = currentReception;
-		this.fullAddress = new FullAddress(wardId);
-	}
+    private int treatID;
+    private String name;
+    private String street;
+    private String wardId;
+    private int capacity;
+    private int currentReception;
+    private FullAddress fullAddress;
 
-	public String getStreatID() {
-		return streatID;
-	}
+    public TreatmentPlace(int treatID, String name, String street, String wardId, int capacity, int currentReception) {
+        this.treatID = treatID;
+        this.name = name;
+        this.street = street;
+        this.wardId = wardId;
+        this.capacity = capacity;
+        this.currentReception = currentReception;
+        this.fullAddress = new FullAddress(wardId);
+    }
 
-	public void setStreatID(String streatID) {
-		this.streatID = streatID;
-	}
+    public int getTreatID() {
+        return treatID;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public void setTreatID(int treatID) {
+        this.treatID = treatID;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getStreet() {
-		return street;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setStreet(String street) {
-		this.street = street;
-	}
+    public String getStreet() {
+        return street;
+    }
 
-	public int getCapacity() {
-		return capacity;
-	}
+    public void setStreet(String street) {
+        this.street = street;
+    }
 
-	public void setCapacity(int capacity) {
-		this.capacity = capacity;
-	}
+    public String getWardID() {
+        return wardId;
+    }
 
-	public int getCurrentReception() {
-		return currentReception;
-	}
+    public void setWardID(String wardId) {
+        this.wardId = wardId;
+    }
 
-	public void setCurrentReception(int currentReception) {
-		this.currentReception = currentReception;
-	}
+    public int getCapacity() {
+        return capacity;
+    }
 
-	public FullAddress getFullAddress() {
-		return fullAddress;
-	}
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
+    }
 
-	public void setFullAddress(FullAddress fullAddress) {
-		this.fullAddress = fullAddress;
-	}
+    public int getCurrentReception() {
+        return currentReception;
+    }
 
+    public void setCurrentReception(int currentReception) {
+        this.currentReception = currentReception;
+    }
+
+    public FullAddress getFullAddress() {
+        return fullAddress;
+    }
+
+    public void setFullAddress(FullAddress fullAddress) {
+        this.fullAddress = fullAddress;
+    }
 
 }

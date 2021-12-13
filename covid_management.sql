@@ -72,7 +72,7 @@ create table TreatmentPlace
 (
 	treatID int AUTO_INCREMENT,
 	name nvarchar(30),
-	street nvarchar(20),
+	street nvarchar(50),
 	wardID char(5),
 	capacity int,
 	currentReception int,

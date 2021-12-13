@@ -2,8 +2,10 @@ package com.seasidechachacha.client;
 
 import com.seasidechachacha.client.controllers.ViewPackageInfoController;
 import com.seasidechachacha.client.controllers.ViewPersonalInfoController;
+import com.seasidechachacha.client.controllers.ViewTreatmentPlaceInfoController;
 import com.seasidechachacha.client.models.ManagedUser;
 import com.seasidechachacha.client.models.Package;
+import com.seasidechachacha.client.models.TreatmentPlace;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -21,13 +23,13 @@ public class App extends Application {
     private static Scene scene;
     private static ScrollPane pn_all;
     private static Pane pn_core, pn_xeom, pn_atom, infoPane;
-    private static String role = "moderator";
+    private static String role = "admin";
 
     @Override
     public void start(Stage stage) throws IOException {
 //                scene = new Scene(loadFXML("view/FirstLogin"), 1050, 800);
 
-        scene = new Scene(loadFXML("view/ModeratorScreen"), 1050, 800);
+        scene = new Scene(loadFXML("view/AdminScreen"), 1050, 800);
         stage.setScene(scene);
         stage.show();
     }
@@ -68,6 +70,11 @@ public class App extends Application {
                 Package pack = (Package) tableRow.getItem();
                 ViewPackageInfoController controller = fxmlLoader.<ViewPackageInfoController>getController();
                 controller.setup(pack);
+            }
+            else if (fxml.equals("view/ViewTreatmentPlaceInfo")) {
+                TreatmentPlace treat = (TreatmentPlace) tableRow.getItem();
+                ViewTreatmentPlaceInfoController controller = fxmlLoader.<ViewTreatmentPlaceInfoController>getController();
+                controller.setup(treat);
             }
             pn_all = (ScrollPane) scene.lookup("#pn_all");
 

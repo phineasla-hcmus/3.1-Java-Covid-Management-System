@@ -286,6 +286,26 @@ public class ManagerDao {
 		}
 		return packageList;
 	}
+        
+        // for testing purpose
+        public static List<Package> getPackageList() {
+		List<Package> packageList = null;
+		try (Connection c = BasicConnection.getConnection()) {
+			String query = "SELECT * FROM package;";
+			PreparedStatement ps = c.prepareStatement(query);
+//			ps.setInt(1, limit);
+//			ps.setInt(2, offset);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				packageList = parsePackageList(rs);
+			}
+			c.close();
+		} catch (SQLException e) {
+			logger.error(e);
+			e.printStackTrace();
+		}
+		return packageList;
+	}
 
 	public static List<Package> getPackageList(int limit, int offset) {
 		List<Package> packageList = null;
@@ -438,7 +458,10 @@ public class ManagerDao {
 			PreparedStatement ps2 = c.prepareStatement(deleteInPackage);
 			ps1.setString(1, packageID);
 			ps2.setString(1, packageID);
-			result = (ps1.executeUpdate() > 0) && (ps2.executeUpdate() > 0);
+                        
+                        result = ps2.executeUpdate() > 0;
+                        // tạm thời comment, do bị lỗi
+//			result = (ps1.executeUpdate() > 0) && (ps2.executeUpdate() > 0);
 			c.close();
 		} catch (SQLException e) {
 			logger.error(e);

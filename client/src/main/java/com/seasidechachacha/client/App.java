@@ -14,7 +14,6 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Pane;
 import org.kordamp.bootstrapfx.BootstrapFX;
 import javafx.application.Platform;
-import javafx.scene.control.Pagination;
 import javafx.scene.control.TableRow;
 
 public class App extends Application {

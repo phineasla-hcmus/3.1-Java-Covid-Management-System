@@ -33,6 +33,24 @@ public class ManagedUserDao {
 		}
 		return user;
 	}
+        
+        // for testing purpose
+        public static List<ManagedUser> getList() {
+		String query = "SELECT * FROM manageduser;";
+		List<ManagedUser> users;
+		try (Connection c = BasicConnection.getConnection(); PreparedStatement ps = c.prepareStatement(query)) {
+//			ps.setInt(1, limit);
+//			ps.setInt(2, offset);
+			try (ResultSet rs = ps.executeQuery()) {
+				users = parseList(rs);
+			}
+		} catch (SQLException e) {
+			logger.error(e);
+			return Collections.emptyList();
+		}
+		return users;
+	}
+
 
 	public static List<ManagedUser> getList(int limit, int offset) {
 		String query = "SELECT * FROM manageduser LIMIT ? OFFSET ?;";

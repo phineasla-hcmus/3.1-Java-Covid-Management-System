@@ -1,6 +1,7 @@
 package com.seasidechachacha.client.controllers;
 
 import com.seasidechachacha.client.App;
+import com.seasidechachacha.client.database.ManagerDao;
 import static com.seasidechachacha.client.database.ManagerDao.getPackageList;
 import com.seasidechachacha.client.models.Package;
 
@@ -16,6 +17,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Pagination;
@@ -48,9 +50,13 @@ public class ViewListPackageController {
     @FXML
     private Pagination pagination;
 
+    // for testing purpose
+    private ManagerDao Tam;
+
     @FXML
     private void initialize() {
-        data = getPackageList(6, 0);
+        Tam = new ManagerDao("mod-19127268");
+        data = getPackageList();
 //        setTable(table, FXCollections.observableList(data));
 
         if (data.size() % rowsPerPage() == 0) {
@@ -88,7 +94,7 @@ public class ViewListPackageController {
             //TODO
 //            table.refresh();
         });
-        cbSort.getItems().addAll("ID", "Họ tên", "Năm sinh", "Trạng thái");
+        cbSort.getItems().addAll("Tên gói", "Mức giới hạn", "Thời gian giới hạn", "Đơn giá");
         btnSort.setOnAction(event -> {
             //TODO
         });
@@ -100,7 +106,7 @@ public class ViewListPackageController {
     }
 
     public int rowsPerPage() {
-        return 4;
+        return 3;
     }
 
     public VBox createPage(int pageIndex) {
@@ -128,36 +134,33 @@ public class ViewListPackageController {
             nameCol.setCellValueFactory(
                     new PropertyValueFactory<Package, String>("name"));
 
-            nameCol.setMinWidth(160);
+            nameCol.setMinWidth(340);
 
             TableColumn limitCol = new TableColumn("Mức giới hạn");
             limitCol.setCellValueFactory(
                     new PropertyValueFactory<Package, String>("limitPerPerson"));
 
-            limitCol.setMinWidth(160);
+            limitCol.setMinWidth(80);
 
             TableColumn dayCol = new TableColumn("Thời gian giới hạn");
             dayCol.setCellValueFactory(
                     new PropertyValueFactory<Package, String>("dayCooldown"));
 
-            dayCol.setMinWidth(160);
+            dayCol.setMinWidth(80);
 
             TableColumn priceCol = new TableColumn("Đơn giá");
             priceCol.setCellValueFactory(
                     new PropertyValueFactory<Package, String>("price"));
 
-//            statusCol.setMinWidth(160);
-            TableColumn actionCol = new TableColumn("");
-            actionCol.setCellValueFactory(new PropertyValueFactory<>(""));
+            TableColumn editCol = new TableColumn();
+            editCol.setCellValueFactory(new PropertyValueFactory<>(""));
             Callback<TableColumn<Package, String>, TableCell<Package, String>> cellFactory
                     = //
                     new Callback<TableColumn<Package, String>, TableCell<Package, String>>() {
-                // TODO: TableCell is a raw type. References to generic type TableCell<S,T>
-                // should be parameterized
                 @Override
                 public TableCell call(final TableColumn<Package, String> param) {
                     final TableCell<Object, String> cell = new TableCell<Object, String>() {
-                        final Button btn = new Button("Xem chi tiết");
+                        final Button btn = new Button("Sửa");
 
                         @Override
                         public void updateItem(String item, boolean empty) {
@@ -183,9 +186,64 @@ public class ViewListPackageController {
                 }
             };
 
-            actionCol.setCellFactory(cellFactory);
+            editCol.setCellFactory(cellFactory);
+//            editCol.setMinWidth(160);
 
-            table.getColumns().addAll(numCol, nameCol, limitCol, dayCol, priceCol, actionCol);
+            TableColumn deleteCol = new TableColumn();
+            deleteCol.setCellValueFactory(new PropertyValueFactory<>(""));
+            Callback<TableColumn<Package, String>, TableCell<Package, String>> cellFactory1
+                    = //
+                    new Callback<TableColumn<Package, String>, TableCell<Package, String>>() {
+                @Override
+                public TableCell call(final TableColumn<Package, String> param) {
+                    final TableCell<Package, String> cell = new TableCell<Package, String>() {
+                        final Button btn = new Button("Xoá");
+
+                        @Override
+                        public void updateItem(String item, boolean empty) {
+                            super.updateItem(item, empty);
+                            if (empty) {
+                                setGraphic(null);
+                                setText(null);
+                            } else {
+                                btn.setOnAction(event -> {
+                                    Package pack = getTableRow().getItem();
+                                    String packID = pack.getPackageID();
+                                    if (Tam.deletePackage(packID)) {
+
+                                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                                        alert.setTitle("Thông báo");
+                                        alert.setHeaderText("Quản lý nhu yếu phẩm");
+                                        alert.setContentText("Xoá nhu yếu phẩm thành công!");
+
+                                        alert.showAndWait();
+
+                                        data.remove(pack);
+//                                        table.refresh();
+                                    } else {
+                                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                                        alert.setTitle("Thông báo");
+                                        alert.setHeaderText("Quản lý nhu yếu phẩm");
+                                        alert.setContentText("Không thể xoá nhu yếu phẩm này!");
+
+                                        alert.showAndWait();
+                                    }
+
+                                });
+                                setGraphic(btn);
+                                setText(null);
+                            }
+                        }
+                    };
+                    cell.setAlignment(Pos.CENTER);
+                    return cell;
+                }
+            };
+
+            deleteCol.setCellFactory(cellFactory1);
+//            deleteCol.setMinWidth(160);
+
+            table.getColumns().addAll(numCol, nameCol, limitCol, dayCol, priceCol, editCol, deleteCol);
             table.setItems(FXCollections.observableArrayList(data));
             if (lastIndex == pageIndex) {
                 table.setItems(FXCollections.observableArrayList(data.subList(pageIndex * rowsPerPage(), pageIndex * rowsPerPage() + displace)));
@@ -197,113 +255,4 @@ public class ViewListPackageController {
         }
         return box;
     }
-
-//    private TableColumn<Package, String> getTableColumnByName(TableView<Package> tableView, String name) {
-//        for (TableColumn<Package, ?> col : tableView.getColumns()) {
-//            if (col.getText().equals(name)) {
-//                return (TableColumn<Package, String>) col;
-//            }
-//        }
-//        return null;
-//    }
-//    public void setColumns(TableView<Package> table) {
-//        numberCol = getTableColumnByName(table, "STT");
-//        numberCol.setCellValueFactory(
-//                new Callback<TableColumn.CellDataFeatures<Package, String>, ObservableValue<String>>() {
-//                    @Override
-//                    public ObservableValue<String> call(TableColumn.CellDataFeatures<Package, String> p) {
-//                        return new ReadOnlyObjectWrapper(table.getItems().indexOf(p.getValue()) + 1 + "");
-//                    }
-//                });
-//
-//        numberCol.setSortable(false);
-//
-//        nameCol = getTableColumnByName(table, "Tên gói");
-//        nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
-//
-//        limitCol = getTableColumnByName(table, "Mức giới hạn");
-//        limitCol.setCellValueFactory(new PropertyValueFactory<>("limitPerPerson"));
-//
-//        dayCol = getTableColumnByName(table, "Thời gian giới hạn");
-//        dayCol.setCellValueFactory(new PropertyValueFactory<>("dayCooldown"));
-//
-//        priceCol = getTableColumnByName(table, "Đơn giá");
-//        priceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
-//    }
-//
-//    public void setTable(TableView<Package> table, ObservableList<Package> data) {
-//        setColumns(table);
-//        editCol = getTableColumnByName(table, "#1");
-//        editCol.setCellValueFactory(new PropertyValueFactory<>(""));
-//        Callback<TableColumn<Package, String>, TableCell<Package, String>> cellFactory = //
-//                new Callback<TableColumn<Package, String>, TableCell<Package, String>>() {
-//                    @Override
-//                    public TableCell call(final TableColumn<Package, String> param) {
-//                        final TableCell<Object, String> cell = new TableCell<Object, String>() {
-//                            final Button btn = new Button("Sửa");
-//
-//                            @Override
-//                            public void updateItem(String item, boolean empty) {
-//                                super.updateItem(item, empty);
-//                                if (empty) {
-//                                    setGraphic(null);
-//                                    setText(null);
-//                                } else {
-//                                    btn.setOnAction(event -> {
-//                                        try {
-//                                            App.setCurrentPane("pn_all", "view/ViewPackageInfo", getTableRow());
-//                                        } catch (IOException ex) {
-//                                            logger.fatal(ex);
-//                                        }
-//                                    });
-//                                    setGraphic(btn);
-//                                    setText(null);
-//                                }
-//                            }
-//                        };
-//                        cell.setAlignment(Pos.CENTER);
-//                        return cell;
-//                    }
-//                };
-//
-//        editCol.setCellFactory(cellFactory);
-//
-//        deleteCol = getTableColumnByName(table, "#2");
-//        deleteCol.setCellValueFactory(new PropertyValueFactory<>(""));
-//        Callback<TableColumn<Package, String>, TableCell<Package, String>> cellFactory1 = //
-//                new Callback<TableColumn<Package, String>, TableCell<Package, String>>() {
-//                    @Override
-//                    public TableCell call(final TableColumn<Package, String> param) {
-//                        final TableCell<Package, String> cell = new TableCell<Package, String>() {
-//                            final Button btn = new Button("Xoá");
-//
-//                            @Override
-//                            public void updateItem(String item, boolean empty) {
-//                                super.updateItem(item, empty);
-//                                if (empty) {
-//                                    setGraphic(null);
-//                                    setText(null);
-//                                } else {
-//                                    btn.setOnAction(event -> {
-//                                        // try {
-//                                        // Package row = getTableRow().getItem();
-//                                        // App.setCurrentPane("pn_all", "view/ViewPersonalInfo", row);
-//                                        // } catch (IOException ex) {
-//                                        // }
-//                                    });
-//                                    setGraphic(btn);
-//                                    setText(null);
-//                                }
-//                            }
-//                        };
-//                        cell.setAlignment(Pos.CENTER);
-//                        return cell;
-//                    }
-//                };
-//
-//        deleteCol.setCellFactory(cellFactory1);
-//
-//        table.setItems(data);
-//
-//    }
 }

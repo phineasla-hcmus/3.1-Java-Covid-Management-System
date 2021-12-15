@@ -7,17 +7,16 @@ public class ManagedUser {
 	private String relatedId;
 	private int debt;
 	private String address;
-	private FullAddress fullAddress;
+//	private FullAddress fullAddress;
 
-	public ManagedUser(String userId, String name, int birthYear, String relateId, int debt, String wardId,
-			String address) {
+	public ManagedUser(String userId, String name, int birthYear, String relateId, int debt, String address) {
 		this.userId = userId;
 		this.name = name;
 		this.birthYear = birthYear;
 		this.relatedId = relateId;
 		this.debt = debt;
 		this.address = address;
-		this.fullAddress = new FullAddress(wardId);
+//		this.fullAddress = new FullAddress(wardId);
 	}
 
 	public String getUserId() {
@@ -68,12 +67,12 @@ public class ManagedUser {
 		this.address = address;
 	}
 
-	public FullAddress getFullAddress() {
-		return fullAddress;
-	}
-
-	public void setFullAddress(FullAddress fullAddress) {
-		this.fullAddress = fullAddress;
-	}
+//	public FullAddress getFullAddress() {
+//		return fullAddress;
+//	}
+//
+//	public void setFullAddress(FullAddress fullAddress) {
+//		this.fullAddress = fullAddress;
+//	}
 
 }

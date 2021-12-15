@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.seasidechachacha.client.controllers.UserInfoController">
+    <children>
+        <Label alignment="TOP_CENTER" prefHeight="30.0" prefWidth="803.0" styleClass="main-label" text="Thông tin cá nhân">
+        </Label>
+        <Label styleClass="sub-label" text="Thông tin cơ bản">
+            <VBox.margin>
+                <Insets left="50.0" />
+            </VBox.margin>
+        </Label>
+        <AnchorPane prefHeight="200.0" prefWidth="511.0" style="-fx-border-color: lightblue; -fx-background-radius: 30; -fx-border-radius: 20; -fx-border-width: 5;">
+            <children>
+                <HBox prefWidth="398.0" spacing="30.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <children>
+                        <Label alignment="TOP_RIGHT" contentDisplay="RIGHT" maxWidth="1.7976931348623157E308" prefHeight="20.0" prefWidth="200.0" text="Họ Tên" textAlignment="RIGHT" textFill="#006abc">
+                            <font>
+                                <Font name="System Bold" size="14.0" />
+                            </font>
+                        </Label>
+                        <Label fx:id="labelFullName" text="">
+                            <font>
+                                <Font size="14.0" />
+                            </font>
+                        </Label>
+                    </children>
+                    <padding>
+                        <Insets top="20.0" />
+                    </padding>
+                </HBox>
+                <HBox layoutY="55.0" prefHeight="20.0" prefWidth="464.0" spacing="30.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="299.0" AnchorPane.topAnchor="55.0">
+                    <children>
+                        <Label alignment="TOP_RIGHT" prefHeight="20.0" prefWidth="200.0" text="CMND/Căn cước công dân" textFill="#006abc">
+                            <font>
+                                <Font name="System Bold" size="14.0" />
+                            </font>
+                        </Label>
+                        <Label fx:id="labelIdentityCard" text="">
+                            <font>
+                                <Font size="14.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </HBox>
+                <HBox layoutY="87.0" prefWidth="398.0" spacing="30.0" AnchorPane.topAnchor="87.0">
+                    <children>
+                        <Label alignment="TOP_RIGHT" prefHeight="20.0" prefWidth="215.0" text="Năm sinh" textFill="#006abc">
+                            <font>
+                                <Font name="System Bold" size="14.0" />
+                            </font>
+                        </Label>
+                        <Label fx:id="labelBirthYear" text="">
+                            <font>
+                                <Font size="14.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </HBox>
+                <HBox layoutY="118.0" prefWidth="398.0" spacing="30.0" AnchorPane.topAnchor="118.0">
+                    <children>
+                        <Label alignment="TOP_RIGHT" prefHeight="20.0" prefWidth="215.0" text="Địa chỉ nơi ở" textFill="#006abc">
+                            <font>
+                                <Font name="System Bold" size="14.0" />
+                            </font>
+                        </Label>
+                        <Label fx:id="labelAddress" text="">
+                            <font>
+                                <Font size="14.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </HBox>
+                <HBox layoutY="148.0" prefWidth="500.0" spacing="30.0" AnchorPane.topAnchor="148.0">
+                    <children>
+                        <Label alignment="TOP_RIGHT" prefHeight="20.0" prefWidth="224.0" text="Trạng thái hiện tại" textFill="#006abc">
+                            <font>
+                                <Font name="System Bold" size="14.0" />
+                            </font>
+                        </Label>
+                        <Label fx:id="labelStatus" prefHeight="20.0" prefWidth="200.0" text="">
+                            <font>
+                                <Font size="14.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </HBox>
+                <HBox layoutY="179.0" prefWidth="500.0" spacing="30.0" AnchorPane.topAnchor="179.0">
+                    <children>
+                        <Label alignment="TOP_RIGHT" prefHeight="20.0" prefWidth="221.0" text="Nơi đang điều trị/cách ly" textFill="#006abc">
+                            <font>
+                                <Font name="System Bold" size="14.0" />
+                            </font>
+                        </Label>
+                        <Label fx:id="labelTreatmentPlace" prefHeight="20.0" prefWidth="200.0" text="">
+                            <font>
+                                <Font size="14.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </HBox>
+            </children>
+            <VBox.margin>
+                <Insets left="50.0" right="50.0" />
+            </VBox.margin>
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            </padding>
+        </AnchorPane>
+        <Label styleClass="sub-label" text="Lịch sử được quản lý">
+            <VBox.margin>
+                <Insets left="50.0" top="20.0" />
+            </VBox.margin>
+        </Label>
+        <TableView fx:id="tableManaged" prefHeight="200.0" prefWidth="646.0">
+            <columns>
+                <TableColumn fx:id="numberCol" prefWidth="75.0" text="Ngày" />
+                <TableColumn fx:id="fullNameCol" prefWidth="75.0" text="Trạng thái" />
+                <TableColumn fx:id="addressCol" prefWidth="75.0" text="Địa điểm điều trị/cách ly" />
+            </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+            </columnResizePolicy>
+            <VBox.margin>
+                <Insets left="50.0" right="50.0" />
+            </VBox.margin>
+        </TableView>
+      <Label styleClass="sub-label" text="Lịch sử tiêu thụ gói nhu yếu phẩm">
+         <VBox.margin>
+            <Insets left="50.0" top="20.0" />
+         </VBox.margin>
+      </Label>
+      <TableView fx:id="tableConsumption" prefHeight="200.0" prefWidth="646.0">
+         <columns>
+            <TableColumn fx:id="dateStatusCol" prefWidth="75.0" text="Mã đơn hàng" />
+            <TableColumn fx:id="currentStatusCol" prefWidth="75.0" text="Ngày mua" />
+            <TableColumn fx:id="currentStatusCol1" prefWidth="75.0" text="Tổng số lượng mua" />
+            <TableColumn fx:id="currentStatusCol2" prefWidth="75.0" text="Tổng tiền" />
+         </columns>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
+         <VBox.margin>
+            <Insets left="50.0" right="50.0" />
+         </VBox.margin>
+      </TableView>
+      <HBox prefWidth="200.0">
+         <children>
+            <Label styleClass="sub-label" text="Dư nợ">
+               <padding>
+                  <Insets left="50.0" top="20.0" />
+               </padding>
+            </Label>
+            <Label fx:id="labelDebt" styleClass="sub-label">
+               <padding>
+                  <Insets left="50.0" top="20.0" />
+               </padding>
+            </Label>
+         </children>
+      </HBox>
+      <Label styleClass="sub-label" text="Lịch sử thanh toán">
+         <VBox.margin>
+            <Insets left="50.0" top="20.0" />
+         </VBox.margin>
+      </Label>
+      <TableView fx:id="tablePayment" prefHeight="200.0" prefWidth="646.0">
+         <columns>
+            <TableColumn fx:id="datePlaceCol" prefWidth="75.0" text="Mã thanh toán" />
+            <TableColumn fx:id="placeCol" prefWidth="75.0" text="Ngày thanh toán" />
+            <TableColumn fx:id="currentStatusCol3" prefWidth="75.0" text="Tổng tiền" />
+         </columns>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
+         <VBox.margin>
+            <Insets left="50.0" right="50.0" />
+         </VBox.margin>
+      </TableView>
+    </children>
+    <stylesheets>
+        <URL value="@../css/style.css" />
+    </stylesheets>
+</VBox>

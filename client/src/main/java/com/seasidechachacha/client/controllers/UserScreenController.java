@@ -25,7 +25,7 @@ public class UserScreenController {
     @FXML
     private void handleButtonAction(ActionEvent event) throws IOException {
         if (event.getSource() == btn_all) {
-            App.setCurrentPane("pn_all", "", null);
+            App.setCurrentPane("pn_all", "view/UserInfo", null);
             pn_all.toFront();
         } else if (event.getSource() == btn_core) {
             App.setCurrentPane("pn_all", "view/BuyPackage", null);

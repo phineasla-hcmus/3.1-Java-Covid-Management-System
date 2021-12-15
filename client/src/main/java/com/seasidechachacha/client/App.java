@@ -29,11 +29,11 @@ public class App extends Application {
     public void start(Stage stage) throws IOException {
 //                scene = new Scene(loadFXML("view/FirstLogin"), 1050, 800);
 
-        scene = new Scene(loadFXML("view/ModeratorScreen"), 1050, 800);
+        scene = new Scene(loadFXML("view/Payment"));
         stage.setScene(scene);
         stage.show();
     }
-
+    
     public static void initializeMainScreen() throws IOException {
         // display screen based on different roles
 

@@ -118,6 +118,24 @@ public class ManagerDao {
 		return stateHistoryList;
 	}
 
+        // for testing purpose
+        public static List<StateHistory> getStateHistoryList(String userID) {
+		List<StateHistory> stateHistoryList = null;
+		try (Connection c = BasicConnection.getConnection()) {
+			String query = "SELECT * FROM statehistory WHERE statehistory.userID = ?;";
+			PreparedStatement ps = c.prepareStatement(query);
+			ps.setString(1, userID);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				stateHistoryList = parseStateHistoryList(rs);
+			}
+			c.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return stateHistoryList;
+	}
+        
 	public static List<StateHistory> getStateHistoryList(String userID, int limit, int offset) {
 		List<StateHistory> stateHistoryList = null;
 		try (Connection c = BasicConnection.getConnection()) {
@@ -666,7 +684,7 @@ public class ManagerDao {
 		return UserDao.changePassword(this.getManagerID(), oldPwd, newPwd);
 	}
 
-	public TreatmentPlace getCurrentTreatmentPlace(String userID) {
+	public static TreatmentPlace getCurrentTreatmentPlace(String userID) {
 		TreatmentPlace result = null;
 		try (Connection c = BasicConnection.getConnection()) {
 			String query = "SELECT * FROM treatmentplacehistory tph INNER JOIN treatmentplace tp ON tph.treatID = tp.treatID WHERE userID = ? ORDER BY time DESC LIMIT 1;";
@@ -794,7 +812,7 @@ public class ManagerDao {
 		List<ManagedUser> users = new ArrayList<ManagedUser>();
 
 		switch (currentState) {
-		case 0, -1: {
+		case 0:  case -1: {
 			ManagedUser F0 = getFather(userID);
 			if (F0 != null) {
 				users.add(F0);

@@ -2,6 +2,7 @@ package com.seasidechachacha.client.controllers;
 
 import com.seasidechachacha.client.App;
 import com.seasidechachacha.client.database.ManagedUserDao;
+import com.seasidechachacha.client.database.ManagerDao;
 import com.seasidechachacha.client.models.ManagedUser;
 
 import org.apache.logging.log4j.LogManager;
@@ -141,15 +142,34 @@ public class ViewListUserController {
             addrCol.setMinWidth(160);
 
             TableColumn statusCol = new TableColumn("Trạng thái");
-            statusCol.setCellValueFactory(
-                    new Callback<TableColumn.CellDataFeatures<ManagedUser, String>, ObservableValue<String>>() {
+            Callback<TableColumn<ManagedUser, String>, TableCell<ManagedUser, String>> cellFactory1
+                    = //
+                    new Callback<TableColumn<ManagedUser, String>, TableCell<ManagedUser, String>>() {
                 @Override
-                public ObservableValue<String> call(TableColumn.CellDataFeatures<ManagedUser, String> p) {
-                    return new ReadOnlyObjectWrapper(table.getItems().indexOf(p.getValue()) + 1 + "");
-                }
-            });
+                public TableCell call(final TableColumn<ManagedUser, String> param) {
+                    final TableCell<Object, String> cell = new TableCell<Object, String>() {
 
-//            statusCol.setMinWidth(160);
+                        @Override
+                        public void updateItem(String item, boolean empty) {
+                            super.updateItem(item, empty);
+                            if (empty) {
+                                setGraphic(null);
+                                setText(null);
+                            } else {
+                                if (getTableRow().getItem() != null) {
+                                    ManagedUser user = (ManagedUser) getTableRow().getItem();
+                                    setText("F" + String.valueOf(ManagerDao.getCurrentState(user.getUserId())));
+                                }
+
+                            }
+                        }
+                    };
+                    cell.setAlignment(Pos.CENTER);
+                    return cell;
+                }
+            };
+            statusCol.setCellFactory(cellFactory1);
+
             TableColumn actionCol = new TableColumn("");
             actionCol.setCellValueFactory(new PropertyValueFactory<>(""));
             Callback<TableColumn<ManagedUser, String>, TableCell<ManagedUser, String>> cellFactory

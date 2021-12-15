@@ -192,3 +192,25 @@ INSERT INTO `manageduser` (`idCard`,`fullName`,`yob`,`relatedPerson`,`debt`,`war
 INSERT INTO `manageduser` (`idCard`,`fullName`,`yob`,`relatedPerson`,`debt`,`wardID`,`street`) VALUES ('079932368028','Đậu Y Khoa',2002,'',0,'30208','23A Phan Văn Bảy');
 INSERT INTO `manageduser` (`idCard`,`fullName`,`yob`,`relatedPerson`,`debt`,`wardID`,`street`) VALUES ('079941055479','Đỗ Yên Bình',1969,'',0,'30208','5 Đường số 1');
 INSERT INTO `manageduser` (`idCard`,`fullName`,`yob`,`relatedPerson`,`debt`,`wardID`,`street`) VALUES ('079111222333','Nguyễn Văn A',1950,'079941055479',0,'30208','5 Đường số 7');
+
+insert into statehistory values ('079157952250', '2021-11-30', 1);
+insert into statehistory values ('079157952250', '2021-10-30', 2);
+insert into statehistory values ('079510193347', '2021-11-30', 0);
+insert into statehistory values ('079732769898', '2021-11-30', 0);
+insert into statehistory values ('079932368028', '2021-11-30', 2);
+insert into statehistory values ('079941055479', '2021-11-30', 2);
+insert into statehistory values ('079111222333', '2021-11-30', 2);
+
+INSERT INTO `treatmentplace` (`treatID`,`name`,`street`,`wardID`,`capacity`,`currentReception`) VALUES (79001,'Bệnh viện đa khoa Sài Gòn','125 Lê Lợi','26743',1000,123);
+INSERT INTO `treatmentplace` (`treatID`,`name`,`street`,`wardID`,`capacity`,`currentReception`) VALUES (79024,'Bệnh viện Nhân Dân 115','527 Sư Vạn Hạnh','27172',1000,234);
+INSERT INTO `treatmentplace` (`treatID`,`name`,`street`,`wardID`,`capacity`,`currentReception`) VALUES (79048,'Bệnh viện Chợ Rẫy','201 B Nguyễn Chí Thanh','27310',1000,345);
+INSERT INTO `treatmentplace` (`treatID`,`name`,`street`,`wardID`,`capacity`,`currentReception`) VALUES (79051,'Bệnh viện Quận 1 - Cơ sở 1','338 Hai Bà Trưng','26734',1000,456);
+INSERT INTO `treatmentplace` (`treatID`,`name`,`street`,`wardID`,`capacity`,`currentReception`) VALUES (87014,'Bệnh viện đa khoa Sa Đéc','153 Nguyễn Sinh Sắc','29911',1000,567);
+
+insert into treatmentplacehistory values('079157952250', '2021-11-30', 79001);
+insert into treatmentplacehistory values('079157952250', '2021-10-30', 79024);
+insert into treatmentplacehistory values('079510193347', '2021-11-30', 79048);
+insert into treatmentplacehistory values('079732769898', '2021-11-30', 79048);
+insert into treatmentplacehistory values('079932368028', '2021-11-30', 79051);
+insert into treatmentplacehistory values('079941055479', '2021-11-30', 79051);
+insert into treatmentplacehistory values('079111222333', '2021-11-30', 87014);

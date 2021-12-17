@@ -1,7 +1,5 @@
 package com.seasidechachacha.client.controllers;
 
-import com.seasidechachacha.client.App;
-import com.seasidechachacha.client.database.ManagedUserDao;
 import com.seasidechachacha.client.database.UserDao;
 import com.seasidechachacha.client.models.User;
 import java.io.IOException;
@@ -16,7 +14,6 @@ import java.util.logging.Level;
 
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -72,7 +69,7 @@ public class LoginController {
      * @param userId
      * @param password
      */
-    public void loginThread(String userId, String password) {
+    private void loginThread(String userId, String password) {
         Task<User> loginTask = new Task<User>() {
             @Override
             public User call() {
@@ -96,7 +93,7 @@ public class LoginController {
      * @param userId
      * @param password
      */
-    public void isNewUserThread(String userId) {
+    private void isNewUserThread(String userId) {
         Task<Boolean> isNewUserTask = new Task<Boolean>() {
             @Override
             public Boolean call() throws SQLException {

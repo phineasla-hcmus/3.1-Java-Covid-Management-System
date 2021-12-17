@@ -33,7 +33,7 @@ public class ViewListTreatmentPlaceController {
 
     @FXML
     private void initialize() {
-        data = getTreatmentPlaceList(5, 0);
+        data = getTreatmentPlaceList();
         if (data.size() % rowsPerPage() == 0) {
             pagination.setPageCount(data.size() / rowsPerPage());
 
@@ -65,12 +65,13 @@ public class ViewListTreatmentPlaceController {
     public VBox createPage(int pageIndex) {
         int lastIndex = 0;
         int displace = data.size() % rowsPerPage();
-        if (displace > 0) {
-            lastIndex = data.size() / rowsPerPage();
-        } else {
-            lastIndex = data.size() / rowsPerPage() - 1;
-
-        }
+        lastIndex = data.size() / rowsPerPage();
+//        if (displace > 0) {
+//            lastIndex = data.size() / rowsPerPage();
+//        } else {
+//            lastIndex = data.size() / rowsPerPage() - 1;
+//
+//        }
 
         VBox box = new VBox(5);
         int page = pageIndex * itemsPerPage();
@@ -171,7 +172,7 @@ public class ViewListTreatmentPlaceController {
     }
 
     public int rowsPerPage() {
-        return 3;
+        return 10;
     }
 
 }

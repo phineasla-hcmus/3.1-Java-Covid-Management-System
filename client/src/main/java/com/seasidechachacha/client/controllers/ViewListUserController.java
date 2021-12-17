@@ -99,7 +99,7 @@ public class ViewListUserController {
     }
 
     public int rowsPerPage() {
-        return 4;
+        return 10;
     }
 
     public VBox createPage(int pageIndex) {

@@ -89,8 +89,7 @@ public class ViewListPackageController {
             String keyword = tfSearch.getText();
 
             //for testing purpose
-            data.remove(3);
-
+//            data.remove(3);
             //TODO
 //            table.refresh();
         });
@@ -106,19 +105,21 @@ public class ViewListPackageController {
     }
 
     public int rowsPerPage() {
-        return 3;
+        return 10;
     }
 
     public VBox createPage(int pageIndex) {
         int lastIndex = 0;
         int displace = data.size() % rowsPerPage();
-        if (displace > 0) {
-            lastIndex = data.size() / rowsPerPage();
-        } else {
-            lastIndex = data.size() / rowsPerPage() - 1;
+        lastIndex = data.size() / rowsPerPage();
 
-        }
-
+//        if (displace > 0) {
+//            lastIndex = data.size() / rowsPerPage();
+//        } 
+//        else {
+//            lastIndex = data.size() / rowsPerPage() - 1;
+//
+//        }
         VBox box = new VBox(5);
         int page = pageIndex * itemsPerPage();
 
@@ -142,7 +143,7 @@ public class ViewListPackageController {
 
             limitCol.setMinWidth(80);
 
-            TableColumn dayCol = new TableColumn("Thời gian giới hạn");
+            TableColumn dayCol = new TableColumn("Thời gian giới hạn (ngày)");
             dayCol.setCellValueFactory(
                     new PropertyValueFactory<Package, String>("dayCooldown"));
 

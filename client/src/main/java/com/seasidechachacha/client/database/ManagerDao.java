@@ -269,10 +269,8 @@ public class ManagerDao {
 		try (Connection c = BasicConnection.getConnection()) {
 			String query = "SELECT * FROM treatmentplace;";
 			PreparedStatement ps = c.prepareStatement(query);
-//			ps.setInt(1, limit);
-//			ps.setInt(2, offset);
 			ResultSet rs = ps.executeQuery();
-			if (rs.next()) {
+			if (rs != null) {
 				treatmentPlaceList = parseTreatmentPlaceList(rs);
 			}
 			c.close();
@@ -379,7 +377,7 @@ public class ManagerDao {
 //			ps.setInt(1, limit);
 //			ps.setInt(2, offset);
 			ResultSet rs = ps.executeQuery();
-			if (rs.next()) {
+			if (rs != null) {
 				packageList = parsePackageList(rs);
 			}
 			c.close();

@@ -1,26 +1,35 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
- */
 package com.seasidechachacha.client.controllers;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-import javafx.fxml.Initializable;
+import static com.seasidechachacha.client.database.ManagedUserDao.get;
+import static com.seasidechachacha.client.database.ManagerDao.getCurrentState;
+import static com.seasidechachacha.client.database.ManagerDao.getCurrentTreatmentPlace;
+import com.seasidechachacha.client.models.ManagedUser;
+import com.seasidechachacha.client.models.TreatmentPlace;
+import javafx.fxml.FXML;
+import javafx.scene.control.Label;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-/**
- * FXML Controller class
- *
- * @author user
- */
-public class UserInfoController implements Initializable {
+public class UserInfoController {
 
-    /**
-     * Initializes the controller class.
-     */
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }    
-    
+    private static final Logger logger = LogManager.getLogger(ViewListPackageController.class);
+    @FXML
+    private Label labelFullName, labelIdentityCard, labelBirthYear, labelAddress, labelStatus, labelTreatmentPlace;
+
+    @FXML
+    private void initialize() {
+        String userId = "079157952250";
+        ManagedUser user = get(userId);
+        labelFullName.setText(user.getName());
+        labelIdentityCard.setText(user.getUserId());
+        labelBirthYear.setText(String.valueOf(user.getBirthYear()));
+        labelAddress.setText(user.getAddress());
+        String currentStatus = "F" + getCurrentState(user.getUserId());
+        labelStatus.setText(currentStatus);
+        TreatmentPlace treat = getCurrentTreatmentPlace(user.getUserId());
+        String currentPlace = treat.getName();
+        if (treat != null) {
+            labelTreatmentPlace.setText(treat.getName());
+        }
+    }
 }

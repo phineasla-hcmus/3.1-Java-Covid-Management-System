@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
@@ -59,7 +60,12 @@ public class ViewPackageInfoController {
 
             if (result.isPresent()) {
                 if (Tam.updatePackageName(packageID, result.get())) {
-                    System.out.println("Update successfully");
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Thông báo");
+                    alert.setHeaderText("Cập nhật thông tin nhu yếu phẩm");
+                    alert.setContentText("Thay đổi tên gói thành công!");
+
+                    alert.showAndWait();
                 }
                 labelName.setText(result.get());
             }
@@ -73,7 +79,12 @@ public class ViewPackageInfoController {
 
             if (result.isPresent()) {
                 if (Tam.updatePackageLimitPerPerson(packageID, Integer.valueOf(result.get()))) {
-                    System.out.println("Update successfully");
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Thông báo");
+                    alert.setHeaderText("Cập nhật thông tin nhu yếu phẩm");
+                    alert.setContentText("Thay đổi mức giới hạn thành công!");
+
+                    alert.showAndWait();
                 }
 
                 labelLimit.setText(result.get());
@@ -88,7 +99,12 @@ public class ViewPackageInfoController {
 
             if (result.isPresent()) {
                 if (Tam.updatePackageDayCooldown(packageID, Integer.valueOf(result.get()))) {
-                    System.out.println("Update successfully");
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Thông báo");
+                    alert.setHeaderText("Cập nhật thông tin nhu yếu phẩm");
+                    alert.setContentText("Thay đổi thời gian giới hạn thành công!");
+
+                    alert.showAndWait();
                 }
                 labelDay.setText(result.get());
             }
@@ -102,7 +118,12 @@ public class ViewPackageInfoController {
 
             if (result.isPresent()) {
                 if (Tam.updatePackagePrice(packageID, Integer.valueOf(result.get()))) {
-                    System.out.println("Update successfully");
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Thông báo");
+                    alert.setHeaderText("Cập nhật thông tin nhu yếu phẩm");
+                    alert.setContentText("Thay đổi đơn giá thành công!");
+
+                    alert.showAndWait();
                 }
                 labelPrice.setText(result.get());
             }

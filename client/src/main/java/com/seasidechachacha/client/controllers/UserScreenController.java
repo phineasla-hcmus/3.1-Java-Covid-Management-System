@@ -6,50 +6,49 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 import com.jfoenix.controls.JFXButton;
 import com.seasidechachacha.client.App;
+import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class UserScreenController {
 
+    private static final Logger logger = LogManager.getLogger(LoginController.class);
     @FXML
     private ScrollPane pn_all;
-    
-    @FXML
-    private Pane pn_core, pn_xeom, pn_atom;
 
     @FXML
-    private JFXButton btn_all, btn_core, btn_xeom, btn_atom;
+    private JFXButton btnInfo, btnPackage, btnPayment;
+    
+    @FXML
+    private Button btnLogout;
+
+    @FXML
+    private void initialize() {
+        btnLogout.setOnAction(event -> {
+            try {
+                App.setRoot("view/Login");
+            } catch (IOException ex) {
+                logger.fatal(ex);
+            }
+        });
+    }
 
     @FXML
     private void handleButtonAction(ActionEvent event) throws IOException {
-        if (event.getSource() == btn_all) {
+        if (event.getSource() == btnInfo) {
             App.setCurrentPane("pn_all", "view/UserInfo", null);
-            pn_all.toFront();
-        } else if (event.getSource() == btn_core) {
+        } else if (event.getSource() == btnPackage) {
             App.setCurrentPane("pn_all", "view/BuyPackage", null);
-            pn_all.toFront();   
-        } else if (event.getSource() == btn_xeom) {
+        } else if (event.getSource() == btnPayment) {
             App.setCurrentPane("pn_all", "view/UserPayment", null);
-            pn_all.toFront();
-        } else if (event.getSource() == btn_atom) {
-            pn_atom.toFront();
         }
     }
 
     @FXML
     private BorderPane mainBorderPane;
-
-    @FXML
-    private void handleShowView1(ActionEvent e) {
-        loadFXML(getClass().getResource("ViewListUser.fxml"));
-    }
-
-    @FXML
-    private void handleShowView2(ActionEvent e) {
-        loadFXML(getClass().getResource("secondary.fxml"));
-    }
 
     private void loadFXML(URL url) {
         try {

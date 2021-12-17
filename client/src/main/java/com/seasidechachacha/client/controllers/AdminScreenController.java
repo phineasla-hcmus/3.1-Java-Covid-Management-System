@@ -9,15 +9,13 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import com.jfoenix.controls.JFXButton;
 import com.seasidechachacha.client.App;
+import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
+import org.apache.logging.log4j.LogManager;
 
 public class AdminScreenController {
 
-    @FXML
-    private ScrollPane pn_all;
-    
-    @FXML
-    private Pane pn_core, pn_xeom, pn_atom;
+    private static final org.apache.logging.log4j.Logger logger = LogManager.getLogger(LoginController.class);
 
     @FXML
     private JFXButton btn_all, btn_core, btn_xeom, btn_atom;
@@ -25,31 +23,29 @@ public class AdminScreenController {
     @FXML
     private void handleButtonAction(ActionEvent event) throws IOException {
         if (event.getSource() == btn_all) {
-            App.setCurrentPane("pn_all", "view/AddNewModerator1", null);
-            pn_all.toFront();
+            App.setCurrentPane("pn_all", "view/AddNewModerator", null);
         } else if (event.getSource() == btn_core) {
             App.setCurrentPane("pn_all", "view/ManageModerator", null);
-            pn_all.toFront();
         } else if (event.getSource() == btn_xeom) {
             App.setCurrentPane("pn_all", "view/ViewListTreatmentPlace", null);
-            pn_all.toFront();
-        } else if (event.getSource() == btn_atom) {
-            pn_atom.toFront();
         }
+    }
+    @FXML
+    private Button btnLogout;
+
+    @FXML
+    private void initialize() {
+        btnLogout.setOnAction(event -> {
+            try {
+                App.setRoot("view/Login");
+            } catch (IOException ex) {
+                logger.fatal(ex);
+            }
+        });
     }
 
     @FXML
     private BorderPane mainBorderPane;
-
-    @FXML
-    private void handleShowView1(ActionEvent e) {
-        loadFXML(getClass().getResource("ViewListUser.fxml"));
-    }
-
-    @FXML
-    private void handleShowView2(ActionEvent e) {
-        loadFXML(getClass().getResource("secondary.fxml"));
-    }
 
     private void loadFXML(URL url) {
         try {

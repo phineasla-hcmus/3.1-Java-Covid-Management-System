@@ -54,7 +54,7 @@
                 </HBox>
                 <HBox layoutY="87.0" prefWidth="398.0" spacing="30.0" AnchorPane.topAnchor="87.0">
                     <children>
-                        <Label alignment="TOP_RIGHT" prefHeight="20.0" prefWidth="215.0" text="Năm sinh" textFill="#006abc">
+                        <Label alignment="TOP_RIGHT" prefHeight="20.0" prefWidth="214.0" text="Năm sinh" textFill="#006abc">
                             <font>
                                 <Font name="System Bold" size="14.0" />
                             </font>
@@ -68,7 +68,7 @@
                 </HBox>
                 <HBox layoutY="118.0" prefWidth="398.0" spacing="30.0" AnchorPane.topAnchor="118.0">
                     <children>
-                        <Label alignment="TOP_RIGHT" prefHeight="20.0" prefWidth="215.0" text="Địa chỉ nơi ở" textFill="#006abc">
+                        <Label alignment="TOP_RIGHT" prefHeight="20.0" prefWidth="214.0" text="Địa chỉ nơi ở" textFill="#006abc">
                             <font>
                                 <Font name="System Bold" size="14.0" />
                             </font>
@@ -82,7 +82,7 @@
                 </HBox>
                 <HBox layoutY="148.0" prefWidth="500.0" spacing="30.0" AnchorPane.topAnchor="148.0">
                     <children>
-                        <Label alignment="TOP_RIGHT" prefHeight="20.0" prefWidth="224.0" text="Trạng thái hiện tại" textFill="#006abc">
+                        <Label alignment="TOP_RIGHT" prefHeight="20.0" prefWidth="216.0" text="Trạng thái hiện tại" textFill="#006abc">
                             <font>
                                 <Font name="System Bold" size="14.0" />
                             </font>
@@ -96,7 +96,7 @@
                 </HBox>
                 <HBox layoutY="179.0" prefWidth="500.0" spacing="30.0" AnchorPane.topAnchor="179.0">
                     <children>
-                        <Label alignment="TOP_RIGHT" prefHeight="20.0" prefWidth="221.0" text="Nơi đang điều trị/cách ly" textFill="#006abc">
+                        <Label alignment="TOP_RIGHT" prefHeight="20.0" prefWidth="214.0" text="Nơi đang điều trị/cách ly" textFill="#006abc">
                             <font>
                                 <Font name="System Bold" size="14.0" />
                             </font>

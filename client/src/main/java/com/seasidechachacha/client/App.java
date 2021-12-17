@@ -23,25 +23,17 @@ public class App extends Application {
 
     private static Scene scene;
     private static ScrollPane pn_all;
-    private static Pane pn_core, pn_xeom, pn_atom, infoPane;
     private static String role = "admin";
 
     @Override
     public void start(Stage stage) throws IOException {
-//                scene = new Scene(loadFXML("view/FirstLogin"), 1050, 800);
-
-        scene = new Scene(loadFXML("view/ModeratorScreen"));
+        scene = new Scene(loadFXML("view/AdminScreen"));
         stage.setScene(scene);
         stage.show();
     }
     
     public static void initializeMainScreen() throws IOException {
-        // display screen based on different roles
-
         scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
-//        pn_core = (Pane) scene.lookup("#pn_core");
-//        pn_xeom = (Pane) scene.lookup("#pn_xeom");
-//        pn_atom = (Pane) scene.lookup("#pn_atom");
         String initialPane = "";
 
         if (role.equals("moderator")) {

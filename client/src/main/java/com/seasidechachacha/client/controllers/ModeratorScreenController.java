@@ -8,6 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.BorderPane;
 import com.jfoenix.controls.JFXButton;
 import com.seasidechachacha.client.App;
+import javafx.scene.control.Button;
 import org.apache.logging.log4j.LogManager;
 
 public class ModeratorScreenController {
@@ -31,12 +32,17 @@ public class ModeratorScreenController {
     private BorderPane mainBorderPane;
 
     @FXML
+    private Button btnLogout;
+
+    @FXML
     private void initialize() {
-//        try {
-//            App.setCurrentPane("pn_all", "view/ViewListUser", null);
-//        } catch (IOException ex) {
-//            logger.fatal(ex);
-//        }
+        btnLogout.setOnAction(event -> {
+            try {
+                App.setRoot("view/Login");
+            } catch (IOException ex) {
+                logger.fatal(ex);
+            }
+        });
     }
 
     private void loadFXML(URL url) {

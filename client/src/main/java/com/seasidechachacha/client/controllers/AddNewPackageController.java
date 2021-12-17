@@ -65,10 +65,8 @@ public class AddNewPackageController {
 
     private Package getCurrentInput() {
         Package pack = null;
-        String ID = "14";
         String name = tfName.getText();
         int limit = Integer.valueOf(tfLimit.getText());
-        System.out.println(limit);
         int day = Integer.valueOf(tfDayCooldown.getText());
         double price = Double.valueOf(tfPrice.getText());
         pack = new Package(0, name, limit, day, price);

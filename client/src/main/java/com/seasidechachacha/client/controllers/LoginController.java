@@ -1,7 +1,5 @@
 package com.seasidechachacha.client.controllers;
 
-import com.seasidechachacha.client.App;
-import com.seasidechachacha.client.database.ManagedUserDao;
 import com.seasidechachacha.client.database.UserDao;
 import com.seasidechachacha.client.models.User;
 
@@ -14,7 +12,6 @@ import java.util.concurrent.Executors;
 
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;

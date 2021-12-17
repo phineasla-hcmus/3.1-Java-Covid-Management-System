@@ -40,8 +40,6 @@ public class AddNewModeratorController {
             a.show();
         } else {
             int managerRoleId = 2; // Reminder purpose
-            // boolean result = UserDao.register(new User(username.getText(),
-            // pass1.getText(), managerRoleId));
             addModeratorThread(new User(username.getText(), pass1.getText(), managerRoleId));
         }
     }

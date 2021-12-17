@@ -162,18 +162,19 @@ INSERT INTO `ward` (`wardID`,`wardName`,`districtID`) VALUES ('30214','Xã Hòa 
 INSERT INTO `ward` (`wardID`,`wardName`,`districtID`) VALUES ('30217','Xã Long Hậu','876');
 INSERT INTO `ward` (`wardID`,`wardName`,`districtID`) VALUES ('30220','Xã Tân Phước','876');
 
-INSERT INTO `user` (`userID`,`pwd`,`roleID`) VALUES ('079157952250','ABearWith0Ears',3);
-INSERT INTO `user` (`userID`,`pwd`,`roleID`) VALUES ('079510193347','nNutN9696',3);
-INSERT INTO `user` (`userID`,`pwd`,`roleID`) VALUES ('079732769898','fishBoiBaitMaster123',3);
-INSERT INTO `user` (`userID`,`pwd`,`roleID`) VALUES ('079932368028','WhyWas6ScaredOf7',3);
-INSERT INTO `user` (`userID`,`pwd`,`roleID`) VALUES ('079941055479','WeakPwd123',3);
-INSERT INTO `user` (`userID`,`pwd`,`roleID`) VALUES ('admin-123456','SeasideChaChaCha07',1);
-INSERT INTO `user` (`userID`,`pwd`,`roleID`) VALUES ('banned-mod01','easyPwd123',2);
-INSERT INTO `user` (`userID`,`pwd`,`roleID`) VALUES ('mod-18127077','pwdFor18127077',2);
-INSERT INTO `user` (`userID`,`pwd`,`roleID`) VALUES ('mod-19127203','pwdFor19127203',2);
-INSERT INTO `user` (`userID`,`pwd`,`roleID`) VALUES ('mod-19127268','pwdFor19127268',2);
-INSERT INTO `user` (`userID`,`pwd`,`roleID`) VALUES ('mod-19127511','pwdFor19127511',2);
-INSERT INTO `user` (`userID`,`pwd`,`roleID`) VALUES('079111222333', '123456', 3);
+--  default password 123456
+INSERT INTO `user` (`userID`,`pwd`,`roleID`) VALUES ('079157952250','$31$16$D6ZOfaeLxxpsbaT9L9QG_e-zTf1WcUtAPt0v2n9fknU',3);
+INSERT INTO `user` (`userID`,`pwd`,`roleID`) VALUES ('079510193347','$31$16$D6ZOfaeLxxpsbaT9L9QG_e-zTf1WcUtAPt0v2n9fknU',3);
+INSERT INTO `user` (`userID`,`pwd`,`roleID`) VALUES ('079732769898','$31$16$D6ZOfaeLxxpsbaT9L9QG_e-zTf1WcUtAPt0v2n9fknU',3);
+INSERT INTO `user` (`userID`,`pwd`,`roleID`) VALUES ('079932368028','$31$16$D6ZOfaeLxxpsbaT9L9QG_e-zTf1WcUtAPt0v2n9fknU',3);
+INSERT INTO `user` (`userID`,`pwd`,`roleID`) VALUES ('079941055479','$31$16$D6ZOfaeLxxpsbaT9L9QG_e-zTf1WcUtAPt0v2n9fknU',3);
+INSERT INTO `user` (`userID`,`pwd`,`roleID`) VALUES ('admin-123456','$31$16$D6ZOfaeLxxpsbaT9L9QG_e-zTf1WcUtAPt0v2n9fknU',1);
+INSERT INTO `user` (`userID`,`pwd`,`roleID`) VALUES ('banned-mod01','$31$16$D6ZOfaeLxxpsbaT9L9QG_e-zTf1WcUtAPt0v2n9fknU',2);
+INSERT INTO `user` (`userID`,`pwd`,`roleID`) VALUES ('mod-18127077','$31$16$D6ZOfaeLxxpsbaT9L9QG_e-zTf1WcUtAPt0v2n9fknU',2);
+INSERT INTO `user` (`userID`,`pwd`,`roleID`) VALUES ('mod-19127203','$31$16$D6ZOfaeLxxpsbaT9L9QG_e-zTf1WcUtAPt0v2n9fknU',2);
+INSERT INTO `user` (`userID`,`pwd`,`roleID`) VALUES ('mod-19127268','$31$16$D6ZOfaeLxxpsbaT9L9QG_e-zTf1WcUtAPt0v2n9fknU',2);
+INSERT INTO `user` (`userID`,`pwd`,`roleID`) VALUES ('mod-19127511','$31$16$D6ZOfaeLxxpsbaT9L9QG_e-zTf1WcUtAPt0v2n9fknU',2);
+INSERT INTO `user` (`userID`,`pwd`,`roleID`) VALUES('079111222333', '$31$16$D6ZOfaeLxxpsbaT9L9QG_e-zTf1WcUtAPt0v2n9fknU', 3);
 
 INSERT INTO `package` (`packageID`,`name`,`limitPerPerson`,`dayCooldown`,`price`) VALUES (1,'Siro điều trị viêm đường hô hấp kèm theo ho Prospan (100ml)',2,7,68000.000);
 INSERT INTO `package` (`packageID`,`name`,`limitPerPerson`,`dayCooldown`,`price`) VALUES (2,'Khẩu trang than hoạt tính 4 lớp Pharmacity (50 cái/hộp)',1,30,89000.000);

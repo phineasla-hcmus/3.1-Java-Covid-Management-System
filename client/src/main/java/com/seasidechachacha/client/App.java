@@ -6,6 +6,7 @@ import com.seasidechachacha.client.controllers.ViewTreatmentPlaceInfoController;
 import com.seasidechachacha.client.models.ManagedUser;
 import com.seasidechachacha.client.models.Package;
 import com.seasidechachacha.client.models.TreatmentPlace;
+import com.seasidechachacha.client.utils.PasswordAuthenticator;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -29,7 +30,7 @@ public class App extends Application {
     public void start(Stage stage) throws IOException {
 //                scene = new Scene(loadFXML("view/FirstLogin"), 1050, 800);
 
-        scene = new Scene(loadFXML("view/Payment"));
+        scene = new Scene(loadFXML("view/Login"));
         stage.setScene(scene);
         stage.show();
     }
@@ -98,12 +99,15 @@ public class App extends Application {
     }
 
     public static void main(String[] args) {
-        // PasswordAuthenticator pwdAuth = new PasswordAuthenticator();
-        // String login = pwdAuth.authenticate("1ixrvSfjhPqd".toCharArray(),
-        //         "$31$16$VKx6w7TTTyO8H504Ajxk6BOW034fSyZYhuayMVsf2P8")
-        //                 ? "Welcome"
-        //                 : "GET OUT";
-        // System.out.println(login);
+//         PasswordAuthenticator pwdAuth = new PasswordAuthenticator();
+////         String login = pwdAuth.authenticate("1ixrvSfjhPqd".toCharArray(),
+////                 "$31$16$VKx6w7TTTyO8H504Ajxk6BOW034fSyZYhuayMVsf2P8")
+////                         ? "Welcome"
+////                         : "GET OUT";
+//        
+////        String a=   pwdAuth.hash("123456".toCharArray());
+//           
+//         System.out.println(a);
         launch();
     }
 

@@ -42,7 +42,7 @@ public class ViewPackageInfoController {
     }
 
     public void setup(Package pack) {
-        String packageID = pack.getPackageID();
+        int packageID = pack.getPackageID();
         Package currentPack = getPackageByID(packageID);
 
         labelName.setText(currentPack.getName());

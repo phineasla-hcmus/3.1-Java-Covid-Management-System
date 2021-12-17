@@ -1,13 +1,13 @@
 package com.seasidechachacha.client.models;
 
 public class Package {
-	private String packageID;
+	private int packageID;
 	private String name;
 	private int limitPerPerson;
 	private int dayCooldown;
 	private double price;
 
-	public Package(String packageID, String name, int limitPerPerson, int dayCooldown, double price) {
+	public Package(int packageID, String name, int limitPerPerson, int dayCooldown, double price) {
 		this.packageID = packageID;
 		this.name = name;
 		this.limitPerPerson = limitPerPerson;
@@ -15,11 +15,11 @@ public class Package {
 		this.price = price;
 	}
 
-	public String getPackageID() {
+	public int getPackageID() {
 		return packageID;
 	}
 
-	public void setPackageID(String packageID) {
+	public void setPackageID(int packageID) {
 		this.packageID = packageID;
 	}
 

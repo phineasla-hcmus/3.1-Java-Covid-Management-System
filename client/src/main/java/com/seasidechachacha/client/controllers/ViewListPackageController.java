@@ -208,7 +208,7 @@ public class ViewListPackageController {
                             } else {
                                 btn.setOnAction(event -> {
                                     Package pack = getTableRow().getItem();
-                                    String packID = pack.getPackageID();
+                                    int packID = pack.getPackageID();
                                     if (Tam.deletePackage(packID)) {
 
                                         Alert alert = new Alert(Alert.AlertType.INFORMATION);

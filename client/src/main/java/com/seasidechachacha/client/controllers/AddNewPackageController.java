@@ -41,24 +41,25 @@ public class AddNewPackageController {
     public void initialize() {
         ManagerDao Tam = new ManagerDao("mod-19127268");
         btnAdd.setOnAction(event -> {
-//            Package user = new Package("123456", tfFullName.getText(), Integer.valueOf(tfBirthYear.getText()), "1", 0,
-//                    "00001", "abc");
-            if (Tam.addPackage(getCurrentInput())) {
-                // TODO
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Thông báo");
-                alert.setHeaderText("Quản lý nhu yếu phẩm");
-                alert.setContentText("Thêm mới nhu yếu phẩm thành công!");
-                
-                alert.showAndWait();
-            } else {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Thông báo");
-                alert.setHeaderText("Quản lý nhu yếu phẩm");
-                alert.setContentText("Nhu yếu phẩm đã tồn tại!");
-                
-                alert.showAndWait();
+            if (isValid()) {
+                if (Tam.addPackage(getCurrentInput())) {
+                    // TODO
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Thông báo");
+                    alert.setHeaderText("Quản lý nhu yếu phẩm");
+                    alert.setContentText("Thêm mới nhu yếu phẩm thành công!");
+                    alert.showAndWait();
+                    refreshInput();
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Thông báo");
+                    alert.setHeaderText("Quản lý nhu yếu phẩm");
+                    alert.setContentText("Nhu yếu phẩm đã tồn tại!");
+
+                    alert.showAndWait();
+                }
             }
+
         });
     }
 
@@ -67,13 +68,40 @@ public class AddNewPackageController {
         String ID = "14";
         String name = tfName.getText();
         int limit = Integer.valueOf(tfLimit.getText());
+        System.out.println(limit);
         int day = Integer.valueOf(tfDayCooldown.getText());
         double price = Double.valueOf(tfPrice.getText());
-        
-
-        pack = new Package(ID, name, limit, day, price);
-
+        pack = new Package(0, name, limit, day, price);
         return pack;
+    }
+
+    private boolean isValid() {
+        boolean valid = true;
+        if (tfName.getText().equals("") || tfLimit.getText().equals("") || tfDayCooldown.getText().equals("") || tfPrice.getText().equals("")) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Thông báo");
+            alert.setHeaderText("Thêm mới nhu yếu phẩm");
+            alert.setContentText("Vui lòng điền đầy đủ thông tin!");
+
+            alert.showAndWait();
+            valid = false;
+        } else if (Integer.valueOf(tfLimit.getText()) <= 0 || Integer.valueOf(tfDayCooldown.getText()) <= 0 || Integer.valueOf(tfPrice.getText()) <= 0) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Thông báo");
+            alert.setHeaderText("Thêm mới nhu yếu phẩm");
+            alert.setContentText("Vui lòng điền số lớn hơn 0 cho các trường thông tin là số!");
+
+            alert.showAndWait();
+            valid = false;
+        }
+        return valid;
+    }
+
+    private void refreshInput() {
+        tfName.setText("");
+        tfLimit.setText("");
+        tfDayCooldown.setText("");
+        tfPrice.setText("");
     }
 
 }

@@ -188,6 +188,27 @@ public class ManagerDao {
 		}
 		return treatmentPlaceHistoryList;
 	}
+        
+        // for testing purpose
+        public static List<TreatmentPlaceHistory> getTreatmentPlaceHistoryList(String userID) {
+		List<TreatmentPlaceHistory> treatmentPlaceHistoryList = null;
+		try (Connection c = BasicConnection.getConnection()) {
+			String query = "SELECT * FROM treatmentplacehistory tph INNER JOIN treatmentplace tp ON tph.treatID = tp.treatID WHERE tph.userID = ?;";
+			PreparedStatement ps = c.prepareStatement(query);
+			ps.setString(1, userID);
+//			ps.setInt(2, limit);
+//			ps.setInt(3, offset);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				treatmentPlaceHistoryList = parseTreatmentPlaceHistoryList(rs);
+			}
+			c.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return treatmentPlaceHistoryList;
+	}
+
 
 	public static List<TreatmentPlaceHistory> getTreatmentPlaceHistoryList(String userID, int limit, int offset) {
 		List<TreatmentPlaceHistory> treatmentPlaceHistoryList = null;
@@ -238,6 +259,25 @@ public class ManagerDao {
 		List<TreatmentPlace> treatmentPlaceList = new ArrayList<TreatmentPlace>();
 		while (rs.next()) {
 			treatmentPlaceList.add(parseTreatmentPlace(rs));
+		}
+		return treatmentPlaceList;
+	}
+        
+        // for testing purpose
+        public static List<TreatmentPlace> getTreatmentPlaceList() {
+		List<TreatmentPlace> treatmentPlaceList = null;
+		try (Connection c = BasicConnection.getConnection()) {
+			String query = "SELECT * FROM treatmentplace;";
+			PreparedStatement ps = c.prepareStatement(query);
+//			ps.setInt(1, limit);
+//			ps.setInt(2, offset);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				treatmentPlaceList = parseTreatmentPlaceList(rs);
+			}
+			c.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 		return treatmentPlaceList;
 	}
@@ -318,7 +358,7 @@ public class ManagerDao {
 	}
 
 	private static Package parsePackage(ResultSet rs) throws SQLException {
-		return new Package(rs.getString("packageID"), rs.getString("name"), rs.getInt("limitPerPerson"),
+		return new Package(rs.getInt("packageID"), rs.getString("name"), rs.getInt("limitPerPerson"),
 				rs.getInt("dayCooldown"), rs.getDouble("price"));
 	}
 
@@ -390,13 +430,13 @@ public class ManagerDao {
 		return packageList;
 	}
 
-	public boolean updatePackageName(String packageID, String name) {
+	public boolean updatePackageName(int packageID, String name) {
 		boolean result = false;
 		try (Connection c = BasicConnection.getConnection()) {
 			String query = "UPDATE package SET name = ? WHERE package.packageID = ?;";
 			PreparedStatement ps = c.prepareStatement(query);
 			ps.setString(1, name);
-			ps.setString(2, packageID);
+			ps.setInt(2, packageID);
 			result = ps.executeUpdate() > 0;
 			c.close();
 		} catch (SQLException e) {
@@ -405,13 +445,13 @@ public class ManagerDao {
 		return result && addMesssage("update packageID = " + packageID + " set name = " + name);
 	}
 
-	public boolean updatePackageLimitPerPerson(String packageID, int limitPerPerson) {
+	public boolean updatePackageLimitPerPerson(int packageID, int limitPerPerson) {
 		boolean result = false;
 		try (Connection c = BasicConnection.getConnection()) {
 			String query = "UPDATE package SET limitPerPerson = ? WHERE package.packageID = ?;";
 			PreparedStatement ps = c.prepareStatement(query);
 			ps.setInt(1, limitPerPerson);
-			ps.setString(2, packageID);
+			ps.setInt(2, packageID);
 			result = ps.executeUpdate() > 0;
 			c.close();
 		} catch (SQLException e) {
@@ -421,13 +461,13 @@ public class ManagerDao {
 				"update packageID = " + packageID + " set limitPerPerson = " + Integer.toString(limitPerPerson));
 	}
 
-	public boolean updatePackageDayCooldown(String packageID, int dayCooldown) {
+	public boolean updatePackageDayCooldown(int packageID, int dayCooldown) {
 		boolean result = false;
 		try (Connection c = BasicConnection.getConnection()) {
 			String query = "UPDATE package SET dayCooldown = ? WHERE package.packageID = ?;";
 			PreparedStatement ps = c.prepareStatement(query);
 			ps.setInt(1, dayCooldown);
-			ps.setString(2, packageID);
+			ps.setInt(2, packageID);
 			result = ps.executeUpdate() > 0;
 			c.close();
 		} catch (SQLException e) {
@@ -437,13 +477,13 @@ public class ManagerDao {
 				"update packageID = " + packageID + " set dayCooldown = " + Integer.toString(dayCooldown));
 	}
 
-	public boolean updatePackagePrice(String packageID, double price) {
+	public boolean updatePackagePrice(int packageID, double price) {
 		boolean result = false;
 		try (Connection c = BasicConnection.getConnection()) {
 			String query = "UPDATE package SET price = ? WHERE package.packageID = ?;";
 			PreparedStatement ps = c.prepareStatement(query);
 			ps.setDouble(1, price);
-			ps.setString(2, packageID);
+			ps.setInt(2, packageID);
 			result = ps.executeUpdate() > 0;
 			c.close();
 		} catch (SQLException e) {
@@ -461,7 +501,7 @@ public class ManagerDao {
 			ps.setInt(2, p.getLimitPerPerson());
 			ps.setInt(3, p.getDayCooldown());
 			ps.setDouble(4, p.getPrice());
-			ps.setString(5, p.getPackageID());
+			ps.setInt(5, p.getPackageID());
 			result = ps.executeUpdate() > 0;
 			c.close();
 		} catch (SQLException e) {
@@ -472,11 +512,11 @@ public class ManagerDao {
 				+ String.valueOf(p.getDayCooldown()) + ", set price = " + String.valueOf(p.getPrice()));
 	}
 
-	private static boolean isPackageInOrderHistory(String packageID) {
+	private static boolean isPackageInOrderHistory(int packageID) {
 		try (Connection c = BasicConnection.getConnection()) {
 			String query = "SELECT * FROM orderitem WHERE packageID = ?;";
 			PreparedStatement ps = c.prepareStatement(query);
-			ps.setString(1, packageID);
+			ps.setInt(1, packageID);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
 				c.close();
@@ -489,7 +529,7 @@ public class ManagerDao {
 		return false;
 	}
 
-	public boolean deletePackage(String packageID) {
+	public boolean deletePackage(int packageID) {
 		boolean result = false;
 		if (isPackageInOrderHistory(packageID)) {
 			return result;
@@ -499,8 +539,8 @@ public class ManagerDao {
 			String deleteInPackage = "DELETE FROM package WHERE packageID = ?;";
 			PreparedStatement ps1 = c.prepareStatement(deleteInCartItem);
 			PreparedStatement ps2 = c.prepareStatement(deleteInPackage);
-			ps1.setString(1, packageID);
-			ps2.setString(1, packageID);
+			ps1.setInt(1, packageID);
+			ps2.setInt(1, packageID);
 
 			result = ps2.executeUpdate() > 0;
 			// tạm thời comment, do bị lỗi
@@ -512,15 +552,15 @@ public class ManagerDao {
 		return result && addMesssage("delete packageID = " + packageID);
 	}
 
-	public static Package getPackageByID(String packageID) {
+	public static Package getPackageByID(int packageID) {
 		Package p = null;
 		try (Connection c = BasicConnection.getConnection()) {
 			String query = "SELECT * FROM package WHERE packageID = ?;";
 			PreparedStatement ps = c.prepareStatement(query);
-			ps.setString(1, packageID);
+			ps.setInt(1, packageID);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
-				p = new Package(rs.getString("packageID"), rs.getString("name"), rs.getInt("limitPerPerson"),
+				p = new Package(rs.getInt("packageID"), rs.getString("name"), rs.getInt("limitPerPerson"),
 						rs.getInt("dayCooldown"), rs.getDouble("price"));
 			}
 			c.close();
@@ -533,13 +573,13 @@ public class ManagerDao {
 	public boolean addPackage(Package p) {
 		boolean result = false;
 		try (Connection c = BasicConnection.getConnection()) {
-			String query = "INSERT INTO package(packageID, name, limitPerPerson, dayCooldown, price) VALUES (?,?,?,?,?);";
+			String query = "INSERT INTO package(packageID, name, limitPerPerson, dayCooldown, price) VALUES (NULL,?,?,?,?);";
 			PreparedStatement ps = c.prepareStatement(query);
-			ps.setString(1, p.getPackageID());
-			ps.setString(2, p.getName());
-			ps.setInt(3, p.getLimitPerPerson());
-			ps.setInt(4, p.getDayCooldown());
-			ps.setDouble(5, p.getPrice());
+//			ps.setString(1, p.getPackageID());
+			ps.setString(1, p.getName());
+			ps.setInt(2, p.getLimitPerPerson());
+			ps.setInt(3, p.getDayCooldown());
+			ps.setDouble(4, p.getPrice());
 			result = ps.executeUpdate() > 0;
 			c.close();
 		} catch (SQLException e) {

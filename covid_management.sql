@@ -184,9 +184,9 @@ alter table ManagedUser
 add
 constraint FK_ManagedUser_User foreign key (idCard) references User(userID);
 
--- --alter table ManagedUser
--- --add
--- --constraint FK_User_Ward foreign key (wardID) references Ward(wardID);
+-- alter table ManagedUser
+-- add
+-- constraint FK_User_Ward foreign key (wardID) references Ward(wardID);
 
 alter table StateHistory
 add constraint FK_StateHistory_ManagedUser foreign key (userID) references ManagedUser(idCard);

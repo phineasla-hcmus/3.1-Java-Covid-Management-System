@@ -7,18 +7,20 @@ import static com.seasidechachacha.client.database.ManagerDao.getCurrentState;
 import static com.seasidechachacha.client.database.ManagerDao.getCurrentTreatmentPlace;
 import static com.seasidechachacha.client.database.ManagerDao.getRelatedManagedUser;
 import static com.seasidechachacha.client.database.ManagerDao.getStateHistoryList;
+import static com.seasidechachacha.client.database.ManagerDao.getTreatmentPlaceHistoryList;
+import static com.seasidechachacha.client.database.ManagerDao.getTreatmentPlaceList;
 import com.seasidechachacha.client.models.ManagedUser;
 import com.seasidechachacha.client.models.StateHistory;
 import com.seasidechachacha.client.models.TreatmentPlace;
+import com.seasidechachacha.client.models.TreatmentPlaceHistory;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -30,7 +32,6 @@ import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
@@ -46,17 +47,23 @@ public class ViewPersonalInfoController {
     private TableView<StateHistory> tableStatus;
 
     @FXML
-    private TableView<TreatmentPlace> tablePlace;
+    private TableView<TreatmentPlaceHistory> tablePlace;
 
     @FXML
     private TableColumn<ManagedUser, String> numberCol, fullNameCol, birthYearCol, addressCol, statusCol;
 
     @FXML
-    private TableColumn<StateHistory, String> dateStatusCol, datePlaceCol, placeCol;
+    private TableColumn<StateHistory, String> dateStatusCol;
 
     @FXML
     private TableColumn<StateHistory, Integer> currentStatusCol;
 
+    @FXML
+    private TableColumn<TreatmentPlaceHistory, String> datePlaceCol;
+    
+    @FXML
+    private TableColumn<TreatmentPlaceHistory, Integer> placeCol;
+    
     @FXML
     private Label labelFullName, labelIdentityCard, labelBirthYear, labelAddress, labelStatus, labelTreatmentPlace;
 
@@ -79,6 +86,7 @@ public class ViewPersonalInfoController {
         String currentStatus = "F" + getCurrentState(currentUser.getUserId());
         labelStatus.setText(currentStatus);
         TreatmentPlace treat = getCurrentTreatmentPlace(currentUser.getUserId());
+        String currentPlace = treat.getName();
         if (treat != null) {
             labelTreatmentPlace.setText(treat.getName());
         }
@@ -106,10 +114,16 @@ public class ViewPersonalInfoController {
             }
         });
 
-        String defaultPlace = "abc";
-        String place[] = {"abc", "xyz", "ohi"};
+//        String defaultPlace = "abc";
+//        String place[] = {"abc", "xyz", "ohi"};
+        List<TreatmentPlace> treatmentPlaceList = getTreatmentPlaceList();
+        List<String> places = new ArrayList<String>();
+        
+        for (int i = 0; i < treatmentPlaceList.size(); i++) {
+            places.add(treatmentPlaceList.get(i).getName());
+        }
 
-        ChoiceDialog<String> placeDialog = new ChoiceDialog<String>(defaultPlace, place);
+        ChoiceDialog<String> placeDialog = new ChoiceDialog<String>(currentPlace, places);
         placeDialog.setResultConverter((ButtonType type) -> {
 
             ButtonBar.ButtonData data = type == null ? null : type.getButtonData();
@@ -134,6 +148,9 @@ public class ViewPersonalInfoController {
 
         List<StateHistory> stateHistoryList = getStateHistoryList(currentUser.getUserId());
         setTableStatus(tableStatus, FXCollections.observableArrayList(stateHistoryList));
+        
+        List<TreatmentPlaceHistory> treatHistoryList = getTreatmentPlaceHistoryList(currentUser.getUserId());
+        setTableTreat(tablePlace, FXCollections.observableArrayList(treatHistoryList));
 
     }
 
@@ -168,6 +185,24 @@ public class ViewPersonalInfoController {
         for (TableColumn<StateHistory, ?> col : tableView.getColumns()) {
             if (col.getText().equals(name)) {
                 return (TableColumn<StateHistory, Integer>) col;
+            }
+        }
+        return null;
+    }
+    
+     private TableColumn<TreatmentPlaceHistory, String> getTableTreatColumnByName(TableView<TreatmentPlaceHistory> tableView, String name) {
+        for (TableColumn<TreatmentPlaceHistory, ?> col : tableView.getColumns()) {
+            if (col.getText().equals(name)) {
+                return (TableColumn<TreatmentPlaceHistory, String>) col;
+            }
+        }
+        return null;
+    }
+     
+      private TableColumn<TreatmentPlaceHistory, Integer> getTableTreatByName(TableView<TreatmentPlaceHistory> tableView, String name) {
+        for (TableColumn<TreatmentPlaceHistory, ?> col : tableView.getColumns()) {
+            if (col.getText().equals(name)) {
+                return (TableColumn<TreatmentPlaceHistory, Integer>) col;
             }
         }
         return null;
@@ -232,6 +267,20 @@ public class ViewPersonalInfoController {
 
     public void setTableStatus(TableView<StateHistory> table, ObservableList<StateHistory> data) {
         setColumnsStatus(table);
+        table.setItems(data);
+
+    }
+    
+     public void setColumnsTreat(TableView<TreatmentPlaceHistory> table) {
+        datePlaceCol = getTableTreatColumnByName(table, "Ngày");
+        datePlaceCol.setCellValueFactory(new PropertyValueFactory<TreatmentPlaceHistory, String>("time"));
+
+        placeCol = getTableTreatByName(table, "Nơi điều trị");
+        placeCol.setCellValueFactory(new PropertyValueFactory<TreatmentPlaceHistory, Integer>("treatID"));
+    }
+     
+     public void setTableTreat(TableView<TreatmentPlaceHistory> table, ObservableList<TreatmentPlaceHistory> data) {
+        setColumnsTreat(table);
         table.setItems(data);
 
     }

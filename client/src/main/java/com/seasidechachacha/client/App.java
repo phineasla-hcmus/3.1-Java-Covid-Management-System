@@ -30,7 +30,7 @@ public class App extends Application {
     public void start(Stage stage) throws IOException {
 //                scene = new Scene(loadFXML("view/FirstLogin"), 1050, 800);
 
-        scene = new Scene(loadFXML("view/Login"));
+        scene = new Scene(loadFXML("view/ModeratorScreen"));
         stage.setScene(scene);
         stage.show();
     }

@@ -4,11 +4,11 @@ INSERT INTO `role` (`roleID`,`roleName`) VALUES (1,'admin');
 INSERT INTO `role` (`roleID`,`roleName`) VALUES (2,'manager');
 INSERT INTO `role` (`roleID`,`roleName`) VALUES (3,'user');
 
-INSERT INTO `city` (`cityID`,`cityName`) VALUES ('01','Thành phố Hà Nội\r');
-INSERT INTO `city` (`cityID`,`cityName`) VALUES ('64','Tỉnh Gia Lai\r');
-INSERT INTO `city` (`cityID`,`cityName`) VALUES ('68','Tỉnh Lâm Đồng\r');
-INSERT INTO `city` (`cityID`,`cityName`) VALUES ('79','Thành phố Hồ Chí Minh\r');
-INSERT INTO `city` (`cityID`,`cityName`) VALUES ('87','Tỉnh Đồng Tháp\r');
+INSERT INTO `city` (`cityID`,`cityName`) VALUES ('01','Thành phố Hà Nội');
+INSERT INTO `city` (`cityID`,`cityName`) VALUES ('64','Tỉnh Gia Lai');
+INSERT INTO `city` (`cityID`,`cityName`) VALUES ('68','Tỉnh Lâm Đồng');
+INSERT INTO `city` (`cityID`,`cityName`) VALUES ('79','Thành phố Hồ Chí Minh');
+INSERT INTO `city` (`cityID`,`cityName`) VALUES ('87','Tỉnh Đồng Tháp');
 
 INSERT INTO `district` (`districtID`,`districtName`,`cityID`) VALUES ('001','Quận Ba Đình','01');
 INSERT INTO `district` (`districtID`,`districtName`,`cityID`) VALUES ('002','Quận Hoàn Kiếm','01');

@@ -133,13 +133,13 @@ public class ViewListUserController {
             birthYearCol.setCellValueFactory(
                     new PropertyValueFactory<ManagedUser, String>("birthYear"));
 
-            birthYearCol.setMinWidth(160);
+            birthYearCol.setMinWidth(80);
 
             TableColumn addrCol = new TableColumn("Địa chỉ");
             addrCol.setCellValueFactory(
                     new PropertyValueFactory<ManagedUser, String>("address"));
 
-            addrCol.setMinWidth(160);
+            addrCol.setMinWidth(240);
 
             TableColumn statusCol = new TableColumn("Trạng thái");
             Callback<TableColumn<ManagedUser, String>, TableCell<ManagedUser, String>> cellFactory1
@@ -156,7 +156,7 @@ public class ViewListUserController {
                                 setGraphic(null);
                                 setText(null);
                             } else {
-                                if (getTableRow().getItem() != null) {
+                                if (getTableRow() != null) {
                                     ManagedUser user = (ManagedUser) getTableRow().getItem();
                                     setText("F" + String.valueOf(ManagerDao.getCurrentState(user.getUserId())));
                                 }

@@ -2,15 +2,15 @@ package com.seasidechachacha.client.models;
 
 public class TreatmentPlaceHistory {
 	private String userID;
-	private String streatID;
+	private String treatID;
 	private String time;
 	private String name;
 	private String street;
 	private FullAddress fullAddress;
 
-	public TreatmentPlaceHistory(String userID, String streatID, String wardId, String time, String name, String street) {
+	public TreatmentPlaceHistory(String userID, String treatID, String wardId, String time, String name, String street) {
 		this.userID = userID;
-		this.streatID = streatID;
+		this.treatID = treatID;
 		this.time = time;
 		this.name = name;
 		this.street = street;
@@ -25,12 +25,12 @@ public class TreatmentPlaceHistory {
 		this.userID = userID;
 	}
 
-	public String getStreatID() {
-		return streatID;
+	public String getTreatID() {
+		return treatID;
 	}
 
-	public void setStreatID(String streatID) {
-		this.streatID = streatID;
+	public void setTreatID(String treatID) {
+		this.treatID = treatID;
 	}
 
 	public String getTime() {

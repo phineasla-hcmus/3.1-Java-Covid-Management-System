@@ -122,7 +122,7 @@ public class AddNewUserController {
 
     private boolean isValid() {
         boolean valid = true;
-        if (tfFullName.getText().equals("") || tfIdentityCard.getText().equals("") || tfBirthYear.getText().equals((""))) {
+        if (tfFullName.getText().equals("") || tfIdentityCard.getText().equals("") || tfBirthYear.getText().equals("")) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Thông báo");
             alert.setHeaderText("Thêm mới người dùng");

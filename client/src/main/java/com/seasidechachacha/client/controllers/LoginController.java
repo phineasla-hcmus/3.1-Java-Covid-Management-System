@@ -69,7 +69,7 @@ public class LoginController {
      * @param userId
      * @param password
      */
-    public void loginThread(String userId, String password) {
+    private void loginThread(String userId, String password) {
         Task<User> loginTask = new Task<User>() {
             @Override
             public User call() {
@@ -89,7 +89,7 @@ public class LoginController {
      * @param userId
      * @param password
      */
-    public void isNewUserThread(String userId) {
+    private void isNewUserThread(String userId) {
         Task<Boolean> isNewUserTask = new Task<Boolean>() {
             @Override
             public Boolean call() throws SQLException {

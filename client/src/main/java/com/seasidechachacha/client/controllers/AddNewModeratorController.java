@@ -5,6 +5,11 @@ import com.seasidechachacha.client.database.UserDao;
 import com.seasidechachacha.client.models.User;
 
 import java.io.IOException;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -18,6 +23,12 @@ public class AddNewModeratorController {
     @FXML
     private TextField pass2;
 
+    private Executor exec;
+
+    public AddNewModeratorController() {
+        exec = Executors.newFixedThreadPool(1);
+    }
+
     public void createModerator(ActionEvent e) throws IOException {
         if (pass1.getText().compareTo(pass2.getText()) != 0) {
             Alert a = new Alert(Alert.AlertType.WARNING);
@@ -29,16 +40,38 @@ public class AddNewModeratorController {
             a.show();
         } else {
             int managerRoleId = 2; // Reminder purpose
-            boolean result = UserDao.register(new User(username.getText(), pass1.getText(), managerRoleId));
-            if (result) {
-                Alert a = new Alert(Alert.AlertType.INFORMATION);
-                a.setContentText("Thêm mới người quản lý thành công!!!");
-                a.show();
-            } else {
-                Alert a = new Alert(Alert.AlertType.WARNING);
-                a.setContentText("Thêm mới người quản lý không thành công!!!");
-                a.show();
+            // boolean result = UserDao.register(new User(username.getText(),
+            // pass1.getText(), managerRoleId));
+            addModeratorThread(new User(username.getText(), pass1.getText(), managerRoleId));
+        }
+    }
+
+    /**
+     * Thread wrapper to call UserDao
+     *
+     */
+    private void addModeratorThread(User mod) {
+        Task<Boolean> addModeratorTask = new Task<Boolean>() {
+            @Override
+            public Boolean call() {
+                return UserDao.register(mod);
             }
+        };
+        addModeratorTask.setOnSucceeded(e -> {
+            resolveAddModerator(e, addModeratorTask.getValue());
+        });
+        exec.execute(addModeratorTask);
+    }
+
+    private void resolveAddModerator(WorkerStateEvent e, boolean status) {
+        if (status) {
+            Alert a = new Alert(Alert.AlertType.INFORMATION);
+            a.setContentText("Thêm mới người quản lý thành công!!!");
+            a.show();
+        } else {
+            Alert a = new Alert(Alert.AlertType.WARNING);
+            a.setContentText("Thêm mới người quản lý không thành công!!!");
+            a.show();
         }
     }
 }

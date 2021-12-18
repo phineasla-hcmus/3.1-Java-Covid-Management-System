@@ -1,11 +1,17 @@
 package com.seasidechachacha.client.controllers;
 
 import com.seasidechachacha.client.App;
+import com.seasidechachacha.client.database.ManagerDao;
 import static com.seasidechachacha.client.database.ManagerDao.getTreatmentPlaceList;
 import com.seasidechachacha.client.models.TreatmentPlace;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 import javafx.collections.FXCollections;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -31,9 +37,49 @@ public class ViewListTreatmentPlaceController {
     @FXML
     private Pagination pagination;
 
+    private Executor exec;
+
     @FXML
     private void initialize() {
-        data = getTreatmentPlaceList();
+        exec = Executors.newSingleThreadScheduledExecutor(new ThreadFactory() {
+            @Override
+            public Thread newThread(Runnable r) {
+                Thread t = new Thread(r);
+                t.setDaemon(true);
+                return t;
+            }
+        });
+        getListTreatmentPlaceThread();
+
+        btnAdd.setOnAction(event -> {
+            try {
+                App.setCurrentPane("pn_all", "view/AddNewTreatmentPlace", null);
+            } catch (IOException ex) {
+                logger.fatal(ex);
+            }
+        });
+
+    }
+
+    private void getListTreatmentPlaceThread() {
+        Task<List<TreatmentPlace>> dataTask = new Task<List<TreatmentPlace>>() {
+            @Override
+            public List<TreatmentPlace> call() {
+                return ManagerDao.getTreatmentPlaceList();
+            }
+        };
+        dataTask.setOnSucceeded(e -> {
+            try {
+                resolveListTreatmentPlace(e, dataTask.getValue());
+            } catch (IOException ex) {
+                logger.fatal(ex);
+            }
+        });
+        exec.execute(dataTask);
+    }
+
+    public void resolveListTreatmentPlace(WorkerStateEvent e, List<TreatmentPlace> list) throws IOException {
+        data = list;
         if (data.size() % rowsPerPage() == 0) {
             pagination.setPageCount(data.size() / rowsPerPage());
 
@@ -51,28 +97,12 @@ public class ViewListTreatmentPlaceController {
                 }
             }
         });
-
-        btnAdd.setOnAction(event -> {
-            try {
-                App.setCurrentPane("pn_all", "view/AddNewTreatmentPlace", null);
-            } catch (IOException ex) {
-                logger.fatal(ex);
-            }
-        });
-
     }
 
     public VBox createPage(int pageIndex) {
         int lastIndex = 0;
         int displace = data.size() % rowsPerPage();
         lastIndex = data.size() / rowsPerPage();
-//        if (displace > 0) {
-//            lastIndex = data.size() / rowsPerPage();
-//        } else {
-//            lastIndex = data.size() / rowsPerPage() - 1;
-//
-//        }
-
         VBox box = new VBox(5);
         int page = pageIndex * itemsPerPage();
 
@@ -101,19 +131,17 @@ public class ViewListTreatmentPlaceController {
                     new PropertyValueFactory<TreatmentPlace, String>("wardID"));
 
 //            wardCol.setMinWidth(160);
-
             TableColumn capacityCol = new TableColumn("Sức chứa");
             capacityCol.setCellValueFactory(
                     new PropertyValueFactory<TreatmentPlace, String>("capacity"));
 
 //            capacityCol.setMinWidth(160);
-
             TableColumn currentReceptionCol = new TableColumn("Số lượng tiếp nhận hiện tại");
             currentReceptionCol.setCellValueFactory(
                     new PropertyValueFactory<TreatmentPlace, String>("currentReception"));
 
             currentReceptionCol.setMinWidth(180);
-            
+
             TableColumn actionCol = new TableColumn("");
             actionCol.setCellValueFactory(new PropertyValueFactory<>(""));
             Callback<TableColumn<TreatmentPlace, String>, TableCell<TreatmentPlace, String>> cellFactory
@@ -151,8 +179,6 @@ public class ViewListTreatmentPlaceController {
             };
 
             actionCol.setCellFactory(cellFactory);
-            
-
 
             table.getColumns().addAll(numCol, nameCol, streetCol, wardCol, capacityCol, currentReceptionCol, actionCol);
             table.setItems(FXCollections.observableArrayList(data));

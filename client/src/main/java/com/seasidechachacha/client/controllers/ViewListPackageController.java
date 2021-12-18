@@ -1,19 +1,21 @@
 package com.seasidechachacha.client.controllers;
 
 import com.seasidechachacha.client.App;
+import com.seasidechachacha.client.database.ManagedUserDao;
 import com.seasidechachacha.client.database.ManagerDao;
 import static com.seasidechachacha.client.database.ManagerDao.getPackageList;
+import com.seasidechachacha.client.models.ManagedUser;
 import com.seasidechachacha.client.models.Package;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import java.io.IOException;
 import java.util.List;
-import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.value.ObservableValue;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -35,9 +37,6 @@ public class ViewListPackageController {
 
     private static List<Package> data;
 
-//    @FXML
-//    private TableView<Package> table;
-//    private static TableColumn<Package, String> numberCol, nameCol, limitCol, dayCol, priceCol, editCol, deleteCol;
     @FXML
     private Button btnAdd, btnSearch, btnSort;
 
@@ -53,29 +52,20 @@ public class ViewListPackageController {
     // for testing purpose
     private ManagerDao Tam;
 
+    private Executor exec;
+
     @FXML
     private void initialize() {
-        Tam = new ManagerDao("mod-19127268");
-        data = getPackageList();
-//        setTable(table, FXCollections.observableList(data));
-
-        if (data.size() % rowsPerPage() == 0) {
-            pagination.setPageCount(data.size() / rowsPerPage());
-
-        } else {
-            pagination.setPageCount(data.size() / rowsPerPage() + 1);
-
-        }
-        pagination.setPageFactory(new Callback<Integer, Node>() {
+        exec = Executors.newSingleThreadScheduledExecutor(new ThreadFactory() {
             @Override
-            public Node call(Integer pageIndex) {
-                if (pageIndex > data.size() / rowsPerPage()) {
-                    return null;
-                } else {
-                    return createPage(pageIndex);
-                }
+            public Thread newThread(Runnable r) {
+                Thread t = new Thread(r);
+                t.setDaemon(true);
+                return t;
             }
         });
+        getListPackageThread();
+        Tam = new ManagerDao("mod-19127268");
 
         btnAdd.setOnAction(event -> {
             try {
@@ -98,6 +88,44 @@ public class ViewListPackageController {
             //TODO
         });
 
+    }
+
+    private void getListPackageThread() {
+        Task<List<Package>> dataTask = new Task<List<Package>>() {
+            @Override
+            public List<Package> call() {
+                return ManagerDao.getPackageList();
+            }
+        };
+        dataTask.setOnSucceeded(e -> {
+            try {
+                resolveListPackage(e, dataTask.getValue());
+            } catch (IOException ex) {
+                logger.fatal(ex);
+            }
+        });
+        exec.execute(dataTask);
+    }
+
+    public void resolveListPackage(WorkerStateEvent e, List<Package> list) throws IOException {
+        data = list;
+        if (data.size() % rowsPerPage() == 0) {
+            pagination.setPageCount(data.size() / rowsPerPage());
+
+        } else {
+            pagination.setPageCount(data.size() / rowsPerPage() + 1);
+
+        }
+        pagination.setPageFactory(new Callback<Integer, Node>() {
+            @Override
+            public Node call(Integer pageIndex) {
+                if (pageIndex > data.size() / rowsPerPage()) {
+                    return null;
+                } else {
+                    return createPage(pageIndex);
+                }
+            }
+        });
     }
 
     public int itemsPerPage() {

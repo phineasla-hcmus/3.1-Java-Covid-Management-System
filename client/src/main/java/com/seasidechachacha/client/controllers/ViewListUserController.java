@@ -4,16 +4,17 @@ import com.seasidechachacha.client.App;
 import com.seasidechachacha.client.database.ManagedUserDao;
 import com.seasidechachacha.client.database.ManagerDao;
 import com.seasidechachacha.client.models.ManagedUser;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.value.ObservableValue;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -25,19 +26,14 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 
 public class ViewListUserController {
 
     private static final Logger logger = LogManager.getLogger(ViewListUserController.class);
-    private static List<ManagedUser> data;
+    private static List<ManagedUser> data = new ArrayList<ManagedUser>();
 
-//    @FXML
-//    private TableView<ManagedUser> table;
-//    private static TableColumn<ManagedUser, String> numberCol, fullNameCol, birthYearCol, addressCol, statusCol,
-//            actionCol;
     @FXML
     private Button btnAdd, btnSearch, btnSort;
 
@@ -50,9 +46,60 @@ public class ViewListUserController {
     @FXML
     private Pagination pagination;
 
+    private Executor exec;
+
     @FXML
     private void initialize() {
-        data = ManagedUserDao.getList();
+        // if use this application won't stop running when closing
+//         exec = Executors.newFixedThreadPool(1);
+        // close thread when close application
+        exec = Executors.newSingleThreadScheduledExecutor(new ThreadFactory() {
+
+            @Override
+            public Thread newThread(Runnable r) {
+                Thread t = new Thread(r);
+                t.setDaemon(true);
+                return t;
+            }
+        });
+        getListManagedUserThread();
+
+        btnAdd.setOnAction(event -> {
+            try {
+                App.setCurrentPane("pn_all", "view/AddNewUser", null);
+            } catch (IOException ex) {
+                logger.fatal(ex);
+            }
+        });
+        btnSearch.setOnAction(event -> {
+            String keyword = tfSearch.getText();
+//            data.remove(3);
+        });
+        cbSort.getItems().addAll("ID", "Họ tên", "Năm sinh", "Trạng thái");
+        btnSort.setOnAction(event -> {
+            //TODO
+        });
+    }
+
+    private void getListManagedUserThread() {
+        Task<List<ManagedUser>> dataTask = new Task<List<ManagedUser>>() {
+            @Override
+            public List<ManagedUser> call() {
+                return ManagedUserDao.getList();
+            }
+        };
+        dataTask.setOnSucceeded(e -> {
+            try {
+                resolveListManagedUser(e, dataTask.getValue());
+            } catch (IOException ex) {
+                logger.fatal(ex);
+            }
+        });
+        exec.execute(dataTask);
+    }
+
+    public void resolveListManagedUser(WorkerStateEvent e, List<ManagedUser> list) throws IOException {
+        data = list;
         if (data.size() % rowsPerPage() == 0) {
             pagination.setPageCount(data.size() / rowsPerPage());
 
@@ -69,28 +116,6 @@ public class ViewListUserController {
                     return createPage(pageIndex);
                 }
             }
-        });
-
-        btnAdd.setOnAction(event -> {
-            try {
-                App.setCurrentPane("pn_all", "view/AddNewUser", null);
-            } catch (IOException ex) {
-                logger.fatal(ex);
-            }
-        });
-        btnSearch.setOnAction(event -> {
-
-            String keyword = tfSearch.getText();
-
-            //for testing purpose
-            data.remove(3);
-
-            //TODO
-//            table.refresh();
-        });
-        cbSort.getItems().addAll("ID", "Họ tên", "Năm sinh", "Trạng thái");
-        btnSort.setOnAction(event -> {
-            //TODO
         });
     }
 

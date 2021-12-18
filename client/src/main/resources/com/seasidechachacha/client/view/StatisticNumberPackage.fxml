@@ -20,8 +20,8 @@
             <Label layoutX="194.0" layoutY="214.0" styleClass="main-label" text="Thống kê số lượng tiêu thụ nhu yếu phẩm" />
             <TableView fx:id="packageTable" layoutX="50.0" layoutY="367.0" prefHeight="363.0" prefWidth="700.0">
                <columns>
-                  <TableColumn prefWidth="419.0" text="Gói nhu yếu phẩm" />
-                  <TableColumn prefWidth="280.0" text="Số lượng tiêu thụ" />
+                  <TableColumn fx:id="packageName" prefWidth="419.0" text="Gói nhu yếu phẩm" />
+                  <TableColumn fx:id="Quantity" prefWidth="280.0" text="Số lượng tiêu thụ" />
                </columns>
             </TableView>
             <DatePicker fx:id="dateInput" layoutX="155.0" layoutY="272.0" />

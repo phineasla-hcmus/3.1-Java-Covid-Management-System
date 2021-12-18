@@ -215,3 +215,17 @@ insert into treatmentplacehistory values('079732769898', '2021-11-30', 79048);
 insert into treatmentplacehistory values('079932368028', '2021-11-30', 79051);
 insert into treatmentplacehistory values('079941055479', '2021-11-30', 79051);
 insert into treatmentplacehistory values('079111222333', '2021-11-30', 87014);
+
+insert into orderhistory values(1,"079932368028","2021-10-1 13:28:08","2021-10-5 13:00:08","169600");
+insert into orderhistory values(2,"079157952250","2021-7-5 7:14:26","2021-7-6 9:23:26","125800");
+insert into orderhistory values(3,"079732769898","2021-8-26 7:37:17","2021-8-28 9:45:17","89000");
+insert into orderhistory values(4,"079732769898","2021-8-17 5:33:57","2021-8-20 8:03:57","27000");
+insert into orderhistory values(5,"079941055479","2021-1-21 11:07:08","2021-1-29 15:04:02","610000");
+
+insert into orderitem values(1,1,2,68000);
+insert into orderitem values(1,5,1,33600);
+insert into orderitem values(1,4,1,5900);
+insert into orderitem values(2,6,2,62900);
+insert into orderitem values(3,2,1,89000);
+insert into orderitem values(4,10,3,27000);
+insert into orderitem values(5,8,1,610000);

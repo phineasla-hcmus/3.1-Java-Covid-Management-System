@@ -9,7 +9,6 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-
 <VBox stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.seasidechachacha.client.controllers.StatisticNumberStatusController">
    <children>
       <AnchorPane id="AnchorPane" prefHeight="800.0" prefWidth="800.0">
@@ -21,9 +20,9 @@
             <Label layoutX="194.0" layoutY="214.0" styleClass="main-label" text="Thống kê số lượng trạng thái theo thời gian" />
             <TableView fx:id="statusTable" layoutX="50.0" layoutY="367.0" prefHeight="363.0" prefWidth="700.0">
               <columns>
-                <TableColumn prefWidth="124.0" text="Thời gian" />
-                <TableColumn prefWidth="108.0" text="Trạng thái" />
-                  <TableColumn prefWidth="467.0" text="Số Lượng" />
+                <TableColumn fx:id="Time" prefWidth="124.0" text="Thời gian" />
+                <TableColumn fx:id="Status" prefWidth="108.0" text="Trạng thái" />
+                  <TableColumn fx:id="Quantity" prefWidth="467.0" text="Số Lượng" />
               </columns>
             </TableView>
             <DatePicker fx:id="dateInput" layoutX="155.0" layoutY="272.0" />

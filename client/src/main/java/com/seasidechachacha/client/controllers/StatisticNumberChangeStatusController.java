@@ -5,7 +5,10 @@
 package com.seasidechachacha.client.controllers;
 
 import com.seasidechachacha.client.App;
+import com.seasidechachacha.client.database.ManagerDao;
+import com.seasidechachacha.client.models.StateStatistic;
 import java.io.IOException;
+import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -13,6 +16,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
 /**
@@ -37,12 +41,10 @@ public class StatisticNumberChangeStatusController {
     private DatePicker dateInput, monthInput;
 
     @FXML
-    private TableView changeStatusTable;
-
-    @FXML
     private void initialize() {
         statisticType.getItems().addAll("số lượng người ở từng trạng thái theo thời gian", "số lượng nhu yếu phẩm được tiêu thụ", "số chuyển trạng thái", "số dư nợ");
         statisticType.setValue("số chuyển trạng thái");
+        
     }
 
     @FXML

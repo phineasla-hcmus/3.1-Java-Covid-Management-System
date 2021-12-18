@@ -5,14 +5,22 @@
 package com.seasidechachacha.client.controllers;
 
 import com.seasidechachacha.client.App;
+import com.seasidechachacha.client.database.ManagerDao;
+import com.seasidechachacha.client.models.StateStatistic;
 import java.io.IOException;
+import static java.lang.String.valueOf;
+import java.util.List;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 /**
  *
@@ -33,16 +41,39 @@ public class StatisticNumberStatusController {
     private DatePicker dateInput, monthInput;
 
     @FXML
-    private TableView statusTable;
+    private TableView<StateStatistic> statusTable;
+
+    @FXML
+    private TableColumn<StateStatistic, String> Time;
+
+    @FXML
+    private TableColumn<StateStatistic, String> Status;
+
+    @FXML
+    private TableColumn<StateStatistic, String> Quantity;
+
+    private ObservableList<StateStatistic> statisticList;
 
     @FXML
     private void initialize() {
         statisticType.getItems().addAll("số lượng người ở từng trạng thái theo thời gian", "số lượng nhu yếu phẩm được tiêu thụ", "số chuyển trạng thái", "số dư nợ");
         statisticType.setValue("số lượng người ở từng trạng thái theo thời gian");
+
+        List<StateStatistic> s = ManagerDao.getStatisticStatusAll();
+
+        statisticList = FXCollections.observableArrayList(s);
+
+        Time.setCellValueFactory(new PropertyValueFactory<StateStatistic, String>("time"));
+        Status.setCellValueFactory(new PropertyValueFactory<StateStatistic, String>("state"));
+        Quantity.setCellValueFactory(new PropertyValueFactory<StateStatistic, String>("quantity"));
+
+        statusTable.setItems(statisticList);
+
     }
 
     @FXML
     private void handleButton(ActionEvent e) throws IOException {
+
         if (e.getSource() == nextButton) { // để đổi bảng thống kê th , ko cần qtam:))
             if (statisticType.getSelectionModel().getSelectedItem().toString().equals("số lượng người ở từng trạng thái theo thời gian")) {
                 App.setCurrentPane("pn_all", "view/StatisticNumberStatus", null);
@@ -59,11 +90,27 @@ public class StatisticNumberStatusController {
             }
         } else if (e.getSource() == dateButton) {  //nếu người dùng bấm vào nút "theo ngày", 
             //sẽ dựa vào ngày để thống kê số lượng theo từng trang thái trong database và hiển thị trong bảng
+            List<StateStatistic> s = ManagerDao.getStatisticStatusbyDay(dateInput.getValue().toString());
+             
+            statisticList = FXCollections.observableArrayList(s);
+
+            statusTable.setItems(statisticList);
+            
 
         } else if (e.getSource() == monthButton) { // tương tự trên nhưng chỉ dựa vào tháng và năm
+        
+            List<StateStatistic> s = ManagerDao.getStatisticStatusbyMonth(valueOf(monthInput.getValue().getMonthValue()));
+             
+            statisticList = FXCollections.observableArrayList(s);
+
+            statusTable.setItems(statisticList);
 
         } else if (e.getSource() == allButton) { // thống kê số lượng không quan tâm tới ngày tháng năm
+            List<StateStatistic> s = ManagerDao.getStatisticStatusAll();
 
+            statisticList = FXCollections.observableArrayList(s);
+
+            statusTable.setItems(statisticList);
         }
     }
 }

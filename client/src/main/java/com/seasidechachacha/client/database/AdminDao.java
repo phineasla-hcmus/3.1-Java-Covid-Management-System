@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.seasidechachacha.client.models.User;
 import com.seasidechachacha.client.models.ActivityHistory;
+import com.seasidechachacha.client.models.TreatmentPlace;
 
 public class AdminDao {
 	private String adminID;
@@ -66,5 +67,70 @@ public class AdminDao {
 		return new ActivityHistory(rs.getString("logID"), rs.getString("userID"), rs.getString("logMsg"),
 				rs.getString("logTime"));
 	}
+	
+	public boolean addTreatmentPlace(TreatmentPlace tp) {
+		boolean result = false;
+		try (Connection c = BasicConnection.getConnection();) {
+			String query = "INSERT INTO treatmentplace(treatID, name, street, wardID, capacity, currentReception) VALUES(?,?,?,?,?,?);";
+			PreparedStatement ps = c.prepareStatement(query);
+			ps.setString(1, tp.getTreatID());
+			ps.setString(2, tp.getName());
+			ps.setString(3, tp.getStreet());
+			ps.setString(4, tp.getWardID());
+			ps.setInt(5, tp.getCapacity());
+			ps.setInt(6, tp.getCurrentReception());
+			result = ps.executeUpdate() > 0;
+			c.close();
+		} catch (SQLException e) {
+			logger.error(e);
+		}
+		return result;
+	}
+	
+	public boolean updateTreatmentPlaceName(String treatID, String name) {
+		boolean result = false;
+		try (Connection c = BasicConnection.getConnection()) {
+			String query = "UPDATE treatmentplace SET name = ? WHERE treatID = ?;";
+			PreparedStatement ps = c.prepareStatement(query);
+			ps.setString(1, name);
+			ps.setString(2, treatID);
+			result = ps.executeUpdate() > 0;
+			c.close();
+		} catch (SQLException e) {
+			logger.error(e);
+		}
+		return result;
+	}
+	
+	public boolean updateTreatmentPlaceCapacity(String treatID, int capacity) {
+		boolean result = false;
+		try (Connection c = BasicConnection.getConnection()) {
+			String query = "UPDATE treatmentplace SET capacity = ? WHERE treatID = ?;";
+			PreparedStatement ps = c.prepareStatement(query);
+			ps.setInt(1, capacity);
+			ps.setString(2, treatID);
+			result = ps.executeUpdate() > 0;
+			c.close();
+		} catch (SQLException e) {
+			logger.error(e);
+		}
+		return result;
+	}
+	
+	public boolean updateTreatmentPlaceCurrentReception(String treatID, int currentReception) {
+		boolean result = false;
+		try (Connection c = BasicConnection.getConnection()) {
+			String query = "UPDATE treatmentplace SET currentReception = ? WHERE treatID = ?;";
+			PreparedStatement ps = c.prepareStatement(query);
+			ps.setInt(1, currentReception);
+			ps.setString(2, treatID);
+			result = ps.executeUpdate() > 0;
+			c.close();
+		} catch (SQLException e) {
+			logger.error(e);
+		}
+		return result;
+	}
 
+	
 }

@@ -31,7 +31,7 @@ public class ViewTreatmentPlaceInfoController {
     private Button btnChangeName, btnChangeCapacity, btnChangeReception;
 
     private Executor exec;
-    private int treatID;
+    private String treatID;
 
     @FXML
     private void initialize() {

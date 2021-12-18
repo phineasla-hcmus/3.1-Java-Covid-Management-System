@@ -2,7 +2,7 @@ package com.seasidechachacha.client.models;
 
 public class TreatmentPlace {
 
-    private int treatID;
+    private String treatID;
     private String name;
     private String street;
     private String wardId;
@@ -10,7 +10,7 @@ public class TreatmentPlace {
     private int currentReception;
     private FullAddress fullAddress;
 
-    public TreatmentPlace(int treatID, String name, String street, String wardId, int capacity, int currentReception) {
+    public TreatmentPlace(String treatID, String name, String street, String wardId, int capacity, int currentReception) {
         this.treatID = treatID;
         this.name = name;
         this.street = street;
@@ -20,11 +20,11 @@ public class TreatmentPlace {
         this.fullAddress = new FullAddress(wardId);
     }
 
-    public int getTreatID() {
+    public String getTreatID() {
         return treatID;
     }
 
-    public void setTreatID(int treatID) {
+    public void setTreatID(String treatID) {
         this.treatID = treatID;
     }
 

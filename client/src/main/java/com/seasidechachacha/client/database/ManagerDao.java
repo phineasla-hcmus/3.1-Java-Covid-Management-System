@@ -40,12 +40,9 @@ public class ManagerDao {
 	private static Logger logger = LogManager.getLogger(ManagerDao.class);
 
 	public static void main(String[] args) throws SQLException {
-//		List<ManagedUser> users = getRelatedManagedUser("333333333");
-//		if (users.size() != 0) {
-//			for (int i = 0; i < users.size(); i++) {
-//				System.out.println(users.get(i).getUserId() + " - " + users.get(i).getRelatedId());
-//			}
-//		}
+		System.out.println(getDebt("111111111"));
+		System.out.println(getDebt("123456789"));
+		System.out.println(getDebt("222222222"));
 	}
 
 	private boolean addMesssage(String logMsg) {
@@ -106,6 +103,13 @@ public class ManagerDao {
 				&& addMesssage("Add new user (userID : " + user.getUserId() + ").");
 	}
 
+	public boolean addNewUser(ManagedUser user, int state) throws SQLException {
+		if (addNewUser(user)) {
+			return setState(user.getUserId(), state);
+		}
+		return false;
+	}
+
 	private static StateHistory parseStateHistory(ResultSet rs) throws SQLException {
 		return new StateHistory(rs.getString("userID"), rs.getString("time"), rs.getInt("state"));
 	}
@@ -118,8 +122,8 @@ public class ManagerDao {
 		return stateHistoryList;
 	}
 
-        // for testing purpose
-        public static List<StateHistory> getStateHistoryList(String userID) {
+	// for testing purpose
+	public static List<StateHistory> getStateHistoryList(String userID) {
 		List<StateHistory> stateHistoryList = null;
 		try (Connection c = BasicConnection.getConnection()) {
 			String query = "SELECT * FROM statehistory WHERE statehistory.userID = ?;";
@@ -135,7 +139,7 @@ public class ManagerDao {
 		}
 		return stateHistoryList;
 	}
-        
+
 	public static List<StateHistory> getStateHistoryList(String userID, int limit, int offset) {
 		List<StateHistory> stateHistoryList = null;
 		try (Connection c = BasicConnection.getConnection()) {
@@ -188,9 +192,9 @@ public class ManagerDao {
 		}
 		return treatmentPlaceHistoryList;
 	}
-        
-        // for testing purpose
-        public static List<TreatmentPlaceHistory> getTreatmentPlaceHistoryList(String userID) {
+
+	// for testing purpose
+	public static List<TreatmentPlaceHistory> getTreatmentPlaceHistoryList(String userID) {
 		List<TreatmentPlaceHistory> treatmentPlaceHistoryList = null;
 		try (Connection c = BasicConnection.getConnection()) {
 			String query = "SELECT * FROM treatmentplacehistory tph INNER JOIN treatmentplace tp ON tph.treatID = tp.treatID WHERE tph.userID = ?;";
@@ -208,7 +212,6 @@ public class ManagerDao {
 		}
 		return treatmentPlaceHistoryList;
 	}
-
 
 	public static List<TreatmentPlaceHistory> getTreatmentPlaceHistoryList(String userID, int limit, int offset) {
 		List<TreatmentPlaceHistory> treatmentPlaceHistoryList = null;
@@ -251,7 +254,7 @@ public class ManagerDao {
 	}
 
 	private static TreatmentPlace parseTreatmentPlace(ResultSet rs) throws SQLException {
-		return new TreatmentPlace(rs.getInt("treatID"), rs.getString("name"), rs.getString("street"),
+		return new TreatmentPlace(rs.getString("treatID"), rs.getString("name"), rs.getString("street"),
 				rs.getString("wardId"), rs.getInt("capacity"), rs.getInt("currentReception"));
 	}
 
@@ -262,9 +265,9 @@ public class ManagerDao {
 		}
 		return treatmentPlaceList;
 	}
-        
-        // for testing purpose
-        public static List<TreatmentPlace> getTreatmentPlaceList() {
+
+	// for testing purpose
+	public static List<TreatmentPlace> getTreatmentPlaceList() {
 		List<TreatmentPlace> treatmentPlaceList = null;
 		try (Connection c = BasicConnection.getConnection()) {
 			String query = "SELECT * FROM treatmentplace;";
@@ -317,15 +320,15 @@ public class ManagerDao {
 		return treatmentPlaceList;
 	}
 
-	public static TreatmentPlace getTreatmentPlaceByID(int treatID) {
+	public static TreatmentPlace getTreatmentPlaceByID(String treatID) {
 		TreatmentPlace t = null;
 		try (Connection c = BasicConnection.getConnection()) {
 			String query = "SELECT * FROM treatmentplace WHERE treatID = ?;";
 			PreparedStatement ps = c.prepareStatement(query);
-			ps.setInt(1, treatID);
+			ps.setString(1, treatID);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
-				t = new TreatmentPlace(rs.getInt("treatID"), rs.getString("name"), rs.getString("street"),
+				t = new TreatmentPlace(rs.getString("treatID"), rs.getString("name"), rs.getString("street"),
 						rs.getString("wardID"), rs.getInt("capacity"), rs.getInt("currentReception"));
 			}
 			c.close();
@@ -655,22 +658,8 @@ public class ManagerDao {
 		return setStateIndividual(userID, 1);
 	}
 
-//	Set -> F0 : 
-//		- Get list các con của F0
-//		- Với mỗi con của F0:
-//		  - Set -> F1
-//		  - Với mỗi con của F1:
-//		    - Set -> F2
-//		    - Remove Child
-//
-//		Set -> F1 :
-//		- Get list các con của F1
-//		- Với mỗi con của F1:
-//		    - Set F2
-//		    - Remove Child
-//	
-//		Set -> F2 :
-//		    - Remove Child
+	// Cập nhật thông tin người liên quan Covid19
+	// Trạng thái → người liên đới phải thay đổi theo
 	public boolean setState(String userID, int state) {
 		switch (state) {
 		case -1: {
@@ -730,7 +719,7 @@ public class ManagerDao {
 			ps.setString(1, userID);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
-				result = new TreatmentPlace(rs.getInt("treatID"), rs.getString("name"), rs.getString("street"),
+				result = new TreatmentPlace(rs.getString("treatID"), rs.getString("name"), rs.getString("street"),
 						rs.getString("wardId"), rs.getInt("capacity"), rs.getInt("currentReception"));
 			}
 			c.close();
@@ -845,12 +834,14 @@ public class ManagerDao {
 		return results;
 	}
 
+	// Lấy trạng thái hiện tại của người liên quan covid19
 	public static List<ManagedUser> getRelatedManagedUser(String userID) {
 		int currentState = getCurrentState(userID);
 		List<ManagedUser> users = new ArrayList<ManagedUser>();
 
 		switch (currentState) {
-		case 0:  case -1: {
+		case 0:
+		case -1: {
 			ManagedUser F0 = getFather(userID);
 			if (F0 != null) {
 				users.add(F0);
@@ -945,4 +936,20 @@ public class ManagerDao {
 				rs.getString("relatedPerson"), rs.getInt("debt"), rs.getString("address"));
 	}
 
+	public static int getDebt(String userID) {
+		int result = -1;
+		try (Connection c = BasicConnection.getConnection()) {
+			String query = "SELECT debt FROM manageduser WHERE idCard = ?;";
+			PreparedStatement ps = c.prepareStatement(query);
+			ps.setString(1, userID);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				result = rs.getInt("debt");
+			}
+			c.close();
+		} catch (SQLException e) {
+			logger.error(e);
+		}
+		return result;
+	}
 }

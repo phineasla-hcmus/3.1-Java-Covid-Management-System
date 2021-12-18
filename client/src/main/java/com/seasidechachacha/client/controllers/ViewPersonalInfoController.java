@@ -1,14 +1,10 @@
 package com.seasidechachacha.client.controllers;
 
 import com.seasidechachacha.client.App;
-import static com.seasidechachacha.client.database.ManagedUserDao.get;
+import com.seasidechachacha.client.database.ManagedUserDao;
 import com.seasidechachacha.client.database.ManagerDao;
 import static com.seasidechachacha.client.database.ManagerDao.getCurrentState;
 import static com.seasidechachacha.client.database.ManagerDao.getCurrentTreatmentPlace;
-import static com.seasidechachacha.client.database.ManagerDao.getRelatedManagedUser;
-import static com.seasidechachacha.client.database.ManagerDao.getStateHistoryList;
-import static com.seasidechachacha.client.database.ManagerDao.getTreatmentPlaceHistoryList;
-import static com.seasidechachacha.client.database.ManagerDao.getTreatmentPlaceList;
 import com.seasidechachacha.client.models.ManagedUser;
 import com.seasidechachacha.client.models.StateHistory;
 import com.seasidechachacha.client.models.TreatmentPlace;
@@ -21,8 +17,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -60,41 +61,84 @@ public class ViewPersonalInfoController {
 
     @FXML
     private TableColumn<TreatmentPlaceHistory, String> datePlaceCol;
-    
+
     @FXML
     private TableColumn<TreatmentPlaceHistory, Integer> placeCol;
-    
+
     @FXML
     private Label labelFullName, labelIdentityCard, labelBirthYear, labelAddress, labelStatus, labelTreatmentPlace;
 
     @FXML
     private Button btnChangeStatus, btnChangePlace;
 
+    ChoiceDialog<String> statusDialog, placeDialog;
+
+    private Executor exec;
+    private String currentStatus, currentPlace, userId;
+    private ManagedUser currentUser;
+
     @FXML
     private void initialize() {
-        // setTable(table, relatedData);
-
+        exec = Executors.newSingleThreadScheduledExecutor(new ThreadFactory() {
+            @Override
+            public Thread newThread(Runnable r) {
+                Thread t = new Thread(r);
+                t.setDaemon(true);
+                return t;
+            }
+        });
+        btnChangeStatus.setOnAction(event -> {
+            statusDialog.setTitle("Thay đổi trạng thái");
+            statusDialog.setHeaderText("Trạng thái hiện tại");
+            Optional<String> result = statusDialog.showAndWait();
+            if (result.isPresent()) {
+                labelStatus.setText(result.get());
+            }
+        });
+        btnChangePlace.setOnAction(event -> {
+            placeDialog.setTitle("Thay đổi nơi điều trị/cách ly");
+            placeDialog.setHeaderText("Nơi điều trị/cách ly hiện tại");
+            Optional<String> result = placeDialog.showAndWait();
+            if (result.isPresent()) {
+                labelTreatmentPlace.setText(result.get());
+            }
+        });
     }
 
-    public void setup(ManagedUser user) {
-        String userId = user.getUserId();
-        ManagedUser currentUser = get(userId);
-        labelFullName.setText(currentUser.getName());
-        labelIdentityCard.setText(currentUser.getUserId());
-        labelBirthYear.setText(String.valueOf(currentUser.getBirthYear()));
-        labelAddress.setText(currentUser.getAddress());
-        String currentStatus = "F" + getCurrentState(currentUser.getUserId());
+    private void getManagedUserThread() {
+        Task<ManagedUser> dataTask = new Task<ManagedUser>() {
+            @Override
+            public ManagedUser call() {
+                return ManagedUserDao.get(userId);
+            }
+        };
+        dataTask.setOnSucceeded(e -> {
+            try {
+                resolveManagedUser(e, dataTask.getValue());
+            } catch (IOException ex) {
+                logger.fatal(ex);
+            }
+        });
+        exec.execute(dataTask);
+    }
+
+    public void resolveManagedUser(WorkerStateEvent e, ManagedUser user) throws IOException {
+        this.currentUser = user;
+        labelFullName.setText(user.getName());
+        labelIdentityCard.setText(user.getUserId());
+        labelBirthYear.setText(String.valueOf(user.getBirthYear()));
+        labelAddress.setText(user.getAddress());
+        currentStatus = "F" + getCurrentState(user.getUserId());
         labelStatus.setText(currentStatus);
-        TreatmentPlace treat = getCurrentTreatmentPlace(currentUser.getUserId());
-        String currentPlace = treat.getName();
+        TreatmentPlace treat = getCurrentTreatmentPlace(user.getUserId());
+        currentPlace = treat.getName();
         if (treat != null) {
             labelTreatmentPlace.setText(treat.getName());
         }
 
-        // String defaultStatus = user.getStatus();
         String status[] = {"F0", "F1", "F2"};
 
-        ChoiceDialog<String> statusDialog = new ChoiceDialog<String>(currentStatus, status);
+        statusDialog = new ChoiceDialog<String>(currentStatus, status);
         statusDialog.setResultConverter((ButtonType type) -> {
 
             ButtonBar.ButtonData data = type == null ? null : type.getButtonData();
@@ -104,26 +148,35 @@ public class ViewPersonalInfoController {
                 return null;
             }
         });
+        getListTreatmentPlaceThread();
 
-        btnChangeStatus.setOnAction(event -> {
-            statusDialog.setTitle("Thay đổi trạng thái");
-            statusDialog.setHeaderText("Trạng thái hiện tại");
-            Optional<String> result = statusDialog.showAndWait();
-            if (result.isPresent()) {
-                labelStatus.setText(result.get());
+    }
+
+    private void getListTreatmentPlaceThread() {
+        Task<List<TreatmentPlace>> dataTask = new Task<List<TreatmentPlace>>() {
+            @Override
+            public List<TreatmentPlace> call() {
+                return ManagerDao.getTreatmentPlaceList();
+            }
+        };
+        dataTask.setOnSucceeded(e -> {
+            try {
+                resolveListTreatmentPlace(e, dataTask.getValue());
+            } catch (IOException ex) {
+                logger.fatal(ex);
             }
         });
+        exec.execute(dataTask);
+    }
 
-//        String defaultPlace = "abc";
-//        String place[] = {"abc", "xyz", "ohi"};
-        List<TreatmentPlace> treatmentPlaceList = getTreatmentPlaceList();
+    public void resolveListTreatmentPlace(WorkerStateEvent e, List<TreatmentPlace> list) throws IOException {
         List<String> places = new ArrayList<String>();
-        
-        for (int i = 0; i < treatmentPlaceList.size(); i++) {
-            places.add(treatmentPlaceList.get(i).getName());
+
+        for (int i = 0; i < list.size(); i++) {
+            places.add(list.get(i).getName());
         }
 
-        ChoiceDialog<String> placeDialog = new ChoiceDialog<String>(currentPlace, places);
+        placeDialog = new ChoiceDialog<String>(currentPlace, places);
         placeDialog.setResultConverter((ButtonType type) -> {
 
             ButtonBar.ButtonData data = type == null ? null : type.getButtonData();
@@ -133,25 +186,77 @@ public class ViewPersonalInfoController {
                 return null;
             }
         });
+        getListRelatedThread();
+    }
 
-        btnChangePlace.setOnAction(event -> {
-            placeDialog.setTitle("Thay đổi nơi điều trị/cách ly");
-            placeDialog.setHeaderText("Nơi điều trị/cách ly hiện tại");
-            Optional<String> result = placeDialog.showAndWait();
-            if (result.isPresent()) {
-                labelTreatmentPlace.setText(result.get());
+    private void getListRelatedThread() {
+        Task<List<ManagedUser>> dataTask = new Task<List<ManagedUser>>() {
+            @Override
+            public List<ManagedUser> call() {
+                return ManagerDao.getRelatedManagedUser(userId);
+            }
+        };
+        dataTask.setOnSucceeded(e -> {
+            try {
+                resolveListRelated(e, dataTask.getValue());
+            } catch (IOException ex) {
+                logger.fatal(ex);
             }
         });
+        exec.execute(dataTask);
+    }
 
-        List<ManagedUser> relatedList = getRelatedManagedUser(currentUser.getUserId());
-        setTableRelated(tableRelated, FXCollections.observableArrayList(relatedList));
+    public void resolveListRelated(WorkerStateEvent e, List<ManagedUser> list) throws IOException {
+        setTableRelated(tableRelated, FXCollections.observableArrayList(list));
+        getListStateHistoryThread();
+    }
 
-        List<StateHistory> stateHistoryList = getStateHistoryList(currentUser.getUserId());
-        setTableStatus(tableStatus, FXCollections.observableArrayList(stateHistoryList));
-        
-        List<TreatmentPlaceHistory> treatHistoryList = getTreatmentPlaceHistoryList(currentUser.getUserId());
-        setTableTreat(tablePlace, FXCollections.observableArrayList(treatHistoryList));
+    private void getListStateHistoryThread() {
+        Task<List<StateHistory>> dataTask = new Task<List<StateHistory>>() {
+            @Override
+            public List<StateHistory> call() {
+                return ManagerDao.getStateHistoryList(userId);
+            }
+        };
+        dataTask.setOnSucceeded(e -> {
+            try {
+                resolveListStateHistory(e, dataTask.getValue());
+            } catch (IOException ex) {
+                logger.fatal(ex);
+            }
+        });
+        exec.execute(dataTask);
+    }
 
+    public void resolveListStateHistory(WorkerStateEvent e, List<StateHistory> list) throws IOException {
+        setTableStatus(tableStatus, FXCollections.observableArrayList(list));
+        getListTreatmentPlaceHistoryThread();
+    }
+
+    private void getListTreatmentPlaceHistoryThread() {
+        Task<List<TreatmentPlaceHistory>> dataTask = new Task<List<TreatmentPlaceHistory>>() {
+            @Override
+            public List<TreatmentPlaceHistory> call() {
+                return ManagerDao.getTreatmentPlaceHistoryList(userId);
+            }
+        };
+        dataTask.setOnSucceeded(e -> {
+            try {
+                resolveListTreatmentPlaceHistory(e, dataTask.getValue());
+            } catch (IOException ex) {
+                logger.fatal(ex);
+            }
+        });
+        exec.execute(dataTask);
+    }
+
+    public void resolveListTreatmentPlaceHistory(WorkerStateEvent e, List<TreatmentPlaceHistory> list) throws IOException {
+        setTableTreat(tablePlace, FXCollections.observableArrayList(list));
+    }
+
+    public void setup(ManagedUser user) {
+        userId = user.getUserId();
+        getManagedUserThread();
     }
 
     @FXML
@@ -189,8 +294,8 @@ public class ViewPersonalInfoController {
         }
         return null;
     }
-    
-     private TableColumn<TreatmentPlaceHistory, String> getTableTreatColumnByName(TableView<TreatmentPlaceHistory> tableView, String name) {
+
+    private TableColumn<TreatmentPlaceHistory, String> getTableTreatColumnByName(TableView<TreatmentPlaceHistory> tableView, String name) {
         for (TableColumn<TreatmentPlaceHistory, ?> col : tableView.getColumns()) {
             if (col.getText().equals(name)) {
                 return (TableColumn<TreatmentPlaceHistory, String>) col;
@@ -198,8 +303,8 @@ public class ViewPersonalInfoController {
         }
         return null;
     }
-     
-      private TableColumn<TreatmentPlaceHistory, Integer> getTableTreatByName(TableView<TreatmentPlaceHistory> tableView, String name) {
+
+    private TableColumn<TreatmentPlaceHistory, Integer> getTableTreatByName(TableView<TreatmentPlaceHistory> tableView, String name) {
         for (TableColumn<TreatmentPlaceHistory, ?> col : tableView.getColumns()) {
             if (col.getText().equals(name)) {
                 return (TableColumn<TreatmentPlaceHistory, Integer>) col;
@@ -270,16 +375,16 @@ public class ViewPersonalInfoController {
         table.setItems(data);
 
     }
-    
-     public void setColumnsTreat(TableView<TreatmentPlaceHistory> table) {
+
+    public void setColumnsTreat(TableView<TreatmentPlaceHistory> table) {
         datePlaceCol = getTableTreatColumnByName(table, "Ngày");
         datePlaceCol.setCellValueFactory(new PropertyValueFactory<TreatmentPlaceHistory, String>("time"));
 
         placeCol = getTableTreatByName(table, "Nơi điều trị");
         placeCol.setCellValueFactory(new PropertyValueFactory<TreatmentPlaceHistory, Integer>("treatID"));
     }
-     
-     public void setTableTreat(TableView<TreatmentPlaceHistory> table, ObservableList<TreatmentPlaceHistory> data) {
+
+    public void setTableTreat(TableView<TreatmentPlaceHistory> table, ObservableList<TreatmentPlaceHistory> data) {
         setColumnsTreat(table);
         table.setItems(data);
 

@@ -10,6 +10,11 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.Optional;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -28,32 +33,49 @@ public class ViewPackageInfoController {
     @FXML
     private Button btnChangeName, btnChangeLimit, btnChangeDay, btnChangePrice;
 
+    private int packageID;
+
+    private Executor exec;
+//    private Package currentPack;
+
+    ManagerDao Tam = new ManagerDao("mod-19127268");
+
     @FXML
     private void initialize() {
-        // TODO
+        exec = Executors.newSingleThreadScheduledExecutor(new ThreadFactory() {
+            @Override
+            public Thread newThread(Runnable r) {
+                Thread t = new Thread(r);
+                t.setDaemon(true);
+                return t;
+            }
+        });
     }
 
-    @FXML
-    private void goBack() {
-        try {
-            App.setCurrentPane("pn_all", "view/ViewListPackage", null);
-        } catch (IOException ex) {
-            logger.fatal(ex);
-        }
+    private void getPackageThread() {
+        Task<Package> dataTask = new Task<Package>() {
+            @Override
+            public Package call() {
+                return ManagerDao.getPackageByID(packageID);
+            }
+        };
+        dataTask.setOnSucceeded(e -> {
+            try {
+                resolvePackage(e, dataTask.getValue());
+            } catch (IOException ex) {
+                logger.fatal(ex);
+            }
+        });
+        exec.execute(dataTask);
     }
 
-    public void setup(Package pack) {
-        int packageID = pack.getPackageID();
-        Package currentPack = getPackageByID(packageID);
-
-        labelName.setText(currentPack.getName());
-        labelLimit.setText(String.valueOf(currentPack.getLimitPerPerson()));
-        labelDay.setText(String.valueOf(currentPack.getDayCooldown()));
-        labelPrice.setText(String.valueOf(currentPack.getPrice()));
-
-        ManagerDao Tam = new ManagerDao("mod-19127268");
+    public void resolvePackage(WorkerStateEvent e, Package pack) throws IOException {
+        labelName.setText(pack.getName());
+        labelLimit.setText(String.valueOf(pack.getLimitPerPerson()));
+        labelDay.setText(String.valueOf(pack.getDayCooldown()));
+        labelPrice.setText(String.valueOf(pack.getPrice()));
         btnChangeName.setOnAction(event -> {
-            Dialog dialog = new TextInputDialog(currentPack.getName());
+            Dialog dialog = new TextInputDialog(pack.getName());
             dialog.setTitle("Thay đổi tên gói");
             dialog.setHeaderText("Tên gói mới");
             Optional<String> result = dialog.showAndWait();
@@ -70,9 +92,8 @@ public class ViewPackageInfoController {
                 labelName.setText(result.get());
             }
         });
-
         btnChangeLimit.setOnAction(event -> {
-            Dialog dialog = new TextInputDialog(String.valueOf(currentPack.getLimitPerPerson()));
+            Dialog dialog = new TextInputDialog(String.valueOf(pack.getLimitPerPerson()));
             dialog.setTitle("Thay đổi mức giới hạn");
             dialog.setHeaderText("Mức giới hạn mới");
             Optional<String> result = dialog.showAndWait();
@@ -92,7 +113,7 @@ public class ViewPackageInfoController {
         });
 
         btnChangeDay.setOnAction(event -> {
-            Dialog dialog = new TextInputDialog(String.valueOf(currentPack.getDayCooldown()));
+            Dialog dialog = new TextInputDialog(String.valueOf(pack.getDayCooldown()));
             dialog.setTitle("Thay đổi thời gian giới hạn");
             dialog.setHeaderText("Thời gian giới hạn mới");
             Optional<String> result = dialog.showAndWait();
@@ -111,7 +132,7 @@ public class ViewPackageInfoController {
         });
 
         btnChangePrice.setOnAction(event -> {
-            Dialog dialog = new TextInputDialog(String.valueOf(currentPack.getPrice()));
+            Dialog dialog = new TextInputDialog(String.valueOf(pack.getPrice()));
             dialog.setTitle("Thay đổi đơn giá");
             dialog.setHeaderText("Đơn giá mới");
             Optional<String> result = dialog.showAndWait();
@@ -128,7 +149,21 @@ public class ViewPackageInfoController {
                 labelPrice.setText(result.get());
             }
         });
+    }
 
+    @FXML
+    private void goBack() {
+        try {
+            App.setCurrentPane("pn_all", "view/ViewListPackage", null);
+        } catch (IOException ex) {
+            logger.fatal(ex);
+        }
+    }
+
+    public void setup(Package pack) {
+//        this.currentPack = pack;
+        packageID = pack.getPackageID();
+        getPackageThread();
     }
 
 }

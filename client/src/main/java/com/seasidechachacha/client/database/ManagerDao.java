@@ -20,6 +20,7 @@ import com.seasidechachacha.client.models.TreatmentPlaceHistory;
 import com.seasidechachacha.client.models.City;
 import com.seasidechachacha.client.models.District;
 import com.seasidechachacha.client.models.ManagedUser;
+import com.seasidechachacha.client.models.PackageStatistic;
 import com.seasidechachacha.client.models.StateStatistic;
 
 /**
@@ -1036,5 +1037,74 @@ public class ManagerDao {
         }
         return information;
     }
+    
+    public static List<PackageStatistic> getStatisticPackageAll() {
+        List<PackageStatistic> result = null;
+        try ( Connection c = BasicConnection.getConnection()) {
+            String query = "SELECT p.name , SUM(o.orderItemQuantity) as quantity\n"
+                    + "FROM orderitem as o JOIN package as p ON o.packageID=p.packageID\n"
+                    + "GROUP BY p.name";
+            
+            PreparedStatement ps = c.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+            result=parseStatisticPackage(rs);
+            c.close();
+        } catch (SQLException e) {
+            logger.error(e);
+            return null;
+        }
+        return result;
+    }
+    
+    
+    public static List<PackageStatistic> getStatisticPackagebyDay(String date) {
+        List<PackageStatistic> result = null;
+        try ( Connection c = BasicConnection.getConnection()) {
+            String query = "SELECT p.name, SUM(o.orderItemQuantity) as quantity\n"
+                    + "FROM orderitem as o JOIN package as p ON o.packageID=p.packageID join orderhistory as h ON h.orderID=o.orderID\n"
+                    + "GROUP BY p.name,h.timeDelivery\n"
+                    + "HAVING DATE(h.timeDelivery) = ? ";
+            
+            PreparedStatement ps = c.prepareStatement(query);
+            
+            ps.setString(1, date);
+            ResultSet rs = ps.executeQuery();
+            result=parseStatisticPackage(rs);
+            c.close();
+        } catch (SQLException e) {
+            logger.error(e);
+            return null;
+        }
+        return result;
+    }
+    
+    public static List<PackageStatistic> getStatisticPackagebyMonth(String month) {
+        List<PackageStatistic> result = null;
+        try ( Connection c = BasicConnection.getConnection()) {
+            String query = "SELECT p.name, SUM(o.orderItemQuantity) as quantity\n"
+                    + "FROM orderitem as o JOIN package as p ON o.packageID=p.packageID join orderhistory as h ON h.orderID=o.orderID\n"
+                    + "GROUP BY p.name,h.timeDelivery\n"
+                    + "HAVING MONTH(h.timeDelivery) = ? ";
+            
+            PreparedStatement ps = c.prepareStatement(query);
+            
+            ps.setString(1, month);
+            ResultSet rs = ps.executeQuery();
+            result=parseStatisticPackage(rs);
+            c.close();
+        } catch (SQLException e) {
+            logger.error(e);
+            return null;
+        }
+        return result;
+    }
+    private static List<PackageStatistic> parseStatisticPackage(ResultSet rs) throws SQLException {
+        List<PackageStatistic> information = new ArrayList<PackageStatistic>();
+        while (rs.next()) {
+            information.add(new PackageStatistic(rs.getString("name"),rs.getString("quantity")));
+        }
+        return information;
+    }
+    
 
 }

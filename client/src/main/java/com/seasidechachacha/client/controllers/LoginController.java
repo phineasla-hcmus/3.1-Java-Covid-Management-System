@@ -47,19 +47,6 @@ public class LoginController {
             if (!userId.isEmpty() && !password.isEmpty()) {
                 loginThread(userId, password);
             }
-            // nếu đăng nhập thành công và database xác nhận là user này mới đăng nhập
-            // lần đầu
-
-            // // là moderator
-            // App.setRoot("view/ModeratorScreen");
-            // // App.initializeMainScreen();
-            // // tạm thời comment để xử lý chia role
-            // // if (true) {
-            // // App.setRoot("view/CreateUserPassword");
-            // // } // nếu đăng nhập thành công và role là moderator
-            // // else {
-            // // App.initializeMainScreen();
-            // // }
         });
     }
 

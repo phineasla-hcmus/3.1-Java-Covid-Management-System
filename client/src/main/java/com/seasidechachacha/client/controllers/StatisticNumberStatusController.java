@@ -10,8 +10,15 @@ import com.seasidechachacha.client.models.StateStatistic;
 import java.io.IOException;
 import static java.lang.String.valueOf;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -54,63 +61,98 @@ public class StatisticNumberStatusController {
 
     private ObservableList<StateStatistic> statisticList;
 
+    private Executor exec;
+
     @FXML
     private void initialize() {
+        exec = Executors.newSingleThreadScheduledExecutor(new ThreadFactory() {
+            @Override
+            public Thread newThread(Runnable r) {
+                Thread t = new Thread(r);
+                t.setDaemon(true);
+                return t;
+            }
+        });
+        getStatisticThread(1);
+
         statisticType.getItems().addAll("số lượng người ở từng trạng thái theo thời gian", "số lượng nhu yếu phẩm được tiêu thụ", "số chuyển trạng thái", "số dư nợ");
         statisticType.setValue("số lượng người ở từng trạng thái theo thời gian");
 
-        List<StateStatistic> s = ManagerDao.getStatisticStatusAll();
+        nextButton.setOnAction(e -> {
+            if (statisticType.getSelectionModel().getSelectedItem().toString().equals("số lượng người ở từng trạng thái theo thời gian")) {
+                try {
+                    App.setCurrentPane("pn_all", "view/StatisticNumberStatus", null);
+                } catch (IOException ex) {
+                    Logger.getLogger(StatisticNumberStatusController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                pn_all.toFront();
+            } else if (statisticType.getSelectionModel().getSelectedItem().toString().equals("số lượng nhu yếu phẩm được tiêu thụ")) {
+                try {
+                    App.setCurrentPane("pn_all", "view/StatisticNumberPackage", null);
+                } catch (IOException ex) {
+                    Logger.getLogger(StatisticNumberStatusController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                pn_all.toFront();
+            } else if (statisticType.getSelectionModel().getSelectedItem().toString().equals("số chuyển trạng thái")) {
+                try {
+                    App.setCurrentPane("pn_all", "view/StatisticNumberChangeStatus", null);
+                } catch (IOException ex) {
+                    Logger.getLogger(StatisticNumberStatusController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                pn_all.toFront();
+            } else if (statisticType.getSelectionModel().getSelectedItem().toString().equals("số dư nợ")) {
+                try {
+                    App.setCurrentPane("pn_all", "view/StatisticNumberBalance", null);
+                } catch (IOException ex) {
+                    Logger.getLogger(StatisticNumberStatusController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                pn_all.toFront();
+            }
+        });
 
-        statisticList = FXCollections.observableArrayList(s);
+        dateButton.setOnAction(e -> {
+            getStatisticThread(2);
+        });
+
+        monthButton.setOnAction(e -> {
+            getStatisticThread(3);
+        });
+
+        allButton.setOnAction(e -> {
+            getStatisticThread(1);
+        });
+    }
+
+    private void getStatisticThread(int type) {
+        Task<List<StateStatistic>> dataTask = new Task<List<StateStatistic>>() {
+            @Override
+            public List<StateStatistic> call() {
+                if (type == 1) {
+                    return ManagerDao.getStatisticStatusAll();
+                } else if (type == 2) {
+                    return ManagerDao.getStatisticStatusbyDay(dateInput.getValue().toString());
+                } else {
+                    return ManagerDao.getStatisticStatusbyMonth(valueOf(monthInput.getValue().getMonthValue()));
+                }
+            }
+        };
+        dataTask.setOnSucceeded(e -> {
+            try {
+                resolveStatistic(e, dataTask.getValue());
+            } catch (IOException ex) {
+                java.util.logging.Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        exec.execute(dataTask);
+    }
+
+    public void resolveStatistic(WorkerStateEvent e, List<StateStatistic> list) throws IOException {
+        statisticList = FXCollections.observableArrayList(list);
 
         Time.setCellValueFactory(new PropertyValueFactory<StateStatistic, String>("time"));
         Status.setCellValueFactory(new PropertyValueFactory<StateStatistic, String>("state"));
         Quantity.setCellValueFactory(new PropertyValueFactory<StateStatistic, String>("quantity"));
 
         statusTable.setItems(statisticList);
-
-    }
-
-    @FXML
-    private void handleButton(ActionEvent e) throws IOException {
-
-        if (e.getSource() == nextButton) { // để đổi bảng thống kê th , ko cần qtam:))
-            if (statisticType.getSelectionModel().getSelectedItem().toString().equals("số lượng người ở từng trạng thái theo thời gian")) {
-                App.setCurrentPane("pn_all", "view/StatisticNumberStatus", null);
-                pn_all.toFront();
-            } else if (statisticType.getSelectionModel().getSelectedItem().toString().equals("số lượng nhu yếu phẩm được tiêu thụ")) {
-                App.setCurrentPane("pn_all", "view/StatisticNumberPackage", null);
-                pn_all.toFront();
-            } else if (statisticType.getSelectionModel().getSelectedItem().toString().equals("số chuyển trạng thái")) {
-                App.setCurrentPane("pn_all", "view/StatisticNumberChangeStatus", null);
-                pn_all.toFront();
-            } else if (statisticType.getSelectionModel().getSelectedItem().toString().equals("số dư nợ")) {
-                App.setCurrentPane("pn_all", "view/StatisticNumberBalance", null);
-                pn_all.toFront();
-            }
-        } else if (e.getSource() == dateButton) {  //nếu người dùng bấm vào nút "theo ngày", 
-            //sẽ dựa vào ngày để thống kê số lượng theo từng trang thái trong database và hiển thị trong bảng
-            List<StateStatistic> s = ManagerDao.getStatisticStatusbyDay(dateInput.getValue().toString());
-             
-            statisticList = FXCollections.observableArrayList(s);
-
-            statusTable.setItems(statisticList);
-            
-
-        } else if (e.getSource() == monthButton) { // tương tự trên nhưng chỉ dựa vào tháng và năm
-        
-            List<StateStatistic> s = ManagerDao.getStatisticStatusbyMonth(valueOf(monthInput.getValue().getMonthValue()));
-             
-            statisticList = FXCollections.observableArrayList(s);
-
-            statusTable.setItems(statisticList);
-
-        } else if (e.getSource() == allButton) { // thống kê số lượng không quan tâm tới ngày tháng năm
-            List<StateStatistic> s = ManagerDao.getStatisticStatusAll();
-
-            statisticList = FXCollections.observableArrayList(s);
-
-            statusTable.setItems(statisticList);
-        }
     }
 }

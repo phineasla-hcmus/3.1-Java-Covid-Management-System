@@ -22,6 +22,9 @@ import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.PieChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
@@ -59,7 +62,13 @@ public class StatisticNumberPackageController {
     private TableColumn<PackageStatistic, String> Quantity;
 
     @FXML
+    private TableColumn<PackageStatistic, String> stt;
+    
+    @FXML
     private ObservableList<PackageStatistic> statisticList;
+    
+    @FXML
+    private PieChart piechart;
     
     private Executor exec;
 
@@ -149,8 +158,19 @@ public class StatisticNumberPackageController {
     }
     
     public void resolveStatistic(WorkerStateEvent e, List<PackageStatistic> list) throws IOException {
+        
+        ObservableList<PieChart.Data> piechartData = FXCollections.observableArrayList();
+        
+        for(int i=0;i<list.size();i++)
+        {
+            int x=i+1;
+            piechartData.add(new PieChart.Data(x+"",Integer.parseInt(list.get(i).getQuantity())));
+        }
+        
+        piechart.setData(piechartData);
         statisticList = FXCollections.observableArrayList(list);
 
+        stt.setCellValueFactory(new PropertyValueFactory<PackageStatistic, String>("id"));
         packageName.setCellValueFactory(new PropertyValueFactory<PackageStatistic, String>("name"));
         Quantity.setCellValueFactory(new PropertyValueFactory<PackageStatistic, String>("quantity"));
 

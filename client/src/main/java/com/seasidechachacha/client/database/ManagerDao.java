@@ -1182,8 +1182,10 @@ public class ManagerDao {
 
     private static List<PackageStatistic> parseStatisticPackage(ResultSet rs) throws SQLException {
         List<PackageStatistic> information = new ArrayList<PackageStatistic>();
+        int i=1;
         while (rs.next()) {
-            information.add(new PackageStatistic(rs.getString("name"), rs.getString("quantity")));
+            information.add(new PackageStatistic(i+"",rs.getString("name"), rs.getString("quantity")));
+            i=i+1;
         }
         return information;
     }

@@ -21,6 +21,7 @@ import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
@@ -59,6 +60,10 @@ public class StatisticNumberStatusController {
     @FXML
     private TableColumn<StateStatistic, String> Quantity;
 
+    @FXML
+    private PieChart piechart;
+    
+    
     private ObservableList<StateStatistic> statisticList;
 
     private Executor exec;
@@ -147,12 +152,21 @@ public class StatisticNumberStatusController {
     }
 
     public void resolveStatistic(WorkerStateEvent e, List<StateStatistic> list) throws IOException {
+        
+        ObservableList<PieChart.Data> piechartData = FXCollections.observableArrayList();
+        
+        for(int i=0;i<list.size();i++)
+        {
+            piechartData.add(new PieChart.Data("F"+list.get(i).getState(),Integer.parseInt(list.get(i).getQuantity())));
+        }
+        
+        piechart.setData(piechartData);
         statisticList = FXCollections.observableArrayList(list);
-
+        
         Time.setCellValueFactory(new PropertyValueFactory<StateStatistic, String>("time"));
         Status.setCellValueFactory(new PropertyValueFactory<StateStatistic, String>("state"));
         Quantity.setCellValueFactory(new PropertyValueFactory<StateStatistic, String>("quantity"));
-
+        
         statusTable.setItems(statisticList);
     }
 }

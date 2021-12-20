@@ -19,8 +19,9 @@
 *.tar.gz
 *.rar
 
-# Database Config
+# Secret Config
 .dbconfig.properties
+.sslconfig.properties
 
 # Maven
 target/

@@ -6,7 +6,6 @@ import com.seasidechachacha.client.controllers.ViewTreatmentPlaceInfoController;
 import com.seasidechachacha.client.models.ManagedUser;
 import com.seasidechachacha.client.models.Package;
 import com.seasidechachacha.client.models.TreatmentPlace;
-import com.seasidechachacha.client.utils.PasswordAuthenticator;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

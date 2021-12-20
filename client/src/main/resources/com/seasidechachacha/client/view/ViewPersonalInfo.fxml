@@ -68,7 +68,7 @@
                         </Label>
                     </children>
                 </HBox>
-                <HBox layoutY="118.0" prefWidth="398.0" spacing="30.0" AnchorPane.topAnchor="118.0">
+                <HBox layoutY="118.0" prefWidth="600.0" spacing="30.0" AnchorPane.topAnchor="118.0">
                     <children>
                         <Label alignment="TOP_RIGHT" prefHeight="20.0" prefWidth="215.0" text="Địa chỉ nơi ở" textFill="#006abc">
                             <font>

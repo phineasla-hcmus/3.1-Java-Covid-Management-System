@@ -26,6 +26,7 @@ import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
@@ -75,7 +76,10 @@ public class ViewPersonalInfoController {
 
     private Executor exec;
     private String currentStatus, currentPlace, userId;
+    private int currentState;
     private ManagedUser currentUser;
+
+    ManagerDao Tam = new ManagerDao("mod-19127268");
 
     @FXML
     private void initialize() {
@@ -92,7 +96,37 @@ public class ViewPersonalInfoController {
             statusDialog.setHeaderText("Trạng thái hiện tại");
             Optional<String> result = statusDialog.showAndWait();
             if (result.isPresent()) {
-                labelStatus.setText(result.get());
+                int state = -1;
+                switch (result.get()) {
+                    case "F0":
+                        state = 0;
+                        break;
+                    case "F1":
+                        state = 1;
+                        break;
+                    case "F2":
+                        state = 2;
+                        break;
+                    default:
+                        break;
+                }
+                if (state > currentState) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Thông báo");
+                    alert.setHeaderText("Cập nhật thông tin người liên quan Covid19");
+                    alert.setContentText("Chỉ có thể thay đổi trạng thái từ F2->F1, F2->F0, F1->F0!");
+
+                    alert.showAndWait();
+                } else if (Tam.setState(userId, state)) {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Thông báo");
+                    alert.setHeaderText("Cập nhật thông tin người liên quan Covid19");
+                    alert.setContentText("Thay đổi trạng thái thành công");
+
+                    alert.showAndWait();
+                    labelStatus.setText(result.get());
+
+                }
             }
         });
         btnChangePlace.setOnAction(event -> {
@@ -100,7 +134,17 @@ public class ViewPersonalInfoController {
             placeDialog.setHeaderText("Nơi điều trị/cách ly hiện tại");
             Optional<String> result = placeDialog.showAndWait();
             if (result.isPresent()) {
-                labelTreatmentPlace.setText(result.get());
+                int treatID = ManagerDao.getTreatmentPlaceIDByName(result.get());
+                if (Tam.addTreatmentPlaceHistory(userId, treatID)) {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Thông báo");
+                    alert.setHeaderText("Cập nhật thông tin người liên quan Covid19");
+                    alert.setContentText("Thay đổi địa điểm điều trị thành công");
+
+                    alert.showAndWait();
+                    labelTreatmentPlace.setText(result.get());
+
+                }
             }
         });
     }
@@ -128,10 +172,11 @@ public class ViewPersonalInfoController {
         labelIdentityCard.setText(user.getUserId());
         labelBirthYear.setText(String.valueOf(user.getBirthYear()));
         labelAddress.setText(user.getAddress());
-        currentStatus = "F" + getCurrentState(user.getUserId());
+        currentState = getCurrentState(user.getUserId());
+        currentStatus = "F" + currentState;
         labelStatus.setText(currentStatus);
         TreatmentPlace treat = getCurrentTreatmentPlace(user.getUserId());
-        currentPlace = treat.getName();
+//        currentPlace = treat.getName();
         if (treat != null) {
             labelTreatmentPlace.setText(treat.getName());
         }
@@ -229,7 +274,9 @@ public class ViewPersonalInfoController {
     }
 
     public void resolveListStateHistory(WorkerStateEvent e, List<StateHistory> list) throws IOException {
-        setTableStatus(tableStatus, FXCollections.observableArrayList(list));
+        if (list != null) {
+            setTableStatus(tableStatus, FXCollections.observableArrayList(list));
+        }
         getListTreatmentPlaceHistoryThread();
     }
 
@@ -251,7 +298,10 @@ public class ViewPersonalInfoController {
     }
 
     public void resolveListTreatmentPlaceHistory(WorkerStateEvent e, List<TreatmentPlaceHistory> list) throws IOException {
-        setTableTreat(tablePlace, FXCollections.observableArrayList(list));
+        if (list != null) {
+            setTableTreat(tablePlace, FXCollections.observableArrayList(list));
+
+        }
     }
 
     public void setup(ManagedUser user) {

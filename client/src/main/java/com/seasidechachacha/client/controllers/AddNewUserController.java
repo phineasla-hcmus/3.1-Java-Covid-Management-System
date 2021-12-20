@@ -1,6 +1,5 @@
 package com.seasidechachacha.client.controllers;
 
-//import java.net.URL;
 import com.seasidechachacha.client.App;
 import com.seasidechachacha.client.database.ManagerDao;
 import static com.seasidechachacha.client.database.ManagerDao.getCityList;
@@ -33,10 +32,14 @@ public class AddNewUserController {
     private TextField tfFullName, tfBirthYear, tfIdentityCard;
 
     @FXML
-    private ComboBox<String> cbCurrentStatus, cbCity, cbDistrict, cbWard, cbRelated;
+    private ComboBox<String> cbCity, cbDistrict, cbWard, cbRelated;
+
+    ManagerDao Tam = new ManagerDao("mod-19127268");
 
     @FXML
     private Button btnAddNewPerson;
+    
+    private int currentState;
 
     @FXML
     private void goBack() {
@@ -50,14 +53,10 @@ public class AddNewUserController {
     @FXML
     private void initialize() {
         // for testing purpose
-        ManagerDao Tam = new ManagerDao("mod-19127268");
         btnAddNewPerson.setOnAction(event -> {
-//            ManagedUser user = new ManagedUser("123456", tfFullName.getText(), Integer.valueOf(tfBirthYear.getText()), "1", 0,
-//                    "00001", "abc");
             try {
                 if (isValid()) {
-                    // TODO
-                    if (Tam.addNewUser(getCurrentInput())) {
+                    if (Tam.addNewUser(getCurrentInput(), currentState)) {
                         Alert alert = new Alert(AlertType.INFORMATION);
                         alert.setTitle("Thông báo");
                         alert.setHeaderText("Quản lý người liên quan Covid19");
@@ -78,7 +77,7 @@ public class AddNewUserController {
                 logger.fatal(ex);
             }
         });
-        cbCurrentStatus.getItems().addAll("F0", "F1", "F2");
+//        cbCurrentStatus.getItems().addAll("F0", "F1", "F2");
         List<City> city = getCityList();
         for (int i = 0; i < city.size(); i++) {
             cbCity.getItems().add(city.get(i).getCityName());
@@ -116,8 +115,13 @@ public class AddNewUserController {
             }
 
         });
+
+        List<String> relatedList = Tam.getUserIDList();
+        for (int i = 0; i < relatedList.size(); i++) {
+            cbRelated.getItems().add(relatedList.get(i));
+        }
         // tạm thời để test
-        cbRelated.getItems().addAll("079510193347", "079932368028");
+//        cbRelated.getItems().addAll("079510193347", "079932368028");
     }
 
     private boolean isValid() {
@@ -130,23 +134,22 @@ public class AddNewUserController {
 
             alert.showAndWait();
             valid = false;
-        } else if (cbCurrentStatus.getValue().equals("") || cbCity.getValue().equals("") || cbDistrict.getValue().equals("") || cbWard.getValue().equals("") || cbRelated.getValue().equals("")) {
+        } else if (cbCity.getValue().equals("") || cbDistrict.getValue().equals("") || cbWard.getValue().equals("") || cbRelated.getValue().equals("")) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Thông báo");
             alert.setHeaderText("Thêm mới người dùng");
-            alert.setContentText("Vui lòng chọn trạng thái, địa chỉ nơi ở và danh sách người liên quan!");
+            alert.setContentText("Vui lòng chọn trạng thái, địa chỉ nơi ở và người liên quan!");
 
             alert.showAndWait();
             valid = false;
         }
         return valid;
     }
-    
+
     private void refreshInput() {
-        tfFullName.setText(""); 
-        tfBirthYear.setText(""); 
+        tfFullName.setText("");
+        tfBirthYear.setText("");
         tfIdentityCard.setText("");
-        cbCurrentStatus.getItems().clear();
         cbCity.getItems().clear();
         cbDistrict.getItems().clear();
         cbWard.getItems().clear();
@@ -158,12 +161,11 @@ public class AddNewUserController {
         String ID = tfIdentityCard.getText();
         String name = tfFullName.getText();
         int birthYear = Integer.valueOf(tfBirthYear.getText());
-        String status = cbCurrentStatus.getValue();
         String relatedID = "079111222333";
-//        String wardID = "30208";
         String address = cbCity.getValue() + ", " + cbDistrict.getValue() + ", " + cbWard.getValue();
 
-        user = new ManagedUser(ID, name, birthYear, relatedID, 0, address);
+        currentState = Tam.getCurrentState(cbRelated.getValue()) + 1;
+        user = new ManagedUser(ID, name, birthYear, relatedID, 0, address, currentState);
 
         return user;
     }

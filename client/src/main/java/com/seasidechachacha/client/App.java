@@ -1,5 +1,7 @@
 package com.seasidechachacha.client;
 
+import java.io.IOException;
+
 import com.seasidechachacha.client.controllers.ViewPackageInfoController;
 import com.seasidechachacha.client.controllers.ViewPersonalInfoController;
 import com.seasidechachacha.client.controllers.ViewTreatmentPlaceInfoController;
@@ -8,20 +10,22 @@ import com.seasidechachacha.client.models.Package;
 import com.seasidechachacha.client.models.TreatmentPlace;
 import com.seasidechachacha.client.payment.PaymentService;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.kordamp.bootstrapfx.BootstrapFX;
+
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.stage.Stage;
-import java.io.IOException;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.Pane;
-import org.kordamp.bootstrapfx.BootstrapFX;
-import javafx.application.Platform;
 import javafx.scene.control.TableRow;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
 public class App extends Application {
-
+    private static final Logger logger = LogManager.getLogger(App.class);
     private static Scene scene;
     private static ScrollPane pn_all;
     private static String role = "admin";
@@ -98,7 +102,15 @@ public class App extends Application {
         // : "GET OUT";
         // String a = pwdAuth.hash("123456".toCharArray());
         // System.out.println(a);
-        PaymentService.initialize();
+        try {
+            SSLConfig.initialize();
+        } catch (NullPointerException e) {
+            logger.fatal(e);
+            return;
+        }
+
+        PaymentService ps = new PaymentService();
+        ps.getAccountBalance("213");
         launch();
     }
 

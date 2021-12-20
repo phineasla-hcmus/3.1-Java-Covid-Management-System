@@ -30,12 +30,13 @@ public class ClientHandler implements Runnable {
         try (InputStream in = socket.getInputStream();
                 BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
             String raw = br.readLine();
+            System.out.println(raw);
             // Client must have close the socket
             if (raw == null) {
                 return;
             }
             logger.trace(raw);
-            
+
         } catch (Exception e) {
             InetSocketAddress address = (InetSocketAddress) socket.getRemoteSocketAddress();
             logger.warn(address, e);

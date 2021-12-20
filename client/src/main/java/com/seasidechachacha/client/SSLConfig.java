@@ -1,17 +1,17 @@
-package com.seasidechachacha.payment;
+package com.seasidechachacha.client;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-public class PaymentConfig {
+public class SSLConfig {
     private String keystorePassword;
 
-    private static final PaymentConfig config = new PaymentConfig();
+    private static final SSLConfig config = new SSLConfig();
 
     public static void initialize() throws IOException, NullPointerException {
-        String keyStorePasswordKey = "KEYSTORE_PASSWORD";
-        try (InputStream in = config.getClass().getResourceAsStream("/.paymentconfig.properties")) {
+        String keyStorePasswordKey = "TRUSTSTORE_PASSWORD";
+        try (InputStream in = config.getClass().getResourceAsStream("/.sslconfig.properties")) {
             if (in == null) {
                 config.keystorePassword = getEnv(keyStorePasswordKey);
             } else {
@@ -30,7 +30,7 @@ public class PaymentConfig {
             return env;
     }
 
-    public static String getKeyStorePassword() {
+    public static String getPassword() {
         return config.keystorePassword;
     }
 }

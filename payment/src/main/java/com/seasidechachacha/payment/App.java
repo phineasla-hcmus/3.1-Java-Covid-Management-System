@@ -26,6 +26,7 @@ import org.apache.logging.log4j.Logger;
 
 public class App {
     private static final Logger logger = LogManager.getLogger(App.class);
+    public static final int PORT = 9906;
 
     /**
      * @see <a href="https://www.youtube.com/watch?v=l4_JIIrMhIQ">
@@ -45,23 +46,9 @@ public class App {
     private static SSLContext initializeKeystore()
             throws IOException, KeyStoreException, NoSuchAlgorithmException, CertificateException,
             UnrecoverableKeyException, KeyManagementException {
-        /**
-         * Generate keystore using keytool.exe in
-         * C:\Program Files\Java\jdk-{version}\bin
-         * 
-         * <pre>
-         * keytool -genkey -v -keystore D:\covid_management_system.keystore -alias csm -validity 365 -keyalg rsa
-         * </pre>
-         */
-
-        // System.setProperty("javax.net.ssl.keyStore",
-        // "covid_management_system.keystore");
-        // System.setProperty("javax.net.ssl.keyStorePassword",
-        // PaymentConfig.getKeyStorePassword());
-
-        char[] password = PaymentConfig.getKeyStorePassword().toCharArray();
+        char[] password = SSLConfig.getPassword().toCharArray();
         KeyStore ks = KeyStore.getInstance("JKS");
-        try (InputStream in = new FileInputStream("covid_management_system.keystore")) {
+        try (InputStream in = new FileInputStream("covid_management_system.jks")) {
             ks.load(in, password);
         }
         KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
@@ -78,19 +65,23 @@ public class App {
 
     public static void main(String[] args) throws Exception {
         try {
-            PaymentConfig.initialize();
+            SSLConfig.initialize();
         } catch (NullPointerException e) {
             logger.fatal(e);
             return;
         }
-        SSLContext sc = initializeKeystore();
+        // SSLContext sc = initializeKeystore();
+        System.setProperty("javax.net.ssl.keyStore",
+                "covid_management_system.jks");
+        System.setProperty("javax.net.ssl.keyStorePassword",
+                SSLConfig.getPassword());
         ExecutorService executorService = Executors.newCachedThreadPool();
 
-        // SSLServerSocketFactory ssf = SSLServerSocketFactory.getDefault();
-        SSLServerSocketFactory ssf = sc.getServerSocketFactory();
-        SSLServerSocket ss = (SSLServerSocket) ssf.createServerSocket(9096);
+        SSLServerSocketFactory ssf = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
+        // SSLServerSocketFactory ssf = sc.getServerSocketFactory();
+        SSLServerSocket ss = (SSLServerSocket) ssf.createServerSocket(PORT);
 
-        logger.info("Server is listening on port " + 9906);
+        logger.info("Server is listening on port " + Integer.toString(PORT));
         while (true) {
             SSLSocket clientSocket = (SSLSocket) ss.accept();
             ClientHandler clientHandler = new ClientHandler(clientSocket);

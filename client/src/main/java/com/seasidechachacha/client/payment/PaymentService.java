@@ -26,18 +26,6 @@ public class PaymentService {
         ssf = (SSLSocketFactory) SSLSocketFactory.getDefault();
     }
 
-    private SSLSocket createSocket() throws IOException {
-        return (SSLSocket) ssf.createSocket(HOST, PORT);
-    }
-
-    private PrintWriter createPrintWriter(Socket s) throws IOException {
-        return new PrintWriter(s.getOutputStream(), true);
-    }
-
-    private BufferedReader createBufferedReader(Socket s) throws IOException {
-        return new BufferedReader(new InputStreamReader(s.getInputStream()));
-    }
-
     public double getAccountBalance(String userId) throws IOException {
         SSLSocket s = createSocket();
         try (PrintWriter pw = createPrintWriter(s);
@@ -49,6 +37,18 @@ public class PaymentService {
         }
         // Testing
         return 0;
+    }
+
+    private SSLSocket createSocket() throws IOException {
+        return (SSLSocket) ssf.createSocket(HOST, PORT);
+    }
+
+    private PrintWriter createPrintWriter(Socket s) throws IOException {
+        return new PrintWriter(s.getOutputStream(), true);
+    }
+
+    private BufferedReader createBufferedReader(Socket s) throws IOException {
+        return new BufferedReader(new InputStreamReader(s.getInputStream()));
     }
 
     // public static void initialize() throws IOException, KeyStoreException,

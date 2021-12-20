@@ -1,8 +1,9 @@
 package com.seasidechachacha.payment;
 
 import java.io.BufferedReader;
-import java.io.InputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
@@ -27,8 +28,8 @@ public class ClientHandler implements Runnable {
     @Override
     public void run() {
         // try-with-resource will auto-close the socket, so do not reuse it
-        try (InputStream in = socket.getInputStream();
-                BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
+        try (BufferedReader br = createBufferedReader();
+                PrintWriter pw = createPrintWriter()) {
             String raw = br.readLine();
             System.out.println(raw);
             // Client must have close the socket
@@ -41,5 +42,13 @@ public class ClientHandler implements Runnable {
             InetSocketAddress address = (InetSocketAddress) socket.getRemoteSocketAddress();
             logger.warn(address, e);
         }
+    }
+
+    private PrintWriter createPrintWriter() throws IOException {
+        return new PrintWriter(socket.getOutputStream(), true);
+    }
+
+    private BufferedReader createBufferedReader() throws IOException {
+        return new BufferedReader(new InputStreamReader(socket.getInputStream()));
     }
 }

@@ -35,7 +35,7 @@ public class ViewListUserController {
     private static List<ManagedUser> data = new ArrayList<ManagedUser>();
 
     @FXML
-    private Button btnAdd, btnSearch, btnSort;
+    private Button btnAdd, btnSearch;
 
     @FXML
     private TextField tfSearch;
@@ -50,9 +50,6 @@ public class ViewListUserController {
 
     @FXML
     private void initialize() {
-        // if use this application won't stop running when closing
-//         exec = Executors.newFixedThreadPool(1);
-        // close thread when close application
         exec = Executors.newSingleThreadScheduledExecutor(new ThreadFactory() {
 
             @Override
@@ -76,9 +73,42 @@ public class ViewListUserController {
 //            data.remove(3);
         });
         cbSort.getItems().addAll("ID", "Họ tên", "Năm sinh", "Trạng thái");
-        btnSort.setOnAction(event -> {
-            //TODO
+        cbSort.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
+            if (newValue.equals("ID")) {
+                getSortedListManagedUserThread("idCard");
+            } else if (newValue.equals("Họ tên")) {
+                getSortedListManagedUserThread("fullName");
+            } else if (newValue.equals("Năm sinh")) {
+                getSortedListManagedUserThread("yob");
+            }
         });
+    }
+
+    private void getSortedListManagedUserThread(String label) {
+        Task<List<ManagedUser>> dataTask = new Task<List<ManagedUser>>() {
+            @Override
+            public List<ManagedUser> call() {
+                if (label.equals("idCard")) {
+                    return ManagerDao.getListByID();
+                }
+                else if (label.equals("fullName")) {
+                    return ManagerDao.getListByName();
+                }
+                else if (label.equals("yob")) {
+                    return ManagerDao.getListByBirthYear();
+                }
+                return null;
+                
+            }
+        };
+        dataTask.setOnSucceeded(e -> {
+            try {
+                resolveListManagedUser(e, dataTask.getValue());
+            } catch (IOException ex) {
+                logger.fatal(ex);
+            }
+        });
+        exec.execute(dataTask);
     }
 
     private void getListManagedUserThread() {

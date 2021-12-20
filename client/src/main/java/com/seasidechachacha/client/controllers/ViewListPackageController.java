@@ -1,10 +1,7 @@
 package com.seasidechachacha.client.controllers;
 
 import com.seasidechachacha.client.App;
-import com.seasidechachacha.client.database.ManagedUserDao;
 import com.seasidechachacha.client.database.ManagerDao;
-import static com.seasidechachacha.client.database.ManagerDao.getPackageList;
-import com.seasidechachacha.client.models.ManagedUser;
 import com.seasidechachacha.client.models.Package;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -38,7 +35,7 @@ public class ViewListPackageController {
     private static List<Package> data;
 
     @FXML
-    private Button btnAdd, btnSearch, btnSort;
+    private Button btnAdd, btnSearch;
 
     @FXML
     private TextField tfSearch;
@@ -75,19 +72,48 @@ public class ViewListPackageController {
             }
         });
         btnSearch.setOnAction(event -> {
-
             String keyword = tfSearch.getText();
-
-            //for testing purpose
-//            data.remove(3);
-            //TODO
-//            table.refresh();
         });
         cbSort.getItems().addAll("Tên gói", "Mức giới hạn", "Thời gian giới hạn", "Đơn giá");
-        btnSort.setOnAction(event -> {
-            //TODO
+        cbSort.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
+            if (newValue.equals("Tên gói")) {
+                getSortedListPackageThread("name");
+            } else if (newValue.equals("Mức giới hạn")) {
+                getSortedListPackageThread("limit");
+            } else if (newValue.equals("Thời gian giới hạn")) {
+                getSortedListPackageThread("time");
+            } else if (newValue.equals("Đơn giá")) {
+                getSortedListPackageThread("price");
+            }
         });
 
+    }
+
+    private void getSortedListPackageThread(String label) {
+        Task<List<Package>> dataTask = new Task<List<Package>>() {
+            @Override
+            public List<Package> call() {
+                if (label.equals("name")) {
+                    return ManagerDao.getPackageListByName();
+                } else if (label.equals("limit")) {
+                    return ManagerDao.getPackageListByLimit();
+                } else if (label.equals("time")) {
+                    return ManagerDao.getPackageListByTime();
+                } else if (label.equals("price")) {
+                    return ManagerDao.getPackageListByPrice();
+                }
+                return null;
+
+            }
+        };
+        dataTask.setOnSucceeded(e -> {
+            try {
+                resolveListPackage(e, dataTask.getValue());
+            } catch (IOException ex) {
+                logger.fatal(ex);
+            }
+        });
+        exec.execute(dataTask);
     }
 
     private void getListPackageThread() {

@@ -1,6 +1,5 @@
 package com.seasidechachacha.client.controllers;
 
-//import java.net.URL;
 import com.seasidechachacha.client.App;
 import com.seasidechachacha.client.database.ManagerDao;
 import static com.seasidechachacha.client.database.ManagerDao.getCityList;
@@ -52,11 +51,8 @@ public class AddNewUserController {
         // for testing purpose
         ManagerDao Tam = new ManagerDao("mod-19127268");
         btnAddNewPerson.setOnAction(event -> {
-//            ManagedUser user = new ManagedUser("123456", tfFullName.getText(), Integer.valueOf(tfBirthYear.getText()), "1", 0,
-//                    "00001", "abc");
             try {
                 if (isValid()) {
-                    // TODO
                     if (Tam.addNewUser(getCurrentInput())) {
                         Alert alert = new Alert(AlertType.INFORMATION);
                         alert.setTitle("Thông báo");

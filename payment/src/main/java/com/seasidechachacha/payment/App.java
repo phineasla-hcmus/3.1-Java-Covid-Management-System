@@ -24,26 +24,30 @@ import javax.net.ssl.TrustManagerFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * @see <a href="https://www.youtube.com/watch?v=l4_JIIrMhIQ">
+ *      Secure Sockets - Java Sockets Tutorial 06 - YouTube
+ *      </a>
+ * @see <a href="https://stackoverflow.com/a/15330139/12405558">
+ *      How can I create a keystore? - Stack Overflow
+ *      </a>
+ * @see <a href="https://stackoverflow.com/a/18790838/12405558">
+ *      SSL Socket connection - Stack Overflow
+ *      </a>
+ * @see <a href=
+ *      "https://docs.oracle.com/cd/E19509-01/820-3503/ggfen/index.html">
+ *      Creating a KeyStore in JKS Format (oracle.com)
+ *      </a>
+ */
 public class App {
     private static final Logger logger = LogManager.getLogger(App.class);
     public static final int PORT = 9906;
 
     /**
-     * @see <a href="https://www.youtube.com/watch?v=l4_JIIrMhIQ">
-     *      Secure Sockets - Java Sockets Tutorial 06 - YouTube
-     *      </a>
-     * @see <a href="https://stackoverflow.com/a/15330139/12405558">
-     *      How can I create a keystore? - Stack Overflow
-     *      </a>
-     * @see <a href="https://stackoverflow.com/a/18790838/12405558">
-     *      SSL Socket connection - Stack Overflow
-     *      </a>
-     * @see <a href=
-     *      "https://docs.oracle.com/cd/E19509-01/820-3503/ggfen/index.html">
-     *      Creating a KeyStore in JKS Format (oracle.com)
-     *      </a>
+     * @deprecated
      */
-    private static SSLContext initializeKeystore()
+    @SuppressWarnings({ "unused" })
+    private static SSLContext initializeSSLContext()
             throws IOException, KeyStoreException, NoSuchAlgorithmException, CertificateException,
             UnrecoverableKeyException, KeyManagementException {
         char[] password = SSLConfig.getPassword().toCharArray();
@@ -63,24 +67,28 @@ public class App {
         return sc;
     }
 
+    private static void initializeKeystore() {
+        System.setProperty("javax.net.ssl.keyStore",
+                "covid_management_system.jks");
+        System.setProperty("javax.net.ssl.keyStorePassword",
+                SSLConfig.getPassword());
+    }
+
     public static void main(String[] args) throws Exception {
+        ExecutorService executorService = Executors.newCachedThreadPool();
         try {
             SSLConfig.initialize();
         } catch (NullPointerException e) {
             logger.fatal(e);
             return;
         }
-        // SSLContext sc = initializeKeystore();
-        System.setProperty("javax.net.ssl.keyStore",
-                "covid_management_system.jks");
-        System.setProperty("javax.net.ssl.keyStorePassword",
-                SSLConfig.getPassword());
-        ExecutorService executorService = Executors.newCachedThreadPool();
+        // SSLContext sc = initializeSSLContext();
+        // SSLServerSocketFactory ssf = (SSLServerSocketFactory)
+        // sc.getServerSocketFactory();
 
+        initializeKeystore();
         SSLServerSocketFactory ssf = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
-        // SSLServerSocketFactory ssf = sc.getServerSocketFactory();
         SSLServerSocket ss = (SSLServerSocket) ssf.createServerSocket(PORT);
-
         logger.info("Server is listening on port " + Integer.toString(PORT));
         while (true) {
             SSLSocket clientSocket = (SSLSocket) ss.accept();

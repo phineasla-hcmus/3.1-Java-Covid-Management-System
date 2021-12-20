@@ -1,5 +1,6 @@
 package com.seasidechachacha.client.database;
 
+import com.seasidechachacha.client.models.BalanceStatistic;
 import com.seasidechachacha.client.models.ChangeStateStatistic;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -1239,6 +1240,36 @@ public class ManagerDao {
         return information;
     }
 
+    public static List<BalanceStatistic> getBalanceStatisticbyYear(String year) {
+        List<BalanceStatistic> result = null;
+        try ( Connection c = BasicConnection.getConnection()) {
+            String query = "SELECT MONTH(o1.timeDelivery) as \"month\" , sum(o1.totalOrderMoney) as total,o1.timeDelivery\n"
+                    + "FROM orderhistory as o1 \n"
+                    + "GROUP BY MONTH(o1.timeDelivery)\n"
+                    + "HAVING YEAR(o1.timeDelivery)=?\n"
+                    + "ORDER BY MONTH(o1.timeDelivery)";
+
+            PreparedStatement ps = c.prepareStatement(query);
+            ps.setString(1, year);
+            ResultSet rs = ps.executeQuery();
+            result = parseListStatisticBalance(rs);
+            c.close();
+        } catch (SQLException e) {
+            logger.error(e);
+            return null;
+        }
+        return result;
+    }
+    
+    private static List<BalanceStatistic> parseListStatisticBalance(ResultSet rs)
+            throws SQLException {
+        List<BalanceStatistic> information = new ArrayList<BalanceStatistic>();
+        while (rs.next()) {
+            information.add(new BalanceStatistic("Tháng "+rs.getString("month"),rs.getString("total")));
+        }
+        return information;
+    }
+    
     public static ArrayList<String> getUserIDList() {
         ArrayList<String> results = new ArrayList<String>();
         try ( Connection c = BasicConnection.getConnection()) {

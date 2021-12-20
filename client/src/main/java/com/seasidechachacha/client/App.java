@@ -8,7 +8,6 @@ import com.seasidechachacha.client.controllers.ViewTreatmentPlaceInfoController;
 import com.seasidechachacha.client.models.ManagedUser;
 import com.seasidechachacha.client.models.Package;
 import com.seasidechachacha.client.models.TreatmentPlace;
-import com.seasidechachacha.client.payment.PaymentService;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

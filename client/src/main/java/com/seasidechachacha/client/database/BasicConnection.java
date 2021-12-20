@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import com.seasidechachacha.database.DatabaseConfig;
+import com.seasidechachacha.common.DatabaseConfig;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

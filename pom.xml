@@ -30,7 +30,7 @@
 
     <modules>
         <module>client</module>
-        <module>database</module>
         <module>payment</module>
+        <module>common</module>
     </modules>
 </project>

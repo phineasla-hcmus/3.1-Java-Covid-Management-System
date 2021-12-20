@@ -3,12 +3,15 @@ package com.seasidechachacha.payment;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetSocketAddress;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
@@ -42,10 +45,20 @@ public class App {
     private static SSLContext initializeKeystore()
             throws IOException, KeyStoreException, NoSuchAlgorithmException, CertificateException,
             UnrecoverableKeyException, KeyManagementException {
+        /**
+         * Generate keystore using keytool.exe in
+         * C:\Program Files\Java\jdk-{version}\bin
+         * 
+         * <pre>
+         * keytool -genkey -v -keystore D:\covid_management_system.keystore -alias csm -validity 365 -keyalg rsa
+         * </pre>
+         */
+
         // System.setProperty("javax.net.ssl.keyStore",
         // "covid_management_system.keystore");
         // System.setProperty("javax.net.ssl.keyStorePassword",
         // PaymentConfig.getKeyStorePassword());
+
         char[] password = PaymentConfig.getKeyStorePassword().toCharArray();
         KeyStore ks = KeyStore.getInstance("JKS");
         try (InputStream in = new FileInputStream("covid_management_system.keystore")) {
@@ -71,12 +84,19 @@ public class App {
             return;
         }
         SSLContext sc = initializeKeystore();
+        ExecutorService executorService = Executors.newCachedThreadPool();
+
         // SSLServerSocketFactory ssf = SSLServerSocketFactory.getDefault();
         SSLServerSocketFactory ssf = sc.getServerSocketFactory();
         SSLServerSocket ss = (SSLServerSocket) ssf.createServerSocket(9096);
+
         logger.info("Server is listening on port " + 9906);
         while (true) {
             SSLSocket clientSocket = (SSLSocket) ss.accept();
+            ClientHandler clientHandler = new ClientHandler(clientSocket);
+
+            logger.info((InetSocketAddress) clientSocket.getRemoteSocketAddress());
+            executorService.submit(clientHandler);
         }
     }
 }

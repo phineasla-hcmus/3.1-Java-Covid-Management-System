@@ -40,8 +40,8 @@ create table ManagedUser
 	yob smallint,
 	relatedPerson varchar(12),
     debt int,
-	-- không dùng wardID nữa do lúc add user chọn từ city -> district -> ward r
 	address nvarchar(100),
+	state tinyint,
 	primary key (idCard)
 );
 

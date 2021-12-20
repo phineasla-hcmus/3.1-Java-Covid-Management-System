@@ -41,12 +41,12 @@
                         <Font size="14.0" />
                     </font>
                 </Label>
-                <Label layoutX="350.0" layoutY="69.0" styleClass="sub-label" text="Trạng thái hiện tại">
+                <Label layoutX="350.0" layoutY="69.0" styleClass="sub-label" text="Người liên quan Covid19">
                     <font>
                         <Font size="14.0" />
                     </font>
                 </Label>
-                <ComboBox fx:id="cbCurrentStatus" layoutX="350.0" layoutY="101.0" prefWidth="150.0" style="-fx-background-color: transparent; -fx-border-color: #006abc;" />
+                <ComboBox fx:id="cbRelated" layoutX="350.0" layoutY="101.0" prefWidth="150.0" style="-fx-background-color: transparent; -fx-border-color: #006abc;" />
                 <Label layoutY="141.0" styleClass="sub-label" text="Địa chỉ nơi ở">
                     <font>
                         <Font size="14.0" />
@@ -70,12 +70,6 @@
                         <Font size="13.0" />
                     </font>
                 </Label>
-                <Label layoutY="251.0" styleClass="sub-label" text="Người liên quan Covid19">
-                    <font>
-                        <Font size="14.0" />
-                    </font>
-                </Label>
-            <ComboBox fx:id="cbRelated" layoutY="278.0" prefWidth="150.0" style="-fx-background-color: transparent; -fx-border-color: #006abc;" />
             <Button fx:id="btnAddNewPerson" alignment="CENTER" contentDisplay="CENTER" layoutX="339.0" layoutY="322.0" mnemonicParsing="false" text="Thêm mới" textAlignment="CENTER" />
             <Button fx:id="btnBack" layoutY="322.0" mnemonicParsing="false" onAction="#goBack" text="Quay lại">
                <graphic>

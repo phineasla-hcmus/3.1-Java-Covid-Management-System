@@ -80,7 +80,7 @@ public class ManagerDao {
     private boolean addManagedUser(ManagedUser user) {
         boolean result = false;
         try (Connection c = BasicConnection.getConnection()) {
-            String addManagedUser = "INSERT INTO manageduser(idCard, fullName, yob, relatedPerson, debt, address) VALUES(?,?,?,?,?,?);";
+            String addManagedUser = "INSERT INTO manageduser(idCard, fullName, yob, relatedPerson, debt, address, state) VALUES(?,?,?,?,?,?,?);";
             PreparedStatement ps = c.prepareStatement(addManagedUser);
             ps.setString(1, user.getUserId());
             ps.setString(2, user.getName());
@@ -90,8 +90,8 @@ public class ManagerDao {
                 ps.setString(4, user.getRelatedId());
             }
             ps.setInt(5, user.getDebt());
-//			ps.setString(6, user.getFullAddress().getWardID());
             ps.setString(6, user.getAddress());
+            ps.setInt(7, user.getState());
             result = ps.executeUpdate() > 0;
             c.close();
         } catch (SQLException e) {
@@ -1023,7 +1023,7 @@ public class ManagerDao {
 
     private static ManagedUser parse(ResultSet rs) throws SQLException {
         return new ManagedUser(rs.getString("idCard"), rs.getString("fullName"), rs.getInt("yob"),
-                rs.getString("relatedPerson"), rs.getInt("debt"), rs.getString("address"));
+                rs.getString("relatedPerson"), rs.getInt("debt"), rs.getString("address"), rs.getInt("state"));
     }
 
     public static int getDebt(String userID) {
@@ -1194,12 +1194,11 @@ public class ManagerDao {
         return information;
     }
 
-    public static ArrayList<String> getUserIDList(String userID) {
+    public static ArrayList<String> getUserIDList() {
         ArrayList<String> results = new ArrayList<String>();
         try (Connection c = BasicConnection.getConnection()) {
-            String query = "SELECT idCard FROM manageduser WHERE idCard != ?;";
+            String query = "SELECT idCard FROM manageduser;";
             PreparedStatement ps = c.prepareStatement(query);
-            ps.setString(1, userID);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 results.add(rs.getString("idCard"));

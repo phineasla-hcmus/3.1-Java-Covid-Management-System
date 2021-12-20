@@ -274,7 +274,9 @@ public class ViewPersonalInfoController {
     }
 
     public void resolveListStateHistory(WorkerStateEvent e, List<StateHistory> list) throws IOException {
-        setTableStatus(tableStatus, FXCollections.observableArrayList(list));
+        if (list != null) {
+            setTableStatus(tableStatus, FXCollections.observableArrayList(list));
+        }
         getListTreatmentPlaceHistoryThread();
     }
 
@@ -296,7 +298,10 @@ public class ViewPersonalInfoController {
     }
 
     public void resolveListTreatmentPlaceHistory(WorkerStateEvent e, List<TreatmentPlaceHistory> list) throws IOException {
-        setTableTreat(tablePlace, FXCollections.observableArrayList(list));
+        if (list != null) {
+            setTableTreat(tablePlace, FXCollections.observableArrayList(list));
+
+        }
     }
 
     public void setup(ManagedUser user) {

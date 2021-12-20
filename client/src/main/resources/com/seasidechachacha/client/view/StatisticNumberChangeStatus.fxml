@@ -8,32 +8,33 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
-
+<?import javafx.scene.text.Font?>
 
 <VBox stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.seasidechachacha.client.controllers.StatisticNumberChangeStatusController">
    <children>
       <AnchorPane id="AnchorPane" prefHeight="800.0" prefWidth="800.0">
          <children>
             <Label layoutX="323.0" layoutY="27.0" styleClass="main-label" text="Thống kê chi tiết" />
-            <Button fx:id="nextButton" layoutX="635.0" layoutY="129.0" mnemonicParsing="false" onAction="#handleButton" text="Tiếp tục" />
+            <Button fx:id="nextButton" layoutX="635.0" layoutY="129.0" mnemonicParsing="false" text="Tiếp tục" />
             <Label layoutX="188.0" layoutY="130.0" styleClass="sub-label" text="Thống kê:" />
             <ChoiceBox fx:id="statisticType" layoutX="284.0" layoutY="130.0" prefHeight="25.0" prefWidth="281.0" />
             <Label layoutX="260.0" layoutY="209.0" styleClass="main-label" text="Thống kê số chuyển trạng thái" />
-            <TableView fx:id="changeStatusTable" layoutX="64.0" layoutY="385.0" prefHeight="226.0" prefWidth="300.0">
+            <TableView fx:id="changeStatusTable" layoutX="76.0" layoutY="287.0" prefHeight="226.0" prefWidth="300.0">
                <columns>
-                  <TableColumn prefWidth="162.0" text="Chuyển trạng thái" />
-                  <TableColumn prefWidth="137.0" text="Số lượng " />
+                  <TableColumn fx:id="from" prefWidth="88.0" text="Ban đầu" />
+                  <TableColumn fx:id="to" prefWidth="117.0" text="Chuyển trạng thái" />
+                  <TableColumn fx:id="quantity" prefWidth="94.0" text="Số lượng" />
                </columns>
             </TableView>
-            <DatePicker fx:id="dateInput" layoutX="155.0" layoutY="272.0" />
-            <Label layoutX="50.0" layoutY="272.0" styleClass="sub-label" text="Theo ngày: " />
-            <Label layoutX="430.0" layoutY="272.0" styleClass="sub-label" text="Theo tháng:" />
-            <DatePicker fx:id="monthInput" layoutX="540.0" layoutY="272.0" />
-            <Button fx:id="dateButton" layoutX="194.0" layoutY="317.0" mnemonicParsing="false" onAction="#handleButton" text="Xác nhận" />
-            <Button fx:id="monthButton" layoutX="590.0" layoutY="317.0" mnemonicParsing="false" onAction="#handleButton" text="Xác nhận" />
-            <Button fx:id="allButton" layoutX="304.0" layoutY="653.0" mnemonicParsing="false" onAction="#handleButton" text="Thống kê theo mọi thời gian" />
-            <Label layoutX="455.0" layoutY="460.0" styleClass="sub-label" text="Số người đã khỏi:" />
-            <Label fx:id="totalCured" layoutX="605.0" layoutY="464.0" text="...." />
+            <Label layoutX="437.0" layoutY="540.0" styleClass="sub-label" text="Theo tháng:" />
+            <DatePicker fx:id="monthInput" layoutX="548.0" layoutY="540.0" />
+            <Button fx:id="monthButton" layoutX="595.0" layoutY="585.0" mnemonicParsing="false" text="Xác nhận" />
+            <Button fx:id="allButton" layoutX="129.0" layoutY="585.0" mnemonicParsing="false" text="Thống kê theo mọi thời gian" />
+            <Label layoutX="445.0" layoutY="412.0" styleClass="sub-label" text="Số người đã khỏi:" />
+            <Label fx:id="totalCured" layoutX="595.0" layoutY="409.0" text="...." textFill="#f50000">
+               <font>
+                  <Font name="Dubai Regular" size="18.0" />
+               </font></Label>
          </children>
       </AnchorPane>
    </children>

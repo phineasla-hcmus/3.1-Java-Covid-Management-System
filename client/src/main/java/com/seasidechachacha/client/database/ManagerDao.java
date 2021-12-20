@@ -256,8 +256,8 @@ public class ManagerDao {
     }
 
     private static TreatmentPlace parseTreatmentPlace(ResultSet rs) throws SQLException {
-        return new TreatmentPlace(rs.getInt("treatID"), rs.getString("name"), rs.getString("street"),
-                rs.getString("wardId"), rs.getInt("capacity"), rs.getInt("currentReception"));
+        return new TreatmentPlace(rs.getInt("treatID"), rs.getString("name"), rs.getString("address"),
+                rs.getInt("capacity"), rs.getInt("currentReception"));
     }
 
     private static List<TreatmentPlace> parseTreatmentPlaceList(ResultSet rs) throws SQLException {
@@ -330,8 +330,8 @@ public class ManagerDao {
             ps.setInt(1, treatID);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                t = new TreatmentPlace(rs.getInt("treatID"), rs.getString("name"), rs.getString("street"),
-                        rs.getString("wardID"), rs.getInt("capacity"), rs.getInt("currentReception"));
+                t = new TreatmentPlace(rs.getInt("treatID"), rs.getString("name"), rs.getString("address"),
+                        rs.getInt("capacity"), rs.getInt("currentReception"));
             }
             c.close();
         } catch (SQLException e) {
@@ -348,8 +348,8 @@ public class ManagerDao {
             ps.setString(1, treatName);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                t = new TreatmentPlace(rs.getInt("treatID"), rs.getString("name"), rs.getString("street"),
-                        rs.getString("wardID"), rs.getInt("capacity"), rs.getInt("currentReception"));
+                t = new TreatmentPlace(rs.getInt("treatID"), rs.getString("name"), rs.getString("address"),
+                        rs.getInt("capacity"), rs.getInt("currentReception"));
             }
             c.close();
         } catch (SQLException e) {
@@ -478,8 +478,8 @@ public class ManagerDao {
         }
         return packageList;
     }
-    
-      public static List<Package> getPackageListByPrice() {
+
+    public static List<Package> getPackageListByPrice() {
         List<Package> packageList = null;
         try (Connection c = BasicConnection.getConnection()) {
             String query = "SELECT * FROM package ORDER BY price ASC";
@@ -784,8 +784,8 @@ public class ManagerDao {
             ps.setString(1, userID);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                result = new TreatmentPlace(rs.getInt("treatID"), rs.getString("name"), rs.getString("street"),
-                        rs.getString("wardId"), rs.getInt("capacity"), rs.getInt("currentReception"));
+                result = new TreatmentPlace(rs.getInt("treatID"), rs.getString("name"), rs.getString("address"),
+                        rs.getInt("capacity"), rs.getInt("currentReception"));
             }
             c.close();
         } catch (SQLException e) {

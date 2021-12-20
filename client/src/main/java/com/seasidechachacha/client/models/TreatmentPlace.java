@@ -4,20 +4,16 @@ public class TreatmentPlace {
 
     private int treatID;
     private String name;
-    private String street;
-    private String wardId;
+    private String address;
     private int capacity;
     private int currentReception;
-    private FullAddress fullAddress;
 
-    public TreatmentPlace(int treatID, String name, String street, String wardId, int capacity, int currentReception) {
+    public TreatmentPlace(int treatID, String name, String address, int capacity, int currentReception) {
         this.treatID = treatID;
         this.name = name;
-        this.street = street;
-        this.wardId = wardId;
+        this.address = address;
         this.capacity = capacity;
         this.currentReception = currentReception;
-        this.fullAddress = new FullAddress(wardId);
     }
 
     public int getTreatID() {
@@ -35,21 +31,13 @@ public class TreatmentPlace {
     public void setName(String name) {
         this.name = name;
     }
-
-    public String getStreet() {
-        return street;
+    
+    public String getAddress() {
+        return address;
     }
-
-    public void setStreet(String street) {
-        this.street = street;
-    }
-
-    public String getWardID() {
-        return wardId;
-    }
-
-    public void setWardID(String wardId) {
-        this.wardId = wardId;
+    
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public int getCapacity() {
@@ -66,14 +54,6 @@ public class TreatmentPlace {
 
     public void setCurrentReception(int currentReception) {
         this.currentReception = currentReception;
-    }
-
-    public FullAddress getFullAddress() {
-        return fullAddress;
-    }
-
-    public void setFullAddress(FullAddress fullAddress) {
-        this.fullAddress = fullAddress;
     }
 
 }

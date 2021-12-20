@@ -4,6 +4,7 @@
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -17,7 +18,7 @@
                 <Insets top="30.0" />
             </VBox.margin>
         </Label>
-        <AnchorPane prefWidth="699.0">
+        <AnchorPane prefHeight="400.0" prefWidth="699.0">
             <VBox.margin>
                 <Insets left="50.0" right="50.0" top="40.0" />
             </VBox.margin>
@@ -40,12 +41,35 @@
                         <Font size="14.0" />
                     </font>
                 </Label>
-            <Button fx:id="btnAdd" layoutX="310.0" layoutY="166.0" mnemonicParsing="false" text="Thêm mới" />
-            <Button fx:id="btnBack" layoutY="166.0" mnemonicParsing="false" onAction="#goBack" text="Quay lại">
+            <Button fx:id="btnAdd" layoutX="310.0" layoutY="303.0" mnemonicParsing="false" text="Thêm mới" />
+            <Button fx:id="btnBack" layoutX="2.0" layoutY="303.0" mnemonicParsing="false" onAction="#goBack" text="Quay lại">
                <graphic>
                   <FontAwesomeIconView fill="WHITE" glyphName="ARROW_LEFT" />
                </graphic>
             </Button>
+            <Label layoutY="135.0" styleClass="sub-label" text="Địa chỉ">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label layoutY="174.0" text="Tỉnh/Thành phố" textFill="#006abc">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Label>
+            <ComboBox fx:id="cbCity" layoutY="208.0" prefWidth="150.0" style="-fx-background-color: transparent; -fx-border-color: #006abc;" />
+            <Label layoutX="277.0" layoutY="174.0" text="Quận/Huyện" textFill="#006abc">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Label>
+            <ComboBox fx:id="cbDistrict" layoutX="278.0" layoutY="208.0" prefWidth="150.0" style="-fx-background-color: transparent; -fx-border-color: #006abc;" />
+            <ComboBox fx:id="cbWard" layoutX="530.0" layoutY="208.0" prefWidth="150.0" style="-fx-background-color: transparent; -fx-border-color: #006abc;" />
+            <Label layoutX="530.0" layoutY="174.0" text="Phường/Xã" textFill="#006abc">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Label>
             </children>
         </AnchorPane>
     </children>

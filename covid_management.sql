@@ -72,8 +72,7 @@ create table TreatmentPlace
 (
 	treatID int AUTO_INCREMENT,
 	name nvarchar(30),
-	street nvarchar(50),
-	wardID char(5),
+	address nvarchar(100),
 	capacity int,
 	currentReception int,
 	primary key (treatID)
@@ -199,8 +198,8 @@ alter table TreatmentPlaceHistory
 add
 constraint FK_TreatmentPlaceHistory_TreatmentPlace foreign key (treatID) references TreatmentPlace(treatID);
 
-alter table TreatmentPlace
-add constraint FK_TreatmentPlace_Ward foreign key (wardID) references Ward(wardID);
+-- alter table TreatmentPlace
+-- add constraint FK_TreatmentPlace_Ward foreign key (wardID) references Ward(wardID);
 
 alter table Cart
 add constraint FK_Cart_ManagedUser foreign key (userID) references ManagedUser(idCard);

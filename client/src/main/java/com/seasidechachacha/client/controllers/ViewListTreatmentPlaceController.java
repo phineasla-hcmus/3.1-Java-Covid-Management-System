@@ -120,17 +120,12 @@ public class ViewListTreatmentPlaceController {
 
             nameCol.setMinWidth(180);
 
-            TableColumn streetCol = new TableColumn("Đường");
-            streetCol.setCellValueFactory(
-                    new PropertyValueFactory<TreatmentPlace, String>("street"));
+            TableColumn addrCol = new TableColumn("Địa chỉ");
+            addrCol.setCellValueFactory(
+                    new PropertyValueFactory<TreatmentPlace, String>("address"));
 
-            streetCol.setMinWidth(160);
+            addrCol.setMinWidth(225);
 
-            TableColumn wardCol = new TableColumn("Phường");
-            wardCol.setCellValueFactory(
-                    new PropertyValueFactory<TreatmentPlace, String>("wardID"));
-
-//            wardCol.setMinWidth(160);
             TableColumn capacityCol = new TableColumn("Sức chứa");
             capacityCol.setCellValueFactory(
                     new PropertyValueFactory<TreatmentPlace, String>("capacity"));
@@ -180,7 +175,7 @@ public class ViewListTreatmentPlaceController {
 
             actionCol.setCellFactory(cellFactory);
 
-            table.getColumns().addAll(numCol, nameCol, streetCol, wardCol, capacityCol, currentReceptionCol, actionCol);
+            table.getColumns().addAll(numCol, nameCol, addrCol, capacityCol, currentReceptionCol, actionCol);
             table.setItems(FXCollections.observableArrayList(data));
             if (lastIndex == pageIndex) {
                 table.setItems(FXCollections.observableArrayList(data.subList(pageIndex * rowsPerPage(), pageIndex * rowsPerPage() + displace)));

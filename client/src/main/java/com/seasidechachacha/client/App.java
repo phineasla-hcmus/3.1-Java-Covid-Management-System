@@ -94,23 +94,24 @@ public class App extends Application {
         Platform.exit();
     }
 
-    public static void main(String[] args) throws Exception {
+    // Quick test
+    public static void playground() {
         // PasswordAuthenticator pwdAuth = new PasswordAuthenticator();
         // String login = pwdAuth.authenticate("1ixrvSfjhPqd".toCharArray(),
-        // "$31$16$VKx6w7TTTyO8H504Ajxk6BOW034fSyZYhuayMVsf2P8")
-        // ? "Welcome"
-        // : "GET OUT";
+        //         "$31$16$VKx6w7TTTyO8H504Ajxk6BOW034fSyZYhuayMVsf2P8")
+        //                 ? "Welcome"
+        //                 : "GET OUT";
         // String a = pwdAuth.hash("123456".toCharArray());
         // System.out.println(a);
+    }
+
+    public static void main(String[] args) throws Exception {
         try {
             SSLConfig.initialize();
         } catch (NullPointerException e) {
             logger.fatal(e);
             return;
         }
-
-        PaymentService ps = new PaymentService();
-        ps.getAccountBalance("213");
         launch();
     }
 

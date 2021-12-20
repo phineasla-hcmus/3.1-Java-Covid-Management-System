@@ -23,6 +23,11 @@
 .dbconfig.properties
 .sslconfig.properties
 
+# SSL certificate
+*.jks
+*.jts
+*.cert
+
 # Maven
 target/
 pom.xml.tag
@@ -41,8 +46,3 @@ hs_err_pid*
 
 # Other
 javafx-sdk-*
-
-# SSL certificate
-*.jks
-*.jts
-*.cert

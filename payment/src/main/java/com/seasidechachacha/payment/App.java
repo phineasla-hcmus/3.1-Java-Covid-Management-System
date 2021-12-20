@@ -1,11 +1,22 @@
 package com.seasidechachacha.payment;
 
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
 
-import javax.net.ServerSocketFactory;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
-import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,9 +39,28 @@ public class App {
      *      Creating a KeyStore in JKS Format (oracle.com)
      *      </a>
      */
-    private static void setKeystore() {
-        System.setProperty("javax.net.ssl.keyStore", "covid_management_system.keystore");
-        System.setProperty("javax.net.ssl.keyStorePassword", PaymentConfig.getKeyStorePassword());
+    private static SSLContext initializeKeystore()
+            throws IOException, KeyStoreException, NoSuchAlgorithmException, CertificateException,
+            UnrecoverableKeyException, KeyManagementException {
+        // System.setProperty("javax.net.ssl.keyStore",
+        // "covid_management_system.keystore");
+        // System.setProperty("javax.net.ssl.keyStorePassword",
+        // PaymentConfig.getKeyStorePassword());
+        char[] password = PaymentConfig.getKeyStorePassword().toCharArray();
+        KeyStore ks = KeyStore.getInstance("JKS");
+        try (InputStream in = new FileInputStream("covid_management_system.keystore")) {
+            ks.load(in, password);
+        }
+        KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
+        kmf.init(ks, password);
+
+        TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
+        tmf.init(ks);
+
+        SSLContext sc = SSLContext.getInstance("TLS");
+        TrustManager[] trustManagers = tmf.getTrustManagers();
+        sc.init(kmf.getKeyManagers(), trustManagers, null);
+        return sc;
     }
 
     public static void main(String[] args) throws Exception {
@@ -40,11 +70,13 @@ public class App {
             logger.fatal(e);
             return;
         }
-        setKeystore();
-        ServerSocketFactory ssf = SSLServerSocketFactory.getDefault();
-        ServerSocket ss = ssf.createServerSocket(9096);
+        SSLContext sc = initializeKeystore();
+        // SSLServerSocketFactory ssf = SSLServerSocketFactory.getDefault();
+        SSLServerSocketFactory ssf = sc.getServerSocketFactory();
+        SSLServerSocket ss = (SSLServerSocket) ssf.createServerSocket(9096);
+        logger.info("Server is listening on port " + 9906);
         while (true) {
-            Socket clientSocket = ss.accept();
+            SSLSocket clientSocket = (SSLSocket) ss.accept();
         }
     }
 }

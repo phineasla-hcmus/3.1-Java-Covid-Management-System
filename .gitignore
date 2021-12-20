@@ -40,4 +40,8 @@ hs_err_pid*
 
 # Other
 javafx-sdk-*
-*.keystore
+
+# SSL certificate
+*.jks
+*.jts
+*.cert

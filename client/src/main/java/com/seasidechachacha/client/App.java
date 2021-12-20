@@ -6,6 +6,8 @@ import com.seasidechachacha.client.controllers.ViewTreatmentPlaceInfoController;
 import com.seasidechachacha.client.models.ManagedUser;
 import com.seasidechachacha.client.models.Package;
 import com.seasidechachacha.client.models.TreatmentPlace;
+import com.seasidechachacha.client.payment.PaymentService;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -30,7 +32,7 @@ public class App extends Application {
         stage.setScene(scene);
         stage.show();
     }
-    
+
     public static void initializeMainScreen() throws IOException {
         scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
         String initialPane = "";
@@ -62,10 +64,10 @@ public class App extends Application {
                 Package pack = (Package) tableRow.getItem();
                 ViewPackageInfoController controller = fxmlLoader.<ViewPackageInfoController>getController();
                 controller.setup(pack);
-            }
-            else if (fxml.equals("view/ViewTreatmentPlaceInfo")) {
+            } else if (fxml.equals("view/ViewTreatmentPlaceInfo")) {
                 TreatmentPlace treat = (TreatmentPlace) tableRow.getItem();
-                ViewTreatmentPlaceInfoController controller = fxmlLoader.<ViewTreatmentPlaceInfoController>getController();
+                ViewTreatmentPlaceInfoController controller = fxmlLoader
+                        .<ViewTreatmentPlaceInfoController>getController();
                 controller.setup(treat);
             }
             pn_all = (ScrollPane) scene.lookup("#pn_all");
@@ -74,7 +76,6 @@ public class App extends Application {
 
         }
     }
-
 
     public static void setRoot(String fxml) throws IOException {
         scene.setRoot(loadFXML(fxml));
@@ -89,16 +90,15 @@ public class App extends Application {
         Platform.exit();
     }
 
-    public static void main(String[] args) {
-//         PasswordAuthenticator pwdAuth = new PasswordAuthenticator();
-////         String login = pwdAuth.authenticate("1ixrvSfjhPqd".toCharArray(),
-////                 "$31$16$VKx6w7TTTyO8H504Ajxk6BOW034fSyZYhuayMVsf2P8")
-////                         ? "Welcome"
-////                         : "GET OUT";
-//        
-////        String a=   pwdAuth.hash("123456".toCharArray());
-//           
-//         System.out.println(a);
+    public static void main(String[] args) throws Exception {
+        // PasswordAuthenticator pwdAuth = new PasswordAuthenticator();
+        // String login = pwdAuth.authenticate("1ixrvSfjhPqd".toCharArray(),
+        // "$31$16$VKx6w7TTTyO8H504Ajxk6BOW034fSyZYhuayMVsf2P8")
+        // ? "Welcome"
+        // : "GET OUT";
+        // String a = pwdAuth.hash("123456".toCharArray());
+        // System.out.println(a);
+        PaymentService.initialize();
         launch();
     }
 

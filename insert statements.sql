@@ -229,3 +229,7 @@ insert into orderitem values(2,6,2,62900);
 insert into orderitem values(3,2,1,89000);
 insert into orderitem values(4,10,3,27000);
 insert into orderitem values(5,8,1,610000);
+
+INSERT INTO log VALUES("1","mod-19127203","thêm gói nhu yếu phẩm : cao sao vàng","2021-10-13 8:10:23");
+INSERT INTO log VALUES("2","mod-19127203","thêm người được quản lý mới : 079111222333","2021-10-13 8:10:23");
+INSERT INTO log VALUES("3","mod-19127203","thêm người được quản lý mới : 079157952250","2021-10-13 8:10:23");

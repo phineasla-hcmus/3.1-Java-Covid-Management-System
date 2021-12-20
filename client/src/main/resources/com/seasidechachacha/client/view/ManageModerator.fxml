@@ -11,7 +11,6 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-
 <VBox prefHeight="800.0" prefWidth="800.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.seasidechachacha.client.controllers.ManageModeratorController">
    <children>
       <AnchorPane id="AnchorPane" prefHeight="283.0" prefWidth="800.0">
@@ -19,7 +18,7 @@
             <Label layoutX="249.0" layoutY="31.0" styleClass="main-label" text="Quản lý thông tin người quản lý" />
             <Label layoutX="230.0" layoutY="147.0" styleClass="sub-label" text="Người quản lý :" />
             <ChoiceBox fx:id="ModeratorUsername" layoutX="369.0" layoutY="147.0" prefWidth="150.0" />
-            <Button fx:id="viewButton" layoutX="354.0" layoutY="220.0" mnemonicParsing="false" onAction="#handleButtonAction" text="Xem dữ liệu" />
+            <Button fx:id="viewButton" layoutX="354.0" layoutY="220.0" mnemonicParsing="false" text="Xem dữ liệu" />
             <ImageView fx:id="logo" fitHeight="188.0" fitWidth="194.0" layoutX="569.0" layoutY="48.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../img/logo2.png" />
@@ -30,12 +29,12 @@
       <AnchorPane fx:id="ManagePane" prefHeight="510.0" prefWidth="800.0" visible="false">
          <children>
             <Label layoutX="65.0" layoutY="23.0" styleClass="sub-label" text="Trạng thái:" />
-            <CheckBox fx:id="activeChoice" layoutX="196.0" layoutY="27.0" mnemonicParsing="false" onAction="#handleCheckBox1" text="Đang hoạt động" />
-            <CheckBox fx:id="inactiveChoice" layoutX="342.0" layoutY="27.0" mnemonicParsing="false" onAction="#handleCheckBox2" text="Ngưng hoạt động" />
+            <CheckBox fx:id="activeChoice" layoutX="196.0" layoutY="27.0" mnemonicParsing="false" text="Đang hoạt động" />
+            <CheckBox fx:id="inactiveChoice" layoutX="342.0" layoutY="27.0" mnemonicParsing="false" text="Ngưng hoạt động" />
             <TableView fx:id="activitiesTable" layoutX="65.0" layoutY="116.0" prefHeight="308.0" prefWidth="701.0">
               <columns>
-                <TableColumn prefWidth="122.0" text="Thời gian" />
-                <TableColumn prefWidth="578.0" text="Hoạt động" />
+                <TableColumn fx:id="time" prefWidth="122.0" text="Thời gian" />
+                <TableColumn fx:id="logMsg" prefWidth="578.0" text="Hoạt động" />
               </columns>
             </TableView>
             <Label layoutX="348.0" layoutY="83.0" styleClass="sub-label" text="Lịch sử hoạt động" />

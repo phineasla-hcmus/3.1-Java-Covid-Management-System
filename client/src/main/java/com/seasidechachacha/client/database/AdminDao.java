@@ -67,13 +67,13 @@ public class AdminDao {
 		return new ActivityHistory(rs.getString("logID"), rs.getString("userID"), rs.getString("logMsg"),
 				rs.getString("logTime"));
 	}
-	
+
 	public boolean addTreatmentPlace(TreatmentPlace tp) {
 		boolean result = false;
 		try (Connection c = BasicConnection.getConnection();) {
 			String query = "INSERT INTO treatmentplace(treatID, name, street, wardID, capacity, currentReception) VALUES(?,?,?,?,?,?);";
 			PreparedStatement ps = c.prepareStatement(query);
-			ps.setString(1, tp.getTreatID());
+			ps.setInt(1, tp.getTreatID());
 			ps.setString(2, tp.getName());
 			ps.setString(3, tp.getStreet());
 			ps.setString(4, tp.getWardID());
@@ -86,7 +86,7 @@ public class AdminDao {
 		}
 		return result;
 	}
-	
+
 	public boolean updateTreatmentPlaceName(String treatID, String name) {
 		boolean result = false;
 		try (Connection c = BasicConnection.getConnection()) {
@@ -101,7 +101,7 @@ public class AdminDao {
 		}
 		return result;
 	}
-	
+
 	public boolean updateTreatmentPlaceCapacity(String treatID, int capacity) {
 		boolean result = false;
 		try (Connection c = BasicConnection.getConnection()) {
@@ -116,7 +116,7 @@ public class AdminDao {
 		}
 		return result;
 	}
-	
+
 	public boolean updateTreatmentPlaceCurrentReception(String treatID, int currentReception) {
 		boolean result = false;
 		try (Connection c = BasicConnection.getConnection()) {
@@ -132,5 +132,4 @@ public class AdminDao {
 		return result;
 	}
 
-	
 }

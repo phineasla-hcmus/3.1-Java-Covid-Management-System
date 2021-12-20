@@ -109,7 +109,6 @@ public class LoginController {
         int roleId = user.getRoleId();
         if (roleId == 1) {
             App.setRoot("view/AdminScreen");
-     
 
         } else if (roleId == 2) {
             App.setRoot("view/ModeratorScreen");

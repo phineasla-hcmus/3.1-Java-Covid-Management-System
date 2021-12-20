@@ -52,7 +52,6 @@ public class AddNewUserController {
 
     @FXML
     private void initialize() {
-        // for testing purpose
         btnAddNewPerson.setOnAction(event -> {
             try {
                 if (isValid()) {
@@ -120,8 +119,6 @@ public class AddNewUserController {
         for (int i = 0; i < relatedList.size(); i++) {
             cbRelated.getItems().add(relatedList.get(i));
         }
-        // tạm thời để test
-//        cbRelated.getItems().addAll("079510193347", "079932368028");
     }
 
     private boolean isValid() {
@@ -161,11 +158,10 @@ public class AddNewUserController {
         String ID = tfIdentityCard.getText();
         String name = tfFullName.getText();
         int birthYear = Integer.valueOf(tfBirthYear.getText());
-        String relatedID = "079111222333";
         String address = cbCity.getValue() + ", " + cbDistrict.getValue() + ", " + cbWard.getValue();
 
         currentState = Tam.getCurrentState(cbRelated.getValue()) + 1;
-        user = new ManagedUser(ID, name, birthYear, relatedID, 0, address, currentState);
+        user = new ManagedUser(ID, name, birthYear, cbRelated.getValue(), 0, address, currentState);
 
         return user;
     }

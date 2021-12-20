@@ -71,14 +71,13 @@ public class AdminDao {
 	public boolean addTreatmentPlace(TreatmentPlace tp) {
 		boolean result = false;
 		try (Connection c = BasicConnection.getConnection();) {
-			String query = "INSERT INTO treatmentplace(treatID, name, street, wardID, capacity, currentReception) VALUES(?,?,?,?,?,?);";
+			String query = "INSERT INTO treatmentplace(treatID, name, address, capacity, currentReception) VALUES(?,?,?,?,?);";
 			PreparedStatement ps = c.prepareStatement(query);
 			ps.setInt(1, tp.getTreatID());
 			ps.setString(2, tp.getName());
-			ps.setString(3, tp.getStreet());
-			ps.setString(4, tp.getWardID());
-			ps.setInt(5, tp.getCapacity());
-			ps.setInt(6, tp.getCurrentReception());
+			ps.setString(3, tp.getAddress());
+			ps.setInt(4, tp.getCapacity());
+			ps.setInt(5, tp.getCurrentReception());
 			result = ps.executeUpdate() > 0;
 			c.close();
 		} catch (SQLException e) {
@@ -87,13 +86,13 @@ public class AdminDao {
 		return result;
 	}
 
-	public boolean updateTreatmentPlaceName(String treatID, String name) {
+	public boolean updateTreatmentPlaceName(int treatID, String name) {
 		boolean result = false;
 		try (Connection c = BasicConnection.getConnection()) {
 			String query = "UPDATE treatmentplace SET name = ? WHERE treatID = ?;";
 			PreparedStatement ps = c.prepareStatement(query);
 			ps.setString(1, name);
-			ps.setString(2, treatID);
+			ps.setInt(2, treatID);
 			result = ps.executeUpdate() > 0;
 			c.close();
 		} catch (SQLException e) {
@@ -102,13 +101,13 @@ public class AdminDao {
 		return result;
 	}
 
-	public boolean updateTreatmentPlaceCapacity(String treatID, int capacity) {
+	public boolean updateTreatmentPlaceCapacity(int treatID, int capacity) {
 		boolean result = false;
 		try (Connection c = BasicConnection.getConnection()) {
 			String query = "UPDATE treatmentplace SET capacity = ? WHERE treatID = ?;";
 			PreparedStatement ps = c.prepareStatement(query);
 			ps.setInt(1, capacity);
-			ps.setString(2, treatID);
+			ps.setInt(2, treatID);
 			result = ps.executeUpdate() > 0;
 			c.close();
 		} catch (SQLException e) {
@@ -117,13 +116,13 @@ public class AdminDao {
 		return result;
 	}
 
-	public boolean updateTreatmentPlaceCurrentReception(String treatID, int currentReception) {
+	public boolean updateTreatmentPlaceCurrentReception(int treatID, int currentReception) {
 		boolean result = false;
 		try (Connection c = BasicConnection.getConnection()) {
 			String query = "UPDATE treatmentplace SET currentReception = ? WHERE treatID = ?;";
 			PreparedStatement ps = c.prepareStatement(query);
 			ps.setInt(1, currentReception);
-			ps.setString(2, treatID);
+			ps.setInt(2, treatID);
 			result = ps.executeUpdate() > 0;
 			c.close();
 		} catch (SQLException e) {

@@ -202,11 +202,11 @@ insert into statehistory values ('079932368028', '2021-11-30', 2);
 insert into statehistory values ('079941055479', '2021-11-30', 2);
 insert into statehistory values ('079111222333', '2021-11-30', 2);
 
-INSERT INTO `treatmentplace` (`treatID`,`name`,`street`,`wardID`,`capacity`,`currentReception`) VALUES (79001,'Bệnh viện đa khoa Sài Gòn','125 Lê Lợi','26743',1000,123);
-INSERT INTO `treatmentplace` (`treatID`,`name`,`street`,`wardID`,`capacity`,`currentReception`) VALUES (79024,'Bệnh viện Nhân Dân 115','527 Sư Vạn Hạnh','27172',1000,234);
-INSERT INTO `treatmentplace` (`treatID`,`name`,`street`,`wardID`,`capacity`,`currentReception`) VALUES (79048,'Bệnh viện Chợ Rẫy','201 B Nguyễn Chí Thanh','27310',1000,345);
-INSERT INTO `treatmentplace` (`treatID`,`name`,`street`,`wardID`,`capacity`,`currentReception`) VALUES (79051,'Bệnh viện Quận 1 - Cơ sở 1','338 Hai Bà Trưng','26734',1000,456);
-INSERT INTO `treatmentplace` (`treatID`,`name`,`street`,`wardID`,`capacity`,`currentReception`) VALUES (87014,'Bệnh viện đa khoa Sa Đéc','153 Nguyễn Sinh Sắc','29911',1000,567);
+INSERT INTO `treatmentplace` (`treatID`,`name`,`address`,`capacity`,`currentReception`) VALUES (79001,'Bệnh viện đa khoa Sài Gòn','125 Lê Lợi',1000,123);
+INSERT INTO `treatmentplace` (`treatID`,`name`,`address`,`capacity`,`currentReception`) VALUES (79024,'Bệnh viện Nhân Dân 115','527 Sư Vạn Hạnh',1000,234);
+INSERT INTO `treatmentplace` (`treatID`,`name`,`address`,`capacity`,`currentReception`) VALUES (79048,'Bệnh viện Chợ Rẫy','201 B Nguyễn Chí Thanh',1000,345);
+INSERT INTO `treatmentplace` (`treatID`,`name`,`address`,`capacity`,`currentReception`) VALUES (79051,'Bệnh viện Quận 1 - Cơ sở 1','338 Hai Bà Trưng',1000,456);
+INSERT INTO `treatmentplace` (`treatID`,`name`,`address`,`capacity`,`currentReception`) VALUES (87014,'Bệnh viện đa khoa Sa Đéc','153 Nguyễn Sinh Sắc',1000,567);
 
 insert into treatmentplacehistory values('079157952250', '2021-11-30', 79001);
 insert into treatmentplacehistory values('079157952250', '2021-10-30', 79024);

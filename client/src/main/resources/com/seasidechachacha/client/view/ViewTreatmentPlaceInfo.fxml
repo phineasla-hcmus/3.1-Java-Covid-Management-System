@@ -14,11 +14,11 @@
     <children>
         <Label alignment="TOP_CENTER" prefHeight="30.0" prefWidth="803.0" styleClass="main-label" text="Thông tin địa điểm điều trị/cách ly">
         </Label>
-        <AnchorPane prefHeight="124.0" prefWidth="703.0" style="-fx-border-color: lightblue; -fx-background-radius: 30; -fx-border-radius: 20; -fx-border-width: 5;">
+        <AnchorPane prefHeight="200.0" prefWidth="703.0" style="-fx-border-color: lightblue; -fx-background-radius: 30; -fx-border-radius: 20; -fx-border-width: 5;">
             <children>
                 <HBox prefWidth="398.0" spacing="30.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <children>
-                        <Label alignment="TOP_RIGHT" contentDisplay="RIGHT" maxWidth="1.7976931348623157E308" prefHeight="20.0" prefWidth="200.0" text="Tên địa điểm điều trị/cách ly" textAlignment="RIGHT" textFill="#006abc">
+                        <Label alignment="TOP_RIGHT" contentDisplay="RIGHT" maxWidth="1.7976931348623157E308" prefHeight="20.0" prefWidth="198.0" text="Tên địa điểm điều trị/cách ly" textAlignment="RIGHT" textFill="#006abc">
                             <font>
                                 <Font name="System Bold" size="14.0" />
                             </font>
@@ -38,9 +38,9 @@
                         <Insets top="20.0" />
                     </padding>
                 </HBox>
-                <HBox layoutY="55.0" prefHeight="20.0" prefWidth="464.0" spacing="30.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="299.0" AnchorPane.topAnchor="55.0">
+                <HBox layoutX="93.0" layoutY="91.0" prefHeight="26.0" prefWidth="411.0" spacing="30.0" AnchorPane.leftAnchor="93.0" AnchorPane.rightAnchor="289.0" AnchorPane.topAnchor="91.0">
                     <children>
-                        <Label alignment="TOP_RIGHT" prefHeight="20.0" prefWidth="200.0" text="Sức chứa" textFill="#006abc">
+                        <Label alignment="TOP_RIGHT" prefHeight="20.0" prefWidth="104.0" text="Sức chứa" textFill="#006abc">
                             <font>
                                 <Font name="System Bold" size="14.0" />
                             </font>
@@ -57,9 +57,9 @@
                   </Button>
                     </children>
                 </HBox>
-                <HBox layoutY="87.0" prefWidth="398.0" spacing="30.0" AnchorPane.topAnchor="87.0">
+                <HBox layoutX="14.0" layoutY="135.0" prefHeight="26.0" prefWidth="367.0" spacing="30.0" AnchorPane.topAnchor="125.0">
                     <children>
-                        <Label alignment="TOP_RIGHT" prefHeight="20.0" prefWidth="215.0" text="Số lượng tiếp nhận hiện tại" textFill="#006abc">
+                        <Label alignment="TOP_RIGHT" prefHeight="20.0" prefWidth="200.0" text="Số lượng tiếp nhận hiện tại" textFill="#006abc">
                             <font>
                                 <Font name="System Bold" size="14.0" />
                             </font>
@@ -76,6 +76,20 @@
                   </Button>
                     </children>
                 </HBox>
+            <HBox layoutX="14.0" layoutY="73.0" prefHeight="20.0" prefWidth="637.0" spacing="30.0">
+               <children>
+                  <Label alignment="TOP_RIGHT" prefHeight="20.0" prefWidth="198.0" text="Địa chỉ" textFill="#006abc">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="labelAddress" prefHeight="20.0" prefWidth="401.0" text="">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
             </children>
             <VBox.margin>
                 <Insets left="50.0" right="50.0" />

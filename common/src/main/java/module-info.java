@@ -1,4 +1,4 @@
-module com.seasidechachacha.database {
+module com.seasidechachacha.common {
     requires transitive java.sql;
     requires org.apache.logging.log4j;
 

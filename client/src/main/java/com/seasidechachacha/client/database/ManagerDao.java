@@ -1404,43 +1404,65 @@ public class ManagerDao {
         return results;
     }
 
-//	Lọc gói nhu yếu phẩm theo giá
-    public static List<Package> filterPackageByPrice(double lowest, double highest, boolean asc) {
-        List<Package> results = new ArrayList<Package>();
-        try ( Connection c = BasicConnection.getConnection()) {
-            String query = "SELECT * FROM package WHERE price BETWEEN ? AND ? ORDER BY price " + (asc ? "ASC" : "DESC");
-            PreparedStatement ps = c.prepareStatement(query);
-            ps.setDouble(1, lowest);
-            ps.setDouble(2, highest);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                results.add(parsePackage(rs));
-            }
-            c.close();
-        } catch (SQLException e) {
-            logger.error(e);
-        }
-        return results;
-    }
+        //	Lọc gói nhu yếu phẩm theo giá
+	public static List<Package> filterPackageByPrice(String keyword, double lowest, double highest) {
+		List<Package> results = new ArrayList<Package>();
+		try (Connection c = BasicConnection.getConnection()) {
+			String query = "SELECT * FROM package WHERE MATCH(name) AGAINST(?) and price BETWEEN ? AND ? ORDER BY price ASC";
+			PreparedStatement ps = c.prepareStatement(query);
+                        ps.setString(1, keyword);
+			ps.setDouble(2, lowest);
+			ps.setDouble(3, highest);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				results.add(parsePackage(rs));
+			}
+			c.close();
+		} catch (SQLException e) {
+			logger.error(e);
+		}
+		return results;
+	}
 
 //	Lọc gói nhu yếu phẩm theo thời gian giới hạn
-    public static List<Package> filterPackageByDayCooldown(int lowest, int highest, boolean asc) {
-        List<Package> results = new ArrayList<Package>();
-        try ( Connection c = BasicConnection.getConnection()) {
-            String query = "SELECT * FROM package WHERE dayCooldown BETWEEN ? AND ? ORDER BY dayCooldown "
-                    + (asc ? "ASC" : "DESC");
-            PreparedStatement ps = c.prepareStatement(query);
-            ps.setInt(1, lowest);
-            ps.setInt(2, highest);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                results.add(parsePackage(rs));
-            }
-            c.close();
-        } catch (SQLException e) {
-            logger.error(e);
-        }
-        return results;
-    }
-
+	public static List<Package> filterPackageByDayCooldown(String keyword, int lowest, int highest) {
+		List<Package> results = new ArrayList<Package>();
+		try (Connection c = BasicConnection.getConnection()) {
+			String query = "SELECT * FROM package WHERE MATCH(name) AGAINST(?) and dayCooldown BETWEEN ? AND ? ORDER BY dayCooldown ASC";
+			PreparedStatement ps = c.prepareStatement(query);
+                        ps.setString(1, keyword);
+			ps.setInt(2, lowest);
+			ps.setInt(3, highest);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				results.add(parsePackage(rs));
+			}
+			c.close();
+		} catch (SQLException e) {
+			logger.error(e);
+		}
+		return results;
+	}
+        
+        // Lọc gói nhu yếu phẩm theo giá và thời gian giới hạn
+        public static List<Package> filterPackageByPriceAndDay(String keyword, int minDay, int maxDay, double lowestPrice, double highestPrice) {
+		List<Package> results = new ArrayList<Package>();
+		try (Connection c = BasicConnection.getConnection()) {
+			String query = "SELECT * FROM package WHERE MATCH(name) AGAINST(?) and dayCooldown BETWEEN ? AND ? and price BETWEEN ? AND ? ORDER BY dayCooldown ASC, price ASC";
+			PreparedStatement ps = c.prepareStatement(query);
+                        ps.setString(1, keyword);
+			ps.setInt(2, minDay);
+			ps.setInt(3, maxDay);
+                        ps.setDouble(4, lowestPrice);
+                        ps.setDouble(5, highestPrice);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				results.add(parsePackage(rs));
+			}
+			c.close();
+		} catch (SQLException e) {
+			logger.error(e);
+		}
+		return results;
+	}
 }

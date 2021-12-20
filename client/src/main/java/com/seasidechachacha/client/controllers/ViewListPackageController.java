@@ -6,11 +6,15 @@ import com.seasidechachacha.client.models.Package;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXML;
@@ -18,7 +22,12 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.DialogPane;
+import javafx.scene.control.Label;
 import javafx.scene.control.Pagination;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -35,7 +44,7 @@ public class ViewListPackageController {
     private static List<Package> data;
 
     @FXML
-    private Button btnAdd, btnSearch;
+    private Button btnAdd, btnSearch, btnFilter;
 
     @FXML
     private TextField tfSearch;
@@ -51,8 +60,14 @@ public class ViewListPackageController {
 
     private Executor exec;
 
+    private String keyword;
+
     @FXML
     private void initialize() {
+        btnFilter.setVisible(false);
+        btnFilter.setOnAction(event -> {
+            showFilterDialog();
+        });
         exec = Executors.newSingleThreadScheduledExecutor(new ThreadFactory() {
             @Override
             public Thread newThread(Runnable r) {
@@ -72,7 +87,11 @@ public class ViewListPackageController {
             }
         });
         btnSearch.setOnAction(event -> {
-            String keyword = tfSearch.getText();
+            keyword = tfSearch.getText();
+            if (!keyword.equals("")) {
+                getSearchResult(keyword);
+                btnFilter.setVisible(true);
+            }
         });
         cbSort.getItems().addAll("Tên gói", "Mức giới hạn", "Thời gian giới hạn", "Đơn giá");
         cbSort.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
@@ -86,7 +105,153 @@ public class ViewListPackageController {
                 getSortedListPackageThread("price");
             }
         });
+        tfSearch.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.equals("")) {
+                getListPackageThread();
+                btnFilter.setVisible(false);
+            }
+        });
+    }
 
+    private void showFilterDialog() {
+        Dialog dialog = new Dialog<>();
+        dialog.setTitle("Lọc nhu yếu phẩm");
+        dialog.setHeaderText("Chọn tiêu chí");
+        DialogPane dialogPane = dialog.getDialogPane();
+        dialogPane.getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+        Label labelDay = new Label("Thời gian giới hạn");
+        ComboBox<String> cbDay = new ComboBox<>();
+        cbDay.getItems().addAll("1 ngày - 7 ngày", "1 tuần - 4 tuần", "1 tháng - 5 tháng");
+        Label labelPrice = new Label("Đơn giá");
+        ComboBox<String> cbPrice = new ComboBox<>();
+        cbPrice.getItems().addAll("10000 - 100000", "100000 - 500000", "500000 - 1000000");
+        dialogPane.setContent(new VBox(8, labelDay, cbDay, labelPrice, cbPrice));
+        Optional<String> result = dialog.showAndWait();
+        if (result.isPresent()) {
+            if (cbDay.getValue() == null && cbPrice.getValue() == null) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Thông báo");
+                alert.setHeaderText("Lọc nhu yếu phẩm");
+                alert.setContentText("Vui lòng chọn tiêu chí!");
+
+                alert.showAndWait();
+                return;
+            }
+            int minDay = 0, maxDay = 0;
+            double minPrice = 0, maxPrice = 0;
+            if (cbDay.getValue() != null) {
+                switch (cbDay.getValue()) {
+                    case "1 ngày - 7 ngày":
+                        minDay = 1;
+                        maxDay = 7;
+                        break;
+                    case "1 tuần - 4 tuần":
+                        minDay = 7;
+                        maxDay = 28;
+                        break;
+                    case "1 tháng - 5 tháng":
+                        minDay = 31;
+                        maxDay = 155;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            if (cbPrice.getValue() != null) {
+                switch (cbPrice.getValue()) {
+                    case "10000 - 100000":
+                        minPrice = 10000;
+                        maxPrice = 100000;
+                        break;
+                    case "100000 - 500000":
+                        minPrice = 100000;
+                        maxPrice = 500000;
+                        break;
+                    case "500000 - 1000000":
+                        minPrice = 500000;
+                        maxPrice = 1000000;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            if (cbDay.getValue() != null && cbPrice.getValue() != null) {
+                getFilterPackageListByPriceAndDay(keyword, minDay, maxDay, minPrice, maxPrice);
+            } else if (cbDay.getValue() != null) {
+                getFilterPackageListByDay(keyword, minDay, maxDay);
+
+            } else {
+                getFilterPackageListByPrice(keyword, minPrice, maxPrice);
+            }
+        }
+    }
+
+    private void getFilterPackageListByPriceAndDay(String keyword, int minDay, int maxDay, double minPrice, double maxPrice) {
+        Task<List<Package>> dataTask = new Task<List<Package>>() {
+            @Override
+            public List<Package> call() {
+                return ManagerDao.filterPackageByPriceAndDay(keyword, minDay, maxDay, minPrice, maxPrice);
+            }
+        };
+        dataTask.setOnSucceeded(e -> {
+            try {
+                resolveListPackage(e, dataTask.getValue());
+            } catch (IOException ex) {
+                logger.fatal(ex);
+            }
+        });
+        exec.execute(dataTask);
+    }
+
+    private void getFilterPackageListByDay(String keyword, int min, int max) {
+        Task<List<Package>> dataTask = new Task<List<Package>>() {
+            @Override
+            public List<Package> call() {
+                return ManagerDao.filterPackageByDayCooldown(keyword, min, max);
+            }
+        };
+        dataTask.setOnSucceeded(e -> {
+            try {
+                resolveListPackage(e, dataTask.getValue());
+            } catch (IOException ex) {
+                logger.fatal(ex);
+            }
+        });
+        exec.execute(dataTask);
+    }
+
+    private void getFilterPackageListByPrice(String keyword, double min, double max) {
+        Task<List<Package>> dataTask = new Task<List<Package>>() {
+            @Override
+            public List<Package> call() {
+                return ManagerDao.filterPackageByPrice(keyword, min, max);
+            }
+        };
+        dataTask.setOnSucceeded(e -> {
+            try {
+                resolveListPackage(e, dataTask.getValue());
+            } catch (IOException ex) {
+                logger.fatal(ex);
+            }
+        });
+        exec.execute(dataTask);
+    }
+
+    private void getSearchResult(String keyword) {
+        Task<List<Package>> dataTask = new Task<List<Package>>() {
+            @Override
+            public List<Package> call() {
+                return ManagerDao.getPackageByName(keyword);
+            }
+        };
+        dataTask.setOnSucceeded(e -> {
+            try {
+                resolveListPackage(e, dataTask.getValue());
+            } catch (IOException ex) {
+                logger.fatal(ex);
+            }
+        });
+        exec.execute(dataTask);
     }
 
     private void getSortedListPackageThread(String label) {
@@ -134,6 +299,15 @@ public class ViewListPackageController {
     }
 
     public void resolveListPackage(WorkerStateEvent e, List<Package> list) throws IOException {
+        if (list == null || list.isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Thông báo");
+            alert.setHeaderText("Quản lý nhu yếu phẩm");
+            alert.setContentText("Không tìm thấy gói nhu yếu phẩm phù hợp!");
+
+            alert.showAndWait();
+            return;
+        }
         data = list;
         if (data.size() % rowsPerPage() == 0) {
             pagination.setPageCount(data.size() / rowsPerPage());

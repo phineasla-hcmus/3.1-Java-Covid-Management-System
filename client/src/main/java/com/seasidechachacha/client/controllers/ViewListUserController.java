@@ -18,6 +18,7 @@ import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Pagination;
@@ -70,7 +71,9 @@ public class ViewListUserController {
         });
         btnSearch.setOnAction(event -> {
             String keyword = tfSearch.getText();
-//            data.remove(3);
+            if (!keyword.equals("")) {
+                getSearchResult(keyword);
+            }
         });
         cbSort.getItems().addAll("ID", "Họ tên", "Năm sinh", "Trạng thái");
         cbSort.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
@@ -82,6 +85,28 @@ public class ViewListUserController {
                 getSortedListManagedUserThread("yob");
             }
         });
+        tfSearch.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.equals("")) {
+                getListManagedUserThread();
+            }
+        });
+    }
+
+    private void getSearchResult(String keyword) {
+        Task<List<ManagedUser>> dataTask = new Task<List<ManagedUser>>() {
+            @Override
+            public List<ManagedUser> call() {
+                return ManagerDao.getManagedUserByFullName(keyword);
+            }
+        };
+        dataTask.setOnSucceeded(e -> {
+            try {
+                resolveListManagedUser(e, dataTask.getValue());
+            } catch (IOException ex) {
+                logger.fatal(ex);
+            }
+        });
+        exec.execute(dataTask);
     }
 
     private void getSortedListManagedUserThread(String label) {
@@ -90,15 +115,13 @@ public class ViewListUserController {
             public List<ManagedUser> call() {
                 if (label.equals("idCard")) {
                     return ManagerDao.getListByID();
-                }
-                else if (label.equals("fullName")) {
+                } else if (label.equals("fullName")) {
                     return ManagerDao.getListByName();
-                }
-                else if (label.equals("yob")) {
+                } else if (label.equals("yob")) {
                     return ManagerDao.getListByBirthYear();
                 }
                 return null;
-                
+
             }
         };
         dataTask.setOnSucceeded(e -> {
@@ -129,6 +152,15 @@ public class ViewListUserController {
     }
 
     public void resolveListManagedUser(WorkerStateEvent e, List<ManagedUser> list) throws IOException {
+        if (list == null || list.isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Thông báo");
+            alert.setHeaderText("Quản lý người liên quan Covid19");
+            alert.setContentText("Không tìm thấy người dùng phù hợp!");
+
+            alert.showAndWait();
+            return;
+        }
         data = list;
         if (data.size() % rowsPerPage() == 0) {
             pagination.setPageCount(data.size() / rowsPerPage());

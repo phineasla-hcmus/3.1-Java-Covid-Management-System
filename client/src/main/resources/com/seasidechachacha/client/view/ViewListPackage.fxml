@@ -38,7 +38,12 @@
             
             <Pane HBox.hgrow="ALWAYS">
                 <children>
-                    <ComboBox fx:id="cbSort" layoutX="91.0" layoutY="1.0" prefWidth="150.0" style="-fx-background-color: transparent; -fx-border-color: #006abc;" />
+                    <ComboBox fx:id="cbSort" layoutX="135.0" layoutY="2.0" prefWidth="150.0" style="-fx-background-color: transparent; -fx-border-color: #006abc;" />
+               <Button fx:id="btnFilter" layoutX="48.0" layoutY="2.0" mnemonicParsing="false">
+                  <graphic>
+                     <FontAwesomeIconView fill="WHITE" glyphName="FILTER" />
+                  </graphic>
+               </Button>
                 </children>
             </Pane>
             <Button fx:id="btnAdd" style="-fx-background-color: #0098f1;" textFill="WHITE">

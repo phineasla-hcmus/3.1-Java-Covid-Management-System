@@ -86,6 +86,37 @@ public class AdminDao {
         }
         return flag;
     }
+    
+    public static boolean banModerator(String managerID){
+        boolean result= false;
+        try ( Connection c = BasicConnection.getConnection();) {
+            String query = "INSERT INTO ban VALUES(?,\"2021-11-30\");";
+            PreparedStatement ps = c.prepareStatement(query);
+            ps.setString(1, managerID);
+            
+            result = ps.executeUpdate() > 0;
+            c.close();
+        } catch (SQLException e) {
+            logger.error(e);
+        }
+        return result;
+    }
+    
+    public static boolean freeModerator(String managerID){
+        boolean result= false;
+        try ( Connection c = BasicConnection.getConnection();) {
+            String query = "DELETE FROM ban WHERE ban.userID=?";
+            PreparedStatement ps = c.prepareStatement(query);
+            ps.setString(1, managerID);
+            
+            result = ps.executeUpdate() > 0;
+            c.close();
+        } catch (SQLException e) {
+            logger.error(e);
+        }
+        return result;
+    }
+    
     public static List<ActivityHistory> getManagerActivityHistory(String managerID) {
         List<ActivityHistory> activityHistory = null;
         try ( Connection c = BasicConnection.getConnection();) {

@@ -9,7 +9,7 @@ module com.seasidechachacha.client {
     requires org.kordamp.bootstrapfx.core;
     requires com.jfoenix;
     
-    requires com.seasidechachacha.database;
+    requires com.seasidechachacha.common;
 
     opens com.seasidechachacha.client to javafx.fxml;
     opens com.seasidechachacha.client.controllers to javafx.fxml;

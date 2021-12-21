@@ -1,4 +1,4 @@
-package com.seasidechachacha.database;
+package com.seasidechachacha.common;
 
 import java.io.IOException;
 import java.io.InputStream;

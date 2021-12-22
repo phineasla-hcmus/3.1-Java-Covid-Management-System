@@ -92,10 +92,15 @@ public class App {
         logger.info("Server is listening on port " + Integer.toString(PORT));
         while (true) {
             SSLSocket clientSocket = (SSLSocket) ss.accept();
-            ClientHandler clientHandler = new ClientHandler(clientSocket);
+            InetSocketAddress address = (InetSocketAddress) clientSocket.getRemoteSocketAddress();
+            logger.info(address);
+            try {
+                ClientHandler clientHandler = new ClientHandler(clientSocket);
+                executorService.submit(clientHandler);
+            } catch (IOException e) {
+                logger.warn(address, e);
+            }
 
-            logger.info((InetSocketAddress) clientSocket.getRemoteSocketAddress());
-            executorService.submit(clientHandler);
         }
     }
 }

@@ -1,6 +1,8 @@
 package com.seasidechachacha.common.payment;
 
-public class TransactionRequest extends Request {
+import java.io.Serializable;
+
+public class TransactionRequest implements Serializable {
     private String fromId;
     private String toId;
     private double amount;

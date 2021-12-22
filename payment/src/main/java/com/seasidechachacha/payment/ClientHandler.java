@@ -1,18 +1,18 @@
 package com.seasidechachacha.payment;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
-import com.google.gson.Gson;
+import com.seasidechachacha.common.payment.ErrorResponse;
+import com.seasidechachacha.common.payment.ErrorResponseType;
 import com.seasidechachacha.common.payment.GetUserRequest;
 import com.seasidechachacha.common.payment.NewUserRequest;
 import com.seasidechachacha.common.payment.TransactionRequest;
+import com.seasidechachacha.common.payment.TransactionResponse;
+import com.seasidechachacha.common.payment.UserResponse;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,11 +23,15 @@ import org.apache.logging.log4j.Logger;
 public class ClientHandler implements Runnable {
     private static final Logger logger = LogManager.getLogger(ClientHandler.class);
     // private Gson gson;
-    private Socket socket;
+    private final Socket socket;
+    private final ObjectOutputStream ostream;
+    private final ObjectInputStream istream;
 
-    public ClientHandler(Socket clientSocket) {
+    public ClientHandler(Socket clientSocket) throws IOException {
         // gson = new Gson();
         socket = clientSocket;
+        ostream = new ObjectOutputStream(socket.getOutputStream());
+        istream = new ObjectInputStream(socket.getInputStream());
     }
 
     @Override
@@ -51,32 +55,59 @@ public class ClientHandler implements Runnable {
         // try-with-resource will auto-close the socket, so do not reuse it
         // ObjectOutputStream must be before the ObjectInputStream
         // https://stackoverflow.com/a/27736470/12405558
-        try (ObjectOutputStream ostream = new ObjectOutputStream(socket.getOutputStream());
-                ObjectInputStream istream = new ObjectInputStream(socket.getInputStream())) {
+        try (ostream; istream) {
             Object raw = istream.readObject();
-            System.out.println(raw);
             logger.trace(raw);
             if (raw instanceof TransactionRequest) {
-                TransactionRequest req = (TransactionRequest) raw;
+                handleTransactionRequest((TransactionRequest) raw);
             } else if (raw instanceof GetUserRequest) {
-                GetUserRequest req = (GetUserRequest) raw;
+                handleGetUserRequest((GetUserRequest) raw);
             } else if (raw instanceof NewUserRequest) {
-                NewUserRequest req = (NewUserRequest) raw;
+                handleNewUserRequest((NewUserRequest) raw);
             } else {
-
+                responseError(ErrorResponseType.INVALID_REQUEST);
             }
-
         } catch (Exception e) {
             InetSocketAddress address = (InetSocketAddress) socket.getRemoteSocketAddress();
             logger.warn(address, e);
         }
     }
 
-    private PrintWriter createPrintWriter() throws IOException {
-        return new PrintWriter(socket.getOutputStream(), true);
+    private void handleNewUserRequest(NewUserRequest req) throws IOException {
+        UserResponse res = new UserResponse("abc", 500);
+        ostream.writeObject(res);
+        // responseError(ErrorResponseType.ID_EXISTED);
     }
 
-    private BufferedReader createBufferedReader() throws IOException {
-        return new BufferedReader(new InputStreamReader(socket.getInputStream()));
+    private void handleGetUserRequest(GetUserRequest req) throws IOException {
+        UserResponse res = new UserResponse("abc", 500);
+        ostream.writeObject(res);
+        // responseError(ErrorResponseType.ID_NOT_FOUND);
     }
+
+    private void handleTransactionRequest(TransactionRequest req) throws IOException {
+        TransactionResponse res = new TransactionResponse("123456");
+        ostream.writeObject(res);
+        // if (false)
+        // responseError(ErrorResponseType.ID_NOT_FOUND);
+        // else if (false)
+        // responseError(ErrorResponseType.INSUFFICIENT_FUNDS);
+    }
+
+    private void responseError(ErrorResponseType type) throws IOException {
+        ostream.writeObject(new ErrorResponse(type));
+    }
+
+    @SuppressWarnings("unused")
+    private void responseError(ErrorResponseType type, String message) throws IOException {
+        ostream.writeObject(new ErrorResponse(type, message));
+    }
+
+    // private PrintWriter createPrintWriter() throws IOException {
+    // return new PrintWriter(socket.getOutputStream(), true);
+    // }
+
+    // private BufferedReader createBufferedReader() throws IOException {
+    // return new BufferedReader(new InputStreamReader(socket.getInputStream()));
+    // }
 }

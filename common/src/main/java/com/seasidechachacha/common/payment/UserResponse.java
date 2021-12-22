@@ -2,14 +2,11 @@ package com.seasidechachacha.common.payment;
 
 import java.io.Serializable;
 
-public class NewUserRequest implements Serializable {
+public class UserResponse implements Serializable {
     String userId;
-    /**
-     * Well I don't know what to call it
-     */
     double deposit;
 
-    public NewUserRequest(String userId, int deposit) {
+    public UserResponse(String userId, double deposit) {
         this.userId = userId;
         this.deposit = deposit;
     }
@@ -22,11 +19,11 @@ public class NewUserRequest implements Serializable {
         this.userId = userId;
     }
 
-    public int getDeposit() {
+    public double getDeposit() {
         return deposit;
     }
 
-    public void setDeposit(int deposit) {
+    public void setDeposit(double deposit) {
         this.deposit = deposit;
     }
 }

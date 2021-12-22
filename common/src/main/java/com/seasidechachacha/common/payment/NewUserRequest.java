@@ -22,7 +22,7 @@ public class NewUserRequest implements Serializable {
         this.userId = userId;
     }
 
-    public int getDeposit() {
+    public double getDeposit() {
         return deposit;
     }
 

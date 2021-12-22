@@ -5,4 +5,5 @@ module com.seasidechachacha.common {
     requires transitive java.sql;
 
     exports com.seasidechachacha.common;
+    exports com.seasidechachacha.common.payment;
 }

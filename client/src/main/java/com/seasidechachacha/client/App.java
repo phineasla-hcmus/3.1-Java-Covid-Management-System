@@ -1,6 +1,7 @@
 package com.seasidechachacha.client;
 
 import java.io.IOException;
+import java.io.Serializable;
 
 import com.seasidechachacha.client.controllers.ViewPackageInfoController;
 import com.seasidechachacha.client.controllers.ViewPersonalInfoController;
@@ -8,6 +9,8 @@ import com.seasidechachacha.client.controllers.ViewTreatmentPlaceInfoController;
 import com.seasidechachacha.client.models.ManagedUser;
 import com.seasidechachacha.client.models.Package;
 import com.seasidechachacha.client.models.TreatmentPlace;
+import com.seasidechachacha.client.payment.PaymentService;
+import com.seasidechachacha.common.payment.UserResponse;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -94,14 +97,19 @@ public class App extends Application {
     }
 
     // Quick test
-    public static void playground() {
+    public static void playground() throws Exception {
         // PasswordAuthenticator pwdAuth = new PasswordAuthenticator();
         // String login = pwdAuth.authenticate("1ixrvSfjhPqd".toCharArray(),
-        //         "$31$16$VKx6w7TTTyO8H504Ajxk6BOW034fSyZYhuayMVsf2P8")
-        //                 ? "Welcome"
-        //                 : "GET OUT";
+        // "$31$16$VKx6w7TTTyO8H504Ajxk6BOW034fSyZYhuayMVsf2P8")
+        // ? "Welcome"
+        // : "GET OUT";
         // String a = pwdAuth.hash("123456".toCharArray());
         // System.out.println(a);
+
+        // PaymentService ps = new PaymentService();
+        // Serializable s = ps.getAccountBalance("userId");
+        // UserResponse res = (UserResponse) s;
+        // System.out.println(res.getDeposit());
     }
 
     public static void main(String[] args) throws Exception {
@@ -111,6 +119,7 @@ public class App extends Application {
             logger.fatal(e);
             return;
         }
+        playground();
         launch();
     }
 

@@ -3,6 +3,7 @@ package com.seasidechachacha.payment;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
@@ -56,7 +57,7 @@ public class ClientHandler implements Runnable {
         // ObjectOutputStream must be before the ObjectInputStream
         // https://stackoverflow.com/a/27736470/12405558
         try (ostream; istream) {
-            Object raw = istream.readObject();
+            Serializable raw = (Serializable) istream.readObject();
             logger.trace(raw);
             if (raw instanceof TransactionRequest) {
                 handleTransactionRequest((TransactionRequest) raw);
@@ -67,7 +68,7 @@ public class ClientHandler implements Runnable {
             } else {
                 responseError(ErrorResponseType.INVALID_REQUEST);
             }
-        } catch (Exception e) {
+        } catch (IOException | ClassNotFoundException e) {
             InetSocketAddress address = (InetSocketAddress) socket.getRemoteSocketAddress();
             logger.warn(address, e);
         }

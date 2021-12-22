@@ -1,15 +1,19 @@
 package com.seasidechachacha.client.payment;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
 import com.seasidechachacha.client.SSLConfig;
+import com.seasidechachacha.common.payment.ErrorResponse;
+import com.seasidechachacha.common.payment.GetUserRequest;
+import com.seasidechachacha.common.payment.TransactionRequest;
+import com.seasidechachacha.common.payment.TransactionResponse;
+import com.seasidechachacha.common.payment.UserResponse;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,30 +30,43 @@ public class PaymentService {
         ssf = (SSLSocketFactory) SSLSocketFactory.getDefault();
     }
 
-    public double getAccountBalance(String userId) throws IOException {
-        SSLSocket s = createSocket();
-        try (PrintWriter pw = createPrintWriter(s);
-                BufferedReader br = createBufferedReader(s)) {
-            String raw = "test. if you receiving this, IT WORKS";
-            pw.println(raw);
-
-            String resRaw = br.readLine();
-        }
-        // Testing
-        return 0;
-    }
-
-    private SSLSocket createSocket() throws IOException {
+    public SSLSocket createSocket() throws IOException {
         return (SSLSocket) ssf.createSocket(HOST, PORT);
     }
 
-    private PrintWriter createPrintWriter(Socket s) throws IOException {
-        return new PrintWriter(s.getOutputStream(), true);
+    public UserResponse requestBalance(String userId) throws IOException,
+            ClassNotFoundException, RespondException {
+        return (UserResponse) request(new GetUserRequest(userId));
     }
 
-    private BufferedReader createBufferedReader(Socket s) throws IOException {
-        return new BufferedReader(new InputStreamReader(s.getInputStream()));
+    public TransactionResponse requestTransaction(String fromId, String toId, double amount) throws IOException,
+            ClassNotFoundException, RespondException {
+        return (TransactionResponse) request(new TransactionRequest(fromId, toId, amount));
     }
+
+    public Serializable request(Serializable req) throws IOException,
+            ClassNotFoundException, RespondException {
+        SSLSocket s = createSocket();
+
+        try (ObjectOutputStream ostream = new ObjectOutputStream(s.getOutputStream());
+                ObjectInputStream istream = new ObjectInputStream(s.getInputStream())) {
+            ostream.writeObject(req);
+            Serializable raw = (Serializable) istream.readObject();
+            if (raw instanceof ErrorResponse) {
+                ErrorResponse err = (ErrorResponse) raw;
+                throw new RespondException(err);
+            }
+            return raw;
+        }
+    }
+    
+    // private PrintWriter createPrintWriter(Socket s) throws IOException {
+    // return new PrintWriter(s.getOutputStream(), true);
+    // }
+
+    // private BufferedReader createBufferedReader(Socket s) throws IOException {
+    // return new BufferedReader(new InputStreamReader(s.getInputStream()));
+    // }
 
     // public static void initialize() throws IOException, KeyStoreException,
     // NoSuchAlgorithmException,

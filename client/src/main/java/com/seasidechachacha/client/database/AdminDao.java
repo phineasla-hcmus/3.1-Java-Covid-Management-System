@@ -15,7 +15,7 @@ import com.seasidechachacha.client.models.ActivityHistory;
 import com.seasidechachacha.client.models.TreatmentPlace;
 
 public class AdminDao {
-
+    private static Logger logger = LogManager.getLogger(AdminDao.class);
     private String adminID;
 
     public AdminDao(String adminID) {
@@ -25,8 +25,6 @@ public class AdminDao {
     public String getAdminID() {
         return adminID;
     }
-
-    private static Logger logger = LogManager.getLogger(AdminDao.class);
 
     public boolean addManager(String ManagerID) {
         User acc = new User(ManagerID, ManagerID, 2);
@@ -44,7 +42,7 @@ public class AdminDao {
 
     public static List<User> getModerator() {
         List<User> user = null;
-        try ( Connection c = BasicConnection.getConnection();) {
+        try (Connection c = BasicConnection.getConnection();) {
             String query = "SELECT * FROM user WHERE roleID = 2;";
             PreparedStatement ps = c.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
@@ -69,31 +67,30 @@ public class AdminDao {
         return user;
     }
 
-    public static boolean checkBanlist(String managerID){
-        boolean flag=false;
-        try ( Connection c = BasicConnection.getConnection();) {
+    public static boolean checkBanlist(String managerID) {
+        boolean flag = false;
+        try (Connection c = BasicConnection.getConnection();) {
             String query = "SELECT * FROM ban WHERE userID = ?;";
             PreparedStatement ps = c.prepareStatement(query);
             ps.setString(1, managerID);
             ResultSet rs = ps.executeQuery();
-            if(rs.next()!=false)
-            {
+            if (rs.next() != false) {
                 flag = true;
             }
-           
+
         } catch (SQLException e) {
             logger.error(e);
         }
         return flag;
     }
-    
-    public static boolean banModerator(String managerID){
-        boolean result= false;
-        try ( Connection c = BasicConnection.getConnection();) {
+
+    public static boolean banModerator(String managerID) {
+        boolean result = false;
+        try (Connection c = BasicConnection.getConnection();) {
             String query = "INSERT INTO ban VALUES(?,\"2021-11-30\");";
             PreparedStatement ps = c.prepareStatement(query);
             ps.setString(1, managerID);
-            
+
             result = ps.executeUpdate() > 0;
             c.close();
         } catch (SQLException e) {
@@ -101,14 +98,14 @@ public class AdminDao {
         }
         return result;
     }
-    
-    public static boolean freeModerator(String managerID){
-        boolean result= false;
-        try ( Connection c = BasicConnection.getConnection();) {
+
+    public static boolean freeModerator(String managerID) {
+        boolean result = false;
+        try (Connection c = BasicConnection.getConnection();) {
             String query = "DELETE FROM ban WHERE ban.userID=?";
             PreparedStatement ps = c.prepareStatement(query);
             ps.setString(1, managerID);
-            
+
             result = ps.executeUpdate() > 0;
             c.close();
         } catch (SQLException e) {
@@ -116,15 +113,15 @@ public class AdminDao {
         }
         return result;
     }
-    
+
     public static List<ActivityHistory> getManagerActivityHistory(String managerID) {
         List<ActivityHistory> activityHistory = null;
-        try ( Connection c = BasicConnection.getConnection();) {
+        try (Connection c = BasicConnection.getConnection();) {
             String query = "SELECT * FROM log WHERE userID = ?;";
             PreparedStatement ps = c.prepareStatement(query);
             ps.setString(1, managerID);
             ResultSet rs = ps.executeQuery();
-          
+
             activityHistory = parseManagerActivityHistoryList(rs);
         } catch (SQLException e) {
             logger.error(e);
@@ -147,7 +144,7 @@ public class AdminDao {
 
     public boolean addTreatmentPlace(TreatmentPlace tp) {
         boolean result = false;
-        try ( Connection c = BasicConnection.getConnection();) {
+        try (Connection c = BasicConnection.getConnection();) {
             String query = "INSERT INTO treatmentplace(treatID, name, address, capacity, currentReception) VALUES(?,?,?,?,?);";
             PreparedStatement ps = c.prepareStatement(query);
             ps.setInt(1, tp.getTreatID());
@@ -165,7 +162,7 @@ public class AdminDao {
 
     public boolean updateTreatmentPlaceName(int treatID, String name) {
         boolean result = false;
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "UPDATE treatmentplace SET name = ? WHERE treatID = ?;";
             PreparedStatement ps = c.prepareStatement(query);
             ps.setString(1, name);
@@ -180,7 +177,7 @@ public class AdminDao {
 
     public boolean updateTreatmentPlaceCapacity(int treatID, int capacity) {
         boolean result = false;
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "UPDATE treatmentplace SET capacity = ? WHERE treatID = ?;";
             PreparedStatement ps = c.prepareStatement(query);
             ps.setInt(1, capacity);
@@ -195,7 +192,7 @@ public class AdminDao {
 
     public boolean updateTreatmentPlaceCurrentReception(int treatID, int currentReception) {
         boolean result = false;
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "UPDATE treatmentplace SET currentReception = ? WHERE treatID = ?;";
             PreparedStatement ps = c.prepareStatement(query);
             ps.setInt(1, currentReception);

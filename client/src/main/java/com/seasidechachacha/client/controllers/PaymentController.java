@@ -36,7 +36,7 @@ public class PaymentController {
         balanceRemain.setText("0 VND");
         balancePay.setText("0 VND");
         // TODO: get userId
-        getBalanceThread(userId);
+        getBalanceThread("GET_USER_ID");
     }
 
     @FXML
@@ -59,7 +59,7 @@ public class PaymentController {
 
                 } else if (option.get() == ButtonType.OK) { // đồng ý thanh toán , trừ vô tài khoản của người dùng
                     // TODO: get userId
-                    transactionThread(userId, balancePay.getText());
+                    transactionThread("GET_USER_ID", Double.parseDouble(balancePay.getText()));
                 } else if (option.get() == ButtonType.CANCEL) { // không có gì xảy ra
 
                 }
@@ -98,9 +98,9 @@ public class PaymentController {
     private void transactionThread(String userId, double amount) {
         Task<TransactionResponse> payTask = new Task<TransactionResponse>() {
             @Override
-            public TransactionResponse call() {
+            public TransactionResponse call() throws IOException, ClassNotFoundException, RespondException {
                 // TODO: query for adminId to pass into toId
-                return paymentService.requestTransaction(userId, toId, amount);
+                return paymentService.requestTransaction(userId, "GET_ADMIN_ID", amount);
             }
         };
 
@@ -112,7 +112,8 @@ public class PaymentController {
             Throwable throwable = payTask.getException();
             if (throwable instanceof RespondException) {
                 RespondException err = (RespondException) throwable;
-                // TODO: getAccountBalance will return ErrorResponseType.INSUFFICIENT_FUNDS and ErrorResponseType.ID_NOT_FOUND
+                // TODO: getAccountBalance will return ErrorResponseType.INSUFFICIENT_FUNDS and
+                // ErrorResponseType.ID_NOT_FOUND
                 ErrorResponseType type = err.getType();
             } else {
                 // IOException, ClassNotFoundException

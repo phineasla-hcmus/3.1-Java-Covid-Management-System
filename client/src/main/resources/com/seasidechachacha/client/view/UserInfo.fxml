@@ -3,8 +3,7 @@
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.Pagination?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -121,7 +120,11 @@
                 <Insets left="50.0" top="20.0" />
             </VBox.margin>
         </Label>
-        <TableView fx:id="tableManaged" prefHeight="200.0" prefWidth="646.0">
+        <Pagination fx:id="paginationManaged" maxWidth="700.0">
+         <VBox.margin>
+            <Insets left="50.0" />
+         </VBox.margin></Pagination>
+        <!--        <TableView fx:id="tableManaged" prefHeight="200.0" prefWidth="646.0">
             <columns>
                 <TableColumn fx:id="numberCol" prefWidth="75.0" text="Ngày" />
                 <TableColumn fx:id="fullNameCol" prefWidth="75.0" text="Trạng thái" />
@@ -133,58 +136,66 @@
             <VBox.margin>
                 <Insets left="50.0" right="50.0" />
             </VBox.margin>
-        </TableView>
-      <Label styleClass="sub-label" text="Lịch sử tiêu thụ gói nhu yếu phẩm">
+        </TableView>-->
+        <Label styleClass="sub-label" text="Lịch sử tiêu thụ gói nhu yếu phẩm">
+            <VBox.margin>
+                <Insets left="50.0" top="20.0" />
+            </VBox.margin>
+        </Label>
+        <Pagination fx:id="paginationConsumption" maxWidth="700.0">
          <VBox.margin>
-            <Insets left="50.0" top="20.0" />
-         </VBox.margin>
-      </Label>
-      <TableView fx:id="tableConsumption" prefHeight="200.0" prefWidth="646.0">
-         <columns>
-            <TableColumn fx:id="dateStatusCol" prefWidth="75.0" text="Mã đơn hàng" />
-            <TableColumn fx:id="currentStatusCol" prefWidth="75.0" text="Ngày mua" />
-            <TableColumn fx:id="currentStatusCol1" prefWidth="75.0" text="Tổng số lượng mua" />
-            <TableColumn fx:id="currentStatusCol2" prefWidth="75.0" text="Tổng tiền" />
-         </columns>
-         <columnResizePolicy>
-            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-         </columnResizePolicy>
+            <Insets left="50.0" />
+         </VBox.margin></Pagination>
+        <!--      <TableView fx:id="tableConsumption" prefHeight="200.0" prefWidth="646.0">
+           <columns>
+              <TableColumn fx:id="dateStatusCol" prefWidth="75.0" text="Mã đơn hàng" />
+              <TableColumn fx:id="currentStatusCol" prefWidth="75.0" text="Ngày mua" />
+              <TableColumn fx:id="currentStatusCol1" prefWidth="75.0" text="Tổng số lượng mua" />
+              <TableColumn fx:id="currentStatusCol2" prefWidth="75.0" text="Tổng tiền" />
+           </columns>
+           <columnResizePolicy>
+              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+           </columnResizePolicy>
+           <VBox.margin>
+              <Insets left="50.0" right="50.0" />
+           </VBox.margin>
+        </TableView>-->
+        <HBox prefWidth="200.0">
+            <children>
+                <Label styleClass="sub-label" text="Dư nợ">
+                    <padding>
+                        <Insets left="50.0" top="20.0" />
+                    </padding>
+                </Label>
+                <Label fx:id="labelDebt" styleClass="sub-label">
+                    <padding>
+                        <Insets left="50.0" top="20.0" />
+                    </padding>
+                </Label>
+            </children>
+        </HBox>
+        <Label styleClass="sub-label" text="Lịch sử thanh toán">
+            <VBox.margin>
+                <Insets left="50.0" top="20.0" />
+            </VBox.margin>
+        </Label>
+        <Pagination fx:id="paginationPayment" maxWidth="700.0">
          <VBox.margin>
-            <Insets left="50.0" right="50.0" />
-         </VBox.margin>
-      </TableView>
-      <HBox prefWidth="200.0">
-         <children>
-            <Label styleClass="sub-label" text="Dư nợ">
-               <padding>
-                  <Insets left="50.0" top="20.0" />
-               </padding>
-            </Label>
-            <Label fx:id="labelDebt" styleClass="sub-label">
-               <padding>
-                  <Insets left="50.0" top="20.0" />
-               </padding>
-            </Label>
-         </children>
-      </HBox>
-      <Label styleClass="sub-label" text="Lịch sử thanh toán">
-         <VBox.margin>
-            <Insets left="50.0" top="20.0" />
-         </VBox.margin>
-      </Label>
-      <TableView fx:id="tablePayment" prefHeight="200.0" prefWidth="646.0">
-         <columns>
-            <TableColumn fx:id="datePlaceCol" prefWidth="75.0" text="Mã thanh toán" />
-            <TableColumn fx:id="placeCol" prefWidth="75.0" text="Ngày thanh toán" />
-            <TableColumn fx:id="currentStatusCol3" prefWidth="75.0" text="Tổng tiền" />
-         </columns>
-         <columnResizePolicy>
-            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-         </columnResizePolicy>
-         <VBox.margin>
-            <Insets left="50.0" right="50.0" />
-         </VBox.margin>
-      </TableView>
+            <Insets left="50.0" />
+         </VBox.margin></Pagination>
+        <!--      <TableView fx:id="tablePayment" prefHeight="200.0" prefWidth="646.0">
+           <columns>
+              <TableColumn fx:id="datePlaceCol" prefWidth="75.0" text="Mã thanh toán" />
+              <TableColumn fx:id="placeCol" prefWidth="75.0" text="Ngày thanh toán" />
+              <TableColumn fx:id="currentStatusCol3" prefWidth="75.0" text="Tổng tiền" />
+           </columns>
+           <columnResizePolicy>
+              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+           </columnResizePolicy>
+           <VBox.margin>
+              <Insets left="50.0" right="50.0" />
+           </VBox.margin>
+        </TableView>-->
     </children>
     <stylesheets>
         <URL value="@../css/style.css" />

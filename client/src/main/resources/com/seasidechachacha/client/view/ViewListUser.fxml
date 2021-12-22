@@ -50,23 +50,7 @@
                 </graphic>
             </Button>    
         </HBox> 
-        <Pagination fx:id="pagination">
-<!--            <fx:define>
-                <TableView fx:id="table" prefHeight="373.0" prefWidth="760.0">
-                    <columns>
-                        <TableColumn fx:id="numberCol" prefWidth="150.4000244140625" text="ID" />
-                        <TableColumn fx:id="fullNameCol" prefWidth="150.4000244140625" text="Họ tên" />
-                        <TableColumn fx:id="birthYearCol" minWidth="0.0" prefWidth="188.0" text="Năm sinh" />
-                        <TableColumn fx:id="addressCol" minWidth="0.0" prefWidth="188.0" text="Địa chỉ" />
-                        <TableColumn fx:id="statusCol" minWidth="0.0" prefWidth="188.0" text="Trạng thái" />
-                        <TableColumn fx:id="actionCol" prefWidth="150.4000244140625" text="#" />
-                    </columns>
-                    <columnResizePolicy>
-                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                    </columnResizePolicy>
-                </TableView>
-            </fx:define>-->
-            
+        <Pagination fx:id="pagination">            
         </Pagination>
        
     </children>

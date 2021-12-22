@@ -1,13 +1,14 @@
 module com.seasidechachacha.client {
     requires java.base;
-
-    requires transitive javafx.controls;
-    requires javafx.fxml;
-    requires javafx.graphicsEmpty;
-
+    
+    requires com.google.gson;
+    requires com.jfoenix;
     requires org.apache.logging.log4j;
     requires org.kordamp.bootstrapfx.core;
-    requires com.jfoenix;
+    
+    requires javafx.controls;
+    requires javafx.fxml;
+    requires javafx.graphicsEmpty;
     
     requires com.seasidechachacha.common;
 
@@ -16,5 +17,4 @@ module com.seasidechachacha.client {
     opens com.seasidechachacha.client.models to javafx.base;
 
     exports com.seasidechachacha.client;
-
 }

@@ -1,6 +1,8 @@
 module com.seasidechachacha.common {
-    requires transitive java.sql;
+    requires com.google.gson;
     requires org.apache.logging.log4j;
+    
+    requires transitive java.sql;
 
     exports com.seasidechachacha.common;
 }

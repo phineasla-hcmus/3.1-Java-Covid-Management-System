@@ -1,4 +1,4 @@
-package com.seasidechachacha.client;
+package com.seasidechachacha.client.config;
 
 import java.io.IOException;
 import java.io.InputStream;

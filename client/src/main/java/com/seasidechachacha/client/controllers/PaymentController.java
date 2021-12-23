@@ -99,13 +99,13 @@ public class PaymentController {
         Task<PaymentResponse> payTask = new Task<PaymentResponse>() {
             @Override
             public PaymentResponse call() throws IOException, ClassNotFoundException, RespondException {
-                // TODO: query for adminId to pass into toId
                 return paymentService.requestPayment(userId, amount);
             }
         };
 
         payTask.setOnSucceeded(e -> {
             // TODO: success
+            // Save to payment history for both user and admin
         });
 
         payTask.setOnFailed(e -> {

@@ -1,6 +1,7 @@
 package com.seasidechachacha.client.controllers;
 
 import com.seasidechachacha.client.App;
+import com.seasidechachacha.client.config.Session;
 import com.seasidechachacha.client.database.UserDao;
 import com.seasidechachacha.client.models.User;
 import java.io.IOException;
@@ -29,9 +30,6 @@ public class LoginController {
     private TextField pass;
     @FXML
     private Button next;
-
-    // Set in resolveLogin
-    private User user = null;
 
     // Provide thread to CRUD database
     private Executor exec;
@@ -105,7 +103,7 @@ public class LoginController {
             a.show();
             return;
         }
-        this.user = user;
+        Session.setUser(user);
         int roleId = user.getRoleId();
         if (roleId == 1) {
             App.setRoot("view/AdminScreen");
@@ -121,7 +119,6 @@ public class LoginController {
         if (isNewUser) {
             App.setRoot("view/CreateUserPassword");
         } else {
-
             App.setRoot("view/UserScreen");
         }
     }

@@ -1,16 +1,14 @@
 package com.seasidechachacha.client;
 
 import java.io.IOException;
-import java.io.Serializable;
 
+import com.seasidechachacha.client.config.SSLConfig;
 import com.seasidechachacha.client.controllers.ViewPackageInfoController;
 import com.seasidechachacha.client.controllers.ViewPersonalInfoController;
 import com.seasidechachacha.client.controllers.ViewTreatmentPlaceInfoController;
 import com.seasidechachacha.client.models.ManagedUser;
 import com.seasidechachacha.client.models.Package;
 import com.seasidechachacha.client.models.TreatmentPlace;
-import com.seasidechachacha.client.payment.PaymentService;
-import com.seasidechachacha.common.payment.UserResponse;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

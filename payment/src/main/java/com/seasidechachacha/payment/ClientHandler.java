@@ -87,7 +87,7 @@ public class ClientHandler implements Runnable {
     }
 
     private void handlePaymentRequest(PaymentRequest req) throws IOException {
-        PaymentResponse res = new PaymentResponse("123456");
+        PaymentResponse res = new PaymentResponse("123456", 5000);
         ostream.writeObject(res);
         // if (false)
         // responseError(ErrorResponseType.ID_NOT_FOUND);

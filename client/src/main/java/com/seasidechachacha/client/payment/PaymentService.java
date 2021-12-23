@@ -50,6 +50,7 @@ public class PaymentService {
 
         try (ObjectOutputStream ostream = new ObjectOutputStream(s.getOutputStream());
                 ObjectInputStream istream = new ObjectInputStream(s.getInputStream())) {
+            logger.trace("Requesting ", req);
             ostream.writeObject(req);
             Serializable raw = (Serializable) istream.readObject();
             if (raw instanceof ErrorResponse) {
@@ -59,7 +60,7 @@ public class PaymentService {
             return raw;
         }
     }
-    
+
     // private PrintWriter createPrintWriter(Socket s) throws IOException {
     // return new PrintWriter(s.getOutputStream(), true);
     // }

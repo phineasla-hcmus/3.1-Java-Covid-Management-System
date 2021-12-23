@@ -9,7 +9,7 @@ public class NewUserRequest implements Serializable {
      */
     double deposit;
 
-    public NewUserRequest(String userId, int deposit) {
+    public NewUserRequest(String userId, double deposit) {
         this.userId = userId;
         this.deposit = deposit;
     }

@@ -11,6 +11,7 @@ import javax.net.ssl.SSLSocketFactory;
 import com.seasidechachacha.client.global.SSLConfig;
 import com.seasidechachacha.common.payment.ErrorResponse;
 import com.seasidechachacha.common.payment.GetUserRequest;
+import com.seasidechachacha.common.payment.NewUserRequest;
 import com.seasidechachacha.common.payment.PaymentRequest;
 import com.seasidechachacha.common.payment.PaymentResponse;
 import com.seasidechachacha.common.payment.UserResponse;
@@ -39,9 +40,14 @@ public class PaymentService {
         return (UserResponse) request(new GetUserRequest(userId));
     }
 
-    public PaymentResponse requestPayment(String fromId, double amount) throws IOException,
+    public PaymentResponse requestPayment(String userId, double total) throws IOException,
             ClassNotFoundException, RespondException {
-        return (PaymentResponse) request(new PaymentRequest(fromId, amount));
+        return (PaymentResponse) request(new PaymentRequest(userId, total));
+    }
+
+    public UserResponse requestNewUser(String userId, double amount) throws IOException,
+            ClassNotFoundException, RespondException {
+        return (UserResponse) request(new NewUserRequest(userId, amount));
     }
 
     public Serializable request(Serializable req) throws IOException,

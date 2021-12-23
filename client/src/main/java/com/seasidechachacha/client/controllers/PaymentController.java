@@ -3,6 +3,7 @@ package com.seasidechachacha.client.controllers;
 import java.io.IOException;
 import java.util.Optional;
 
+import com.seasidechachacha.client.global.Session;
 import com.seasidechachacha.client.payment.PaymentService;
 import com.seasidechachacha.client.payment.RespondException;
 import com.seasidechachacha.common.payment.ErrorResponseType;
@@ -35,8 +36,7 @@ public class PaymentController {
     private void initialize() { // chỗ này lấy dữ liệu giá phải trả + tiền còn trong tài khoản của người dùng
         balanceRemain.setText("0 VND");
         balancePay.setText("0 VND");
-        // TODO: get userId
-        getBalanceThread("GET_USER_ID");
+        getBalanceThread(Session.getUser().getUserId());
     }
 
     @FXML
@@ -58,8 +58,7 @@ public class PaymentController {
                 if (option.get() == null) {
 
                 } else if (option.get() == ButtonType.OK) { // đồng ý thanh toán , trừ vô tài khoản của người dùng
-                    // TODO: get userId
-                    paymentThread("GET_USER_ID", Double.parseDouble(balancePay.getText()));
+                    paymentThread(Session.getUser().getUserId(), Double.parseDouble(balancePay.getText()));
                 } else if (option.get() == ButtonType.CANCEL) { // không có gì xảy ra
 
                 }
@@ -86,8 +85,8 @@ public class PaymentController {
             Throwable throwable = getBalanceTask.getException();
             if (throwable instanceof RespondException) {
                 RespondException err = (RespondException) throwable;
-                // TODO: getAccountBalance will return ErrorResponseType.ID_NOT_FOUND
                 ErrorResponseType type = err.getType();
+                logger.error(type.name() + ": " + userId);
             } else {
                 // IOException, ClassNotFoundException
                 logger.error(throwable);
@@ -112,8 +111,10 @@ public class PaymentController {
             Throwable throwable = payTask.getException();
             if (throwable instanceof RespondException) {
                 RespondException err = (RespondException) throwable;
-                // TODO: getAccountBalance will return ErrorResponseType.INSUFFICIENT_FUNDS and ErrorResponseType.ID_NOT_FOUND
+                // getAccountBalance returns ErrorResponseType.INSUFFICIENT_FUNDS and
+                // ErrorResponseType.ID_NOT_FOUND
                 ErrorResponseType type = err.getType();
+                logger.error(type.name() + ": " + userId);
             } else {
                 // IOException, ClassNotFoundException
                 logger.error(throwable);

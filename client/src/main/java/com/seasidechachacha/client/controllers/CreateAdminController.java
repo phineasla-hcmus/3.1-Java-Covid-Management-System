@@ -3,8 +3,16 @@ package com.seasidechachacha.client.controllers;
 import com.seasidechachacha.client.App;
 import com.seasidechachacha.client.database.UserDao;
 import com.seasidechachacha.client.models.User;
+import com.seasidechachacha.client.payment.PaymentService;
+import com.seasidechachacha.client.payment.RespondException;
+import com.seasidechachacha.common.payment.ErrorResponseType;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -14,6 +22,7 @@ import javafx.scene.control.TextField;
  * Nếu hệ thống khởi tạo lần đầu, table User == empty, mở CreateAdminController
  */
 public class CreateAdminController {
+    private static final Logger logger = LogManager.getLogger(CreateAdminController.class);
     @FXML
     private TextField username;
     @FXML
@@ -37,10 +46,55 @@ public class CreateAdminController {
             a.show();
         } else {
             int adminRoleId = 1; // Reminder purpose
-            UserDao.register(new User(username.getText(), pass1.getText(), adminRoleId));
-
-            App.setRoot("view/Login"); // này để test màn hình login khi mới tạo tkhoan admin , mốt có database thì cho
-                                       // vô admin luôn
+            createAdminThread(new User(username.getText(), pass1.getText(), adminRoleId));
         }
+    }
+
+    /**
+     * Spawn new thread for inserting admin to database
+     * 
+     * @param user
+     */
+    private void createAdminThread(User user) {
+        Task<Boolean> createAdminTask = new Task<Boolean>() {
+            @Override
+            public Boolean call() {
+                boolean result = UserDao.register(user);
+                if (!result)
+                    return false;
+                PaymentService ps = new PaymentService();
+                // Admin will start at 0
+                try {
+                    ps.requestNewUser(user.getUserId(), 0);
+                    // If requestNewUser doesn't throw anything -> succeeded
+                    return true;
+                } catch (RespondException e) {
+                    // ErrorResponseType.ID_EXISTED
+                    ErrorResponseType type = e.getType();
+                    logger.error(type.name() + ": " + user.getUserId());
+                    // TODO: should I rollback UserDao.register()?
+                    return false;
+                } catch (IOException | ClassNotFoundException e) {
+                    logger.error(e);
+                    return false;
+                }
+            }
+        };
+
+        createAdminTask.setOnSucceeded(e -> {
+            boolean result = createAdminTask.getValue();
+            if (result) {
+                //TODO: này để test màn hình login khi mới tạo tkhoan admin , mốt có database thì cho vô admin luôn
+                try {
+                    App.setRoot("view/Login");
+                } catch (IOException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+            }
+            else {
+                //TODO: show alert
+            }
+        });
     }
 }

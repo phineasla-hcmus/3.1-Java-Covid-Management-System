@@ -6,7 +6,7 @@ import java.util.Optional;
 import com.seasidechachacha.client.payment.PaymentService;
 import com.seasidechachacha.client.payment.RespondException;
 import com.seasidechachacha.common.payment.ErrorResponseType;
-import com.seasidechachacha.common.payment.TransactionResponse;
+import com.seasidechachacha.common.payment.PaymentResponse;
 import com.seasidechachacha.common.payment.UserResponse;
 
 import org.apache.logging.log4j.LogManager;
@@ -59,7 +59,7 @@ public class PaymentController {
 
                 } else if (option.get() == ButtonType.OK) { // đồng ý thanh toán , trừ vô tài khoản của người dùng
                     // TODO: get userId
-                    transactionThread("GET_USER_ID", Double.parseDouble(balancePay.getText()));
+                    paymentThread("GET_USER_ID", Double.parseDouble(balancePay.getText()));
                 } else if (option.get() == ButtonType.CANCEL) { // không có gì xảy ra
 
                 }
@@ -95,12 +95,12 @@ public class PaymentController {
         });
     }
 
-    private void transactionThread(String userId, double amount) {
-        Task<TransactionResponse> payTask = new Task<TransactionResponse>() {
+    private void paymentThread(String userId, double amount) {
+        Task<PaymentResponse> payTask = new Task<PaymentResponse>() {
             @Override
-            public TransactionResponse call() throws IOException, ClassNotFoundException, RespondException {
+            public PaymentResponse call() throws IOException, ClassNotFoundException, RespondException {
                 // TODO: query for adminId to pass into toId
-                return paymentService.requestTransaction(userId, "GET_ADMIN_ID", amount);
+                return paymentService.requestPayment(userId, amount);
             }
         };
 
@@ -112,8 +112,7 @@ public class PaymentController {
             Throwable throwable = payTask.getException();
             if (throwable instanceof RespondException) {
                 RespondException err = (RespondException) throwable;
-                // TODO: getAccountBalance will return ErrorResponseType.INSUFFICIENT_FUNDS and
-                // ErrorResponseType.ID_NOT_FOUND
+                // TODO: getAccountBalance will return ErrorResponseType.INSUFFICIENT_FUNDS and ErrorResponseType.ID_NOT_FOUND
                 ErrorResponseType type = err.getType();
             } else {
                 // IOException, ClassNotFoundException

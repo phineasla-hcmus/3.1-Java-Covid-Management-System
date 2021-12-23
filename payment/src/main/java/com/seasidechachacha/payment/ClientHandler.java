@@ -11,8 +11,8 @@ import com.seasidechachacha.common.payment.ErrorResponse;
 import com.seasidechachacha.common.payment.ErrorResponseType;
 import com.seasidechachacha.common.payment.GetUserRequest;
 import com.seasidechachacha.common.payment.NewUserRequest;
-import com.seasidechachacha.common.payment.TransactionRequest;
-import com.seasidechachacha.common.payment.TransactionResponse;
+import com.seasidechachacha.common.payment.PaymentRequest;
+import com.seasidechachacha.common.payment.PaymentResponse;
 import com.seasidechachacha.common.payment.UserResponse;
 
 import org.apache.logging.log4j.LogManager;
@@ -59,8 +59,8 @@ public class ClientHandler implements Runnable {
         try (ostream; istream) {
             Serializable raw = (Serializable) istream.readObject();
             logger.trace(raw);
-            if (raw instanceof TransactionRequest) {
-                handleTransactionRequest((TransactionRequest) raw);
+            if (raw instanceof PaymentRequest) {
+                handlePaymentRequest((PaymentRequest) raw);
             } else if (raw instanceof GetUserRequest) {
                 handleGetUserRequest((GetUserRequest) raw);
             } else if (raw instanceof NewUserRequest) {
@@ -86,8 +86,8 @@ public class ClientHandler implements Runnable {
         // responseError(ErrorResponseType.ID_NOT_FOUND);
     }
 
-    private void handleTransactionRequest(TransactionRequest req) throws IOException {
-        TransactionResponse res = new TransactionResponse("123456");
+    private void handlePaymentRequest(PaymentRequest req) throws IOException {
+        PaymentResponse res = new PaymentResponse("123456");
         ostream.writeObject(res);
         // if (false)
         // responseError(ErrorResponseType.ID_NOT_FOUND);

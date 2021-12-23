@@ -35,13 +35,17 @@ public class ManagedUserDao {
         return user;
     }
 
-    // for testing purpose
+    /**
+     * 
+     * For testing purpose
+     * 
+     * @deprecated
+     * @return
+     */
     public static List<ManagedUser> getList() {
         String query = "SELECT * FROM manageduser;";
         List<ManagedUser> users;
         try (Connection c = BasicConnection.getConnection(); PreparedStatement ps = c.prepareStatement(query)) {
-//			ps.setInt(1, limit);
-//			ps.setInt(2, offset);
             try (ResultSet rs = ps.executeQuery()) {
                 users = parseList(rs);
             }
@@ -68,6 +72,19 @@ public class ManagedUserDao {
         return users;
     }
 
+    /**
+     * orderByLabel is useless, "?" placeholder does not accept column
+     * name
+     * 
+     * @deprecated
+     * @see https://stackoverflow.com/a/12430474/12405558
+     * @see https://stackoverflow.com/a/2857417/12405558
+     * @param limit
+     * @param offset
+     * @param orderByLabel
+     * @param asc
+     * @return
+     */
     public static List<ManagedUser> getList(int limit, int offset, String orderByLabel, boolean asc) {
         String query = "SELECT * FROM manageduser LIMIT ? OFFSET ? ORDER BY ? " + (asc ? "ASC" : "DESC");
         List<ManagedUser> users;

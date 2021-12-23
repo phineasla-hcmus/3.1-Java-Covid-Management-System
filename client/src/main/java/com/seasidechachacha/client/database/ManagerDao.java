@@ -26,7 +26,6 @@ import com.seasidechachacha.client.models.City;
 import com.seasidechachacha.client.models.District;
 import com.seasidechachacha.client.models.ManagedUser;
 import com.seasidechachacha.client.models.ManagedUserHistory;
-import com.seasidechachacha.client.models.OrderHistory;
 
 /**
  * Manager những operations cần log lại như add, update, delete,... thì k xài
@@ -1284,28 +1283,6 @@ public class ManagerDao {
             logger.error(e);
         }
         return results;
-    }
-
-    public static List<OrderHistory> getOrderHistoryList(String userID) {
-        List<OrderHistory> results = new ArrayList<OrderHistory>();
-        try ( Connection c = BasicConnection.getConnection()) {
-            String query = "SELECT t.orderID, timeOrder, SUM(orderItemQuantity) AS 'totalItems', totalOrderMoney, t.userID FROM orderhistory t INNER JOIN orderitem p ON t.orderID = p.orderID GROUP BY t.orderID HAVING t.userID = ?;";
-            PreparedStatement ps = c.prepareStatement(query);
-            ps.setString(1, userID);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                results.add(parseOrderHistory(rs));
-            }
-            c.close();
-        } catch (SQLException e) {
-            logger.error(e);
-        }
-        return results;
-    }
-
-    private static OrderHistory parseOrderHistory(ResultSet rs) throws SQLException {
-        return new OrderHistory(rs.getInt("orderID"), rs.getString("timeOrder"), rs.getInt("totalItems"),
-                rs.getFloat("totalOrderMoney"));
     }
 
     public static List<PaymentHistory> getPaymentHistoryList(String userID) {

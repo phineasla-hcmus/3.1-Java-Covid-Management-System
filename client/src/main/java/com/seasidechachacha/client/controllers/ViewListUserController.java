@@ -138,7 +138,7 @@ public class ViewListUserController {
         Task<List<ManagedUser>> dataTask = new Task<List<ManagedUser>>() {
             @Override
             public List<ManagedUser> call() {
-                return ManagedUserDao.getList();
+                return ManagedUserDao.getList(100, 0);
             }
         };
         dataTask.setOnSucceeded(e -> {
@@ -229,78 +229,78 @@ public class ViewListUserController {
             addrCol.setMinWidth(240);
 
             TableColumn statusCol = new TableColumn("Trạng thái");
-            Callback<TableColumn<ManagedUser, String>, TableCell<ManagedUser, String>> cellFactory1
-                    = //
+            Callback<TableColumn<ManagedUser, String>, TableCell<ManagedUser, String>> cellFactory1 = //
                     new Callback<TableColumn<ManagedUser, String>, TableCell<ManagedUser, String>>() {
-                @Override
-                public TableCell call(final TableColumn<ManagedUser, String> param) {
-                    final TableCell<Object, String> cell = new TableCell<Object, String>() {
-
                         @Override
-                        public void updateItem(String item, boolean empty) {
-                            super.updateItem(item, empty);
-                            if (empty) {
-                                setGraphic(null);
-                                setText(null);
-                            } else {
-                                if (getTableRow() != null) {
-                                    ManagedUser user = (ManagedUser) getTableRow().getItem();
-                                    setText("F" + String.valueOf(ManagerDao.getCurrentState(user.getUserId())));
-                                }
+                        public TableCell call(final TableColumn<ManagedUser, String> param) {
+                            final TableCell<Object, String> cell = new TableCell<Object, String>() {
 
-                            }
+                                @Override
+                                public void updateItem(String item, boolean empty) {
+                                    super.updateItem(item, empty);
+                                    if (empty) {
+                                        setGraphic(null);
+                                        setText(null);
+                                    } else {
+                                        if (getTableRow() != null) {
+                                            ManagedUser user = (ManagedUser) getTableRow().getItem();
+                                            setText("F" + String.valueOf(ManagerDao.getCurrentState(user.getUserId())));
+                                        }
+
+                                    }
+                                }
+                            };
+                            cell.setAlignment(Pos.CENTER);
+                            return cell;
                         }
                     };
-                    cell.setAlignment(Pos.CENTER);
-                    return cell;
-                }
-            };
             statusCol.setCellFactory(cellFactory1);
 
             TableColumn actionCol = new TableColumn("");
             actionCol.setCellValueFactory(new PropertyValueFactory<>(""));
-            Callback<TableColumn<ManagedUser, String>, TableCell<ManagedUser, String>> cellFactory
-                    = //
+            Callback<TableColumn<ManagedUser, String>, TableCell<ManagedUser, String>> cellFactory = //
                     new Callback<TableColumn<ManagedUser, String>, TableCell<ManagedUser, String>>() {
-                // TODO: TableCell is a raw type. References to generic type TableCell<S,T>
-                // should be parameterized
-                @Override
-                public TableCell call(final TableColumn<ManagedUser, String> param) {
-                    final TableCell<Object, String> cell = new TableCell<Object, String>() {
-                        final Button btn = new Button("Xem chi tiết");
-
+                        // TODO: TableCell is a raw type. References to generic type TableCell<S,T>
+                        // should be parameterized
                         @Override
-                        public void updateItem(String item, boolean empty) {
-                            super.updateItem(item, empty);
-                            if (empty) {
-                                setGraphic(null);
-                                setText(null);
-                            } else {
-                                btn.setOnAction(event -> {
-                                    try {
-                                        App.setCurrentPane("pn_all", "view/ViewPersonalInfo", getTableRow());
-                                    } catch (IOException ex) {
-                                        logger.fatal(ex);
+                        public TableCell call(final TableColumn<ManagedUser, String> param) {
+                            final TableCell<Object, String> cell = new TableCell<Object, String>() {
+                                final Button btn = new Button("Xem chi tiết");
+
+                                @Override
+                                public void updateItem(String item, boolean empty) {
+                                    super.updateItem(item, empty);
+                                    if (empty) {
+                                        setGraphic(null);
+                                        setText(null);
+                                    } else {
+                                        btn.setOnAction(event -> {
+                                            try {
+                                                App.setCurrentPane("pn_all", "view/ViewPersonalInfo", getTableRow());
+                                            } catch (IOException ex) {
+                                                logger.fatal(ex);
+                                            }
+                                        });
+                                        setGraphic(btn);
+                                        setText(null);
                                     }
-                                });
-                                setGraphic(btn);
-                                setText(null);
-                            }
+                                }
+                            };
+                            cell.setAlignment(Pos.CENTER);
+                            return cell;
                         }
                     };
-                    cell.setAlignment(Pos.CENTER);
-                    return cell;
-                }
-            };
 
             actionCol.setCellFactory(cellFactory);
 
             table.getColumns().addAll(numCol, nameCol, birthYearCol, addrCol, statusCol, actionCol);
             table.setItems(FXCollections.observableArrayList(data));
             if (lastIndex == pageIndex) {
-                table.setItems(FXCollections.observableArrayList(data.subList(pageIndex * rowsPerPage(), pageIndex * rowsPerPage() + displace)));
+                table.setItems(FXCollections.observableArrayList(
+                        data.subList(pageIndex * rowsPerPage(), pageIndex * rowsPerPage() + displace)));
             } else {
-                table.setItems(FXCollections.observableArrayList(data.subList(pageIndex * rowsPerPage(), pageIndex * rowsPerPage() + rowsPerPage())));
+                table.setItems(FXCollections.observableArrayList(
+                        data.subList(pageIndex * rowsPerPage(), pageIndex * rowsPerPage() + rowsPerPage())));
             }
 
             box.getChildren().add(table);

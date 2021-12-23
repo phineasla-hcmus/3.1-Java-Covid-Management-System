@@ -12,9 +12,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 
 import com.seasidechachacha.client.database.ManagerDao;
+import com.seasidechachacha.client.database.InvoiceDao;
 import com.seasidechachacha.client.models.ManagedUser;
 import com.seasidechachacha.client.models.ManagedUserHistory;
-import com.seasidechachacha.client.models.OrderHistory;
+import com.seasidechachacha.client.models.Invoice;
 import com.seasidechachacha.client.models.PaymentHistory;
 import com.seasidechachacha.client.models.TreatmentPlace;
 
@@ -49,7 +50,7 @@ public class UserInfoController {
     private Pagination paginationManaged, paginationConsumption, paginationPayment;
 
     private List<ManagedUserHistory> dataManaged;
-    private List<OrderHistory> dataOrder;
+    private List<Invoice> dataOrder;
     private List<PaymentHistory> dataPayment;
 
     @FXML
@@ -120,10 +121,10 @@ public class UserInfoController {
     }
 
     private void getOrderHistoryThread(String userID) {
-        Task<List<OrderHistory>> dataTask = new Task<List<OrderHistory>>() {
+        Task<List<Invoice>> dataTask = new Task<List<Invoice>>() {
             @Override
-            public List<OrderHistory> call() {
-                return ManagerDao.getOrderHistoryList(userID);
+            public List<Invoice> call() {
+                return InvoiceDao.getOrderHistoryList(userID, 100, 0);
             }
         };
         dataTask.setOnSucceeded(e -> {
@@ -136,7 +137,7 @@ public class UserInfoController {
         exec.execute(dataTask);
     }
 
-    public void resolveOrderHistory(WorkerStateEvent e, List<OrderHistory> list) throws IOException {
+    public void resolveOrderHistory(WorkerStateEvent e, List<Invoice> list) throws IOException {
         dataOrder = list;
         if (dataOrder.size() % rowsPerPage() == 0) {
             paginationConsumption.setPageCount(dataOrder.size() / rowsPerPage());
@@ -256,28 +257,28 @@ public class UserInfoController {
         int page = pageIndex * itemsPerPage();
 
         for (int i = page; i < page + itemsPerPage(); i++) {
-            TableView<OrderHistory> table = new TableView<OrderHistory>();
+            TableView<Invoice> table = new TableView<Invoice>();
             TableColumn orderCol = new TableColumn("Mã đơn hàng");
             orderCol.setCellValueFactory(
-                    new PropertyValueFactory<OrderHistory, Integer>("orderID"));
+                    new PropertyValueFactory<Invoice, Integer>("orderID"));
 
             orderCol.setMinWidth(100);
 
             TableColumn dateCol = new TableColumn("Ngày mua");
             dateCol.setCellValueFactory(
-                    new PropertyValueFactory<OrderHistory, String>("timeOrder"));
+                    new PropertyValueFactory<Invoice, String>("timeOrder"));
 
             dateCol.setMinWidth(160);
 
             TableColumn totalCol = new TableColumn("Tổng số lượng mua");
             totalCol.setCellValueFactory(
-                    new PropertyValueFactory<OrderHistory, Integer>("totalItems"));
+                    new PropertyValueFactory<Invoice, Integer>("totalItems"));
 
             totalCol.setMinWidth(300);
 
             TableColumn moneyCol = new TableColumn("Tổng tiền");
             moneyCol.setCellValueFactory(
-                    new PropertyValueFactory<OrderHistory, Float>("totalOrderMoney"));
+                    new PropertyValueFactory<Invoice, Float>("totalOrderMoney"));
 
             moneyCol.setMinWidth(300);
 

@@ -1,27 +1,33 @@
 package com.seasidechachacha.client.models;
 
-public class OrderHistory {
-	int orderID;
+/**
+ * Represent Cart and OrderHistory in database
+ */
+public class Invoice {
+	int invoiceId;
 	String timeOrder;
 	int totalItems;
 	float totalOrderMoney;
-	
-	public OrderHistory(int orderID, String timeOrder, int totalItems, float totalOrderMoney) {
-		this.orderID = orderID;
+
+	public Invoice(int orderID, String timeOrder, int totalItems, float totalOrderMoney) {
+		this.invoiceId = orderID;
 		this.timeOrder = timeOrder;
 		this.totalItems = totalItems;
 		this.totalOrderMoney = totalOrderMoney;
 	}
-	
-	public int getOrderID() {
-		return orderID;
+
+	public int getInvoiceId() {
+		return invoiceId;
 	}
+
 	public String getTimeOrder() {
 		return timeOrder;
 	}
+
 	public int getTotalItems() {
 		return totalItems;
 	}
+
 	public float getTotalOrderMoney() {
 		return totalOrderMoney;
 	}

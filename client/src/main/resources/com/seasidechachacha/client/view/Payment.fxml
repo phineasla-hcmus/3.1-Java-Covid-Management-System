@@ -29,12 +29,12 @@
             </Label>
             <Button fx:id="back" layoutX="199.0" layoutY="321.0" mnemonicParsing="false" onAction="#handleButton" text="Quay lại" />
             <Button fx:id="pay" layoutX="331.0" layoutY="321.0" mnemonicParsing="false" onAction="#handleButton" text="Thanh toán" />
-            <Label fx:id="balancePay" layoutX="300.0" layoutY="213.0" text="..." textFill="RED">
+            <Label fx:id="balanceLabel" layoutX="300.0" layoutY="213.0" text="..." textFill="RED">
                <font>
                   <Font name="Calibri Light" size="14.0" />
                </font>
             </Label>
-            <Label fx:id="balanceRemain" layoutX="300.0" layoutY="257.0" text="..." textFill="RED">
+            <Label fx:id="totalLabel" layoutX="300.0" layoutY="257.0" text="..." textFill="RED">
                <font>
                   <Font name="Calibri Light" size="14.0" />
                </font>

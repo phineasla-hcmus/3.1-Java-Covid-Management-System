@@ -30,12 +30,16 @@ public class PaymentController {
     private Button back, pay;
 
     @FXML
-    private Label balanceRemain, balancePay;
+    private Label totalLabel, balanceLabel;
+
+    // Số tiền cần phải trả, tổng từ Cart
+    private double total;
+    // Số tiền hiện có trong tài khoản
+    private double balance;
 
     @FXML
     private void initialize() { // chỗ này lấy dữ liệu giá phải trả + tiền còn trong tài khoản của người dùng
-        balanceRemain.setText("0 VND");
-        balancePay.setText("0 VND");
+        balanceLabel.setText("0 VND");
         getBalanceThread(Session.getUser().getUserId());
     }
 
@@ -49,8 +53,8 @@ public class PaymentController {
                 Alert alert = new Alert(AlertType.CONFIRMATION); // make sure người dùng thanh toán
                 alert.setTitle("Confirm Payment");
                 alert.setHeaderText("Are you sure want pay this cost?");
-                alert.setContentText("Remain balance: " + balanceRemain.getText() + "\n" + "Balance need to pay: "
-                        + balancePay.getText());
+                alert.setContentText("Remain balance: " + totalLabel.getText() + "\n" + "Balance need to pay: "
+                        + balanceLabel.getText());
 
                 // option != null.
                 Optional<ButtonType> option = alert.showAndWait();
@@ -58,7 +62,7 @@ public class PaymentController {
                 if (option.get() == null) {
 
                 } else if (option.get() == ButtonType.OK) { // đồng ý thanh toán , trừ vô tài khoản của người dùng
-                    paymentThread(Session.getUser().getUserId(), Double.parseDouble(balancePay.getText()));
+                    paymentThread(Session.getUser().getUserId(), total);
                 } else if (option.get() == ButtonType.CANCEL) { // không có gì xảy ra
 
                 }
@@ -75,16 +79,18 @@ public class PaymentController {
         };
 
         getBalanceTask.setOnSucceeded(e -> {
-            // TODO: show balance
+            // Show balance
             UserResponse res = getBalanceTask.getValue();
-            res.getDeposit();
-            res.getUserId();
+            balance = res.getDeposit();
+            balanceLabel.setText(balance + " VND");
         });
 
         getBalanceTask.setOnFailed(e -> {
+            // requestBalance() can throw RespondException
             Throwable throwable = getBalanceTask.getException();
             if (throwable instanceof RespondException) {
                 RespondException err = (RespondException) throwable;
+                // Always ErrorResponseType.ID_NOT_FOUND
                 ErrorResponseType type = err.getType();
                 logger.error(type.name() + ": " + userId);
             } else {
@@ -110,11 +116,14 @@ public class PaymentController {
         payTask.setOnFailed(e -> {
             Throwable throwable = payTask.getException();
             if (throwable instanceof RespondException) {
+                // requestPayment() can throw RespondException
                 RespondException err = (RespondException) throwable;
-                // getAccountBalance returns ErrorResponseType.INSUFFICIENT_FUNDS and
-                // ErrorResponseType.ID_NOT_FOUND
+                // ErrorResponseType.INSUFFICIENT_FUNDS or ErrorResponseType.ID_NOT_FOUND
                 ErrorResponseType type = err.getType();
                 logger.error(type.name() + ": " + userId);
+                if (type == ErrorResponseType.INSUFFICIENT_FUNDS) {
+                    // TODO alert user
+                }
             } else {
                 // IOException, ClassNotFoundException
                 logger.error(throwable);

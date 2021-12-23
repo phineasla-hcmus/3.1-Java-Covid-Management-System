@@ -2,7 +2,7 @@ package com.seasidechachacha.client;
 
 import java.io.IOException;
 
-import com.seasidechachacha.client.config.SSLConfig;
+import com.seasidechachacha.client.global.SSLConfig;
 import com.seasidechachacha.client.controllers.ViewPackageInfoController;
 import com.seasidechachacha.client.controllers.ViewPersonalInfoController;
 import com.seasidechachacha.client.controllers.ViewTreatmentPlaceInfoController;

@@ -1,7 +1,7 @@
 package com.seasidechachacha.client.controllers;
 
 import com.seasidechachacha.client.App;
-import com.seasidechachacha.client.config.Session;
+import com.seasidechachacha.client.global.Session;
 import com.seasidechachacha.client.database.UserDao;
 import com.seasidechachacha.client.models.User;
 import java.io.IOException;

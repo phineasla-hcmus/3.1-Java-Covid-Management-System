@@ -1,4 +1,4 @@
-package com.seasidechachacha.client.config;
+package com.seasidechachacha.client.global;
 
 import com.seasidechachacha.client.models.User;
 

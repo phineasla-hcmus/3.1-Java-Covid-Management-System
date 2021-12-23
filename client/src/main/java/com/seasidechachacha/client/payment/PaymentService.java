@@ -8,7 +8,7 @@ import java.io.Serializable;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
-import com.seasidechachacha.client.SSLConfig;
+import com.seasidechachacha.client.global.SSLConfig;
 import com.seasidechachacha.common.payment.ErrorResponse;
 import com.seasidechachacha.common.payment.GetUserRequest;
 import com.seasidechachacha.common.payment.PaymentRequest;

@@ -51,7 +51,8 @@ public class CreateAdminController {
     }
 
     /**
-     * Spawn new thread for inserting admin to database
+     * Spawn new thread for inserting admin to database, then request payment server
+     * to insert admin to payment database
      * 
      * @param user
      */
@@ -84,16 +85,15 @@ public class CreateAdminController {
         createAdminTask.setOnSucceeded(e -> {
             boolean result = createAdminTask.getValue();
             if (result) {
-                //TODO: này để test màn hình login khi mới tạo tkhoan admin , mốt có database thì cho vô admin luôn
+                // TODO: này để test màn hình login khi mới tạo tkhoan admin , mốt có database thì cho vô admin luôn
                 try {
                     App.setRoot("view/Login");
                 } catch (IOException e1) {
                     // TODO Auto-generated catch block
                     e1.printStackTrace();
                 }
-            }
-            else {
-                //TODO: show alert
+            } else {
+                // TODO: show alert on screen
             }
         });
     }

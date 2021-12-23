@@ -21,7 +21,7 @@ public class UserPaymentController {
     private Label totalCost;
 
     @FXML
-    private void initialize() {// khởi tạo trang bằng thông tin lịch sử đặt hàng lấy được từ database thêm vô bảng + cập nhật totalCost
+    private void initialize() {// TODO Phineas lấy dữ liệu từ bảng orderhistory 
 
     }
 

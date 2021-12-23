@@ -29,8 +29,8 @@ public class BuyPackageController {
         if (e.getSource() == "searchButton") // khi người dùng bấm search , dựa vào searchText để tìm tên trong database
         { // sau đó xuất lên bảng
             String namePackage = searchText.getText();
-        } else if (e.getSource() == acceptButton) { // người dùng đồng ý mua , chuyển qua trang thanh toán
-
+        } else if (e.getSource() == acceptButton) { // TODO Phineas lưu dữ liệu từ choosePackage(Gói packet chọn) và quantity về database Cart
+            
         }
     }
 

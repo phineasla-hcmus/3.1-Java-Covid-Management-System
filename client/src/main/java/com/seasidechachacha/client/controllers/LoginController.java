@@ -1,18 +1,17 @@
 package com.seasidechachacha.client.controllers;
 
-import com.seasidechachacha.client.App;
-import com.seasidechachacha.client.global.Session;
-import com.seasidechachacha.client.database.UserDao;
-import com.seasidechachacha.client.models.User;
 import java.io.IOException;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import java.sql.SQLException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-import java.util.logging.Level;
+
+import com.seasidechachacha.client.App;
+import com.seasidechachacha.client.database.UserDao;
+import com.seasidechachacha.client.global.Session;
+import com.seasidechachacha.client.models.User;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
@@ -66,7 +65,7 @@ public class LoginController {
             try {
                 resolveLogin(e, loginTask.getValue());
             } catch (IOException ex) {
-                java.util.logging.Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+                logger.error(ex);
             }
         });
         exec.execute(loginTask);
@@ -90,7 +89,7 @@ public class LoginController {
             try {
                 resolveIsNewUser(e, isNewUserTask.getValue());
             } catch (IOException ex) {
-                java.util.logging.Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+                logger.error(ex);
             }
         });
         exec.execute(isNewUserTask);

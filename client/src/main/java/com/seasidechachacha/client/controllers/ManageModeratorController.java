@@ -28,37 +28,36 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 
-
 public class ManageModeratorController {
 
     @FXML
     private Button viewButton, updateButton;
-    
+
     @FXML
     private ChoiceBox ModeratorUsername;
-    
+
     @FXML
     private CheckBox activeChoice, inactiveChoice;
-    
+
     @FXML
     private TableView<ActivityHistory> activitiesTable;
-    
+
     @FXML
     private AnchorPane ManagePane;
-    
+
     @FXML
-    private TableColumn<ActivityHistory,String> time;
-    
+    private TableColumn<ActivityHistory, String> time;
+
     @FXML
-    private TableColumn<ActivityHistory,String> logMsg;
-    
+    private TableColumn<ActivityHistory, String> logMsg;
+
     private ObservableList<ActivityHistory> listAct;
-    
+
     private Executor exec;
-    
+
     @FXML
     private void initialize() {
-        
+
         exec = Executors.newSingleThreadScheduledExecutor(new ThreadFactory() {
             @Override
             public Thread newThread(Runnable r) {
@@ -67,67 +66,62 @@ public class ManageModeratorController {
                 return t;
             }
         });
-        
+
         getModeratorThread();
-      
-        
+
         inactiveChoice.setOnAction(e -> {
-            if(activeChoice.isSelected()==true)
-        {
-            inactiveChoice.setSelected(false);
-        }
-            
+            if (activeChoice.isSelected() == true) {
+                inactiveChoice.setSelected(false);
+            }
+
         });
 
         activeChoice.setOnAction(e -> {
-            if(inactiveChoice.isSelected()==true)
-        {
-            activeChoice.setSelected(false);
-        }
-            
+            if (inactiveChoice.isSelected() == true) {
+                activeChoice.setSelected(false);
+            }
+
         });
-        
-        viewButton.setOnAction(e->{
+
+        viewButton.setOnAction(e -> {
             showModeratorThread();
         });
-        
-        updateButton.setOnAction(e->{
-           if(inactiveChoice.isSelected()==true)
-           {
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);  
+
+        updateButton.setOnAction(e -> {
+            if (inactiveChoice.isSelected() == true) {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("Xác nhận BLOCK");
-                alert.setHeaderText("BLOCK người quản lý: " + ModeratorUsername.getSelectionModel().getSelectedItem().toString());
+                alert.setHeaderText(
+                        "BLOCK người quản lý: " + ModeratorUsername.getSelectionModel().getSelectedItem().toString());
                 alert.setContentText("Hãy xác nhận BLOCK");
 
-                
                 Optional<ButtonType> option = alert.showAndWait();
 
                 if (option.get() == null) {
-                } else if (option.get() == ButtonType.OK) { 
+                } else if (option.get() == ButtonType.OK) {
                     BanModeratorThread(ModeratorUsername.getSelectionModel().getSelectedItem().toString());
-                } else if (option.get() == ButtonType.CANCEL) { 
+                } else if (option.get() == ButtonType.CANCEL) {
                 }
-           }
-           if(activeChoice.isSelected()==true)
-           {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);  
+            }
+            if (activeChoice.isSelected() == true) {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("Xác nhận gỡ BLOCK");
-                alert.setHeaderText("Gỡ BLOCK người quản lý: " + ModeratorUsername.getSelectionModel().getSelectedItem().toString());
+                alert.setHeaderText("Gỡ BLOCK người quản lý: "
+                        + ModeratorUsername.getSelectionModel().getSelectedItem().toString());
                 alert.setContentText("Hãy xác nhận gỡ BLOCK");
 
-                
                 Optional<ButtonType> option = alert.showAndWait();
 
                 if (option.get() == null) {
-                } else if (option.get() == ButtonType.OK) { 
+                } else if (option.get() == ButtonType.OK) {
                     FreeModeratorThread(ModeratorUsername.getSelectionModel().getSelectedItem().toString());
-                } else if (option.get() == ButtonType.CANCEL) { 
-                }   
-           }
+                } else if (option.get() == ButtonType.CANCEL) {
+                }
+            }
         });
-        
+
     }
- 
+
     private void BanModeratorThread(String userId) {
         Task<Boolean> ban = new Task<Boolean>() {
             @Override
@@ -144,17 +138,15 @@ public class ManageModeratorController {
         });
         exec.execute(ban);
     }
-    
+
     public void resolveBanModerator(WorkerStateEvent e, boolean ban) throws IOException {
-        if(ban==true)
-        {
+        if (ban == true) {
             Alert a = new Alert(Alert.AlertType.INFORMATION);
             a.setContentText("BLOCK thành công !!!");
             a.show();
         }
     }
-    
-    
+
     private void FreeModeratorThread(String userId) {
         Task<Boolean> free = new Task<Boolean>() {
             @Override
@@ -171,19 +163,16 @@ public class ManageModeratorController {
         });
         exec.execute(free);
     }
-    
+
     public void resolveFreeModerator(WorkerStateEvent e, boolean ban) throws IOException {
-        if(ban==true)
-        {
+        if (ban == true) {
             Alert a = new Alert(Alert.AlertType.INFORMATION);
             a.setContentText("Gỡ BLOCK thành công !!!");
             a.show();
         }
     }
-    
 
-    
-    private void getModeratorThread(){
+    private void getModeratorThread() {
         Task<List<User>> dataTask = new Task<List<User>>() {
             @Override
             public List<User> call() {
@@ -199,21 +188,19 @@ public class ManageModeratorController {
         });
         exec.execute(dataTask);
     }
-    
+
     public void resolveGetModerator(WorkerStateEvent e, List<User> list) throws IOException {
-        for(int i=0;i<list.size();i++)
-        {
+        for (int i = 0; i < list.size(); i++) {
             ModeratorUsername.getItems().add(list.get(i).getUserId());
-          
         }
-       
     }
-    
-    private void showModeratorThread(){
+
+    private void showModeratorThread() {
         Task<List<ActivityHistory>> dataTask = new Task<List<ActivityHistory>>() {
             @Override
             public List<ActivityHistory> call() {
-                return AdminDao.getManagerActivityHistory(ModeratorUsername.getSelectionModel().getSelectedItem().toString());
+                return AdminDao
+                        .getManagerActivityHistory(ModeratorUsername.getSelectionModel().getSelectedItem().toString());
             }
         };
         dataTask.setOnSucceeded(e -> {
@@ -225,27 +212,20 @@ public class ManageModeratorController {
         });
         exec.execute(dataTask);
     }
-    
+
     public void resolveShowModerator(WorkerStateEvent e, List<ActivityHistory> list) throws IOException {
         ManagePane.setVisible(true);
-        
-        if(AdminDao.checkBanlist(ModeratorUsername.getSelectionModel().getSelectedItem().toString())==false){
+
+        if (AdminDao.checkBanlist(ModeratorUsername.getSelectionModel().getSelectedItem().toString()) == false) {
             activeChoice.setSelected(true);
-        }
-        else
+        } else
             inactiveChoice.setSelected(true);
-        
+
         listAct = FXCollections.observableArrayList(list);
 
         time.setCellValueFactory(new PropertyValueFactory<ActivityHistory, String>("logTime"));
         logMsg.setCellValueFactory(new PropertyValueFactory<ActivityHistory, String>("logMsg"));
-  
+
         activitiesTable.setItems(listAct);
-       
     }
-    
-
-    
 }
-
-

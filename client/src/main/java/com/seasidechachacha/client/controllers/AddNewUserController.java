@@ -1,10 +1,15 @@
 package com.seasidechachacha.client.controllers;
 
-import com.seasidechachacha.client.App;
-import com.seasidechachacha.client.database.ManagerDao;
 import static com.seasidechachacha.client.database.ManagerDao.getCityList;
 import static com.seasidechachacha.client.database.ManagerDao.getDistrictList;
 import static com.seasidechachacha.client.database.ManagerDao.getWardList;
+
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
+
+import com.seasidechachacha.client.App;
+import com.seasidechachacha.client.database.ManagerDao;
 import com.seasidechachacha.client.models.City;
 import com.seasidechachacha.client.models.District;
 import com.seasidechachacha.client.models.ManagedUser;
@@ -12,10 +17,6 @@ import com.seasidechachacha.client.models.Ward;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.List;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -38,7 +39,7 @@ public class AddNewUserController {
 
     @FXML
     private Button btnAddNewPerson;
-    
+
     private int currentState;
 
     @FXML
@@ -76,7 +77,7 @@ public class AddNewUserController {
                 logger.fatal(ex);
             }
         });
-//        cbCurrentStatus.getItems().addAll("F0", "F1", "F2");
+        // cbCurrentStatus.getItems().addAll("F0", "F1", "F2");
         List<City> city = getCityList();
         for (int i = 0; i < city.size(); i++) {
             cbCity.getItems().add(city.get(i).getCityName());
@@ -123,7 +124,8 @@ public class AddNewUserController {
 
     private boolean isValid() {
         boolean valid = true;
-        if (tfFullName.getText().equals("") || tfIdentityCard.getText().equals("") || tfBirthYear.getText().equals("")) {
+        if (tfFullName.getText().equals("") || tfIdentityCard.getText().equals("")
+                || tfBirthYear.getText().equals("")) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Thông báo");
             alert.setHeaderText("Thêm mới người dùng");
@@ -131,7 +133,8 @@ public class AddNewUserController {
 
             alert.showAndWait();
             valid = false;
-        } else if (cbCity.getValue().equals("") || cbDistrict.getValue().equals("") || cbWard.getValue().equals("") || cbRelated.getValue().equals("")) {
+        } else if (cbCity.getValue().equals("") || cbDistrict.getValue().equals("") || cbWard.getValue().equals("")
+                || cbRelated.getValue().equals("")) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Thông báo");
             alert.setHeaderText("Thêm mới người dùng");

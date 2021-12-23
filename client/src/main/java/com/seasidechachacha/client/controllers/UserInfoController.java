@@ -1,20 +1,26 @@
 package com.seasidechachacha.client.controllers;
 
 import static com.seasidechachacha.client.database.ManagedUserDao.get;
-import com.seasidechachacha.client.database.ManagerDao;
 import static com.seasidechachacha.client.database.ManagerDao.getCurrentState;
 import static com.seasidechachacha.client.database.ManagerDao.getCurrentTreatmentPlace;
 import static com.seasidechachacha.client.database.ManagerDao.getDebt;
-import com.seasidechachacha.client.models.ManagedUser;
-import com.seasidechachacha.client.models.ManagedUserHistory;
-import com.seasidechachacha.client.models.OrderHistory;
-import com.seasidechachacha.client.models.PaymentHistory;
-import com.seasidechachacha.client.models.TreatmentPlace;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
+
+import com.seasidechachacha.client.database.ManagerDao;
+import com.seasidechachacha.client.models.ManagedUser;
+import com.seasidechachacha.client.models.ManagedUserHistory;
+import com.seasidechachacha.client.models.OrderHistory;
+import com.seasidechachacha.client.models.PaymentHistory;
+import com.seasidechachacha.client.models.TreatmentPlace;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
@@ -27,14 +33,13 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public class UserInfoController {
 
     private static final Logger logger = LogManager.getLogger(ViewListPackageController.class);
     @FXML
-    private Label labelFullName, labelIdentityCard, labelBirthYear, labelAddress, labelStatus, labelTreatmentPlace, labelDebt;
+    private Label labelFullName, labelIdentityCard, labelBirthYear, labelAddress, labelStatus, labelTreatmentPlace,
+            labelDebt;
 
     private Executor exec;
 
@@ -42,7 +47,6 @@ public class UserInfoController {
 
     @FXML
     private Pagination paginationManaged, paginationConsumption, paginationPayment;
-    
 
     private List<ManagedUserHistory> dataManaged;
     private List<OrderHistory> dataOrder;
@@ -151,7 +155,7 @@ public class UserInfoController {
                 }
             }
         });
-        
+
         getPaymentHistoryThread(userId);
     }
 
@@ -226,9 +230,11 @@ public class UserInfoController {
             table.getColumns().addAll(paymentCol, moneyCol);
             table.setItems(FXCollections.observableArrayList(dataPayment));
             if (lastIndex == pageIndex) {
-                table.setItems(FXCollections.observableArrayList(dataPayment.subList(pageIndex * rowsPerPage(), pageIndex * rowsPerPage() + displace)));
+                table.setItems(FXCollections.observableArrayList(
+                        dataPayment.subList(pageIndex * rowsPerPage(), pageIndex * rowsPerPage() + displace)));
             } else {
-                table.setItems(FXCollections.observableArrayList(dataPayment.subList(pageIndex * rowsPerPage(), pageIndex * rowsPerPage() + rowsPerPage())));
+                table.setItems(FXCollections.observableArrayList(
+                        dataPayment.subList(pageIndex * rowsPerPage(), pageIndex * rowsPerPage() + rowsPerPage())));
             }
 
             box.getChildren().add(table);
@@ -275,47 +281,51 @@ public class UserInfoController {
 
             moneyCol.setMinWidth(300);
 
-//            TableColumn actionCol = new TableColumn("");
-//            actionCol.setCellValueFactory(new PropertyValueFactory<>(""));
-//            Callback<TableColumn<ManagedUser, String>, TableCell<ManagedUser, String>> cellFactory
-//                    = //
-//                    new Callback<TableColumn<ManagedUser, String>, TableCell<ManagedUser, String>>() {
-//                @Override
-//                public TableCell call(final TableColumn<ManagedUser, String> param) {
-//                    final TableCell<Object, String> cell = new TableCell<Object, String>() {
-//                        final Button btn = new Button("Xem chi tiết");
-//
-//                        @Override
-//                        public void updateItem(String item, boolean empty) {
-//                            super.updateItem(item, empty);
-//                            if (empty) {
-//                                setGraphic(null);
-//                                setText(null);
-//                            } else {
-//                                btn.setOnAction(event -> {
-//                                    try {
-//                                        App.setCurrentPane("pn_all", "view/ViewPersonalInfo", getTableRow());
-//                                    } catch (IOException ex) {
-//                                        logger.fatal(ex);
-//                                    }
-//                                });
-//                                setGraphic(btn);
-//                                setText(null);
-//                            }
-//                        }
-//                    };
-//                    cell.setAlignment(Pos.CENTER);
-//                    return cell;
-//                }
-//            };
-//
-//            actionCol.setCellFactory(cellFactory);
+            // TableColumn actionCol = new TableColumn("");
+            // actionCol.setCellValueFactory(new PropertyValueFactory<>(""));
+            // Callback<TableColumn<ManagedUser, String>, TableCell<ManagedUser, String>>
+            // cellFactory
+            // = //
+            // new Callback<TableColumn<ManagedUser, String>, TableCell<ManagedUser,
+            // String>>() {
+            // @Override
+            // public TableCell call(final TableColumn<ManagedUser, String> param) {
+            // final TableCell<Object, String> cell = new TableCell<Object, String>() {
+            // final Button btn = new Button("Xem chi tiết");
+            //
+            // @Override
+            // public void updateItem(String item, boolean empty) {
+            // super.updateItem(item, empty);
+            // if (empty) {
+            // setGraphic(null);
+            // setText(null);
+            // } else {
+            // btn.setOnAction(event -> {
+            // try {
+            // App.setCurrentPane("pn_all", "view/ViewPersonalInfo", getTableRow());
+            // } catch (IOException ex) {
+            // logger.fatal(ex);
+            // }
+            // });
+            // setGraphic(btn);
+            // setText(null);
+            // }
+            // }
+            // };
+            // cell.setAlignment(Pos.CENTER);
+            // return cell;
+            // }
+            // };
+            //
+            // actionCol.setCellFactory(cellFactory);
             table.getColumns().addAll(orderCol, dateCol, totalCol, moneyCol);
             table.setItems(FXCollections.observableArrayList(dataOrder));
             if (lastIndex == pageIndex) {
-                table.setItems(FXCollections.observableArrayList(dataOrder.subList(pageIndex * rowsPerPage(), pageIndex * rowsPerPage() + displace)));
+                table.setItems(FXCollections.observableArrayList(
+                        dataOrder.subList(pageIndex * rowsPerPage(), pageIndex * rowsPerPage() + displace)));
             } else {
-                table.setItems(FXCollections.observableArrayList(dataOrder.subList(pageIndex * rowsPerPage(), pageIndex * rowsPerPage() + rowsPerPage())));
+                table.setItems(FXCollections.observableArrayList(
+                        dataOrder.subList(pageIndex * rowsPerPage(), pageIndex * rowsPerPage() + rowsPerPage())));
             }
 
             box.getChildren().add(table);
@@ -359,9 +369,11 @@ public class UserInfoController {
             table.getColumns().addAll(dateCol, stateCol, placeCol);
             table.setItems(FXCollections.observableArrayList(dataManaged));
             if (lastIndex == pageIndex) {
-                table.setItems(FXCollections.observableArrayList(dataManaged.subList(pageIndex * rowsPerPage(), pageIndex * rowsPerPage() + displace)));
+                table.setItems(FXCollections.observableArrayList(
+                        dataManaged.subList(pageIndex * rowsPerPage(), pageIndex * rowsPerPage() + displace)));
             } else {
-                table.setItems(FXCollections.observableArrayList(dataManaged.subList(pageIndex * rowsPerPage(), pageIndex * rowsPerPage() + rowsPerPage())));
+                table.setItems(FXCollections.observableArrayList(
+                        dataManaged.subList(pageIndex * rowsPerPage(), pageIndex * rowsPerPage() + rowsPerPage())));
             }
 
             box.getChildren().add(table);

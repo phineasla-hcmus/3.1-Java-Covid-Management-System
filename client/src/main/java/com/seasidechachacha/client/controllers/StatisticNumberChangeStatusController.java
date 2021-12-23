@@ -4,11 +4,8 @@
  */
 package com.seasidechachacha.client.controllers;
 
-import com.seasidechachacha.client.App;
-import com.seasidechachacha.client.database.ManagerDao;
-import com.seasidechachacha.client.models.ChangeStateStatistic;
 import static java.lang.String.valueOf;
-import javafx.collections.FXCollections;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -16,10 +13,15 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.seasidechachacha.client.App;
+import com.seasidechachacha.client.database.ManagerDao;
+import com.seasidechachacha.client.models.ChangeStateStatistic;
+
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;

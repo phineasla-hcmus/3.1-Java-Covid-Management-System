@@ -6,7 +6,7 @@ module com.seasidechachacha.client {
     requires org.apache.logging.log4j;
     requires org.kordamp.bootstrapfx.core;
     
-    requires javafx.controls;
+    requires transitive javafx.controls;
     requires javafx.fxml;
     requires javafx.graphicsEmpty;
     

@@ -1,25 +1,27 @@
 package com.seasidechachacha.client.controllers;
 
-import com.seasidechachacha.client.App;
-import com.seasidechachacha.client.database.AdminDao;
-import com.seasidechachacha.client.database.ManagerDao;
 import static com.seasidechachacha.client.database.ManagerDao.getCityList;
 import static com.seasidechachacha.client.database.ManagerDao.getDistrictList;
 import static com.seasidechachacha.client.database.ManagerDao.getWardList;
+
+import java.io.IOException;
+import java.util.List;
+
+import com.seasidechachacha.client.App;
+import com.seasidechachacha.client.database.AdminDao;
 import com.seasidechachacha.client.models.City;
 import com.seasidechachacha.client.models.District;
 import com.seasidechachacha.client.models.TreatmentPlace;
 import com.seasidechachacha.client.models.Ward;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public class AddNewTreatmentPlaceController {
 

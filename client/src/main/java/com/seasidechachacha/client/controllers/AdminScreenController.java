@@ -2,16 +2,17 @@ package com.seasidechachacha.client.controllers;
 
 import java.io.IOException;
 import java.net.URL;
+
+import com.jfoenix.controls.JFXButton;
+import com.seasidechachacha.client.App;
+
+import org.apache.logging.log4j.LogManager;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-import com.jfoenix.controls.JFXButton;
-import com.seasidechachacha.client.App;
 import javafx.scene.control.Button;
-import javafx.scene.control.ScrollPane;
-import org.apache.logging.log4j.LogManager;
+import javafx.scene.layout.BorderPane;
 
 public class AdminScreenController {
 
@@ -30,6 +31,7 @@ public class AdminScreenController {
             App.setCurrentPane("pn_all", "view/ViewListTreatmentPlace", null);
         }
     }
+
     @FXML
     private Button btnLogout;
 

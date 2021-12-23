@@ -4,9 +4,6 @@
  */
 package com.seasidechachacha.client.controllers;
 
-import com.seasidechachacha.client.App;
-import com.seasidechachacha.client.database.ManagerDao;
-import com.seasidechachacha.client.models.BalanceStatistic;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -14,11 +11,15 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.seasidechachacha.client.App;
+import com.seasidechachacha.client.database.ManagerDao;
+import com.seasidechachacha.client.models.BalanceStatistic;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
@@ -26,7 +27,6 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;

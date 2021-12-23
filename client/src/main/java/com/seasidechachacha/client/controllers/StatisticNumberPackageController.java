@@ -4,27 +4,24 @@
  */
 package com.seasidechachacha.client.controllers;
 
-import com.seasidechachacha.client.App;
-import com.seasidechachacha.client.database.ManagerDao;
-import com.seasidechachacha.client.models.PackageStatistic;
-
 import java.io.IOException;
-import static java.lang.String.valueOf;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.seasidechachacha.client.App;
+import com.seasidechachacha.client.database.ManagerDao;
+import com.seasidechachacha.client.models.PackageStatistic;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.chart.BarChart;
 import javafx.scene.chart.PieChart;
-import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
@@ -32,7 +29,6 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-
 
 /**
  *
@@ -63,13 +59,13 @@ public class StatisticNumberPackageController {
 
     @FXML
     private TableColumn<PackageStatistic, String> stt;
-    
+
     @FXML
     private ObservableList<PackageStatistic> statisticList;
-    
+
     @FXML
     private PieChart piechart;
-    
+
     private Executor exec;
 
     @FXML
@@ -82,22 +78,24 @@ public class StatisticNumberPackageController {
                 return t;
             }
         });
-        
+
         getStatisticThread(1);
-        
-        statisticType.getItems().addAll("số lượng người ở từng trạng thái theo thời gian", "số lượng nhu yếu phẩm được tiêu thụ", "số chuyển trạng thái", "số dư nợ");
+
+        statisticType.getItems().addAll("số lượng người ở từng trạng thái theo thời gian",
+                "số lượng nhu yếu phẩm được tiêu thụ", "số chuyển trạng thái", "số dư nợ");
         statisticType.setValue("số lượng nhu yếu phẩm được tiêu thụ");
-        
-        
+
         nextButton.setOnAction(e -> {
-            if (statisticType.getSelectionModel().getSelectedItem().toString().equals("số lượng người ở từng trạng thái theo thời gian")) {
+            if (statisticType.getSelectionModel().getSelectedItem().toString()
+                    .equals("số lượng người ở từng trạng thái theo thời gian")) {
                 try {
                     App.setCurrentPane("pn_all", "view/StatisticNumberStatus", null);
                 } catch (IOException ex) {
                     Logger.getLogger(StatisticNumberStatusController.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 pn_all.toFront();
-            } else if (statisticType.getSelectionModel().getSelectedItem().toString().equals("số lượng nhu yếu phẩm được tiêu thụ")) {
+            } else if (statisticType.getSelectionModel().getSelectedItem().toString()
+                    .equals("số lượng nhu yếu phẩm được tiêu thụ")) {
                 try {
                     App.setCurrentPane("pn_all", "view/StatisticNumberPackage", null);
                 } catch (IOException ex) {
@@ -133,8 +131,8 @@ public class StatisticNumberPackageController {
             getStatisticThread(1);
         });
     }
-    
-    private void getStatisticThread(int type){
+
+    private void getStatisticThread(int type) {
         Task<List<PackageStatistic>> dataTask = new Task<List<PackageStatistic>>() {
             @Override
             public List<PackageStatistic> call() {
@@ -143,7 +141,7 @@ public class StatisticNumberPackageController {
                 } else if (type == 2) {
                     return ManagerDao.getStatisticPackagebyDay(dateInput.getValue().toString());
                 } else {
-                    return ManagerDao.getStatisticPackagebyMonth(valueOf(monthInput.getValue().getMonthValue()));
+                    return ManagerDao.getStatisticPackagebyMonth(String.valueOf(monthInput.getValue().getMonthValue()));
                 }
             }
         };
@@ -156,17 +154,16 @@ public class StatisticNumberPackageController {
         });
         exec.execute(dataTask);
     }
-    
+
     public void resolveStatistic(WorkerStateEvent e, List<PackageStatistic> list) throws IOException {
-        
+
         ObservableList<PieChart.Data> piechartData = FXCollections.observableArrayList();
-        
-        for(int i=0;i<list.size();i++)
-        {
-            int x=i+1;
-            piechartData.add(new PieChart.Data(x+"",Integer.parseInt(list.get(i).getQuantity())));
+
+        for (int i = 0; i < list.size(); i++) {
+            int x = i + 1;
+            piechartData.add(new PieChart.Data(x + "", Integer.parseInt(list.get(i).getQuantity())));
         }
-        
+
         piechart.setData(piechartData);
         statisticList = FXCollections.observableArrayList(list);
 
@@ -176,5 +173,5 @@ public class StatisticNumberPackageController {
 
         packageTable.setItems(statisticList);
     }
-    
+
 }

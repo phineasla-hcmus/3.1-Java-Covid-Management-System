@@ -1,14 +1,19 @@
 package com.seasidechachacha.client.controllers;
 
-import com.seasidechachacha.client.App;
-import com.seasidechachacha.client.database.AdminDao;
-import com.seasidechachacha.client.database.ManagerDao;
-import com.seasidechachacha.client.models.TreatmentPlace;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
+
+import com.seasidechachacha.client.App;
+import com.seasidechachacha.client.database.AdminDao;
+import com.seasidechachacha.client.database.ManagerDao;
+import com.seasidechachacha.client.models.TreatmentPlace;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXML;
@@ -17,8 +22,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextInputDialog;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public class ViewTreatmentPlaceInfoController {
 

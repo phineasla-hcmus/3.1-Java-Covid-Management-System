@@ -1,5 +1,7 @@
 package com.seasidechachacha.client.controllers;
 
+import java.io.IOException;
+
 import com.seasidechachacha.client.App;
 import com.seasidechachacha.client.database.ManagerDao;
 import com.seasidechachacha.client.models.Package;
@@ -7,13 +9,9 @@ import com.seasidechachacha.client.models.Package;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.IOException;
-import java.sql.SQLException;
-
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 
 public class AddNewPackageController {

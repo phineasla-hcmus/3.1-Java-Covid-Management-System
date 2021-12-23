@@ -1,12 +1,11 @@
 package com.seasidechachacha.client.controllers;
 
-import com.seasidechachacha.client.App;
-import com.seasidechachacha.client.database.UserDao;
-import com.seasidechachacha.client.models.User;
-
 import java.io.IOException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+
+import com.seasidechachacha.client.database.UserDao;
+import com.seasidechachacha.client.models.User;
 
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;

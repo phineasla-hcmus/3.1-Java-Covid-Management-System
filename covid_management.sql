@@ -100,7 +100,7 @@ create table Cart
 
 create table CartItem
 (
-	cartID int,
+	cartID bigint,
 	packageID int,
 	cartItemQuantity tinyint,
 	cartItemPrice decimal(10,3),
@@ -110,7 +110,7 @@ create table CartItem
 
 create table OrderHistory
 (
-	orderID int,
+	orderID bigint,
 	userID varchar(12),
 	timeOrder datetime,
 	timeDelivery datetime,
@@ -120,7 +120,7 @@ create table OrderHistory
 
 create table OrderItem
 (
-	orderID int,
+	orderID bigint,
 	packageID int,
 	orderItemQuantity tinyint,
 	orderItemPrice decimal(10,3),
@@ -136,7 +136,7 @@ create table PaymentAccount
 
 create table PaymentHistory
 (
-	paymentID int AUTO_INCREMENT,
+	paymentID bigint AUTO_INCREMENT,
 	fromID varchar(12),
 	toID varchar(12),
 	paymentTime datetime,

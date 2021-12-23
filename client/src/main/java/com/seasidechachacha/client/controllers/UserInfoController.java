@@ -124,7 +124,7 @@ public class UserInfoController {
         Task<List<Invoice>> dataTask = new Task<List<Invoice>>() {
             @Override
             public List<Invoice> call() {
-                return InvoiceDao.getOrderHistoryList(userID, 100, 0);
+                return InvoiceDao.getList(userID, 100, 0);
             }
         };
         dataTask.setOnSucceeded(e -> {

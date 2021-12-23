@@ -75,24 +75,38 @@ public class ClientHandler implements Runnable {
     }
 
     private void handleNewUserRequest(NewUserRequest req) throws IOException {
-        UserResponse res = new UserResponse("abc", 500);
+        // TODO@changkho6310 Insert into PaymentAccount, return userID
+        String userId = "RETURN_FROM_QUERY";
+        UserResponse res = new UserResponse(userId, req.getDeposit());
         ostream.writeObject(res);
+        // If SQL fail, respond error
         // responseError(ErrorResponseType.ID_EXISTED);
     }
 
     private void handleGetUserRequest(GetUserRequest req) throws IOException {
-        UserResponse res = new UserResponse("abc", 500);
+        // TODO@changkho6310 Get PaymentAccount
+        double balance = 0;
+        UserResponse res = new UserResponse(req.getUserId(), balance);
         ostream.writeObject(res);
+        // If SQL fail, respond error
         // responseError(ErrorResponseType.ID_NOT_FOUND);
     }
 
     private void handlePaymentRequest(PaymentRequest req) throws IOException {
-        PaymentResponse res = new PaymentResponse("123456", 5000);
+        // TODO@changkho6310 Query for "balance" in PaymentAccount
+        double balance = 0;
+        if (req.getTotal() > balance) {
+            responseError(ErrorResponseType.INSUFFICIENT_FUNDS);
+            return;
+        }
+        double newBalance = balance - req.getTotal();
+        // TODO@changkho6310 Update PaymentAccount
+        // TODO@changkho6310 Insert into PaymentHistory, return paymentID
+        long paymentId = 0;
+        PaymentResponse res = new PaymentResponse(paymentId, req.getTotal());
         ostream.writeObject(res);
-        // if (false)
+        // If SQL fail, respond error
         // responseError(ErrorResponseType.ID_NOT_FOUND);
-        // else if (false)
-        // responseError(ErrorResponseType.INSUFFICIENT_FUNDS);
     }
 
     private void responseError(ErrorResponseType type) throws IOException {

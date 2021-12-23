@@ -1,19 +1,19 @@
 package com.seasidechachacha.common.payment;
 
 public class PaymentResponse {
-    private String paymentId;
+    private long paymentId;
     private double total;
 
-    public PaymentResponse(String paymentId, double deposit) {
+    public PaymentResponse(long paymentId, double deposit) {
         this.setPaymentId(paymentId);
         this.total = deposit;
     }
 
-    public String getPaymentId() {
+    public long getPaymentId() {
         return paymentId;
     }
 
-    public void setPaymentId(String paymentId) {
+    public void setPaymentId(long paymentId) {
         this.paymentId = paymentId;
     }
 

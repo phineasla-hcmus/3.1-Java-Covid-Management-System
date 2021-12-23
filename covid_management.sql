@@ -110,7 +110,7 @@ create table CartItem
 
 create table OrderHistory
 (
-	orderID int AUTO_INCREMENT,
+	orderID int,
 	userID varchar(12),
 	timeOrder datetime,
 	timeDelivery datetime,
@@ -136,10 +136,12 @@ create table PaymentAccount
 
 create table PaymentHistory
 (
-	userID varchar(12),
+	paymentID int AUTO_INCREMENT,
+	fromID varchar(12),
+	toID varchar(12),
 	paymentTime datetime,
 	totalMoney decimal(10,3),
-	primary key (userID, paymentTime)
+	primary key (paymentID, userID)
 );
 
 create table City

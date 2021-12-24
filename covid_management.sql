@@ -129,7 +129,7 @@ create table Cart
 
 create table CartItem
 (
-	cartID bigint,
+	cartID int AUTO_INCREMENT,
 	packageID int,
 	cartItemQuantity tinyint,
 	cartItemPrice decimal(10,3),
@@ -172,7 +172,7 @@ create table PaymentHistory
     orderID bigint,
 	userID varchar(12),
 	paymentTime datetime,
-	primary key (paymentID, userID)
+	primary key (transactionID, userID)
 );
 
 -- SCHEMA CỦA PAYMENT SERVER
@@ -190,7 +190,7 @@ create table TransactionHistory
 	toID varchar(12),
 	paymentTime datetime,
 	totalMoney decimal(10,3),
-	primary key (paymentID, userID)
+	primary key (transactionID)
 );
 -- SCHEMA CỦA PAYMENT SERVER
 
@@ -250,11 +250,9 @@ alter table OrderItem
 add
 constraint FK_OrderItem_Package foreign key (packageID) references Package(packageID);
 
-alter table PaymentAccount
-add constraint FK_PaymentAccount_User foreign key (userID) references User(userID);
+alter table TransactionAccount
+add constraint FK_TransactionAccount_User foreign key (userID) references User(userID);
 
-alter table PaymentHistory
-add constraint FK_PaymentHistory_PaymentAccount foreign key (userID) references PaymentAccount(userID);
 
 alter table District
 add constraint FK_District_City foreign key (cityID) references City(cityID);

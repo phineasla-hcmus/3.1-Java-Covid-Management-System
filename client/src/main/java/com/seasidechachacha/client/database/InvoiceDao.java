@@ -50,11 +50,10 @@ public class InvoiceDao {
     /**
      * Insert invoice to OrderHistory and invoiceItems to OrderItem
      * 
-     * @param invoiceId    it is the ID returned from payment server, not cartID
      * @param invoice
      * @param invoiceItems
      */
-    public static boolean logInvoice(String invoiceId, Invoice invoice, InvoiceItem[] invoiceItems) {
+    public static boolean logInvoice(Invoice invoice, InvoiceItem[] invoiceItems) {
         boolean result = false;
         String invoiceSql = "INSERT INTO OrderHistory VALUES(?,?,?,?)";
         try (Connection c = BasicConnection.getConnection()) {

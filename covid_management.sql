@@ -78,6 +78,29 @@ create table TreatmentPlace
 	primary key (treatID)
 );
 
+create table District
+(
+	districtID char(3),
+	districtName nvarchar(20),
+	cityID char(2),
+	primary key (districtID)
+);
+
+create table Ward
+(
+	wardID char(5),
+	wardName nvarchar(20),
+	districtID char(3),
+	primary key (wardID)
+);
+
+create table City
+(
+	cityID char(2),
+	cityName nvarchar(30),
+	primary key (cityID)
+);
+
 create table Package
 (
 	packageID int AUTO_INCREMENT,
@@ -88,6 +111,11 @@ create table Package
 	primary key (packageID)
 );
 
+-- Flow: 
+-- 1.	Thêm vào giỏ hàng --> Insert vào CartItem
+-- 1.1	Nếu ManagedUser.debt vượt quá mức quy định thì không cho thêm vào giỏ hàng nữa
+-- 2.	Trong view Cart, có nút Buy --> Chuyển data từ Cart, CartItem sang OrderHistory, OrderItem, và cộng vào ManagedUser.debt
+-- 3.	User dùng payment screen để trả cho ManagedUser.debt --> thành công --> ManagedUser.debt = 0
 create table Cart
 (
 	cartID int AUTO_INCREMENT,
@@ -107,6 +135,15 @@ create table CartItem
 	primary key (cartID, packageID)
 );
 
+-- BỎ DO KHÔNG CÓ THỜI GIAN
+-- Đây là log của những order chưa được trả tiền
+create table PendingPayment
+(
+	orderID bigint,
+    userID varchar(12),
+    total decimal(10,3),
+    primary key (orderID)
+);
 
 create table OrderHistory
 (
@@ -127,47 +164,34 @@ create table OrderItem
 	primary key (orderID, packageID)
 );
 
-create table PaymentAccount
+-- Là bản copy của TransactionHistory ở phía client, dùng để đối soát
+create table PaymentHistory
+(
+	transactionID bigint,
+    orderID bigint,
+	userID varchar(12),
+	paymentTime datetime,
+	primary key (paymentID, userID)
+);
+
+-- SCHEMA CỦA PAYMENT SERVER
+create table TransactionAccount
 (
 	userID varchar(12),
 	balance decimal(10,3),
 	primary key (userID)
 );
 
-create table PaymentHistory
+create table TransactionHistory
 (
-	paymentID bigint AUTO_INCREMENT,
+	transactionID bigint AUTO_INCREMENT,
 	fromID varchar(12),
 	toID varchar(12),
 	paymentTime datetime,
 	totalMoney decimal(10,3),
 	primary key (paymentID, userID)
 );
-
-create table City
-(
-	cityID char(2),
-	cityName nvarchar(30),
-	primary key (cityID)
-);
-
-create table District
-(
-	districtID char(3),
-	districtName nvarchar(20),
-	cityID char(2),
-	primary key (districtID)
-);
-
-create table Ward
-(
-	wardID char(5),
-	wardName nvarchar(20),
-	districtID char(3),
-	primary key (wardID)
-);
-
--- tạo khoá ngoại
+-- SCHEMA CỦA PAYMENT SERVER
 
 alter table User
 add

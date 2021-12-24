@@ -1,22 +1,20 @@
 package com.seasidechachacha.client.controllers;
 
-import com.seasidechachacha.client.global.Session;
-import com.seasidechachacha.client.database.InvoiceDao;
-import com.seasidechachacha.client.database.ManagedUserDao;
-import com.seasidechachacha.client.models.Package;
-import com.seasidechachacha.client.database.ManagerDao;
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
-import java.util.logging.Level;
+
+import com.seasidechachacha.client.database.InvoiceDao;
+import com.seasidechachacha.client.database.ManagerDao;
+import com.seasidechachacha.client.global.Session;
+import com.seasidechachacha.client.models.Package;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;

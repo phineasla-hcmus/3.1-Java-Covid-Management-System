@@ -77,7 +77,8 @@ public class InvoiceDao {
      * <ol>
      * <li>Clear user's CartItem. See {@link InvoiceDao#clearCart(String)}</li>
      * <li>Accumulate ManagedUser.debt. See
-     * {@link InvoiceDao#getCartTotalPrice(String)}</li>
+     * {@link InvoiceDao#getCartTotalPrice(String)}
+     * </li>
      * </ol>
      * 
      * @param userId
@@ -85,6 +86,7 @@ public class InvoiceDao {
      */
     public static boolean commitCart(String userId) {
         boolean result = false;
+        // NULL for AUTO_INCREMENT
         String sql = "INSERT INTO OrderHistory SELECT NULL,?,NOW(),SUM(quantity*price) FROM CartItem WHERE userID=?";
         String itemSql = "INSERT INTO OrderItem SELECT ?,packageID,quantity,price FROM CartItem WHERE userID=?";
         try (Connection c = BasicConnection.getConnection()) {

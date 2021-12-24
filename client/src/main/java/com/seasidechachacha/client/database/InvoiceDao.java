@@ -5,11 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import com.seasidechachacha.client.models.Invoice;
-import com.seasidechachacha.client.models.InvoiceItem;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,8 +18,7 @@ public class InvoiceDao {
     public static List<Invoice> getList(String userID, int limit, int offset) {
         List<Invoice> results = new ArrayList<Invoice>();
         try (Connection c = BasicConnection.getConnection()) {
-            String query = "SELECT t.orderID, timeOrder, SUM(orderItemQuantity) \n"
-                    + "AS totalItems, totalOrderMoney, t.userID \n"
+            String query = "SELECT t.orderID, timeOrder, SUM(orderItemQuantity) AS totalItems, totalOrderMoney, t.userID \n"
                     + "FROM orderhistory t \n"
                     + "INNER JOIN orderitem p \n"
                     + "ON t.orderID = p.orderID \n"

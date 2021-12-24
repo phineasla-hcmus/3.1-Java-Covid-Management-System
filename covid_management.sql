@@ -50,7 +50,7 @@ create table NewUser
 (
 	userID varchar(12),
 	primary key (userID),
-	foreign key (userID) references ManagedUser(userID)
+	foreign key (userID) references ManagedUser(idCard)
 );
 
 create table StateHistory
@@ -124,17 +124,9 @@ create table CartItem
 	packageID int,
 	quantity tinyint,
 	price decimal(10,3),
-	primary key (cartID, packageID)
-);
-
--- BỎ DO KHÔNG CÓ THỜI GIAN
--- Log của những order chưa được trả tiền
-create table PendingPayment
-(
-	orderID bigint,
-    userID varchar(12),
-    total decimal(10,3),
-    primary key (orderID)
+	primary key (userID, packageID),
+    foreign key (userID) references User(userID),
+    foreign key (packageID) references Package(packageID)
 );
 
 create table OrderHistory
@@ -152,7 +144,17 @@ create table OrderItem
 	packageID int,
 	orderItemQuantity tinyint,
 	orderItemPrice decimal(10,3),
-	primary key (orderID, packageID)
+	primary key (orderID, packageID),
+	foreign key (orderID) references OrderHistory(orderID)
+);
+
+-- BỎ DO KHÔNG CÓ THỜI GIAN
+-- Log của những order chưa được trả tiền
+create table PendingPayment
+(
+	orderID bigint,
+    primary key (orderID),
+	foreign key (orderID) references OrderHistory(orderID)
 );
 
 -- Là bản copy của TransactionHistory ở phía client, dùng để đối soát
@@ -184,7 +186,7 @@ create table TransactionHistory
 	totalMoney decimal(10,3),
 	primary key (transactionID),
 	foreign key (fromID) references TransactionAccount(userID),
-	foreign key (toID) references TransactionAccount(userID),
+	foreign key (toID) references TransactionAccount(userID)
 );
 -- SCHEMA CỦA PAYMENT SERVER
 
@@ -223,13 +225,6 @@ constraint FK_TreatmentPlaceHistory_TreatmentPlace foreign key (treatID) referen
 -- Tích hợp vô chung address nvarchar nên không cần nữa
 -- alter table TreatmentPlace
 -- add constraint FK_TreatmentPlace_Ward foreign key (wardID) references Ward(wardID);
-
-alter table Cart
-add constraint FK_Cart_ManagedUser foreign key (userID) references ManagedUser(idCard);
-
-alter table CartItem
-add
-constraint FK_CartItem_Cart foreign key (cartID) references Cart(cartID);
 
 alter table OrderHistory
 add constraint FK_OrderHistory_ManagedUser foreign key (userID) references ManagedUser(idCard);

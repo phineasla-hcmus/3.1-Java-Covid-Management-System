@@ -109,6 +109,7 @@ public class App extends Application {
         // Serializable s = ps.getAccountBalance("userId");
         // UserResponse res = (UserResponse) s;
         // System.out.println(res.getDeposit());
+        // InvoiceDao.logInvoice("079932368028");
     }
 
     public static void main(String[] args) throws Exception {

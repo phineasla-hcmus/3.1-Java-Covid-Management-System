@@ -1,6 +1,7 @@
 package com.seasidechachacha.client.controllers;
 
 import com.seasidechachacha.client.global.Session;
+import com.seasidechachacha.client.database.InvoiceDao;
 import com.seasidechachacha.client.database.ManagedUserDao;
 import com.seasidechachacha.client.models.Package;
 import com.seasidechachacha.client.database.ManagerDao;
@@ -71,7 +72,8 @@ public class BuyPackageController {
 
                     double price = 0;
                     for (int i = 0; i < listP.size(); i++) {
-                        if (listP.get(i).getName().equalsIgnoreCase(choosePackage.getSelectionModel().getSelectedItem().toString())) {
+                        if (listP.get(i).getName()
+                                .equalsIgnoreCase(choosePackage.getSelectionModel().getSelectedItem().toString())) {
                             price = listP.get(i).getPrice();
                         }
                     }
@@ -87,15 +89,15 @@ public class BuyPackageController {
         acceptButton.setOnAction(e -> {
             if (choosePackage.getSelectionModel() != null) {
                 for (int i = 0; i < listP.size(); i++) {
-                    if (listP.get(i).getName().equalsIgnoreCase(choosePackage.getSelectionModel().getSelectedItem().toString())) {
+                    if (listP.get(i).getName()
+                            .equalsIgnoreCase(choosePackage.getSelectionModel().getSelectedItem().toString())) {
 
                         if (quantity.getText() != "" && quantity.getText().matches("\\d+")) {
-                            if(Integer.parseInt(quantity.getText())>listP.get(i).getLimitPerPerson()){
+                            if (Integer.parseInt(quantity.getText()) > listP.get(i).getLimitPerPerson()) {
                                 Alert a = new Alert(Alert.AlertType.WARNING);
                                 a.setContentText("Số lượng mua lớn hơn giới hạn cho phép, xin hãy nhập lại !!!");
                                 a.show();
-                            }
-                            else
+                            } else
                                 addCartThread(listP.get(i).getPackageID());
                         } else {
                             Alert a = new Alert(Alert.AlertType.WARNING);
@@ -144,23 +146,24 @@ public class BuyPackageController {
         packageTable.setItems(listPackage);
     }
 
-    private void addCartThread(int packetId) {
+    private void addCartThread(int packageId) {
         Task<Boolean> flag = new Task<Boolean>() {
             @Override
             public Boolean call() throws SQLException {
-                return ManagedUserDao.addtoCart(Session.getUser().getUserId(), packetId+"", quantity.getText(), totalCost.getText().substring(0, totalCost.getText().length()-6));
+                int quantityNum = Integer.parseInt(quantity.getText());
+                String totalCostString = totalCost.getText().substring(0, totalCost.getText().length() - 6);
+                double totalCostNum = Double.parseDouble(totalCostString);
+                return InvoiceDao.addtoCart(Session.getUser().getUserId(), packageId, quantityNum, totalCostNum);
             }
         };
         flag.setOnSucceeded(e -> {
-            resolveAddtoCart(e,flag.getValue());
+            resolveAddtoCart(e, flag.getValue());
         });
         exec.execute(flag);
     }
-    
-    public void resolveAddtoCart(WorkerStateEvent e, boolean flag)
-    {
-        if(flag==true)
-        {
+
+    public void resolveAddtoCart(WorkerStateEvent e, boolean flag) {
+        if (flag == true) {
             Alert a = new Alert(Alert.AlertType.INFORMATION);
             a.setContentText("Thêm vào giỏ hàng thành công !!!");
             a.show();

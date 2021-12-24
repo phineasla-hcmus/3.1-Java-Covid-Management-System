@@ -47,7 +47,7 @@ public class ManagerDao {
 
     private boolean addMesssage(String logMsg) {
         boolean rowAffected = false;
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "INSERT INTO log(userID, logMsg, logTime) VALUES (?,?,NOW());";
             PreparedStatement ps = c.prepareStatement(query);
             ps.setString(1, this.getManagerID());
@@ -62,7 +62,7 @@ public class ManagerDao {
 
     private static boolean isUserExist(String userID) {
         boolean result = false;
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "SELECT * FROM user WHERE user.userID = ?;";
             PreparedStatement ps = c.prepareStatement(query);
             ps.setString(1, userID);
@@ -77,7 +77,7 @@ public class ManagerDao {
 
     private boolean addManagedUser(ManagedUser user) {
         boolean result = false;
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String addManagedUser = "INSERT INTO manageduser(idCard, fullName, yob, relatedPerson, debt, address, state) VALUES(?,?,?,?,?,?,?);";
             PreparedStatement ps = c.prepareStatement(addManagedUser);
             ps.setString(1, user.getUserId());
@@ -125,7 +125,7 @@ public class ManagerDao {
     // for testing purpose
     public static List<StateHistory> getStateHistoryList(String userID) {
         List<StateHistory> stateHistoryList = null;
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "SELECT * FROM statehistory WHERE statehistory.userID = ?;";
             PreparedStatement ps = c.prepareStatement(query);
             ps.setString(1, userID);
@@ -142,7 +142,7 @@ public class ManagerDao {
 
     public static List<StateHistory> getStateHistoryList(String userID, int limit, int offset) {
         List<StateHistory> stateHistoryList = null;
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "SELECT * FROM statehistory WHERE statehistory.userID = ? LIMIT ? OFFSET ?;";
             PreparedStatement ps = c.prepareStatement(query);
             ps.setString(1, userID);
@@ -162,7 +162,7 @@ public class ManagerDao {
     public static List<StateHistory> getStateHistoryList(String userID, int limit, int offset, String orderByLabel,
             boolean asc) {
         List<StateHistory> stateHistoryList = null;
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "SELECT * FROM statehistory WHERE statehistory.userID = ? ORDER BY " + orderByLabel
                     + (asc ? " ASC" : " DESC") + " LIMIT ? OFFSET ? ;";
             PreparedStatement ps = c.prepareStatement(query);
@@ -196,12 +196,12 @@ public class ManagerDao {
     // for testing purpose
     public static List<TreatmentPlaceHistory> getTreatmentPlaceHistoryList(String userID) {
         List<TreatmentPlaceHistory> treatmentPlaceHistoryList = null;
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "SELECT * FROM treatmentplacehistory tph INNER JOIN treatmentplace tp ON tph.treatID = tp.treatID WHERE tph.userID = ?;";
             PreparedStatement ps = c.prepareStatement(query);
             ps.setString(1, userID);
-//			ps.setInt(2, limit);
-//			ps.setInt(3, offset);
+            // ps.setInt(2, limit);
+            // ps.setInt(3, offset);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 treatmentPlaceHistoryList = parseTreatmentPlaceHistoryList(rs);
@@ -215,7 +215,7 @@ public class ManagerDao {
 
     public static List<TreatmentPlaceHistory> getTreatmentPlaceHistoryList(String userID, int limit, int offset) {
         List<TreatmentPlaceHistory> treatmentPlaceHistoryList = null;
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "SELECT * FROM treatmentplacehistory tph INNER JOIN treatmentplace tp ON tph.treatID = tp.treatID WHERE tph.userID = ? LIMIT ? OFFSET ?;";
             PreparedStatement ps = c.prepareStatement(query);
             ps.setString(1, userID);
@@ -235,7 +235,7 @@ public class ManagerDao {
     public static List<TreatmentPlaceHistory> getTreatmentPlaceHistoryList(String userID, int limit, int offset,
             String orderByLabel, boolean asc) {
         List<TreatmentPlaceHistory> treatmentPlaceHistoryList = null;
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "SELECT * FROM treatmentplacehistory tph INNER JOIN treatmentplace tp ON tph.treatID = tp.treatID WHERE tph.userID = ? ORDER BY "
                     + orderByLabel + (asc ? " ASC" : " DESC") + " LIMIT ? OFFSET ?;";
             PreparedStatement ps = c.prepareStatement(query);
@@ -269,7 +269,7 @@ public class ManagerDao {
     // for testing purpose
     public static List<TreatmentPlace> getTreatmentPlaceList() {
         List<TreatmentPlace> treatmentPlaceList = null;
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "SELECT * FROM treatmentplace;";
             PreparedStatement ps = c.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
@@ -285,7 +285,7 @@ public class ManagerDao {
 
     public static List<TreatmentPlace> getTreatmentPlaceList(int limit, int offset) {
         List<TreatmentPlace> treatmentPlaceList = null;
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "SELECT * FROM treatmentplace LIMIT ? OFFSET ?;";
             PreparedStatement ps = c.prepareStatement(query);
             ps.setInt(1, limit);
@@ -303,7 +303,7 @@ public class ManagerDao {
 
     public static List<TreatmentPlace> getTreatmentPlaceList(int limit, int offset, String orderByLabel, boolean asc) {
         List<TreatmentPlace> treatmentPlaceList = null;
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "SELECT * FROM treatmentplace ORDER BY " + orderByLabel + (asc ? " ASC" : " DESC")
                     + " LIMIT ? OFFSET ? ;";
             PreparedStatement ps = c.prepareStatement(query);
@@ -322,7 +322,7 @@ public class ManagerDao {
 
     public static TreatmentPlace getTreatmentPlaceByID(int treatID) {
         TreatmentPlace t = null;
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "SELECT * FROM treatmentplace WHERE treatID = ?;";
             PreparedStatement ps = c.prepareStatement(query);
             ps.setInt(1, treatID);
@@ -340,7 +340,7 @@ public class ManagerDao {
 
     public static int getTreatmentPlaceIDByName(String treatName) {
         TreatmentPlace t = null;
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "SELECT * FROM treatmentplace WHERE name = ?;";
             PreparedStatement ps = c.prepareStatement(query);
             ps.setString(1, treatName);
@@ -358,7 +358,7 @@ public class ManagerDao {
 
     public boolean addTreatmentPlaceHistory(String userID, int treatmentID) {
         boolean result = false;
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             try {
                 String query = "INSERT INTO treatmentplacehistory(userID, time, treatID) VALUES (?, NOW(), ?);";
                 PreparedStatement ps = c.prepareStatement(query);
@@ -392,7 +392,7 @@ public class ManagerDao {
     // for testing purpose
     public static List<Package> getPackageList() {
         List<Package> packageList = null;
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "SELECT * FROM package;";
             PreparedStatement ps = c.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
@@ -409,7 +409,7 @@ public class ManagerDao {
 
     public static List<Package> getPackageList(int limit, int offset) {
         List<Package> packageList = null;
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "SELECT * FROM package LIMIT ? OFFSET ?;";
             PreparedStatement ps = c.prepareStatement(query);
             ps.setInt(1, limit);
@@ -428,7 +428,7 @@ public class ManagerDao {
 
     public static List<Package> getPackageListByName() {
         List<Package> packageList = null;
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "SELECT * FROM package ORDER BY name ASC";
             PreparedStatement ps = c.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
@@ -445,7 +445,7 @@ public class ManagerDao {
 
     public static List<Package> getPackageListByLimit() {
         List<Package> packageList = null;
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "SELECT * FROM package ORDER BY limitPerPerson ASC";
             PreparedStatement ps = c.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
@@ -462,7 +462,7 @@ public class ManagerDao {
 
     public static List<Package> getPackageListByTime() {
         List<Package> packageList = null;
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "SELECT * FROM package ORDER BY dayCooldown ASC";
             PreparedStatement ps = c.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
@@ -479,7 +479,7 @@ public class ManagerDao {
 
     public static List<Package> getPackageListByPrice() {
         List<Package> packageList = null;
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "SELECT * FROM package ORDER BY price ASC";
             PreparedStatement ps = c.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
@@ -496,7 +496,7 @@ public class ManagerDao {
 
     public boolean updatePackageName(int packageID, String name) {
         boolean result = false;
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "UPDATE package SET name = ? WHERE package.packageID = ?;";
             PreparedStatement ps = c.prepareStatement(query);
             ps.setString(1, name);
@@ -511,7 +511,7 @@ public class ManagerDao {
 
     public boolean updatePackageLimitPerPerson(int packageID, int limitPerPerson) {
         boolean result = false;
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "UPDATE package SET limitPerPerson = ? WHERE package.packageID = ?;";
             PreparedStatement ps = c.prepareStatement(query);
             ps.setInt(1, limitPerPerson);
@@ -527,7 +527,7 @@ public class ManagerDao {
 
     public boolean updatePackageDayCooldown(int packageID, int dayCooldown) {
         boolean result = false;
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "UPDATE package SET dayCooldown = ? WHERE package.packageID = ?;";
             PreparedStatement ps = c.prepareStatement(query);
             ps.setInt(1, dayCooldown);
@@ -543,7 +543,7 @@ public class ManagerDao {
 
     public boolean updatePackagePrice(int packageID, double price) {
         boolean result = false;
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "UPDATE package SET price = ? WHERE package.packageID = ?;";
             PreparedStatement ps = c.prepareStatement(query);
             ps.setDouble(1, price);
@@ -558,7 +558,7 @@ public class ManagerDao {
 
     public boolean updatePackage(Package p) {
         boolean result = false;
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "UPDATE package SET package.name = ? AND limitPerPerson = ? AND dayCooldown = ? AND price = ? WHERE package.packageID = ?;";
             PreparedStatement ps = c.prepareStatement(query);
             ps.setString(1, p.getName());
@@ -577,7 +577,7 @@ public class ManagerDao {
     }
 
     private static boolean isPackageInOrderHistory(int packageID) {
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "SELECT * FROM orderitem WHERE packageID = ?;";
             PreparedStatement ps = c.prepareStatement(query);
             ps.setInt(1, packageID);
@@ -598,7 +598,7 @@ public class ManagerDao {
         if (isPackageInOrderHistory(packageID)) {
             return result;
         }
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String deleteInCartItem = "DELETE FROM cartitem WHERE packageID = ?;";
             String deleteInPackage = "DELETE FROM package WHERE packageID = ?;";
             PreparedStatement ps1 = c.prepareStatement(deleteInCartItem);
@@ -607,8 +607,9 @@ public class ManagerDao {
             ps2.setInt(1, packageID);
 
             result = ps2.executeUpdate() > 0;
+            // TODO@leesuby
             // tạm thời comment, do bị lỗi
-//			result = (ps1.executeUpdate() > 0) && (ps2.executeUpdate() > 0);
+            // result = (ps1.executeUpdate() > 0) && (ps2.executeUpdate() > 0);
             c.close();
         } catch (SQLException e) {
             logger.error(e);
@@ -618,7 +619,7 @@ public class ManagerDao {
 
     public static Package getPackageByID(int packageID) {
         Package p = null;
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "SELECT * FROM package WHERE packageID = ?;";
             PreparedStatement ps = c.prepareStatement(query);
             ps.setInt(1, packageID);
@@ -636,10 +637,10 @@ public class ManagerDao {
 
     public boolean addPackage(Package p) {
         boolean result = false;
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "INSERT INTO package(packageID, name, limitPerPerson, dayCooldown, price) VALUES (NULL,?,?,?,?);";
             PreparedStatement ps = c.prepareStatement(query);
-//			ps.setString(1, p.getPackageID());
+            // ps.setString(1, p.getPackageID());
             ps.setString(1, p.getName());
             ps.setInt(2, p.getLimitPerPerson());
             ps.setInt(3, p.getDayCooldown());
@@ -656,7 +657,7 @@ public class ManagerDao {
 
     private static boolean setStateIndividual(String userID, int state) {
         boolean result = false;
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             try {
                 String query = "INSERT INTO statehistory(userID, time, state) VALUES (?, NOW(), ?);";
                 PreparedStatement ps = c.prepareStatement(query);
@@ -676,7 +677,7 @@ public class ManagerDao {
     private static ArrayList<String> getChildrens(String userID) {
         ArrayList<String> childrens = new ArrayList<String>();
 
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "SELECT * FROM manageduser WHERE relatedPerson = ?;";
             PreparedStatement ps = c.prepareStatement(query);
             ps.setString(1, userID);
@@ -694,7 +695,7 @@ public class ManagerDao {
     private static boolean removeChildren(String userID) {
         boolean result = false;
         ArrayList<String> childrens = getChildrens(userID);
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             for (int i = 0; i < childrens.size(); i++) {
                 try {
                     String query = "UPDATE manageduser SET relatedPerson = null WHERE manageduser.idCard = ?;";
@@ -754,7 +755,7 @@ public class ManagerDao {
 
     public static int getCurrentState(String userID) {
         int currentState = -2;
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "SELECT * FROM statehistory WHERE userID = ? ORDER BY time DESC LIMIT 1;";
             PreparedStatement ps = c.prepareStatement(query);
             ps.setString(1, userID);
@@ -776,7 +777,7 @@ public class ManagerDao {
 
     public static TreatmentPlace getCurrentTreatmentPlace(String userID) {
         TreatmentPlace result = null;
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "SELECT * FROM treatmentplacehistory tph INNER JOIN treatmentplace tp ON tph.treatID = tp.treatID WHERE userID = ? ORDER BY time DESC LIMIT 1;";
             PreparedStatement ps = c.prepareStatement(query);
             ps.setString(1, userID);
@@ -796,8 +797,8 @@ public class ManagerDao {
     public static List<ManagedUser> getListByID() {
         String query = "SELECT * FROM manageduser ORDER BY idCard ASC";
         List<ManagedUser> users;
-        try ( Connection c = BasicConnection.getConnection();  PreparedStatement ps = c.prepareStatement(query)) {
-            try ( ResultSet rs = ps.executeQuery()) {
+        try (Connection c = BasicConnection.getConnection(); PreparedStatement ps = c.prepareStatement(query)) {
+            try (ResultSet rs = ps.executeQuery()) {
                 users = parseList(rs);
             }
         } catch (SQLException e) {
@@ -810,8 +811,8 @@ public class ManagerDao {
     public static List<ManagedUser> getListByBirthYear() {
         String query = "SELECT * FROM manageduser ORDER BY yob ASC";
         List<ManagedUser> users;
-        try ( Connection c = BasicConnection.getConnection();  PreparedStatement ps = c.prepareStatement(query)) {
-            try ( ResultSet rs = ps.executeQuery()) {
+        try (Connection c = BasicConnection.getConnection(); PreparedStatement ps = c.prepareStatement(query)) {
+            try (ResultSet rs = ps.executeQuery()) {
                 users = parseList(rs);
             }
         } catch (SQLException e) {
@@ -824,8 +825,8 @@ public class ManagerDao {
     public static List<ManagedUser> getListByName() {
         String query = "SELECT * FROM manageduser ORDER BY fullName ASC";
         List<ManagedUser> users;
-        try ( Connection c = BasicConnection.getConnection();  PreparedStatement ps = c.prepareStatement(query)) {
-            try ( ResultSet rs = ps.executeQuery()) {
+        try (Connection c = BasicConnection.getConnection(); PreparedStatement ps = c.prepareStatement(query)) {
+            try (ResultSet rs = ps.executeQuery()) {
                 users = parseList(rs);
             }
         } catch (SQLException e) {
@@ -849,7 +850,7 @@ public class ManagerDao {
 
     public static List<City> getCityList() {
         List<City> results = null;
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "SELECT * FROM city;";
             PreparedStatement ps = c.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
@@ -878,7 +879,7 @@ public class ManagerDao {
 
     public static List<District> getDistrictList(String cityID) {
         List<District> results = null;
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "SELECT * FROM district WHERE cityID = ?;";
             PreparedStatement ps = c.prepareStatement(query);
             ps.setString(1, cityID);
@@ -907,7 +908,7 @@ public class ManagerDao {
 
     public static List<Ward> getWardList(String districtID) {
         List<Ward> results = null;
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "SELECT * FROM ward WHERE districtID = ?;";
             PreparedStatement ps = c.prepareStatement(query);
             ps.setString(1, districtID);
@@ -980,7 +981,7 @@ public class ManagerDao {
 
     private static ManagedUser getFather(String userID) {
         ManagedUser user = null;
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "SELECT * FROM manageduser f WHERE f.idCard IN (SELECT relatedPerson FROM manageduser c WHERE c.idCard = ?);";
             PreparedStatement ps = c.prepareStatement(query);
             ps.setString(1, userID);
@@ -998,7 +999,7 @@ public class ManagerDao {
     private static List<ManagedUser> getChildList(String userID) {
         List<ManagedUser> users = null;
 
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "SELECT * FROM manageduser WHERE relatedPerson = ?;";
             PreparedStatement ps = c.prepareStatement(query);
             ps.setString(1, userID);
@@ -1026,7 +1027,7 @@ public class ManagerDao {
 
     public static int getDebt(String userID) {
         int result = -1;
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "SELECT debt FROM manageduser WHERE idCard = ?;";
             PreparedStatement ps = c.prepareStatement(query);
             ps.setString(1, userID);
@@ -1043,7 +1044,7 @@ public class ManagerDao {
 
     public static List<StateStatistic> getStatisticStatusAll() {
         List<StateStatistic> result = null;
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "SELECT s2.state, COUNT(s1.userID) as quantity\n"
                     + "FROM (SELECT s.userID , max(s.time) as time\n" + "FROM statehistory as s  \n"
                     + "group by s.userID) as s1 JOIN statehistory as s2 ON s1.userID = s2.userID AND s1.time= s2.time\n"
@@ -1069,7 +1070,7 @@ public class ManagerDao {
 
     public static List<StateStatistic> getStatisticStatusbyDay(String date) {
         List<StateStatistic> result = null;
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "SELECT s.time,s.state, COUNT(s.userID) as quantity\n" + "FROM statehistory as s\n"
                     + "group by s.state , s.time\n" + "having s.time= ?";
 
@@ -1095,7 +1096,7 @@ public class ManagerDao {
 
     public static List<StateStatistic> getStatisticStatusbyMonth(String month) {
         List<StateStatistic> result = null;
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "SELECT s.time,s.state, COUNT(s.userID) as quantity\n" + "FROM statehistory as s\n"
                     + "group by s.state , s.time\n" + "having MONTH(s.time)= ?";
 
@@ -1122,7 +1123,7 @@ public class ManagerDao {
 
     public static List<PackageStatistic> getStatisticPackageAll() {
         List<PackageStatistic> result = null;
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "SELECT p.name , SUM(o.orderItemQuantity) as quantity\n"
                     + "FROM orderitem as o JOIN package as p ON o.packageID=p.packageID\n" + "GROUP BY p.name";
 
@@ -1139,7 +1140,7 @@ public class ManagerDao {
 
     public static List<PackageStatistic> getStatisticPackagebyDay(String date) {
         List<PackageStatistic> result = null;
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "SELECT p.name, SUM(o.orderItemQuantity) as quantity\n"
                     + "FROM orderitem as o JOIN package as p ON o.packageID=p.packageID join orderhistory as h ON h.orderID=o.orderID\n"
                     + "GROUP BY p.name,h.timeDelivery\n" + "HAVING DATE(h.timeDelivery) = ? ";
@@ -1159,7 +1160,7 @@ public class ManagerDao {
 
     public static List<PackageStatistic> getStatisticPackagebyMonth(String month) {
         List<PackageStatistic> result = null;
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "SELECT p.name, SUM(o.orderItemQuantity) as quantity\n"
                     + "FROM orderitem as o JOIN package as p ON o.packageID=p.packageID join orderhistory as h ON h.orderID=o.orderID\n"
                     + "GROUP BY p.name,h.timeDelivery\n" + "HAVING MONTH(h.timeDelivery) = ? ";
@@ -1179,17 +1180,17 @@ public class ManagerDao {
 
     private static List<PackageStatistic> parseStatisticPackage(ResultSet rs) throws SQLException {
         List<PackageStatistic> information = new ArrayList<PackageStatistic>();
-        int i=1;
+        int i = 1;
         while (rs.next()) {
-            information.add(new PackageStatistic(i+"",rs.getString("name"), rs.getString("quantity")));
-            i=i+1;
+            information.add(new PackageStatistic(i + "", rs.getString("name"), rs.getString("quantity")));
+            i = i + 1;
         }
         return information;
     }
 
     public static List<ChangeStateStatistic> getChangeStateStatisticAll() {
         List<ChangeStateStatistic> result = null;
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "SELECT s1.state as \"from\" , s2.state as \"to\" , COUNT(*) as \"quantity\"\n"
                     + "FROM statehistory as s1 JOIN statehistory as s2 \n"
                     + "ON s1.userID = s2.userID AND s1.time < s2.time AND s1.state != s2.state\n"
@@ -1205,10 +1206,10 @@ public class ManagerDao {
         }
         return result;
     }
-    
+
     public static List<ChangeStateStatistic> getChangeStateStatisticbyMonth(String month) {
         List<ChangeStateStatistic> result = null;
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "SELECT s1.state as \"from\" , s2.state as \"to\" , COUNT(*) as \"quantity\"\n"
                     + "FROM statehistory as s1 JOIN statehistory as s2 \n"
                     + "ON s1.userID = s2.userID AND s1.time < s2.time AND s1.state != s2.state\n"
@@ -1231,14 +1232,15 @@ public class ManagerDao {
             throws SQLException {
         List<ChangeStateStatistic> information = new ArrayList<ChangeStateStatistic>();
         while (rs.next()) {
-            information.add(new ChangeStateStatistic("F" + rs.getString("from"), "F" + rs.getString("to"), rs.getString("quantity")));
+            information.add(new ChangeStateStatistic("F" + rs.getString("from"), "F" + rs.getString("to"),
+                    rs.getString("quantity")));
         }
         return information;
     }
 
     public static List<BalanceStatistic> getBalanceStatisticbyYear(String year) {
         List<BalanceStatistic> result = null;
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "SELECT MONTH(o1.timeDelivery) as \"month\" , sum(o1.totalOrderMoney) as total,o1.timeDelivery\n"
                     + "FROM orderhistory as o1 \n"
                     + "GROUP BY MONTH(o1.timeDelivery)\n"
@@ -1256,19 +1258,19 @@ public class ManagerDao {
         }
         return result;
     }
-    
+
     private static List<BalanceStatistic> parseListStatisticBalance(ResultSet rs)
             throws SQLException {
         List<BalanceStatistic> information = new ArrayList<BalanceStatistic>();
         while (rs.next()) {
-            information.add(new BalanceStatistic("Tháng "+rs.getString("month"),rs.getString("total")));
+            information.add(new BalanceStatistic("Tháng " + rs.getString("month"), rs.getString("total")));
         }
         return information;
     }
-    
+
     public static ArrayList<String> getUserIDList() {
         ArrayList<String> results = new ArrayList<String>();
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "SELECT idCard FROM manageduser;";
             PreparedStatement ps = c.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
@@ -1284,7 +1286,7 @@ public class ManagerDao {
 
     public static List<PaymentHistory> getPaymentHistoryList(String userID) {
         List<PaymentHistory> results = new ArrayList<PaymentHistory>();
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "SELECT paymentTime, totalMoney FROM paymenthistory WHERE userID = ?;";
             PreparedStatement ps = c.prepareStatement(query);
             ps.setString(1, userID);
@@ -1305,7 +1307,7 @@ public class ManagerDao {
 
     private static List<String> getAllTimeFromStateAndTreatmentPlaceHistory(String userID) {
         List<String> results = new ArrayList<String>();
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "SELECT T FROM (SELECT CAST(time as DATE) AS T FROM treatmentplacehistory WHERE userID = ? UNION SELECT CAST(time as DATE) AS T FROM statehistory WHERE userID = ?) AS T1 ORDER BY T;";
             PreparedStatement ps = c.prepareStatement(query);
             ps.setString(1, userID);
@@ -1323,7 +1325,7 @@ public class ManagerDao {
 
     private static int getStateAtDate(String userID, String date) {
         int result = -2;
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "SELECT state FROM statehistory WHERE userID = ? AND time <= ? ORDER BY time DESC LIMIT 1;";
             PreparedStatement ps = c.prepareStatement(query);
             ps.setString(1, userID);
@@ -1341,7 +1343,7 @@ public class ManagerDao {
 
     private static String getTreatmentPlaceNameAtDate(String userID, String date) {
         String result = "";
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "SELECT name FROM treatmentplacehistory tph INNER JOIN treatmentplace tp ON tp.treatID = tph.treatID WHERE tph.userID = ? AND tph.time <= ? ORDER BY tph.time DESC LIMIT 1;";
             PreparedStatement ps = c.prepareStatement(query);
             ps.setString(1, userID);
@@ -1375,10 +1377,10 @@ public class ManagerDao {
         return results;
     }
 
-//	Tìm kiếm người liên quan Covid19 theo họ tên
+    // Tìm kiếm người liên quan Covid19 theo họ tên
     public static List<ManagedUser> getManagedUserByFullName(String fullName) {
         List<ManagedUser> results = new ArrayList<ManagedUser>();
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "SELECT * FROM manageduser WHERE MATCH(fullName) AGAINST(?);";
             PreparedStatement ps = c.prepareStatement(query);
             ps.setString(1, fullName);
@@ -1393,10 +1395,10 @@ public class ManagerDao {
         return results;
     }
 
-//	Tìm kiếm gói nhu yếu phẩm theo tên
+    // Tìm kiếm gói nhu yếu phẩm theo tên
     public static List<Package> getPackageByName(String packageName) {
         List<Package> results = new ArrayList<Package>();
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "SELECT * FROM package WHERE MATCH(name) AGAINST(?);";
             PreparedStatement ps = c.prepareStatement(query);
             ps.setString(1, packageName);
@@ -1411,65 +1413,66 @@ public class ManagerDao {
         return results;
     }
 
-        //	Lọc gói nhu yếu phẩm theo giá
-	public static List<Package> filterPackageByPrice(String keyword, double lowest, double highest) {
-		List<Package> results = new ArrayList<Package>();
-		try (Connection c = BasicConnection.getConnection()) {
-			String query = "SELECT * FROM package WHERE MATCH(name) AGAINST(?) and price BETWEEN ? AND ? ORDER BY price ASC";
-			PreparedStatement ps = c.prepareStatement(query);
-                        ps.setString(1, keyword);
-			ps.setDouble(2, lowest);
-			ps.setDouble(3, highest);
-			ResultSet rs = ps.executeQuery();
-			while (rs.next()) {
-				results.add(parsePackage(rs));
-			}
-			c.close();
-		} catch (SQLException e) {
-			logger.error(e);
-		}
-		return results;
-	}
+    // Lọc gói nhu yếu phẩm theo giá
+    public static List<Package> filterPackageByPrice(String keyword, double lowest, double highest) {
+        List<Package> results = new ArrayList<Package>();
+        try (Connection c = BasicConnection.getConnection()) {
+            String query = "SELECT * FROM package WHERE MATCH(name) AGAINST(?) and price BETWEEN ? AND ? ORDER BY price ASC";
+            PreparedStatement ps = c.prepareStatement(query);
+            ps.setString(1, keyword);
+            ps.setDouble(2, lowest);
+            ps.setDouble(3, highest);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                results.add(parsePackage(rs));
+            }
+            c.close();
+        } catch (SQLException e) {
+            logger.error(e);
+        }
+        return results;
+    }
 
-//	Lọc gói nhu yếu phẩm theo thời gian giới hạn
-	public static List<Package> filterPackageByDayCooldown(String keyword, int lowest, int highest) {
-		List<Package> results = new ArrayList<Package>();
-		try (Connection c = BasicConnection.getConnection()) {
-			String query = "SELECT * FROM package WHERE MATCH(name) AGAINST(?) and dayCooldown BETWEEN ? AND ? ORDER BY dayCooldown ASC";
-			PreparedStatement ps = c.prepareStatement(query);
-                        ps.setString(1, keyword);
-			ps.setInt(2, lowest);
-			ps.setInt(3, highest);
-			ResultSet rs = ps.executeQuery();
-			while (rs.next()) {
-				results.add(parsePackage(rs));
-			}
-			c.close();
-		} catch (SQLException e) {
-			logger.error(e);
-		}
-		return results;
-	}
-        
-        // Lọc gói nhu yếu phẩm theo giá và thời gian giới hạn
-        public static List<Package> filterPackageByPriceAndDay(String keyword, int minDay, int maxDay, double lowestPrice, double highestPrice) {
-		List<Package> results = new ArrayList<Package>();
-		try (Connection c = BasicConnection.getConnection()) {
-			String query = "SELECT * FROM package WHERE MATCH(name) AGAINST(?) and dayCooldown BETWEEN ? AND ? and price BETWEEN ? AND ? ORDER BY dayCooldown ASC, price ASC";
-			PreparedStatement ps = c.prepareStatement(query);
-                        ps.setString(1, keyword);
-			ps.setInt(2, minDay);
-			ps.setInt(3, maxDay);
-                        ps.setDouble(4, lowestPrice);
-                        ps.setDouble(5, highestPrice);
-			ResultSet rs = ps.executeQuery();
-			while (rs.next()) {
-				results.add(parsePackage(rs));
-			}
-			c.close();
-		} catch (SQLException e) {
-			logger.error(e);
-		}
-		return results;
-	}
+    // Lọc gói nhu yếu phẩm theo thời gian giới hạn
+    public static List<Package> filterPackageByDayCooldown(String keyword, int lowest, int highest) {
+        List<Package> results = new ArrayList<Package>();
+        try (Connection c = BasicConnection.getConnection()) {
+            String query = "SELECT * FROM package WHERE MATCH(name) AGAINST(?) and dayCooldown BETWEEN ? AND ? ORDER BY dayCooldown ASC";
+            PreparedStatement ps = c.prepareStatement(query);
+            ps.setString(1, keyword);
+            ps.setInt(2, lowest);
+            ps.setInt(3, highest);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                results.add(parsePackage(rs));
+            }
+            c.close();
+        } catch (SQLException e) {
+            logger.error(e);
+        }
+        return results;
+    }
+
+    // Lọc gói nhu yếu phẩm theo giá và thời gian giới hạn
+    public static List<Package> filterPackageByPriceAndDay(String keyword, int minDay, int maxDay, double lowestPrice,
+            double highestPrice) {
+        List<Package> results = new ArrayList<Package>();
+        try (Connection c = BasicConnection.getConnection()) {
+            String query = "SELECT * FROM package WHERE MATCH(name) AGAINST(?) and dayCooldown BETWEEN ? AND ? and price BETWEEN ? AND ? ORDER BY dayCooldown ASC, price ASC";
+            PreparedStatement ps = c.prepareStatement(query);
+            ps.setString(1, keyword);
+            ps.setInt(2, minDay);
+            ps.setInt(3, maxDay);
+            ps.setDouble(4, lowestPrice);
+            ps.setDouble(5, highestPrice);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                results.add(parsePackage(rs));
+            }
+            c.close();
+        } catch (SQLException e) {
+            logger.error(e);
+        }
+        return results;
+    }
 }

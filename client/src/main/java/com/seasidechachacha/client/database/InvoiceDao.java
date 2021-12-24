@@ -13,6 +13,9 @@ import com.seasidechachacha.client.models.Invoice;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * DAO for CartItem, OrderHistory and OrderItem
+ */
 public class InvoiceDao {
     private static Logger logger = LogManager.getLogger(InvoiceDao.class);
 
@@ -51,34 +54,68 @@ public class InvoiceDao {
      * OrderItem
      * 
      * @param userId
-     * @param now    the time you call this method
-     * @return
+     * @return true if both operations success
      */
     public static boolean logInvoice(String userId) {
         boolean result = false;
-        // String invoiceSql = "INSERT INTO OrderHistory \n" +
-        // "VALUES(NULL,?,NOW(),(SELECT SUM(quantity*price) FROM CartItem WHERE
-        // userID=?))";
         String sql = "INSERT INTO OrderHistory SELECT NULL,?,NOW(),SUM(quantity*price) FROM CartItem WHERE userID=?";
+        String itemSql = "INSERT INTO OrderItem SELECT ?,packageID,quantity,price FROM CartItem WHERE userID=?";
         try (Connection c = BasicConnection.getConnection()) {
             c.setAutoCommit(false);
-            PreparedStatement ps = c.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, userId);
-            ps.setString(2, userId);
-            System.out.println(ps.toString());
+            PreparedStatement orderStmt = c.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement itemStmt = c.prepareStatement(itemSql);
+            orderStmt.setString(1, userId);
+            orderStmt.setString(2, userId);
+            itemStmt.setString(2, userId);
+            logger.trace(orderStmt.toString());
             try {
-                ps.executeUpdate();
-                c.commit();
-                ResultSet rs = ps.getGeneratedKeys();
+                orderStmt.executeUpdate();
+                ResultSet rs = orderStmt.getGeneratedKeys();
                 rs.next();
-                long autoId = rs.getLong(1);
-                System.out.println(autoId);
+                long orderId = rs.getLong(1);
+
+                itemStmt.setLong(1, orderId);
+                itemStmt.executeUpdate();
+                c.commit();
             } catch (SQLException commitException) {
                 logger.error(commitException);
                 c.rollback();
             }
         } catch (SQLException e) {
-            logger.error(e);
+            logger.error("Error create connection or rollback", e);
+        }
+        return result;
+    }
+
+    /**
+     * Create new CartItem record
+     * 
+     * @param userID
+     * @param packageID
+     * @param quantity
+     * @param price
+     * @return true if operation success
+     */
+    public static boolean addtoCart(String userID, int packageID, int quantity, double price) {
+        boolean result = false;
+        try (Connection c = BasicConnection.getConnection()) {
+            c.setAutoCommit(false);
+            String query = "INSERT INTO CartItem VALUES (?,?,NOW(),?,?);";
+            PreparedStatement ps = c.prepareStatement(query);
+            try {
+                System.out.println(userID + " " + packageID + " " + quantity + " " + price);
+                ps.setString(1, userID);
+                ps.setInt(2, packageID);
+                ps.setInt(3, quantity);
+                ps.setDouble(4, price);
+                result = ps.executeUpdate() > 0;
+                c.commit();
+            } catch (SQLException commitException) {
+                logger.error(commitException);
+                c.rollback();
+            }
+        } catch (SQLException e) {
+            logger.error("Error create connection or rollback", e);
         }
         return result;
     }

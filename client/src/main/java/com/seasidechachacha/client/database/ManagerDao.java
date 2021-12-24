@@ -607,10 +607,9 @@ public class ManagerDao {
             ps2.setInt(1, packageID);
 
             result = ps2.executeUpdate() > 0;
-            // TODO@leesuby
+            // TODO@leesuby@changkho6310
             // tạm thời comment, do bị lỗi
             // result = (ps1.executeUpdate() > 0) && (ps2.executeUpdate() > 0);
-            c.close();
         } catch (SQLException e) {
             logger.error(e);
         }

@@ -50,13 +50,40 @@ public class InvoiceDao {
     }
 
     /**
-     * Create a new OrderHistory record and transfer all item from CartItem to
-     * OrderItem
+     * Sum of all CartItem of a ManagedUser
+     * 
+     * @param userId
+     * @return
+     */
+    public static double getCartTotalPrice(String userId) {
+        double total = 0;
+        String sql = "SELECT SUM(quantity*price) FROM CartItem WHERE userID=?";
+        try (Connection c = BasicConnection.getConnection()) {
+            PreparedStatement ps = c.prepareStatement(sql);
+            ps.setString(1, userId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                total = rs.getDouble(1);
+            }
+        } catch (SQLException e) {
+            logger.error(e);
+        }
+        return total;
+    }
+
+    /**
+     * Create a new OrderHistory record and copy items from CartItem to OrderItem
+     * Note: this method doesn't:
+     * <ol>
+     * <li>Clear user's CartItem. See {@link InvoiceDao#clearCart(String)}</li>
+     * <li>Accumulate ManagedUser.debt. See
+     * {@link InvoiceDao#getCartTotalPrice(String)}</li>
+     * </ol>
      * 
      * @param userId
      * @return true if both operations success
      */
-    public static boolean logInvoice(String userId) {
+    public static boolean commitCart(String userId) {
         boolean result = false;
         String sql = "INSERT INTO OrderHistory SELECT NULL,?,NOW(),SUM(quantity*price) FROM CartItem WHERE userID=?";
         String itemSql = "INSERT INTO OrderItem SELECT ?,packageID,quantity,price FROM CartItem WHERE userID=?";
@@ -90,24 +117,50 @@ public class InvoiceDao {
     /**
      * Create new CartItem record
      * 
-     * @param userID
+     * @param userId
      * @param packageID
      * @param quantity
      * @param price
      * @return true if operation success
      */
-    public static boolean addtoCart(String userID, int packageID, int quantity, double price) {
+    public static boolean addtoCart(String userId, int packageID, int quantity, double price) {
         boolean result = false;
         try (Connection c = BasicConnection.getConnection()) {
             c.setAutoCommit(false);
-            String query = "INSERT INTO CartItem VALUES (?,?,NOW(),?,?);";
-            PreparedStatement ps = c.prepareStatement(query);
+            String sql = "INSERT INTO CartItem VALUES (?,?,NOW(),?,?);";
+            PreparedStatement ps = c.prepareStatement(sql);
             try {
-                System.out.println(userID + " " + packageID + " " + quantity + " " + price);
-                ps.setString(1, userID);
+                System.out.println(userId + " " + packageID + " " + quantity + " " + price);
+                ps.setString(1, userId);
                 ps.setInt(2, packageID);
                 ps.setInt(3, quantity);
                 ps.setDouble(4, price);
+                result = ps.executeUpdate() > 0;
+                c.commit();
+            } catch (SQLException commitException) {
+                logger.error(commitException);
+                c.rollback();
+            }
+        } catch (SQLException e) {
+            logger.error("Error create connection or rollback", e);
+        }
+        return result;
+    }
+
+    /**
+     * Clear user's CartItem. This usually use with
+     * {@link InvoiceDao#commitCart(String)}
+     * 
+     * @param userId
+     * @return true if operation success
+     */
+    public static boolean clearCart(String userId) {
+        boolean result = false;
+        try (Connection c = BasicConnection.getConnection()) {
+            c.setAutoCommit(false);
+            String sql = "DELETE FROM CartItem WHERE userId=?";
+            PreparedStatement ps = c.prepareStatement(sql);
+            try {
                 result = ps.executeUpdate() > 0;
                 c.commit();
             } catch (SQLException commitException) {

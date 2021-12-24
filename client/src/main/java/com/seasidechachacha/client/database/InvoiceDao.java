@@ -53,7 +53,7 @@ public class InvoiceDao {
      * @param invoice
      * @param invoiceItems
      */
-    public static boolean logInvoice(Invoice invoice, InvoiceItem[] invoiceItems) {
+    public static boolean logInvoice(String userId) {
         boolean result = false;
         String invoiceSql = "INSERT INTO OrderHistory VALUES(?,?,?,?)";
         try (Connection c = BasicConnection.getConnection()) {

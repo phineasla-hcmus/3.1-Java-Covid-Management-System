@@ -49,7 +49,8 @@ create table ManagedUser
 create table NewUser
 (
 	userID varchar(12),
-	primary key (userID)
+	primary key (userID),
+	foreign key (userID) references ManagedUser(userID)
 );
 
 create table StateHistory
@@ -172,7 +173,9 @@ create table PaymentHistory
     orderID bigint,
 	userID varchar(12),
 	paymentTime datetime,
-	primary key (transactionID, userID)
+	primary key (orderID),
+	foreign key (orderID) references OrderHistory(orderID),
+	foreign key (userID) references User(userID)
 );
 
 -- SCHEMA CỦA PAYMENT SERVER
@@ -190,7 +193,9 @@ create table TransactionHistory
 	toID varchar(12),
 	paymentTime datetime,
 	totalMoney decimal(10,3),
-	primary key (transactionID)
+	primary key (transactionID),
+	foreign key (fromID) references TransactionAccount(userID),
+	foreign key (toID) references TransactionAccount(userID),
 );
 -- SCHEMA CỦA PAYMENT SERVER
 
@@ -210,6 +215,7 @@ alter table ManagedUser
 add
 constraint FK_ManagedUser_User foreign key (idCard) references User(userID);
 
+-- Tích hợp vô chung address nvarchar nên không cần nữa
 -- alter table ManagedUser
 -- add
 -- constraint FK_User_Ward foreign key (wardID) references Ward(wardID);
@@ -225,6 +231,7 @@ alter table TreatmentPlaceHistory
 add
 constraint FK_TreatmentPlaceHistory_TreatmentPlace foreign key (treatID) references TreatmentPlace(treatID);
 
+-- Tích hợp vô chung address nvarchar nên không cần nữa
 -- alter table TreatmentPlace
 -- add constraint FK_TreatmentPlace_Ward foreign key (wardID) references Ward(wardID);
 
@@ -249,10 +256,6 @@ constraint FK_OrderItem_ConsumptionHistory foreign key (orderID) references Orde
 alter table OrderItem
 add
 constraint FK_OrderItem_Package foreign key (packageID) references Package(packageID);
-
-alter table TransactionAccount
-add constraint FK_TransactionAccount_User foreign key (userID) references User(userID);
-
 
 alter table District
 add constraint FK_District_City foreign key (cityID) references City(cityID);

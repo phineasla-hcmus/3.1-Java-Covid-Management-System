@@ -9,38 +9,36 @@ public class DatabaseConfig {
     private String username;
     private String password;
 
-    private static final DatabaseConfig dbConfig = new DatabaseConfig();
+    private static final DatabaseConfig config = new DatabaseConfig();
 
-    public DatabaseConfig() {
+    public static void initialize() throws IOException, NullPointerException {
         String urlKey = "DATABASE_URL";
         String usernameKey = "DATABASE_USERNAME";
         String passwordKey = "DATABASE_PASSWORD";
-        try (InputStream in = getClass().getResourceAsStream("/.dbconfig.properties")) {
+        try (InputStream in = config.getClass().getResourceAsStream("/.dbconfig.properties")) {
             if (in == null) {
-                url = System.getenv(urlKey);
-                username = System.getenv(usernameKey);
-                password = System.getenv(passwordKey);
+                config.url = System.getenv(urlKey);
+                config.username = System.getenv(usernameKey);
+                config.password = System.getenv(passwordKey);
             } else {
                 Properties p = new Properties();
                 p.load(in);
-                url = p.getProperty(urlKey);
-                username = p.getProperty(usernameKey);
-                password = p.getProperty(passwordKey);
+                config.url = p.getProperty(urlKey);
+                config.username = p.getProperty(usernameKey);
+                config.password = p.getProperty(passwordKey);
             }
-        } catch (IOException e) {
-            // Ignored
         }
     }
 
     public static String getUrl() {
-        return dbConfig.url;
+        return config.url;
     }
 
     public static String getUsername() {
-        return dbConfig.username;
+        return config.username;
     }
 
     public static String getPassword() {
-        return dbConfig.password;
+        return config.password;
     }
 }

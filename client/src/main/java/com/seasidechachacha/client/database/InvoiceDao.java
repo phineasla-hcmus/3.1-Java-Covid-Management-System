@@ -65,10 +65,16 @@ public class InvoiceDao {
             PreparedStatement ps = c.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, userId);
             ps.setString(2, userId);
+            System.out.println(ps.toString());
             try {
                 ps.executeUpdate();
                 c.commit();
+                ResultSet rs = ps.getGeneratedKeys();
+                rs.next();
+                long autoId = rs.getLong(1);
+                System.out.println(autoId);
             } catch (SQLException commitException) {
+                logger.error(commitException);
                 c.rollback();
             }
         } catch (SQLException e) {

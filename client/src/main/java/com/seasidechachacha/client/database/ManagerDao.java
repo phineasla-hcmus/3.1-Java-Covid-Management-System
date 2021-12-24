@@ -45,9 +45,6 @@ public class ManagerDao {
 
     private static Logger logger = LogManager.getLogger(ManagerDao.class);
 
-    public static void main(String[] args) throws SQLException {
-    }
-
     private boolean addMesssage(String logMsg) {
         boolean rowAffected = false;
         try ( Connection c = BasicConnection.getConnection()) {

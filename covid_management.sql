@@ -131,7 +131,7 @@ create table CartItem
 
 create table OrderHistory
 (
-	orderID bigint,
+	orderID bigint AUTO_INCREMENT,
 	userID varchar(12),
 	timeOrder datetime,
 	totalOrderMoney decimal(10,3),
@@ -148,6 +148,16 @@ create table OrderItem
 	foreign key (orderID) references OrderHistory(orderID)
 );
 
+-- Là bản copy của TransactionHistory cho client, dùng để đối soát
+create table PaymentHistory
+(
+	transactionID bigint,
+    orderID bigint,
+	paymentTime datetime,
+	primary key (orderID),
+	foreign key (orderID) references OrderHistory(orderID)
+);
+
 -- BỎ DO KHÔNG CÓ THỜI GIAN
 -- Log của những order chưa được trả tiền
 create table PendingPayment
@@ -155,18 +165,6 @@ create table PendingPayment
 	orderID bigint,
     primary key (orderID),
 	foreign key (orderID) references OrderHistory(orderID)
-);
-
--- Là bản copy của TransactionHistory ở phía client, dùng để đối soát
-create table PaymentHistory
-(
-	transactionID bigint,
-    orderID bigint,
-	userID varchar(12),
-	paymentTime datetime,
-	primary key (orderID),
-	foreign key (orderID) references OrderHistory(orderID),
-	foreign key (userID) references User(userID)
 );
 
 -- SCHEMA CỦA PAYMENT SERVER

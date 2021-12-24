@@ -21,6 +21,8 @@ import javax.net.ssl.SSLSocket;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 
+import com.seasidechachacha.common.DatabaseConfig;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -78,6 +80,7 @@ public class App {
         ExecutorService executorService = Executors.newCachedThreadPool();
         try {
             SSLConfig.initialize();
+            DatabaseConfig.initialize();
         } catch (NullPointerException e) {
             logger.fatal(e);
             return;

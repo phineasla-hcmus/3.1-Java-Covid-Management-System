@@ -144,7 +144,6 @@ create table OrderHistory
 	orderID bigint,
 	userID varchar(12),
 	timeOrder datetime,
-	timeDelivery datetime,
 	totalOrderMoney decimal(10,3),
 	primary key (orderID)
 );

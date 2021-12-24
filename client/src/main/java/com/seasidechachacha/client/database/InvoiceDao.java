@@ -48,10 +48,11 @@ public class InvoiceDao {
     }
 
     /**
-     * Insert invoice to OrderHistory and invoiceItems to OrderItem
+     * Create a new OrderHistory record and transfer all item from CartItem to
+     * OrderItem
      * 
-     * @param invoice
-     * @param invoiceItems
+     * @param userId 
+     * @return true if the operation success
      */
     public static boolean logInvoice(String userId) {
         boolean result = false;

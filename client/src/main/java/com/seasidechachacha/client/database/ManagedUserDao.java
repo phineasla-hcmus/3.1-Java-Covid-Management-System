@@ -117,20 +117,19 @@ public class ManagedUserDao {
         return new ManagedUser(rs.getString("idCard"), rs.getString("fullName"), rs.getInt("yob"),
                 rs.getString("relatedPerson"), rs.getInt("debt"), rs.getString("address"), rs.getInt("state"));
     }
-    
-    public static boolean addtoCart(String userID,String packageID ,String quantity ,String money) {
+
+    public static boolean addtoCart(String userID, String packageID, String quantity, String price) {
         boolean result = false;
-        try ( Connection c = BasicConnection.getConnection()) {
+        try (Connection c = BasicConnection.getConnection()) {
             try {
-                String query = "INSERT INTO cart(userID,packageID, checkoutTime, totalCartQuantity,totalCartMoney) VALUES (?,?, NOW(), ?, ?);";
+                String query = "INSERT INTO CartItem VALUES (?,?,NOW(),?,?);";
                 PreparedStatement ps = c.prepareStatement(query);
-                System.out.println(userID +" "+packageID+" "+quantity+" "+money );
+                System.out.println(userID + " " + packageID + " " + quantity + " " + price);
                 ps.setString(1, userID);
                 ps.setString(2, packageID);
                 ps.setString(3, quantity);
-                ps.setString(4, money);
+                ps.setString(4, price);
                 result = ps.executeUpdate() > 0;
-                c.close();
             } catch (SQLException e1) {
                 logger.error(e1);
             }
@@ -139,6 +138,5 @@ public class ManagedUserDao {
         }
         return result;
     }
-    
-  
+
 }

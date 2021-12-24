@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.seasidechachacha.client.models.Invoice;
@@ -20,7 +21,7 @@ public class InvoiceDao {
         List<Invoice> results = new ArrayList<Invoice>();
         try (Connection c = BasicConnection.getConnection()) {
             String query = "SELECT t.orderID, timeOrder, SUM(orderItemQuantity) \n"
-                    + "AS 'totalItems', totalOrderMoney, t.userID \n"
+                    + "AS totalItems, totalOrderMoney, t.userID \n"
                     + "FROM orderhistory t \n"
                     + "INNER JOIN orderitem p \n"
                     + "ON t.orderID = p.orderID \n"
@@ -51,12 +52,14 @@ public class InvoiceDao {
      * Create a new OrderHistory record and transfer all item from CartItem to
      * OrderItem
      * 
-     * @param userId 
-     * @return true if the operation success
+     * @param userId
+     * @param now    the time you call this method
+     * @return
      */
     public static boolean logInvoice(String userId) {
         boolean result = false;
-        String invoiceSql = "INSERT INTO OrderHistory VALUES(?,?,?,?)";
+        String invoiceSql = "INSERT INTO OrderHistory \n" +
+                "VALUES(NULL,?,NOW(),(SELECT SUM(quantity*price) FROM CartItem WHERE userID=?))";
         try (Connection c = BasicConnection.getConnection()) {
             c.setAutoCommit(false);
 

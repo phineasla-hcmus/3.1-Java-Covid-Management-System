@@ -115,22 +115,20 @@ create table Package
 -- Flow: 
 -- 1.	Thêm vào giỏ hàng --> Insert vào CartItem
 -- 1.1	Nếu ManagedUser.debt vượt quá mức quy định thì không cho thêm vào giỏ hàng nữa
--- 2.	Trong view Cart, có nút Buy --> Chuyển data từ Cart, CartItem sang OrderHistory, OrderItem, và cộng vào ManagedUser.debt
+-- 2.	Trong view Cart, có nút Buy --> Chuyển data từ CartItem sang OrderHistory, OrderItem, và cộng vào ManagedUser.debt
 -- 3.	User dùng payment screen để trả cho ManagedUser.debt --> thành công --> ManagedUser.debt = 0
 --		NOTE: Trả hết ManagedUser.debt, không hỗ trợ trả góp
-create table Cart
+create table CartItem
 (
-	cartID int AUTO_INCREMENT,
 	userID varchar(12),
-    packageID int,
-	checkoutTime datetime,
-	totalCartQuantity tinyint,
-	totalCartMoney decimal(10,3),
-	primary key (cartID)
+	packageID int,
+	quantity tinyint,
+	price decimal(10,3),
+	primary key (cartID, packageID)
 );
 
 -- BỎ DO KHÔNG CÓ THỜI GIAN
--- Đây là log của những order chưa được trả tiền
+-- Log của những order chưa được trả tiền
 create table PendingPayment
 (
 	orderID bigint,

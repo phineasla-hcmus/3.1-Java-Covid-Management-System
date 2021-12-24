@@ -116,6 +116,7 @@ create table Package
 -- 1.1	Nếu ManagedUser.debt vượt quá mức quy định thì không cho thêm vào giỏ hàng nữa
 -- 2.	Trong view Cart, có nút Buy --> Chuyển data từ Cart, CartItem sang OrderHistory, OrderItem, và cộng vào ManagedUser.debt
 -- 3.	User dùng payment screen để trả cho ManagedUser.debt --> thành công --> ManagedUser.debt = 0
+--		NOTE: Trả hết ManagedUser.debt, không hỗ trợ trả góp
 create table Cart
 (
 	cartID int AUTO_INCREMENT,

@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,11 +56,21 @@ public class InvoiceDao {
      */
     public static boolean logInvoice(String userId) {
         boolean result = false;
-        String invoiceSql = "INSERT INTO OrderHistory \n" +
-                "VALUES(NULL,?,NOW(),(SELECT SUM(quantity*price) FROM CartItem WHERE userID=?))";
+        // String invoiceSql = "INSERT INTO OrderHistory \n" +
+        // "VALUES(NULL,?,NOW(),(SELECT SUM(quantity*price) FROM CartItem WHERE
+        // userID=?))";
+        String sql = "INSERT INTO OrderHistory SELECT NULL,?,NOW(),SUM(quantity*price) FROM CartItem WHERE userID=?";
         try (Connection c = BasicConnection.getConnection()) {
             c.setAutoCommit(false);
-
+            PreparedStatement ps = c.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, userId);
+            ps.setString(2, userId);
+            try {
+                ps.executeUpdate();
+                c.commit();
+            } catch (SQLException commitException) {
+                c.rollback();
+            }
         } catch (SQLException e) {
             logger.error(e);
         }

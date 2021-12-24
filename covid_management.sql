@@ -121,19 +121,11 @@ create table Cart
 (
 	cartID int AUTO_INCREMENT,
 	userID varchar(12),
+    packageID int,
 	checkoutTime datetime,
 	totalCartQuantity tinyint,
 	totalCartMoney decimal(10,3),
 	primary key (cartID)
-);
-
-create table CartItem
-(
-	cartID int AUTO_INCREMENT,
-	packageID int,
-	cartItemQuantity tinyint,
-	cartItemPrice decimal(10,3),
-	primary key (cartID, packageID)
 );
 
 -- BỎ DO KHÔNG CÓ THỜI GIAN
@@ -234,10 +226,6 @@ add constraint FK_Cart_ManagedUser foreign key (userID) references ManagedUser(i
 alter table CartItem
 add
 constraint FK_CartItem_Cart foreign key (cartID) references Cart(cartID);
-
-alter table CartItem
-add
-constraint FK_CartItem_Package foreign key (packageID) references Package(packageID);
 
 alter table OrderHistory
 add constraint FK_OrderHistory_ManagedUser foreign key (userID) references ManagedUser(idCard);

@@ -58,6 +58,9 @@ insert into treatmentplacehistory values('079932368028', '2021-11-30', 79051);
 insert into treatmentplacehistory values('079941055479', '2021-11-30', 79051);
 insert into treatmentplacehistory values('079111222333', '2021-11-30', 87014);
 
+insert into CartItem values("079932368028",1,2,68000);
+insert into CartItem values("079932368028",5,2,33600);
+
 insert into orderhistory values(1,"079932368028","2021-10-1 13:28:08","169600");
 insert into orderhistory values(2,"079157952250","2021-7-5 7:14:26","125800");
 insert into orderhistory values(3,"079732769898","2021-8-26 7:37:17","89000");

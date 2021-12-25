@@ -1,3 +1,4 @@
 DATABASE_URL=jdbc:mysql://localhost:3306/covid_management
 DATABASE_USERNAME=root
 DATABASE_PASSWORD=leesuby.tl123
+DATABASE_MAX_CONNECTION=20

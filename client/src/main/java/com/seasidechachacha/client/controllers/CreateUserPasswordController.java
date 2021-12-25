@@ -3,6 +3,7 @@ package com.seasidechachacha.client.controllers;
 import com.seasidechachacha.client.App;
 import com.seasidechachacha.client.database.UserDao;
 import com.seasidechachacha.client.global.Session;
+import com.seasidechachacha.client.global.TaskExecutor;
 
 import java.io.IOException;
 
@@ -52,6 +53,7 @@ public class CreateUserPasswordController {
                 // Error in App#initializeMainScreen()
             }
         });
+        TaskExecutor.execute(changePasswordTask);
     }
 
     private void resolveChangePassword(WorkerStateEvent e, boolean result) throws IOException {

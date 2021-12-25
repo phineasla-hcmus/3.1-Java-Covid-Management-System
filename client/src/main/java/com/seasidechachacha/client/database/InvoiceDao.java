@@ -19,29 +19,67 @@ import org.apache.logging.log4j.Logger;
 public class InvoiceDao {
     private static Logger logger = LogManager.getLogger(InvoiceDao.class);
 
-    public static List<Invoice> getList(String userID, int limit, int offset) {
+    public static List<Invoice> getList(String userId, int limit, int offset) {
         List<Invoice> results = new ArrayList<Invoice>();
         try (Connection c = BasicConnection.getConnection()) {
-            String query = "SELECT t.orderID, timeOrder, SUM(orderItemQuantity) AS totalItems, totalOrderMoney, t.userID \n"
+            String query = "SELECT t.orderID,timeOrder,SUM(orderItemQuantity) AS totalItems,totalOrderMoney,t.userID \n"
                     + "FROM orderhistory t \n"
                     + "INNER JOIN orderitem p \n"
-                    + "ON t.orderID = p.orderID \n"
+                    + "ON t.orderID=p.orderID \n"
                     + "GROUP BY t.orderID \n"
-                    + "HAVING t.userID = ? \n"
+                    + "HAVING t.userID=? \n"
                     + "LIMIT ? OFFSET ?;";
             PreparedStatement ps = c.prepareStatement(query);
-            ps.setString(1, userID);
+            ps.setString(1, userId);
             ps.setInt(2, limit);
             ps.setInt(3, offset);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 results.add(parseInvoice(rs));
             }
-            c.close();
+            rs.close();
         } catch (SQLException e) {
             logger.error(e);
         }
         return results;
+    }
+
+    /**
+     * Get a list from {@code OrderHistory} where not in {@code PaymentHistory}
+     * 
+     * @see <a href="https://stackoverflow.com/a/21338705/12405558">
+     *      Select records where not in another table
+     *      </a>
+     * @param userId
+     * @param limit
+     * @param offset
+     * @return
+     */
+    public static List<Invoice> getPendingPaymentList(String userId, int limit, int offset) {
+        List<Invoice> result = new ArrayList<>();
+        try (Connection c = BasicConnection.getConnection()) {
+            String query = "SELECT t.orderID, timeOrder,SUM(orderItemQuantity) AS totalItems,totalOrderMoney,t.userID \n"
+                    + "FROM orderhistory t \n"
+                    + "INNER JOIN orderitem p \n"
+                    + "ON t.orderID=p.orderID \n"
+                    + "GROUP BY t.orderID \n"
+                    + "HAVING t.userID=? \n"
+                    + "WHERE t.orderID NOT IN \n"
+                    + "(SELECT orderID FROM PaymentHistory) \n"
+                    + "LIMIT ? OFFSET ?;";
+            PreparedStatement ps = c.prepareStatement(query);
+            ps.setString(1, userId);
+            ps.setInt(2, limit);
+            ps.setInt(3, offset);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                result.add(parseInvoice(rs));
+            }
+            rs.close();
+        } catch (SQLException e) {
+            logger.error(e);
+        }
+        return result;
     }
 
     private static Invoice parseInvoice(ResultSet rs) throws SQLException {
@@ -72,20 +110,24 @@ public class InvoiceDao {
     }
 
     /**
-     * Create a new OrderHistory record and copy items from CartItem to OrderItem
-     * Note: this method doesn't:
+     * Create a new {@code OrderHistory} record and copy items
+     * from {@code CartItem} to {@code OrderItem}.
+     * <p>
+     * <b>Note: this method doesn't:</b>
      * <ol>
      * <li>Clear user's CartItem. See {@link InvoiceDao#clearCart(String)}</li>
      * <li>Accumulate ManagedUser.debt. See
      * {@link InvoiceDao#getCartTotalPrice(String)}
      * </li>
+     * <li>Create new {@code PendingPayment} record</li>
      * </ol>
+     * </p>
      * 
      * @param userId
-     * @return true if both operations success
+     * @return {@code orderId} if all operations success, else 0
      */
-    public static boolean commitCart(String userId) {
-        boolean result = false;
+    public static long logCart(String userId) {
+        long orderId = 0;
         // NULL for AUTO_INCREMENT
         String sql = "INSERT INTO OrderHistory SELECT NULL,?,NOW(),SUM(quantity*price) FROM CartItem WHERE userID=?";
         String itemSql = "INSERT INTO OrderItem SELECT ?,packageID,quantity,price FROM CartItem WHERE userID=?";
@@ -101,7 +143,7 @@ public class InvoiceDao {
                 orderStmt.executeUpdate();
                 ResultSet rs = orderStmt.getGeneratedKeys();
                 rs.next();
-                long orderId = rs.getLong(1);
+                orderId = rs.getLong(1);
 
                 itemStmt.setLong(1, orderId);
                 itemStmt.executeUpdate();
@@ -109,11 +151,12 @@ public class InvoiceDao {
             } catch (SQLException commitException) {
                 logger.error(commitException);
                 c.rollback();
+                orderId = 0;
             }
         } catch (SQLException e) {
             logger.error("Error create connection or rollback", e);
         }
-        return result;
+        return orderId;
     }
 
     /**
@@ -151,7 +194,7 @@ public class InvoiceDao {
 
     /**
      * Clear user's CartItem. This usually use with
-     * {@link InvoiceDao#commitCart(String)}
+     * {@link InvoiceDao#logCart(String)}
      * 
      * @param userId
      * @return true if operation success

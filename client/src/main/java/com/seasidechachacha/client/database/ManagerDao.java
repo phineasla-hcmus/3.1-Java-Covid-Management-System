@@ -1255,8 +1255,8 @@ public class ManagerDao {
 		return information;
 	}
 
-	public static ArrayList<String> getUserIDList() {
-		ArrayList<String> results = new ArrayList<String>();
+	public static List<String> getUserIDList() {
+		List<String> results = new ArrayList<String>();
 		try (Connection c = BasicConnection.getConnection()) {
 			String query = "SELECT idCard FROM manageduser;";
 			PreparedStatement ps = c.prepareStatement(query);

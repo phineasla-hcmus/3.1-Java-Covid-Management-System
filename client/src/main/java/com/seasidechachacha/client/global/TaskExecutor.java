@@ -8,11 +8,14 @@ import java.util.concurrent.TimeUnit;
 /**
  * A thin static wrapper for {@code ExecutorService}
  * 
- * @see <a href="https://stackoverflow.com/q/13784333/12405558">
- *      Platform.runLater and Task in JavaFX
+ * @see <a href="https://stackoverflow.com/a/30250308/12405558">
+ *      Using threads to make database requests
  *      </a>
  * @see <a href="https://stackoverflow.com/q/3332832/12405558">
  *      Graceful shutdown of threads and executor
+ *      </a>
+ * @see <a href="https://stackoverflow.com/q/13784333/12405558">
+ *      Platform.runLater and Task in JavaFX
  *      </a>
  */
 public class TaskExecutor {

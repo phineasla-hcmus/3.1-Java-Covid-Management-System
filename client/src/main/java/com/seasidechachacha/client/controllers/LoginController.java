@@ -8,6 +8,7 @@ import java.util.concurrent.Executors;
 import com.seasidechachacha.client.App;
 import com.seasidechachacha.client.database.UserDao;
 import com.seasidechachacha.client.global.Session;
+import com.seasidechachacha.client.global.TaskExecutor;
 import com.seasidechachacha.client.models.User;
 
 import org.apache.logging.log4j.LogManager;
@@ -30,14 +31,8 @@ public class LoginController {
     @FXML
     private Button next;
 
-    // Provide thread to CRUD database
-    private Executor exec;
-
     @FXML
     private void initialize() {
-        // https://stackoverflow.com/questions/30249493/using-threads-to-make-database-requests
-        exec = Executors.newFixedThreadPool(1);
-
         next.setOnAction(e -> {
             String userId = username.getText();
             String password = pass.getText();
@@ -68,7 +63,7 @@ public class LoginController {
                 logger.error(ex);
             }
         });
-        exec.execute(loginTask);
+        TaskExecutor.execute(loginTask);
     }
 
     /**
@@ -92,7 +87,7 @@ public class LoginController {
                 logger.error(ex);
             }
         });
-        exec.execute(isNewUserTask);
+        TaskExecutor.execute(isNewUserTask);
     }
 
     public void resolveLogin(WorkerStateEvent e, User user) throws IOException {

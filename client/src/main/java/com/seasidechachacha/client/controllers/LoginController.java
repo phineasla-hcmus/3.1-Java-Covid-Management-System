@@ -98,7 +98,7 @@ public class LoginController {
     public void resolveLogin(WorkerStateEvent e, User user) throws IOException {
         if (user == null) {
             Alert a = new Alert(Alert.AlertType.WARNING);
-            a.setContentText("Xin kiểm tra lại tên đăng nhập hoặc mật khẩu !!!");
+            a.setContentText("Xin kiểm tra lại tên đăng nhập hoặc mật khẩu!");
             a.show();
             return;
         }

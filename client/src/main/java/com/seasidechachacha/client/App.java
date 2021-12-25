@@ -5,12 +5,16 @@ import java.io.IOException;
 import com.seasidechachacha.client.controllers.ViewPackageInfoController;
 import com.seasidechachacha.client.controllers.ViewPersonalInfoController;
 import com.seasidechachacha.client.controllers.ViewTreatmentPlaceInfoController;
+import com.seasidechachacha.client.database.UserDao;
 import com.seasidechachacha.client.global.SSLConfig;
+import com.seasidechachacha.client.global.TaskExecutor;
 import com.seasidechachacha.client.models.ManagedUser;
 import com.seasidechachacha.client.models.Package;
 import com.seasidechachacha.client.models.TreatmentPlace;
 import com.seasidechachacha.common.DatabaseConfig;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,11 +41,10 @@ public class App extends Application {
     public void start(Stage stage) throws IOException, SQLException {
         if (UserDao.isEmpty()) {
             scene = new Scene(loadFXML("view/FirstLogin"));
-        }
-        else {
+        } else {
             scene = new Scene(loadFXML("view/Login"));
         }
- 
+
         stage.setScene(scene);
         stage.show();
     }
@@ -128,7 +131,24 @@ public class App extends Application {
             logger.fatal(e);
             return;
         }
+        TaskExecutor.initialize();
         playground();
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                TaskExecutor.shutdown();
+                try {
+                    if (!TaskExecutor.awaitTermination(3, TimeUnit.SECONDS)) {
+                        List<Runnable> droppedTasks = TaskExecutor.shutdownNow();
+                        logger.warn("Executor did not terminate in the specified time. "
+                                + droppedTasks.size()
+                                + " tasks will not be executed");
+                    }
+                } catch (InterruptedException e) {
+                    // Kill it, I don't care
+                }
+            }
+        });
         launch();
     }
 

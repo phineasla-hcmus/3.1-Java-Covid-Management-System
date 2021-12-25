@@ -58,7 +58,7 @@ public class LoginController {
         Task<User> loginTask = new Task<User>() {
             @Override
             public User call() {
-                return UserDao.login(userId, password);
+                return UserDao.authenticate(userId, password);
             }
         };
         loginTask.setOnSucceeded(e -> {
@@ -106,7 +106,6 @@ public class LoginController {
         int roleId = user.getRoleId();
         if (roleId == 1) {
             App.setRoot("view/AdminScreen");
-
         } else if (roleId == 2) {
             App.setRoot("view/ModeratorScreen");
         } else if (roleId == 3) {

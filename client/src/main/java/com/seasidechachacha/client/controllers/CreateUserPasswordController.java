@@ -1,7 +1,13 @@
 package com.seasidechachacha.client.controllers;
 
 import com.seasidechachacha.client.App;
+import com.seasidechachacha.client.database.UserDao;
+import com.seasidechachacha.client.global.Session;
+
 import java.io.IOException;
+
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -27,15 +33,33 @@ public class CreateUserPasswordController {
             Alert a = new Alert(Alert.AlertType.INFORMATION);
             a.setContentText("Khởi tạo mật khẩu thành công!!!");
             a.show();
-            // TODO@phineasla
             // khởi tạo thành công, cập nhật database và cho vô screen User
-            // TODO@leesuby
-
-            App.initializeMainScreen(); // này là screen moderator :))
+            changePasswordThread(Session.getUser().getUserId(), pass1.getText());
         }
     }
 
     private void changePasswordThread(String userId, String password) {
-        
+        Task<Boolean> changePasswordTask = new Task<Boolean>() {
+            @Override
+            public Boolean call() {
+                return UserDao.changePassword(userId, password);
+            }
+        };
+        changePasswordTask.setOnSucceeded(e -> {
+            try {
+                resolveChangePassword(e, changePasswordTask.getValue());
+            } catch (IOException ex) {
+                // Error in App#initializeMainScreen()
+            }
+        });
+    }
+
+    private void resolveChangePassword(WorkerStateEvent e, boolean result) throws IOException {
+        // TODO@leesuby
+        if (result)
+            App.initializeMainScreen(); // này là screen moderator :))
+        else {
+            // Something went wrong in the database
+        }
     }
 }

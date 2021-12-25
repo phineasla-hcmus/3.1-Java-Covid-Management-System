@@ -21,7 +21,7 @@ public class UserDao {
 	 * @param password in plain text
 	 * @return Account if username and password are correct, else null
 	 */
-	public static User login(String userId, String password) {
+	public static User authenticate(String userId, String password) {
 		String query = "SELECT * FROM User WHERE userID=?";
 		User acc = null;
 
@@ -37,7 +37,6 @@ public class UserDao {
 			logger.error(e);
 			return null;
 		}
-
 		return acc;
 	}
 
@@ -108,7 +107,7 @@ public class UserDao {
 	 * Check if the User is first time loged in
 	 * 
 	 * @return true if User exist in NewUser table, else false
-	 * @throws SQLException
+	 * @throws SQLException if a database access error occurs
 	 */
 	public static boolean isFirstLogin(String userId) throws SQLException {
 		String query = "SELECT * FROM NewUser WHERE userID=?";
@@ -124,16 +123,22 @@ public class UserDao {
 		return isFirst;
 	}
 
-	private static boolean verifyPassword(String userID, String pwd) {
+	/**
+	 * 
+	 * @param userId
+	 * @param newPassword in plain text
+	 * @return
+	 */
+	public static boolean changePassword(String userId, String newPassword) {
 		boolean result = false;
 		try (Connection c = BasicConnection.getConnection()) {
-			String query = "SELECT * FROM user WHERE userID=?";
+			String query = "UPDATE user SET pwd = ? WHERE userID = ?;";
 			PreparedStatement ps = c.prepareStatement(query);
-			ps.setString(1, userID);
-			try (ResultSet rs = ps.executeQuery()) {
-				PasswordAuthenticator pwdAuth = new PasswordAuthenticator();
-				result = rs.next() && pwdAuth.authenticate(pwd.toCharArray(), rs.getString("pwd"));
-			}
+
+			PasswordAuthenticator pwdAuth = new PasswordAuthenticator();
+			ps.setString(1, pwdAuth.hash(newPassword.toCharArray()));
+			ps.setString(2, userId);
+			result = ps.executeUpdate() > 0;
 			c.close();
 		} catch (SQLException e) {
 			logger.error(e);
@@ -141,26 +146,18 @@ public class UserDao {
 		return result;
 	}
 
-	public static boolean changePassword(String userID, String oldHashPwd, String newPwd) {
-		if (!verifyPassword(userID, oldHashPwd)) {
+	/**
+	 * Change password with validate old password
+	 * 
+	 * @param userId
+	 * @param oldPassword in plain text
+	 * @param newPassword in plain text
+	 * @return
+	 */
+	public static boolean changePassword(String userId, String oldPassword, String newPassword) {
+		if (authenticate(userId, oldPassword) == null) {
 			return false;
 		}
-
-		boolean result = false;
-		try (Connection c = BasicConnection.getConnection()) {
-			String query = "UPDATE user SET pwd = ? WHERE userID = ?;";
-			PreparedStatement ps = c.prepareStatement(query);
-
-			PasswordAuthenticator pwdAuth = new PasswordAuthenticator();
-			ps.setString(1, pwdAuth.hash(newPwd.toCharArray()));
-
-			ps.setString(2, userID);
-
-			result = ps.executeUpdate() > 0;
-			c.close();
-		} catch (SQLException e) {
-			logger.error(e);
-		}
-		return result;
+		return changePassword(userId, newPassword);
 	}
 }

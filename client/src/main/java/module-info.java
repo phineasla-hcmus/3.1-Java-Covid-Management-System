@@ -1,7 +1,6 @@
 module com.seasidechachacha.client {
     requires java.base;
     
-    requires com.google.gson;
     requires com.jfoenix;
     requires org.apache.logging.log4j;
     requires org.kordamp.bootstrapfx.core;

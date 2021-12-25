@@ -37,22 +37,6 @@ public class ClientHandler implements Runnable {
 
     @Override
     public void run() {
-        // try (BufferedReader br = createBufferedReader();
-        // PrintWriter pw = createPrintWriter()) {
-        // String raw = br.readLine();
-        // System.out.println(raw);
-        // // Client must have close the socket
-        // if (raw == null) {
-        // return;
-        // }
-        // logger.trace(raw);
-
-        // } catch (Exception e) {
-        // InetSocketAddress address = (InetSocketAddress)
-        // socket.getRemoteSocketAddress();
-        // logger.warn(address, e);
-        // }
-
         // try-with-resource will auto-close the socket, so do not reuse it
         // ObjectOutputStream must be before the ObjectInputStream
         // https://stackoverflow.com/a/27736470/12405558

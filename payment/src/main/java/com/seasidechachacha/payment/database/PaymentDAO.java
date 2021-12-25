@@ -9,9 +9,9 @@ import org.apache.logging.log4j.Logger;
 
 import com.seasidechachacha.payment.sql.DataSource;
 
-public class PaymentDAO {
+public class PaymentDao {
 
-	private static Logger logger = LogManager.getLogger(PaymentDAO.class);
+	private static Logger logger = LogManager.getLogger(PaymentDao.class);
 
 	public static void main(String[] args) {
 		System.out.println(addPaymentAcc("1", 1000));

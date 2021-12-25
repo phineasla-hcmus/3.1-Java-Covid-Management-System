@@ -152,10 +152,10 @@ create table OrderItem
 create table PaymentHistory
 (
 	transactionID bigint,
-    orderID bigint,
+	userID varchar(12),
 	paymentTime datetime,
-	primary key (orderID),
-	foreign key (orderID) references OrderHistory(orderID)
+	totalMoney decimal(10,3),
+	primary key (transactionID),
 );
 
 -- BỎ DO KHÔNG CÓ THỜI GIAN

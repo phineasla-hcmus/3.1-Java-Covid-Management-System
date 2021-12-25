@@ -49,6 +49,18 @@ public class App extends Application {
         stage.show();
     }
 
+    @Override
+    public void stop() throws Exception {
+        logger.info("Exiting");
+        TaskExecutor.shutdown();
+        if (!TaskExecutor.awaitTermination(3, TimeUnit.SECONDS)) {
+            List<Runnable> droppedTasks = TaskExecutor.shutdownNow();
+            logger.warn("Executor did not terminate in the specified time. "
+                    + droppedTasks.size()
+                    + " tasks will not be executed");
+        }
+    }
+
     public static void initializeMainScreen() throws IOException {
         scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
         String initialPane = "";
@@ -133,22 +145,6 @@ public class App extends Application {
         }
         TaskExecutor.initialize();
         playground();
-        Runtime.getRuntime().addShutdownHook(new Thread() {
-            @Override
-            public void run() {
-                TaskExecutor.shutdown();
-                try {
-                    if (!TaskExecutor.awaitTermination(3, TimeUnit.SECONDS)) {
-                        List<Runnable> droppedTasks = TaskExecutor.shutdownNow();
-                        logger.warn("Executor did not terminate in the specified time. "
-                                + droppedTasks.size()
-                                + " tasks will not be executed");
-                    }
-                } catch (InterruptedException e) {
-                    // Kill it, I don't care
-                }
-            }
-        });
         launch();
     }
 

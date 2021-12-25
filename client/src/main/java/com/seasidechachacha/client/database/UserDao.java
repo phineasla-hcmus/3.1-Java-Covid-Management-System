@@ -97,7 +97,7 @@ public class UserDao {
 		try (Connection c = BasicConnection.getConnection(); Statement s = c.createStatement()) {
 			ResultSet rs = s.executeQuery(query);
 			while (rs.next()) {
-				isEmpty = rs.getBoolean(1);
+				isEmpty = !rs.getBoolean(1);
 			}
 		}
 		return isEmpty;

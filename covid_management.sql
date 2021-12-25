@@ -231,12 +231,16 @@ alter table OrderItem
 add
 constraint FK_OrderItem_ConsumptionHistory foreign key (orderID) references OrderHistory(orderID);
 
-alter table OrderItem
-add
-constraint FK_OrderItem_Package foreign key (packageID) references Package(packageID);
+ALTER TABLE OrderItem
+ADD CONSTRAINT FK_OrderItem_Package FOREIGN KEY(packageID)
+REFERENCES Package(packageID) ON DELETE CASCADE;
 
 alter table District
 add constraint FK_District_City foreign key (cityID) references City(cityID);
 
 alter table Ward
 add constraint FK_Ward_District foreign key (districtID) references District(districtID);
+
+ALTER TABLE manageduser ADD FULLTEXT(fullName);
+
+ALTER TABLE package ADD FULLTEXT(name);

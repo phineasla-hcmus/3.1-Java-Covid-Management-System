@@ -260,7 +260,7 @@ public class UserInfoController {
             TableView<Invoice> table = new TableView<Invoice>();
             TableColumn orderCol = new TableColumn("Mã đơn hàng");
             orderCol.setCellValueFactory(
-                    new PropertyValueFactory<Invoice, Integer>("orderID"));
+                    new PropertyValueFactory<Invoice, Integer>("invoiceId"));
 
             orderCol.setMinWidth(100);
 

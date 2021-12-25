@@ -110,14 +110,13 @@ public class UserDao {
 	 * @throws SQLException if a database access error occurs
 	 */
 	public static boolean isFirstLogin(String userId) throws SQLException {
-		String query = "SELECT * FROM NewUser WHERE userID=?";
-		Boolean isFirst = null;
+		String query = "SELECT 1 FROM NewUser WHERE userID=?";
+		boolean isFirst = false;
 		try (Connection c = BasicConnection.getConnection(); PreparedStatement ps = c.prepareStatement(query)) {
 			ps.setString(1, userId);
 			try (ResultSet rs = ps.executeQuery()) {
-				while (rs.next()) {
-					isFirst = rs.getBoolean(1);
-				}
+				// https://stackoverflow.com/questions/11288557/how-do-i-tell-if-a-row-exists-in-a-table
+				isFirst = rs.next();
 			}
 		}
 		return isFirst;

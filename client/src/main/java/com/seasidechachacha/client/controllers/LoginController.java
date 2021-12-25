@@ -73,7 +73,7 @@ public class LoginController {
 
     /**
      * Create and execute database request for checking new user, which then
-     * will be forward to resolveIsNewUser
+     * will be forwarded to resolveIsNewUser
      *
      * @param userId
      * @param password

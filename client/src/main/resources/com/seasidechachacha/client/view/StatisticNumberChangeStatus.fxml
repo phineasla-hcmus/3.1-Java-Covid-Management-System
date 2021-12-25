@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.seasidechachacha.client.controllers.StatisticNumberChangeStatusController">
+<VBox stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/13" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.seasidechachacha.client.controllers.StatisticNumberChangeStatusController">
    <children>
       <AnchorPane id="AnchorPane" prefHeight="800.0" prefWidth="800.0">
          <children>

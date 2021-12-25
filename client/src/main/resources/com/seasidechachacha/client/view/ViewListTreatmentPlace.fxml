@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="600.0" prefWidth="800.0" spacing="20.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.seasidechachacha.client.controllers.ViewListTreatmentPlaceController">
+<VBox prefHeight="600.0" prefWidth="800.0" spacing="20.0" xmlns="http://javafx.com/javafx/13" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.seasidechachacha.client.controllers.ViewListTreatmentPlaceController">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
@@ -28,22 +28,6 @@
             </Button>    
         </HBox> 
         <Pagination fx:id="pagination">
-<!--            <fx:define>
-                <TableView fx:id="table" prefHeight="373.0" prefWidth="760.0">
-                    <columns>
-                        <TableColumn fx:id="numberCol" prefWidth="150.4000244140625" text="ID" />
-                        <TableColumn fx:id="fullNameCol" prefWidth="150.4000244140625" text="Họ tên" />
-                        <TableColumn fx:id="birthYearCol" minWidth="0.0" prefWidth="188.0" text="Năm sinh" />
-                        <TableColumn fx:id="addressCol" minWidth="0.0" prefWidth="188.0" text="Địa chỉ" />
-                        <TableColumn fx:id="statusCol" minWidth="0.0" prefWidth="188.0" text="Trạng thái" />
-                        <TableColumn fx:id="actionCol" prefWidth="150.4000244140625" text="#" />
-                    </columns>
-                    <columnResizePolicy>
-                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                    </columnResizePolicy>
-                </TableView>
-            </fx:define>-->
-            
         </Pagination>
     </children>
     <stylesheets>

@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.VBox?>
 
 
-<VBox stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.seasidechachacha.client.controllers.ModeratorStatisticController">
+<VBox stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/13" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.seasidechachacha.client.controllers.ModeratorStatisticController">
    <children>
       <AnchorPane id="AnchorPane" prefHeight="800.0" prefWidth="800.0">
          <children>

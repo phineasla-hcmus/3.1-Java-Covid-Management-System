@@ -10,6 +10,7 @@ import com.seasidechachacha.client.models.ManagedUser;
 import com.seasidechachacha.client.models.Package;
 import com.seasidechachacha.client.models.TreatmentPlace;
 import com.seasidechachacha.common.DatabaseConfig;
+import java.sql.SQLException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,14 +27,21 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 public class App extends Application {
+
     private static final Logger logger = LogManager.getLogger(App.class);
     private static Scene scene;
     private static ScrollPane pn_all;
     private static String role = "admin";
 
     @Override
-    public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("view/UserScreen"));
+    public void start(Stage stage) throws IOException, SQLException {
+        if (UserDao.isEmpty()) {
+            scene = new Scene(loadFXML("view/FirstLogin"));
+        }
+        else {
+            scene = new Scene(loadFXML("view/Login"));
+        }
+ 
         stage.setScene(scene);
         stage.show();
     }

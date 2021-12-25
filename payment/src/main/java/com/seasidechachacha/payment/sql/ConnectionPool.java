@@ -1,4 +1,4 @@
-package com.seasidechachacha.ConnectionPool;
+package com.seasidechachacha.payment.sql;
 
 import java.sql.Connection;
 import java.sql.SQLException;

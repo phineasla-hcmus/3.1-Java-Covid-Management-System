@@ -1,4 +1,4 @@
-package com.seasidechachacha.ConnectionPool;
+package com.seasidechachacha.payment.sql;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -25,7 +25,7 @@ public class BasicConnection {
 	}
 
 	public static Connection getConnection() throws SQLException {
-		return DriverManager.getConnection(DatabaseConfig.getUrl()+"payment", DatabaseConfig.getUsername(),
+		return DriverManager.getConnection(DatabaseConfig.getUrl() + "payment", DatabaseConfig.getUsername(),
 				DatabaseConfig.getPassword());
 	}
 }

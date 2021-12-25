@@ -103,7 +103,6 @@ public class App {
             } catch (IOException e) {
                 logger.warn(address, e);
             }
-
         }
     }
 }

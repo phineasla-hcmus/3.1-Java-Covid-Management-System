@@ -155,7 +155,7 @@ create table PaymentHistory
 	userID varchar(12),
 	paymentTime datetime,
 	totalMoney decimal(10,3),
-	primary key (transactionID),
+	primary key (transactionID)
 );
 
 -- BỎ DO KHÔNG CÓ THỜI GIAN

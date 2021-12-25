@@ -5,6 +5,7 @@ import java.io.IOException;
 import com.seasidechachacha.client.controllers.ViewPackageInfoController;
 import com.seasidechachacha.client.controllers.ViewPersonalInfoController;
 import com.seasidechachacha.client.controllers.ViewTreatmentPlaceInfoController;
+import com.seasidechachacha.client.database.UserDao;
 import com.seasidechachacha.client.global.SSLConfig;
 import com.seasidechachacha.client.models.ManagedUser;
 import com.seasidechachacha.client.models.Package;
@@ -110,6 +111,8 @@ public class App extends Application {
         // UserResponse res = (UserResponse) s;
         // System.out.println(res.getDeposit());
         // InvoiceDao.logInvoice("079932368028");
+        System.out.println(UserDao.isEmpty());
+
     }
 
     public static void main(String[] args) throws Exception {

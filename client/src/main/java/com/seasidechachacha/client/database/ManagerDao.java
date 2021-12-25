@@ -770,10 +770,6 @@ public class ManagerDao {
         return currentState;
     }
 
-    public boolean changePassword(String oldPwd, String newPwd) {
-        return UserDao.changePassword(this.getManagerID(), oldPwd, newPwd);
-    }
-
     public static TreatmentPlace getCurrentTreatmentPlace(String userID) {
         TreatmentPlace result = null;
         try (Connection c = BasicConnection.getConnection()) {

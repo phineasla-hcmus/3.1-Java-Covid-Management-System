@@ -7,7 +7,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 
-
 public class CreateUserPasswordController {
     @FXML
     private TextField pass1;
@@ -28,8 +27,15 @@ public class CreateUserPasswordController {
             Alert a = new Alert(Alert.AlertType.INFORMATION);
             a.setContentText("Khởi tạo mật khẩu thành công!!!");
             a.show();
+            // TODO@phineasla
             // khởi tạo thành công, cập nhật database và cho vô screen User
+            // TODO@leesuby
+
             App.initializeMainScreen(); // này là screen moderator :))
         }
+    }
+
+    private void changePasswordThread(String userId, String password) {
+        
     }
 }

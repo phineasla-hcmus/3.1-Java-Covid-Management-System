@@ -102,7 +102,6 @@ public class BuyPackageController {
                             a.setContentText("Xin kiểm tra lại số lượng nhập !!!");
                             a.show();
                         }
-
                     }
                 }
             } else {

@@ -86,7 +86,7 @@ public class UserDao {
 	}
 
 	/**
-	 * Check if the User table is empty
+	 * Check if the User table is empty, useful for checking first time system boot
 	 * 
 	 * @return true if User table is empty, else false
 	 * @throws SQLException

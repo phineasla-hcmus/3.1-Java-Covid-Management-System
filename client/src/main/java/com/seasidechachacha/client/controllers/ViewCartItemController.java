@@ -121,7 +121,7 @@ public class ViewCartItemController {
         float sum = 0;
 
         for (int i = 0; i < list.size(); i++) {
-            sum += Integer.parseInt(list.get(i).getTotalPrice().substring(0, list.get(i).getTotalPrice().length() - 4));
+            sum += Integer.parseInt(list.get(i).getTotalPrice().substring(0, list.get(i).getTotalPrice().length() - 2));
         }
 
         packageName.setCellValueFactory(new PropertyValueFactory<CartItem, String>("name"));

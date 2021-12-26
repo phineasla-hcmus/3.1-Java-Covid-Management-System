@@ -265,7 +265,7 @@ public class PaymentDao {
     public static List<CartItem> getCart(String userId) {
         List<CartItem> result = new ArrayList<CartItem>();
         try (Connection c = BasicConnection.getConnection()) {
-            String sql = "SELECT userID,name,quantity,CartItem.price AS totalPrice,package.price AS price \n"
+            String sql = "SELECT userID,name,quantity,package.price AS price \n"
                     + "FROM CartItem JOIN Package ON CartItem.packageID=Package.packageID \n"
                     + "WHERE userId=?";
             PreparedStatement ps = c.prepareStatement(sql);
@@ -283,7 +283,7 @@ public class PaymentDao {
     }
 
     private static CartItem parseCartItem(ResultSet rs) throws SQLException {
-        return new CartItem(rs.getString("userID"), rs.getString("name"), rs.getString("quantity"),
-                rs.getString("price"), rs.getString("totalPrice"));
+        float totalPrice = Integer.parseInt(rs.getString("quantity")) * Float.parseFloat(rs.getString("price").substring(0, (rs.getString("price").length()) - 4));
+        return new CartItem(rs.getString("userID"), rs.getString("name"), rs.getString("quantity"),rs.getString("price"), Float.toString(totalPrice));
     }
 }

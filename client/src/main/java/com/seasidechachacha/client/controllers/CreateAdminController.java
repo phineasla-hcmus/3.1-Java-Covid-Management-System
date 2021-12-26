@@ -88,6 +88,10 @@ public class CreateAdminController {
                 // TODO@leesuby: này để test màn hình login khi mới tạo tkhoan admin , mốt có
                 // database thì cho vô admin luôn
                 try {
+                    Alert a = new Alert(Alert.AlertType.INFORMATION);
+                    a.setHeaderText("Thông báo!!!");
+                    a.setContentText("Khởi tạo tài khoản Admin thành công.\n Xin hãy đăng nhập lại!");
+                    a.show();
                     App.setRoot("view/Login");
                 } catch (IOException e1) {
                     // TODO Auto-generated catch block
@@ -95,6 +99,10 @@ public class CreateAdminController {
                 }
             } else {
                 // TODO: show alert on screen
+                Alert a = new Alert(Alert.AlertType.INFORMATION);
+                a.setHeaderText("Thông báo!!!");
+                a.setContentText("Khởi tạo tài khoản Admin không thành công.\n Xin hãy khởi tạo lại!");
+                a.show();
             }
         });
     }

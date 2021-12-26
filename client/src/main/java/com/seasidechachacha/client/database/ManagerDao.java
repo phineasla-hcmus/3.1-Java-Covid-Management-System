@@ -1135,7 +1135,7 @@ public class ManagerDao {
 		try (Connection c = BasicConnection.getConnection()) {
 			String query = "SELECT p.name, SUM(o.orderItemQuantity) as quantity\n"
 					+ "FROM orderitem as o JOIN package as p ON o.packageID=p.packageID join orderhistory as h ON h.orderID=o.orderID\n"
-					+ "GROUP BY p.name,h.timeDelivery\n" + "HAVING DATE(h.timeDelivery) = ? ";
+					+ "GROUP BY p.name,h.timeOrder\n" + "HAVING DATE(h.timeOrder) = ? ";
 
 			PreparedStatement ps = c.prepareStatement(query);
 
@@ -1155,7 +1155,7 @@ public class ManagerDao {
 		try (Connection c = BasicConnection.getConnection()) {
 			String query = "SELECT p.name, SUM(o.orderItemQuantity) as quantity\n"
 					+ "FROM orderitem as o JOIN package as p ON o.packageID=p.packageID join orderhistory as h ON h.orderID=o.orderID\n"
-					+ "GROUP BY p.name,h.timeDelivery\n" + "HAVING MONTH(h.timeDelivery) = ? ";
+					+ "GROUP BY p.name,h.timeOrder\n" + "HAVING MONTH(h.timeOrder) = ? ";
 
 			PreparedStatement ps = c.prepareStatement(query);
 
@@ -1231,9 +1231,9 @@ public class ManagerDao {
 	public static List<BalanceStatistic> getBalanceStatisticbyYear(String year) {
 		List<BalanceStatistic> result = null;
 		try (Connection c = BasicConnection.getConnection()) {
-			String query = "SELECT MONTH(o1.timeDelivery) as \"month\" , sum(o1.totalOrderMoney) as total,o1.timeDelivery\n"
-					+ "FROM orderhistory as o1 \n" + "GROUP BY MONTH(o1.timeDelivery)\n"
-					+ "HAVING YEAR(o1.timeDelivery)=?\n" + "ORDER BY MONTH(o1.timeDelivery)";
+			String query = "SELECT MONTH(o1.timeOrder) as \"month\" , sum(o1.totalOrderMoney) as total,o1.timeOrder\n"
+					+ "FROM orderhistory as o1 \n" + "GROUP BY MONTH(o1.timeOrder)\n"
+					+ "HAVING YEAR(o1.timeOrder)=?\n" + "ORDER BY MONTH(o1.timeOrder)";
 
 			PreparedStatement ps = c.prepareStatement(query);
 			ps.setString(1, year);

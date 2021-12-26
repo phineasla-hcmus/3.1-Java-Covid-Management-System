@@ -2,13 +2,12 @@ package com.seasidechachacha.client.controllers;
 
 import java.io.IOException;
 import java.util.Optional;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 
 import com.seasidechachacha.client.App;
 import com.seasidechachacha.client.database.AdminDao;
 import com.seasidechachacha.client.database.ManagerDao;
+import com.seasidechachacha.client.global.Session;
+import com.seasidechachacha.client.global.TaskExecutor;
 import com.seasidechachacha.client.models.TreatmentPlace;
 
 import org.apache.logging.log4j.LogManager;
@@ -33,20 +32,10 @@ public class ViewTreatmentPlaceInfoController {
     @FXML
     private Button btnChangeName, btnChangeCapacity, btnChangeReception;
 
-    private Executor exec;
     private int treatID;
+    
+    private AdminDao admin = new AdminDao(Session.getUser().getUserId());
 
-    @FXML
-    private void initialize() {
-        exec = Executors.newSingleThreadScheduledExecutor(new ThreadFactory() {
-            @Override
-            public Thread newThread(Runnable r) {
-                Thread t = new Thread(r);
-                t.setDaemon(true);
-                return t;
-            }
-        });
-    }
 
     private void getTreatmentPlaceThread() {
         Task<TreatmentPlace> dataTask = new Task<TreatmentPlace>() {
@@ -62,7 +51,7 @@ public class ViewTreatmentPlaceInfoController {
                 logger.fatal(ex);
             }
         });
-        exec.execute(dataTask);
+        TaskExecutor.execute(dataTask);
     }
 
     public void resolveTreatmentPlace(WorkerStateEvent e, TreatmentPlace treat) throws IOException {
@@ -71,7 +60,6 @@ public class ViewTreatmentPlaceInfoController {
         labelCapacity.setText(String.valueOf(treat.getCapacity()));
         labelReception.setText(String.valueOf(treat.getCurrentReception()));
 
-        AdminDao Tam = new AdminDao("admin-123456");
         btnChangeName.setOnAction(event -> {
             Dialog dialog = new TextInputDialog(treat.getName());
             dialog.setTitle("Thay đổi tên địa điểm");
@@ -79,7 +67,7 @@ public class ViewTreatmentPlaceInfoController {
             Optional<String> result = dialog.showAndWait();
 
             if (result.isPresent()) {
-                if (Tam.updateTreatmentPlaceName(treatID, result.get())) {
+                if (admin.updateTreatmentPlaceName(treatID, result.get())) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Thông báo");
                     alert.setHeaderText("Cập nhật thông tin địa điểm điều trị/cách ly");
@@ -98,7 +86,7 @@ public class ViewTreatmentPlaceInfoController {
             Optional<String> result = dialog.showAndWait();
 
             if (result.isPresent()) {
-                if (Tam.updateTreatmentPlaceCapacity(treatID, Integer.valueOf(result.get()))) {
+                if (admin.updateTreatmentPlaceCapacity(treatID, Integer.valueOf(result.get()))) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Thông báo");
                     alert.setHeaderText("Cập nhật thông tin địa điểm điều trị/cách ly");
@@ -118,7 +106,7 @@ public class ViewTreatmentPlaceInfoController {
             Optional<String> result = dialog.showAndWait();
 
             if (result.isPresent()) {
-                if (Tam.updateTreatmentPlaceCurrentReception(treatID, Integer.valueOf(result.get()))) {
+                if (admin.updateTreatmentPlaceCurrentReception(treatID, Integer.valueOf(result.get()))) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Thông báo");
                     alert.setHeaderText("Cập nhật thông tin địa điểm điều trị/cách ly");

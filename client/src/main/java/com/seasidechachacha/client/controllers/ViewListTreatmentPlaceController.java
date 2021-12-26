@@ -2,13 +2,10 @@ package com.seasidechachacha.client.controllers;
 
 import com.seasidechachacha.client.App;
 import com.seasidechachacha.client.database.ManagerDao;
-import static com.seasidechachacha.client.database.ManagerDao.getTreatmentPlaceList;
+import com.seasidechachacha.client.global.TaskExecutor;
 import com.seasidechachacha.client.models.TreatmentPlace;
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
@@ -37,18 +34,8 @@ public class ViewListTreatmentPlaceController {
     @FXML
     private Pagination pagination;
 
-    private Executor exec;
-
     @FXML
     private void initialize() {
-        exec = Executors.newSingleThreadScheduledExecutor(new ThreadFactory() {
-            @Override
-            public Thread newThread(Runnable r) {
-                Thread t = new Thread(r);
-                t.setDaemon(true);
-                return t;
-            }
-        });
         getListTreatmentPlaceThread();
 
         btnAdd.setOnAction(event -> {
@@ -75,7 +62,7 @@ public class ViewListTreatmentPlaceController {
                 logger.fatal(ex);
             }
         });
-        exec.execute(dataTask);
+        TaskExecutor.execute(dataTask);
     }
 
     public void resolveListTreatmentPlace(WorkerStateEvent e, List<TreatmentPlace> list) throws IOException {
@@ -142,8 +129,6 @@ public class ViewListTreatmentPlaceController {
             Callback<TableColumn<TreatmentPlace, String>, TableCell<TreatmentPlace, String>> cellFactory
                     = //
                     new Callback<TableColumn<TreatmentPlace, String>, TableCell<TreatmentPlace, String>>() {
-                // TODO: TableCell is a raw type. References to generic type TableCell<S,T>
-                // should be parameterized
                 @Override
                 public TableCell call(final TableColumn<TreatmentPlace, String> param) {
                     final TableCell<Object, String> cell = new TableCell<Object, String>() {

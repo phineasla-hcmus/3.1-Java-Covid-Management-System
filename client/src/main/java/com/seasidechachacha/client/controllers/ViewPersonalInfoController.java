@@ -5,6 +5,8 @@ import com.seasidechachacha.client.database.ManagedUserDao;
 import com.seasidechachacha.client.database.ManagerDao;
 import static com.seasidechachacha.client.database.ManagerDao.getCurrentState;
 import static com.seasidechachacha.client.database.ManagerDao.getCurrentTreatmentPlace;
+import com.seasidechachacha.client.global.Session;
+import com.seasidechachacha.client.global.TaskExecutor;
 import com.seasidechachacha.client.models.ManagedUser;
 import com.seasidechachacha.client.models.StateHistory;
 import com.seasidechachacha.client.models.TreatmentPlace;
@@ -17,9 +19,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -73,24 +72,14 @@ public class ViewPersonalInfoController {
     private Button btnChangeStatus, btnChangePlace;
 
     ChoiceDialog<String> statusDialog, placeDialog;
-
-    private Executor exec;
+    
     private String currentStatus, currentPlace, userId;
     private int currentState;
-    private ManagedUser currentUser;
 
-    ManagerDao Tam = new ManagerDao("mod-19127268");
+    private ManagerDao manager = new ManagerDao(Session.getUser().getUserId());
 
     @FXML
     private void initialize() {
-        exec = Executors.newSingleThreadScheduledExecutor(new ThreadFactory() {
-            @Override
-            public Thread newThread(Runnable r) {
-                Thread t = new Thread(r);
-                t.setDaemon(true);
-                return t;
-            }
-        });
         btnChangeStatus.setOnAction(event -> {
             statusDialog.setTitle("Thay đổi trạng thái");
             statusDialog.setHeaderText("Trạng thái hiện tại");
@@ -117,7 +106,7 @@ public class ViewPersonalInfoController {
                     alert.setContentText("Chỉ có thể thay đổi trạng thái từ F2->F1, F2->F0, F1->F0!");
 
                     alert.showAndWait();
-                } else if (Tam.setState(userId, state)) {
+                } else if (manager.setState(userId, state)) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Thông báo");
                     alert.setHeaderText("Cập nhật thông tin người liên quan Covid19");
@@ -135,7 +124,7 @@ public class ViewPersonalInfoController {
             Optional<String> result = placeDialog.showAndWait();
             if (result.isPresent()) {
                 int treatID = ManagerDao.getTreatmentPlaceIDByName(result.get());
-                if (Tam.addTreatmentPlaceHistory(userId, treatID)) {
+                if (manager.addTreatmentPlaceHistory(userId, treatID)) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Thông báo");
                     alert.setHeaderText("Cập nhật thông tin người liên quan Covid19");
@@ -163,11 +152,11 @@ public class ViewPersonalInfoController {
                 logger.fatal(ex);
             }
         });
-        exec.execute(dataTask);
+        TaskExecutor.execute(dataTask);
     }
 
     public void resolveManagedUser(WorkerStateEvent e, ManagedUser user) throws IOException {
-        this.currentUser = user;
+//        this.currentUser = user;
         labelFullName.setText(user.getName());
         labelIdentityCard.setText(user.getUserId());
         labelBirthYear.setText(String.valueOf(user.getBirthYear()));
@@ -211,7 +200,7 @@ public class ViewPersonalInfoController {
                 logger.fatal(ex);
             }
         });
-        exec.execute(dataTask);
+        TaskExecutor.execute(dataTask);
     }
 
     public void resolveListTreatmentPlace(WorkerStateEvent e, List<TreatmentPlace> list) throws IOException {
@@ -248,7 +237,7 @@ public class ViewPersonalInfoController {
                 logger.fatal(ex);
             }
         });
-        exec.execute(dataTask);
+        TaskExecutor.execute(dataTask);
     }
 
     public void resolveListRelated(WorkerStateEvent e, List<ManagedUser> list) throws IOException {
@@ -270,7 +259,7 @@ public class ViewPersonalInfoController {
                 logger.fatal(ex);
             }
         });
-        exec.execute(dataTask);
+        TaskExecutor.execute(dataTask);
     }
 
     public void resolveListStateHistory(WorkerStateEvent e, List<StateHistory> list) throws IOException {
@@ -294,7 +283,7 @@ public class ViewPersonalInfoController {
                 logger.fatal(ex);
             }
         });
-        exec.execute(dataTask);
+        TaskExecutor.execute(dataTask);
     }
 
     public void resolveListTreatmentPlaceHistory(WorkerStateEvent e, List<TreatmentPlaceHistory> list) throws IOException {

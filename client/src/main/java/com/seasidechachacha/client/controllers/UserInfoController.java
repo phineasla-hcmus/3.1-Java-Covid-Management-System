@@ -7,13 +7,11 @@ import static com.seasidechachacha.client.database.ManagerDao.getDebt;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 
 import com.seasidechachacha.client.database.ManagerDao;
 import com.seasidechachacha.client.database.InvoiceDao;
 import com.seasidechachacha.client.global.Session;
+import com.seasidechachacha.client.global.TaskExecutor;
 import com.seasidechachacha.client.models.ManagedUser;
 import com.seasidechachacha.client.models.ManagedUserHistory;
 import com.seasidechachacha.client.models.Invoice;
@@ -43,8 +41,6 @@ public class UserInfoController {
     private Label labelFullName, labelIdentityCard, labelBirthYear, labelAddress, labelStatus, labelTreatmentPlace,
             labelDebt;
 
-    private Executor exec;
-
     private String userId = Session.getUser().getUserId();
 
     @FXML
@@ -56,15 +52,6 @@ public class UserInfoController {
 
     @FXML
     private void initialize() {
-        exec = Executors.newSingleThreadScheduledExecutor(new ThreadFactory() {
-
-            @Override
-            public Thread newThread(Runnable r) {
-                Thread t = new Thread(r);
-                t.setDaemon(true);
-                return t;
-            }
-        });
         getManagedHistoryThread(userId);
 
         ManagedUser user = get(userId);
@@ -96,7 +83,7 @@ public class UserInfoController {
                 logger.fatal(ex);
             }
         });
-        exec.execute(dataTask);
+        TaskExecutor.execute(dataTask);
     }
 
     public void resolveManagedHistory(WorkerStateEvent e, List<ManagedUserHistory> list) throws IOException {
@@ -135,7 +122,7 @@ public class UserInfoController {
                 logger.fatal(ex);
             }
         });
-        exec.execute(dataTask);
+        TaskExecutor.execute(dataTask);
     }
 
     public void resolveOrderHistory(WorkerStateEvent e, List<Invoice> list) throws IOException {
@@ -175,7 +162,7 @@ public class UserInfoController {
                 logger.fatal(ex);
             }
         });
-        exec.execute(dataTask);
+        TaskExecutor.execute(dataTask);
     }
 
     public void resolvePaymentHistory(WorkerStateEvent e, List<PaymentHistory> list) throws IOException {

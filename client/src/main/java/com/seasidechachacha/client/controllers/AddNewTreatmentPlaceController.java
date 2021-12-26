@@ -9,6 +9,7 @@ import java.util.List;
 
 import com.seasidechachacha.client.App;
 import com.seasidechachacha.client.database.AdminDao;
+import com.seasidechachacha.client.global.Session;
 import com.seasidechachacha.client.models.City;
 import com.seasidechachacha.client.models.District;
 import com.seasidechachacha.client.models.TreatmentPlace;
@@ -33,7 +34,7 @@ public class AddNewTreatmentPlaceController {
     @FXML
     private ComboBox<String> cbCity, cbDistrict, cbWard;
 
-    AdminDao Tam = new AdminDao("admin-123456");
+    private AdminDao admin = new AdminDao(Session.getUser().getUserId());
 
     @FXML
     private Button btnAdd;
@@ -42,7 +43,7 @@ public class AddNewTreatmentPlaceController {
     private void initialize() {
         btnAdd.setOnAction(event -> {
             if (isValid()) {
-                if (Tam.addTreatmentPlace(getCurrentInput())) {
+                if (admin.addTreatmentPlace(getCurrentInput())) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Thông báo");
                     alert.setHeaderText("Quản lý địa điểm điều trị/cách ly");

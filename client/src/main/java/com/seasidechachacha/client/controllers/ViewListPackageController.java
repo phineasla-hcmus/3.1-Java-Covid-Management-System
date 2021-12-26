@@ -2,19 +2,15 @@ package com.seasidechachacha.client.controllers;
 
 import com.seasidechachacha.client.App;
 import com.seasidechachacha.client.database.ManagerDao;
+import com.seasidechachacha.client.global.Session;
+import com.seasidechachacha.client.global.TaskExecutor;
 import com.seasidechachacha.client.models.Package;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXML;
@@ -24,7 +20,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
@@ -55,10 +50,8 @@ public class ViewListPackageController {
     @FXML
     private Pagination pagination;
 
-    // for testing purpose
-    private ManagerDao Tam;
+    private ManagerDao manager = new ManagerDao(Session.getUser().getUserId());
 
-    private Executor exec;
 
     private String keyword;
 
@@ -68,16 +61,8 @@ public class ViewListPackageController {
         btnFilter.setOnAction(event -> {
             showFilterDialog();
         });
-        exec = Executors.newSingleThreadScheduledExecutor(new ThreadFactory() {
-            @Override
-            public Thread newThread(Runnable r) {
-                Thread t = new Thread(r);
-                t.setDaemon(true);
-                return t;
-            }
-        });
+
         getListPackageThread();
-        Tam = new ManagerDao("mod-19127268");
 
         btnAdd.setOnAction(event -> {
             try {
@@ -200,7 +185,7 @@ public class ViewListPackageController {
                 logger.fatal(ex);
             }
         });
-        exec.execute(dataTask);
+        TaskExecutor.execute(dataTask);
     }
 
     private void getFilterPackageListByDay(String keyword, int min, int max) {
@@ -217,7 +202,7 @@ public class ViewListPackageController {
                 logger.fatal(ex);
             }
         });
-        exec.execute(dataTask);
+        TaskExecutor.execute(dataTask);
     }
 
     private void getFilterPackageListByPrice(String keyword, double min, double max) {
@@ -234,7 +219,7 @@ public class ViewListPackageController {
                 logger.fatal(ex);
             }
         });
-        exec.execute(dataTask);
+        TaskExecutor.execute(dataTask);
     }
 
     private void getSearchResult(String keyword) {
@@ -251,7 +236,7 @@ public class ViewListPackageController {
                 logger.fatal(ex);
             }
         });
-        exec.execute(dataTask);
+        TaskExecutor.execute(dataTask);
     }
 
     private void getSortedListPackageThread(String label) {
@@ -278,7 +263,7 @@ public class ViewListPackageController {
                 logger.fatal(ex);
             }
         });
-        exec.execute(dataTask);
+        TaskExecutor.execute(dataTask);
     }
 
     private void getListPackageThread() {
@@ -295,7 +280,7 @@ public class ViewListPackageController {
                 logger.fatal(ex);
             }
         });
-        exec.execute(dataTask);
+        TaskExecutor.execute(dataTask);
     }
 
     public void resolveListPackage(WorkerStateEvent e, List<Package> list) throws IOException {
@@ -438,7 +423,7 @@ public class ViewListPackageController {
                                 btn.setOnAction(event -> {
                                     Package pack = getTableRow().getItem();
                                     int packID = pack.getPackageID();
-                                    if (Tam.deletePackage(packID)) {
+                                    if (manager.deletePackage(packID)) {
 
                                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
                                         alert.setTitle("Thông báo");

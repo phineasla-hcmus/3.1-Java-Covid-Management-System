@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import com.seasidechachacha.client.App;
 import com.seasidechachacha.client.database.ManagerDao;
+import com.seasidechachacha.client.global.Session;
 import com.seasidechachacha.client.models.Package;
 
 import org.apache.logging.log4j.LogManager;
@@ -24,6 +25,8 @@ public class AddNewPackageController {
     @FXML
     private Button btnAdd;
 
+    private ManagerDao manager = new ManagerDao(Session.getUser().getUserId());
+
 //    @FXML
 //    private ComboBox cbDayCooldown;
     @FXML
@@ -37,10 +40,9 @@ public class AddNewPackageController {
 
     @FXML
     public void initialize() {
-        ManagerDao Tam = new ManagerDao("mod-19127268");
         btnAdd.setOnAction(event -> {
             if (isValid()) {
-                if (Tam.addPackage(getCurrentInput())) {
+                if (manager.addPackage(getCurrentInput())) {
                     // TODO
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Thông báo");

@@ -2,6 +2,8 @@ package com.seasidechachacha.client.controllers;
 
 import com.seasidechachacha.client.App;
 import com.seasidechachacha.client.database.ManagerDao;
+import com.seasidechachacha.client.global.Session;
+import com.seasidechachacha.client.global.TaskExecutor;
 import com.seasidechachacha.client.models.Package;
 
 import org.apache.logging.log4j.LogManager;
@@ -9,9 +11,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.Optional;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 
@@ -34,22 +33,7 @@ public class ViewPackageInfoController {
 
     private int packageID;
 
-    private Executor exec;
-//    private Package currentPack;
-
-    ManagerDao Tam = new ManagerDao("mod-19127268");
-
-    @FXML
-    private void initialize() {
-        exec = Executors.newSingleThreadScheduledExecutor(new ThreadFactory() {
-            @Override
-            public Thread newThread(Runnable r) {
-                Thread t = new Thread(r);
-                t.setDaemon(true);
-                return t;
-            }
-        });
-    }
+    private ManagerDao manager = new ManagerDao(Session.getUser().getUserId());
 
     private void getPackageThread() {
         Task<Package> dataTask = new Task<Package>() {
@@ -65,7 +49,7 @@ public class ViewPackageInfoController {
                 logger.fatal(ex);
             }
         });
-        exec.execute(dataTask);
+        TaskExecutor.execute(dataTask);
     }
 
     public void resolvePackage(WorkerStateEvent e, Package pack) throws IOException {
@@ -80,7 +64,7 @@ public class ViewPackageInfoController {
             Optional<String> result = dialog.showAndWait();
 
             if (result.isPresent()) {
-                if (Tam.updatePackageName(packageID, result.get())) {
+                if (manager.updatePackageName(packageID, result.get())) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Thông báo");
                     alert.setHeaderText("Cập nhật thông tin nhu yếu phẩm");
@@ -98,7 +82,7 @@ public class ViewPackageInfoController {
             Optional<String> result = dialog.showAndWait();
 
             if (result.isPresent()) {
-                if (Tam.updatePackageLimitPerPerson(packageID, Integer.valueOf(result.get()))) {
+                if (manager.updatePackageLimitPerPerson(packageID, Integer.valueOf(result.get()))) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Thông báo");
                     alert.setHeaderText("Cập nhật thông tin nhu yếu phẩm");
@@ -118,7 +102,7 @@ public class ViewPackageInfoController {
             Optional<String> result = dialog.showAndWait();
 
             if (result.isPresent()) {
-                if (Tam.updatePackageDayCooldown(packageID, Integer.valueOf(result.get()))) {
+                if (manager.updatePackageDayCooldown(packageID, Integer.valueOf(result.get()))) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Thông báo");
                     alert.setHeaderText("Cập nhật thông tin nhu yếu phẩm");
@@ -137,7 +121,7 @@ public class ViewPackageInfoController {
             Optional<String> result = dialog.showAndWait();
 
             if (result.isPresent()) {
-                if (Tam.updatePackagePrice(packageID, Integer.valueOf(result.get()))) {
+                if (manager.updatePackagePrice(packageID, Integer.valueOf(result.get()))) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Thông báo");
                     alert.setHeaderText("Cập nhật thông tin nhu yếu phẩm");
@@ -160,7 +144,6 @@ public class ViewPackageInfoController {
     }
 
     public void setup(Package pack) {
-//        this.currentPack = pack;
         packageID = pack.getPackageID();
         getPackageThread();
     }

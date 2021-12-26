@@ -3,15 +3,13 @@ package com.seasidechachacha.client.controllers;
 import com.seasidechachacha.client.App;
 import com.seasidechachacha.client.database.ManagedUserDao;
 import com.seasidechachacha.client.database.ManagerDao;
+import com.seasidechachacha.client.global.TaskExecutor;
 import com.seasidechachacha.client.models.ManagedUser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
@@ -47,19 +45,8 @@ public class ViewListUserController {
     @FXML
     private Pagination pagination;
 
-    private Executor exec;
-
     @FXML
     private void initialize() {
-        exec = Executors.newSingleThreadScheduledExecutor(new ThreadFactory() {
-
-            @Override
-            public Thread newThread(Runnable r) {
-                Thread t = new Thread(r);
-                t.setDaemon(true);
-                return t;
-            }
-        });
         getListManagedUserThread();
 
         btnAdd.setOnAction(event -> {
@@ -106,7 +93,7 @@ public class ViewListUserController {
                 logger.fatal(ex);
             }
         });
-        exec.execute(dataTask);
+        TaskExecutor.execute(dataTask);
     }
 
     private void getSortedListManagedUserThread(String label) {
@@ -131,7 +118,7 @@ public class ViewListUserController {
                 logger.fatal(ex);
             }
         });
-        exec.execute(dataTask);
+        TaskExecutor.execute(dataTask);
     }
 
     private void getListManagedUserThread() {
@@ -148,7 +135,7 @@ public class ViewListUserController {
                 logger.fatal(ex);
             }
         });
-        exec.execute(dataTask);
+        TaskExecutor.execute(dataTask);
     }
 
     public void resolveListManagedUser(WorkerStateEvent e, List<ManagedUser> list) throws IOException {

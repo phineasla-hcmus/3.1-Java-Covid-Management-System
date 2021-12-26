@@ -10,6 +10,7 @@ import java.util.List;
 
 import com.seasidechachacha.client.App;
 import com.seasidechachacha.client.database.ManagerDao;
+import com.seasidechachacha.client.global.Session;
 import com.seasidechachacha.client.models.City;
 import com.seasidechachacha.client.models.District;
 import com.seasidechachacha.client.models.ManagedUser;
@@ -35,7 +36,7 @@ public class AddNewUserController {
     @FXML
     private ComboBox<String> cbCity, cbDistrict, cbWard, cbRelated;
 
-    ManagerDao Tam = new ManagerDao("mod-19127268");
+    private ManagerDao manager = new ManagerDao(Session.getUser().getUserId());
 
     @FXML
     private Button btnAddNewPerson;
@@ -56,7 +57,7 @@ public class AddNewUserController {
         btnAddNewPerson.setOnAction(event -> {
             try {
                 if (isValid()) {
-                    if (Tam.addNewUser(getCurrentInput(), currentState)) {
+                    if (manager.addNewUser(getCurrentInput(), currentState)) {
                         Alert alert = new Alert(AlertType.INFORMATION);
                         alert.setTitle("Thông báo");
                         alert.setHeaderText("Quản lý người liên quan Covid19");
@@ -116,7 +117,7 @@ public class AddNewUserController {
 
         });
 
-        List<String> relatedList = Tam.getUserIDList();
+        List<String> relatedList = manager.getUserIDList();
         for (int i = 0; i < relatedList.size(); i++) {
             cbRelated.getItems().add(relatedList.get(i));
         }
@@ -163,7 +164,7 @@ public class AddNewUserController {
         int birthYear = Integer.valueOf(tfBirthYear.getText());
         String address = cbCity.getValue() + ", " + cbDistrict.getValue() + ", " + cbWard.getValue();
 
-        currentState = Tam.getCurrentState(cbRelated.getValue()) + 1;
+        currentState = manager.getCurrentState(cbRelated.getValue()) + 1;
         user = new ManagedUser(ID, name, birthYear, cbRelated.getValue(), 0, address, currentState);
 
         return user;

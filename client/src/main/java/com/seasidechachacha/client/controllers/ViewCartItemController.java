@@ -4,7 +4,7 @@
  */
 package com.seasidechachacha.client.controllers;
 
-import com.seasidechachacha.client.database.InvoiceDao;
+import com.seasidechachacha.client.database.PaymentDao;
 import com.seasidechachacha.client.global.Session;
 import com.seasidechachacha.client.global.TaskExecutor;
 import com.seasidechachacha.client.models.CartItem;
@@ -106,7 +106,7 @@ public class ViewCartItemController {
         Task<List<CartItem>> cart = new Task<List<CartItem>>() {
             @Override
             public List<CartItem> call() throws SQLException {
-                return InvoiceDao.getCart(Session.getUser().getUserId());
+                return PaymentDao.getCart(Session.getUser().getUserId());
             }
         };
         cart.setOnSucceeded(e -> {
@@ -137,7 +137,7 @@ public class ViewCartItemController {
         Task<Long> cart = new Task<Long>() {
             @Override
             public Long call() throws SQLException {
-                return InvoiceDao.logCart(Session.getUser().getUserId());
+                return PaymentDao.logCart(Session.getUser().getUserId());
             }
         };
         cart.setOnSucceeded(e -> {
@@ -151,7 +151,7 @@ public class ViewCartItemController {
         alert.setTitle("Thông báo");
         alert.setHeaderText("Đặt hàng thành công!!!");
         alert.show();
-        InvoiceDao.clearCart(Session.getUser().getUserId());
+        PaymentDao.clearCart(Session.getUser().getUserId());
         getCartItemsThread();
 
     }
@@ -160,7 +160,7 @@ public class ViewCartItemController {
         Task<Boolean> clearCart = new Task<Boolean>() {
             @Override
             public Boolean call() throws SQLException {
-                return InvoiceDao.clearCart(Session.getUser().getUserId());
+                return PaymentDao.clearCart(Session.getUser().getUserId());
             }
         };
         clearCart.setOnSucceeded(e -> {

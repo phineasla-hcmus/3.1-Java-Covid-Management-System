@@ -6,7 +6,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 
-import com.seasidechachacha.client.database.InvoiceDao;
+import com.seasidechachacha.client.database.PaymentDao;
 import com.seasidechachacha.client.database.ManagerDao;
 import com.seasidechachacha.client.global.Session;
 import com.seasidechachacha.client.models.Package;
@@ -157,7 +157,7 @@ public class BuyPackageController {
                 int quantityNum = Integer.parseInt(quantity.getText());
                 String totalCostString = totalCost.getText().substring(0, totalCost.getText().length() - 6);
                 double totalCostNum = Double.parseDouble(totalCostString);
-                return InvoiceDao.addToCart(Session.getUser().getUserId(), packageId, quantityNum, price);
+                return PaymentDao.addToCart(Session.getUser().getUserId(), packageId, quantityNum, price);
             }
         };
         flag.setOnSucceeded(e -> {

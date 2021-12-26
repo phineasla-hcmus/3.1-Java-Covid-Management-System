@@ -17,10 +17,10 @@ import org.apache.logging.log4j.Logger;
 /**
  * DAO for CartItem, OrderHistory and OrderItem
  */
-public class InvoiceDao {
-    private static Logger logger = LogManager.getLogger(InvoiceDao.class);
+public class PaymentDao {
+    private static Logger logger = LogManager.getLogger(PaymentDao.class);
 
-    public static List<Invoice> getList(String userId, int limit, int offset) {
+    public static List<Invoice> getHistoryList(String userId, int limit, int offset) {
         List<Invoice> results = new ArrayList<Invoice>();
         try (Connection c = BasicConnection.getConnection()) {
             String query = "SELECT t.orderID,timeOrder,SUM(orderItemQuantity) AS totalItems,totalOrderMoney,t.userID \n"
@@ -59,7 +59,7 @@ public class InvoiceDao {
     public static List<Invoice> getPendingPaymentList(String userId, int limit, int offset) {
         List<Invoice> result = new ArrayList<>();
         try (Connection c = BasicConnection.getConnection()) {
-            String query = "SELECT t.orderID, timeOrder,SUM(orderItemQuantity) AS totalItems,totalOrderMoney,t.userID \n"
+            String query = "SELECT t.orderID,timeOrder,SUM(orderItemQuantity) AS totalItems,totalOrderMoney,t.userID \n"
                     + "FROM orderhistory t \n"
                     + "INNER JOIN orderitem p \n"
                     + "ON t.orderID=p.orderID \n"
@@ -116,9 +116,9 @@ public class InvoiceDao {
      * <p>
      * <b>Note: this method doesn't:</b>
      * <ol>
-     * <li>Clear user's CartItem. See {@link InvoiceDao#clearCart(String)}</li>
+     * <li>Clear user's CartItem. See {@link PaymentDao#clearCart(String)}</li>
      * <li>Accumulate ManagedUser.debt. See
-     * {@link InvoiceDao#getCartTotalPrice(String)}
+     * {@link PaymentDao#getCartTotalPrice(String)}
      * </li>
      * <li>Create new {@code PendingPayment} record</li>
      * </ol>
@@ -229,7 +229,7 @@ public class InvoiceDao {
 
     /**
      * Clear user's CartItem. This usually use with
-     * {@link InvoiceDao#logCart(String)}
+     * {@link PaymentDao#logCart(String)}
      * 
      * @param userId
      * @return true if operation success

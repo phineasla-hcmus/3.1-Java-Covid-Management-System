@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.List;
 
 import com.seasidechachacha.client.database.ManagerDao;
-import com.seasidechachacha.client.database.InvoiceDao;
+import com.seasidechachacha.client.database.PaymentDao;
 import com.seasidechachacha.client.global.Session;
 import com.seasidechachacha.client.global.TaskExecutor;
 import com.seasidechachacha.client.models.ManagedUser;
@@ -112,7 +112,7 @@ public class UserInfoController {
         Task<List<Invoice>> dataTask = new Task<List<Invoice>>() {
             @Override
             public List<Invoice> call() {
-                return InvoiceDao.getList(userID, 100, 0);
+                return PaymentDao.getHistoryList(userID, 100, 0);
             }
         };
         dataTask.setOnSucceeded(e -> {

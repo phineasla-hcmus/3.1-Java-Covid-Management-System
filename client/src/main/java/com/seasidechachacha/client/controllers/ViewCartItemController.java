@@ -106,7 +106,7 @@ public class ViewCartItemController {
         Task<List<CartItem>> cart = new Task<List<CartItem>>() {
             @Override
             public List<CartItem> call() throws SQLException {
-                return InvoiceDao.viewCart(Session.getUser().getUserId());
+                return InvoiceDao.getCart(Session.getUser().getUserId());
             }
         };
         cart.setOnSucceeded(e -> {
@@ -157,16 +157,16 @@ public class ViewCartItemController {
     }
 
     private void clearCartThread() {
-        Task<Boolean> cart = new Task<Boolean>() {
+        Task<Boolean> clearCart = new Task<Boolean>() {
             @Override
             public Boolean call() throws SQLException {
                 return InvoiceDao.clearCart(Session.getUser().getUserId());
             }
         };
-        cart.setOnSucceeded(e -> {
-            resolveClearCart(e, cart.getValue());
+        clearCart.setOnSucceeded(e -> {
+            resolveClearCart(e, clearCart.getValue());
         });
-        TaskExecutor.execute(cart);
+        TaskExecutor.execute(clearCart);
     }
 
     public void resolveClearCart(WorkerStateEvent e, Boolean list) {

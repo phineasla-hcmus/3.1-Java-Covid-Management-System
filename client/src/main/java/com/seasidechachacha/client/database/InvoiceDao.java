@@ -164,21 +164,22 @@ public class InvoiceDao {
      * Create new CartItem record
      * 
      * @param userId
-     * @param packageID
+     * @param packageId
      * @param quantity
-     * @param price
+     * @param price     the current price of the package, not the total price of
+     *                  CartItem
      * @return true if operation success
      */
-    public static boolean addtoCart(String userId, int packageID, int quantity, double price) {
+    public static boolean addToCart(String userId, int packageId, int quantity, double price) {
         boolean result = false;
         try (Connection c = BasicConnection.getConnection()) {
             c.setAutoCommit(false);
             String sql = "INSERT INTO CartItem VALUES (?,?,?,?);";
             PreparedStatement ps = c.prepareStatement(sql);
             try {
-                System.out.println(userId + " " + packageID + " " + quantity + " " + price);
+                System.out.println(userId + " " + packageId + " " + quantity + " " + price);
                 ps.setString(1, userId);
-                ps.setInt(2, packageID);
+                ps.setInt(2, packageId);
                 ps.setInt(3, quantity);
                 ps.setDouble(4, price);
                 result = ps.executeUpdate() > 0;
@@ -186,6 +187,39 @@ public class InvoiceDao {
             } catch (SQLException commitException) {
                 logger.error(commitException);
                 c.rollback();
+                result = false;
+            }
+        } catch (SQLException e) {
+            logger.error("Error create connection or rollback", e);
+        }
+        return result;
+    }
+
+    /**
+     * Create new CartItem record, with "price" from {@code Package} table
+     * 
+     * @param userId
+     * @param packageId
+     * @param quantity
+     * @return true if operation success
+     */
+    public static boolean addToCart(String userId, int packageId, int quantity) {
+        boolean result = false;
+        try (Connection c = BasicConnection.getConnection()) {
+            c.setAutoCommit(false);
+            String sql = "INSERT INTO CartItem SELECT ?,?,?,price FROM Package WHERE packageID=?";
+            PreparedStatement ps = c.prepareStatement(sql);
+            try {
+                ps.setString(1, userId);
+                ps.setInt(2, packageId);
+                ps.setInt(3, quantity);
+                ps.setInt(4, packageId);
+                result = ps.executeUpdate() > 0;
+                c.commit();
+            } catch (SQLException commitException) {
+                logger.error(commitException);
+                c.rollback();
+                result = false;
             }
         } catch (SQLException e) {
             logger.error("Error create connection or rollback", e);
@@ -223,32 +257,26 @@ public class InvoiceDao {
     }
 
     /**
-     * View user's CartItem.
+     * View user's CartItem list.
      * 
      * @param userId
-     * @return true if operation success
+     * @return list of {@code CartItem}
      */
-    public static List<CartItem> viewCart(String userId) {
+    public static List<CartItem> getCart(String userId) {
         List<CartItem> result = new ArrayList<CartItem>();
-        System.out.println(userId);
         try (Connection c = BasicConnection.getConnection()) {
-            c.setAutoCommit(false);
-            String sql = "SELECT userID ,name , quantity, CartItem.price as totalPrice, package.price as price FROM CartItem JOIN Package ON CartItem.packageID=Package.packageID WHERE userId=?";
+            String sql = "SELECT userID,name,quantity,CartItem.price AS totalPrice,package.price AS price \n"
+                    + "FROM CartItem JOIN Package ON CartItem.packageID=Package.packageID \n"
+                    + "WHERE userId=?";
             PreparedStatement ps = c.prepareStatement(sql);
             ps.setString(1, userId);
-
-            try {
-                ResultSet rs = ps.executeQuery();
+            try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     result.add(parseCartItem(rs));
                 }
-                c.commit();
-            } catch (SQLException commitException) {
-                logger.error(commitException);
-                c.rollback();
             }
         } catch (SQLException e) {
-            logger.error("Error create connection or rollback", e);
+            logger.error(e);
         }
 
         return result;

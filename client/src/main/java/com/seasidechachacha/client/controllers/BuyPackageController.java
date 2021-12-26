@@ -157,7 +157,7 @@ public class BuyPackageController {
                 int quantityNum = Integer.parseInt(quantity.getText());
                 String totalCostString = totalCost.getText().substring(0, totalCost.getText().length() - 6);
                 double totalCostNum = Double.parseDouble(totalCostString);
-                return InvoiceDao.addtoCart(Session.getUser().getUserId(), packageId, quantityNum, price);
+                return InvoiceDao.addToCart(Session.getUser().getUserId(), packageId, quantityNum, price);
             }
         };
         flag.setOnSucceeded(e -> {

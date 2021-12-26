@@ -2,8 +2,6 @@ package com.seasidechachacha.client.controllers;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 import com.seasidechachacha.client.App;
 import com.seasidechachacha.client.database.UserDao;

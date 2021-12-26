@@ -1,10 +1,9 @@
 package com.seasidechachacha.client.controllers;
 
 import java.io.IOException;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 import com.seasidechachacha.client.database.UserDao;
+import com.seasidechachacha.client.global.TaskExecutor;
 import com.seasidechachacha.client.models.User;
 
 import javafx.concurrent.Task;
@@ -21,12 +20,6 @@ public class AddNewModeratorController {
     private TextField pass1;
     @FXML
     private TextField pass2;
-
-    private Executor exec;
-
-    public AddNewModeratorController() {
-        exec = Executors.newFixedThreadPool(1);
-    }
 
     public void createModerator(ActionEvent e) throws IOException {
         if (pass1.getText().compareTo(pass2.getText()) != 0) {
@@ -57,7 +50,7 @@ public class AddNewModeratorController {
         addModeratorTask.setOnSucceeded(e -> {
             resolveAddModerator(e, addModeratorTask.getValue());
         });
-        exec.execute(addModeratorTask);
+        TaskExecutor.execute(addModeratorTask);
     }
 
     private void resolveAddModerator(WorkerStateEvent e, boolean status) {

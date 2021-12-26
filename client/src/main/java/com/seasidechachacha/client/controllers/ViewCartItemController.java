@@ -6,6 +6,7 @@ package com.seasidechachacha.client.controllers;
 
 import com.seasidechachacha.client.database.InvoiceDao;
 import com.seasidechachacha.client.global.Session;
+import com.seasidechachacha.client.global.TaskExecutor;
 import com.seasidechachacha.client.models.CartItem;
 import com.seasidechachacha.client.models.Invoice;
 import java.io.IOException;
@@ -37,43 +38,33 @@ import javafx.scene.control.cell.PropertyValueFactory;
 public class ViewCartItemController {
     @FXML
     private TableView<CartItem> CartItems;
-    
-    @FXML
-    private TableColumn<CartItem,String> packageName;
-    
-    @FXML
-    private TableColumn<CartItem,String> packageQuantity;
-    
-    @FXML
-    private TableColumn<CartItem,String> packagePrice;
-    
-    @FXML
-    private TableColumn<CartItem,String> totalPrice;
 
     @FXML
-    private Button orderButton,cancelButton;
+    private TableColumn<CartItem, String> packageName;
+
+    @FXML
+    private TableColumn<CartItem, String> packageQuantity;
+
+    @FXML
+    private TableColumn<CartItem, String> packagePrice;
+
+    @FXML
+    private TableColumn<CartItem, String> totalPrice;
+
+    @FXML
+    private Button orderButton, cancelButton;
 
     @FXML
     private Label totalCost;
-    
-    private Executor exec;
-    
+
     private ObservableList<CartItem> listCart;
-    
+
     @FXML
     private void initialize() {
-        exec = Executors.newSingleThreadScheduledExecutor(new ThreadFactory() {
-            @Override
-            public Thread newThread(Runnable r) {
-                Thread t = new Thread(r);
-                t.setDaemon(true);
-                return t;
-            }
-        });
 
         getCartItemsThread();
-        
-        orderButton.setOnAction(e->{
+
+        orderButton.setOnAction(e -> {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Xác nhận");
             alert.setHeaderText("Hãy xác nhận đặt hàng");
@@ -90,11 +81,10 @@ public class ViewCartItemController {
 
             }
 
-            
         });
-        
-        cancelButton.setOnAction(e->{
-            
+
+        cancelButton.setOnAction(e -> {
+
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Xác nhận");
             alert.setHeaderText("Hãy xác nhận xóa đơn đặt hàng");
@@ -111,8 +101,8 @@ public class ViewCartItemController {
             }
         });
     }
-    
-    private void getCartItemsThread(){
+
+    private void getCartItemsThread() {
         Task<List<CartItem>> cart = new Task<List<CartItem>>() {
             @Override
             public List<CartItem> call() throws SQLException {
@@ -122,29 +112,28 @@ public class ViewCartItemController {
         cart.setOnSucceeded(e -> {
             resolveGetCartItem(e, cart.getValue());
         });
-        exec.execute(cart);
+        TaskExecutor.execute(cart);
     }
-    
-    public void resolveGetCartItem(WorkerStateEvent e, List<CartItem> list){
+
+    public void resolveGetCartItem(WorkerStateEvent e, List<CartItem> list) {
         listCart = FXCollections.observableArrayList(list);
 
-        float sum=0;
-        
-        for (int i =0;i<list.size();i++)
-        {
-            sum += Integer.parseInt(list.get(i).getTotalPrice().substring(0,list.get(i).getTotalPrice().length() -4));
+        float sum = 0;
+
+        for (int i = 0; i < list.size(); i++) {
+            sum += Integer.parseInt(list.get(i).getTotalPrice().substring(0, list.get(i).getTotalPrice().length() - 4));
         }
-        
+
         packageName.setCellValueFactory(new PropertyValueFactory<CartItem, String>("name"));
         packageQuantity.setCellValueFactory(new PropertyValueFactory<CartItem, String>("quantity"));
         packagePrice.setCellValueFactory(new PropertyValueFactory<CartItem, String>("price"));
         totalPrice.setCellValueFactory(new PropertyValueFactory<CartItem, String>("totalPrice"));
-        
-        totalCost.setText(Float.toString(sum)+" VND");
+
+        totalCost.setText(Float.toString(sum) + " VND");
         CartItems.setItems(listCart);
     }
-    
-    private void logCartThread(){
+
+    private void logCartThread() {
         Task<Long> cart = new Task<Long>() {
             @Override
             public Long call() throws SQLException {
@@ -154,20 +143,20 @@ public class ViewCartItemController {
         cart.setOnSucceeded(e -> {
             resolveLogCart(e, cart.getValue());
         });
-        exec.execute(cart);
+        TaskExecutor.execute(cart);
     }
-    
-     public void resolveLogCart(WorkerStateEvent e, Long list){
-         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-         alert.setTitle("Thông báo");
-         alert.setHeaderText("Đặt hàng thành công!!!");
-         alert.show();
-         InvoiceDao.clearCart(Session.getUser().getUserId());
-         getCartItemsThread();
-         
-     }
-     
-     private void clearCartThread(){
+
+    public void resolveLogCart(WorkerStateEvent e, Long list) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Thông báo");
+        alert.setHeaderText("Đặt hàng thành công!!!");
+        alert.show();
+        InvoiceDao.clearCart(Session.getUser().getUserId());
+        getCartItemsThread();
+
+    }
+
+    private void clearCartThread() {
         Task<Boolean> cart = new Task<Boolean>() {
             @Override
             public Boolean call() throws SQLException {
@@ -177,14 +166,15 @@ public class ViewCartItemController {
         cart.setOnSucceeded(e -> {
             resolveClearCart(e, cart.getValue());
         });
-        exec.execute(cart);
-     }
-     public void resolveClearCart(WorkerStateEvent e, Boolean list){
-         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-         alert.setTitle("Thông báo");
-         alert.setHeaderText("Xóa đơn hàng thành công!!!");
-         alert.show();
-         getCartItemsThread();
-         
-     }
+        TaskExecutor.execute(cart);
+    }
+
+    public void resolveClearCart(WorkerStateEvent e, Boolean list) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Thông báo");
+        alert.setHeaderText("Xóa đơn hàng thành công!!!");
+        alert.show();
+        getCartItemsThread();
+
+    }
 }

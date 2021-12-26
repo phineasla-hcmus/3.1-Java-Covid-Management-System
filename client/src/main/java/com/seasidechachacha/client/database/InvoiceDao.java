@@ -206,7 +206,7 @@ public class InvoiceDao {
         try (Connection c = BasicConnection.getConnection()) {
             c.setAutoCommit(false);
             String sql = "DELETE FROM CartItem WHERE userId=?";
-            
+
             PreparedStatement ps = c.prepareStatement(sql);
             ps.setString(1, userId);
             try {
@@ -221,14 +221,14 @@ public class InvoiceDao {
         }
         return result;
     }
-    
+
     /**
-     * View user's CartItem. 
+     * View user's CartItem.
      * 
      * @param userId
      * @return true if operation success
      */
-    public static List<CartItem> viewCart(String userId){
+    public static List<CartItem> viewCart(String userId) {
         List<CartItem> result = new ArrayList<CartItem>();
         System.out.println(userId);
         try (Connection c = BasicConnection.getConnection()) {
@@ -236,11 +236,10 @@ public class InvoiceDao {
             String sql = "SELECT userID ,name , quantity, CartItem.price as totalPrice, package.price as price FROM CartItem JOIN Package ON CartItem.packageID=Package.packageID WHERE userId=?";
             PreparedStatement ps = c.prepareStatement(sql);
             ps.setString(1, userId);
-            
+
             try {
-                ResultSet rs=ps.executeQuery();
-                while(rs.next())
-                {
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
                     result.add(parseCartItem(rs));
                 }
                 c.commit();
@@ -251,11 +250,12 @@ public class InvoiceDao {
         } catch (SQLException e) {
             logger.error("Error create connection or rollback", e);
         }
-        
+
         return result;
     }
-    
+
     private static CartItem parseCartItem(ResultSet rs) throws SQLException {
-        return new CartItem(rs.getString("userID"),rs.getString("name"), rs.getString("quantity"), rs.getString("price"),rs.getString("totalPrice"));
+        return new CartItem(rs.getString("userID"), rs.getString("name"), rs.getString("quantity"),
+                rs.getString("price"), rs.getString("totalPrice"));
     }
 }

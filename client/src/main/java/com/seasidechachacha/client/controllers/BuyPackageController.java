@@ -147,10 +147,17 @@ public class BuyPackageController {
         Task<Boolean> flag = new Task<Boolean>() {
             @Override
             public Boolean call() throws SQLException {
+                double price = 0;
+                    for (int i = 0; i < listP.size(); i++) {
+                        if (listP.get(i).getName()
+                                .equalsIgnoreCase(choosePackage.getSelectionModel().getSelectedItem().toString())) {
+                            price = listP.get(i).getPrice();
+                        }
+                    }
                 int quantityNum = Integer.parseInt(quantity.getText());
                 String totalCostString = totalCost.getText().substring(0, totalCost.getText().length() - 6);
                 double totalCostNum = Double.parseDouble(totalCostString);
-                return InvoiceDao.addtoCart(Session.getUser().getUserId(), packageId, quantityNum, totalCostNum);
+                return InvoiceDao.addtoCart(Session.getUser().getUserId(), packageId, quantityNum, price);
             }
         };
         flag.setOnSucceeded(e -> {

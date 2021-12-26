@@ -20,7 +20,7 @@ public class UserScreenController {
     private ScrollPane pn_all;
 
     @FXML
-    private JFXButton btnInfo, btnPackage, btnPayment;
+    private JFXButton btnInfo, btnPackage, btnPayment ,btnViewCart;
     
     @FXML
     private Button btnLogout;
@@ -42,8 +42,10 @@ public class UserScreenController {
             App.setCurrentPane("pn_all", "view/UserInfo", null);
         } else if (event.getSource() == btnPackage) {
             App.setCurrentPane("pn_all", "view/BuyPackage", null);
-        } else if (event.getSource() == btnPayment) {
-            App.setCurrentPane("pn_all", "view/UserPayment", null);
+        } else if (event.getSource() == btnViewCart) {
+            App.setCurrentPane("pn_all", "view/viewCartItem", null);
+        } else if(event.getSource() == btnPayment){
+            App.setCurrentPane("pn_all", "view/Payment", null);
         }
     }
 

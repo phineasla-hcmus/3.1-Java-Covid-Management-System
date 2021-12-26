@@ -1274,7 +1274,7 @@ public class ManagerDao {
 	public static List<PaymentHistory> getPaymentHistoryList(String userID) {
 		List<PaymentHistory> results = new ArrayList<PaymentHistory>();
 		try (Connection c = BasicConnection.getConnection()) {
-			String query = "SELECT paymentTime, totalMoney FROM paymenthistory WHERE userID = ?;";
+			String query = "SELECT transactionID, paymentTime, totalMoney FROM paymenthistory WHERE userID = ?;";
 			PreparedStatement ps = c.prepareStatement(query);
 			ps.setString(1, userID);
 			ResultSet rs = ps.executeQuery();
@@ -1289,7 +1289,7 @@ public class ManagerDao {
 	}
 
 	private static PaymentHistory parsePaymentHistory(ResultSet rs) throws SQLException {
-		return new PaymentHistory(rs.getString("paymentTime"), rs.getFloat("totalMoney"));
+		return new PaymentHistory(rs.getInt("transactionID"), rs.getString("paymentTime"), rs.getFloat("totalMoney"));
 	}
 
 	private static List<String> getAllTimeFromStateAndTreatmentPlaceHistory(String userID) {

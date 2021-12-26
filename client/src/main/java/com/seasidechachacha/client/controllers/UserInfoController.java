@@ -13,6 +13,7 @@ import java.util.concurrent.ThreadFactory;
 
 import com.seasidechachacha.client.database.ManagerDao;
 import com.seasidechachacha.client.database.InvoiceDao;
+import com.seasidechachacha.client.global.Session;
 import com.seasidechachacha.client.models.ManagedUser;
 import com.seasidechachacha.client.models.ManagedUserHistory;
 import com.seasidechachacha.client.models.Invoice;
@@ -44,7 +45,7 @@ public class UserInfoController {
 
     private Executor exec;
 
-    private String userId = "079157952250";
+    private String userId = Session.getUser().getUserId();
 
     @FXML
     private Pagination paginationManaged, paginationConsumption, paginationPayment;
@@ -216,19 +217,26 @@ public class UserInfoController {
 
         for (int i = page; i < page + itemsPerPage(); i++) {
             TableView<PaymentHistory> table = new TableView<PaymentHistory>();
+            
+            TableColumn idCol = new TableColumn("Mã thanh toán");
+            idCol.setCellValueFactory(
+                    new PropertyValueFactory<PaymentHistory, Integer>("transactionID"));
+
+            idCol.setMinWidth(200);
+            
             TableColumn paymentCol = new TableColumn("Ngày thanh toán");
             paymentCol.setCellValueFactory(
                     new PropertyValueFactory<PaymentHistory, String>("paymentTime"));
 
-            paymentCol.setMinWidth(100);
+            paymentCol.setMinWidth(200);
 
             TableColumn moneyCol = new TableColumn("Tổng tiền");
             moneyCol.setCellValueFactory(
                     new PropertyValueFactory<PaymentHistory, Float>("totalMoney"));
 
-            moneyCol.setMinWidth(160);
+            moneyCol.setMinWidth(300);
 
-            table.getColumns().addAll(paymentCol, moneyCol);
+            table.getColumns().addAll(idCol, paymentCol, moneyCol);
             table.setItems(FXCollections.observableArrayList(dataPayment));
             if (lastIndex == pageIndex) {
                 table.setItems(FXCollections.observableArrayList(
@@ -262,25 +270,25 @@ public class UserInfoController {
             orderCol.setCellValueFactory(
                     new PropertyValueFactory<Invoice, Integer>("invoiceId"));
 
-            orderCol.setMinWidth(100);
+            orderCol.setMinWidth(140);
 
             TableColumn dateCol = new TableColumn("Ngày mua");
             dateCol.setCellValueFactory(
                     new PropertyValueFactory<Invoice, String>("timeOrder"));
 
-            dateCol.setMinWidth(160);
+            dateCol.setMinWidth(200);
 
             TableColumn totalCol = new TableColumn("Tổng số lượng mua");
             totalCol.setCellValueFactory(
                     new PropertyValueFactory<Invoice, Integer>("totalItems"));
 
-            totalCol.setMinWidth(300);
+            totalCol.setMinWidth(160);
 
             TableColumn moneyCol = new TableColumn("Tổng tiền");
             moneyCol.setCellValueFactory(
                     new PropertyValueFactory<Invoice, Float>("totalOrderMoney"));
 
-            moneyCol.setMinWidth(300);
+            moneyCol.setMinWidth(200);
 
             // TableColumn actionCol = new TableColumn("");
             // actionCol.setCellValueFactory(new PropertyValueFactory<>(""));
@@ -359,13 +367,13 @@ public class UserInfoController {
             stateCol.setCellValueFactory(
                     new PropertyValueFactory<ManagedUserHistory, Integer>("state"));
 
-            stateCol.setMinWidth(160);
+            stateCol.setMinWidth(140);
 
             TableColumn placeCol = new TableColumn("Địa điểm điều trị/cách ly");
             placeCol.setCellValueFactory(
                     new PropertyValueFactory<ManagedUserHistory, String>("treatmentPlaceName"));
 
-            placeCol.setMinWidth(300);
+            placeCol.setMinWidth(460);
 
             table.getColumns().addAll(dateCol, stateCol, placeCol);
             table.setItems(FXCollections.observableArrayList(dataManaged));

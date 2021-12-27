@@ -4,17 +4,17 @@ import com.seasidechachacha.payment.models.PaymentAccount;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.seasidechachacha.payment.models.PaymentAccount;
 import com.seasidechachacha.payment.sql.DataSource;
 import java.sql.ResultSet;
 
 public class PaymentDao {
 
-    private static Logger logger = LogManager.getLogger(PaymentDao.class);
+	private static Logger logger = LogManager.getLogger(PaymentDao.class);
 
 	public static boolean register(String userID, double amount) {
 		try (Connection c = DataSource.getConnection()) {
@@ -31,83 +31,82 @@ public class PaymentDao {
 		return false;
 	}
 
-    public static PaymentAccount get(String userID) {
-        PaymentAccount result = null;
-        try ( Connection c = DataSource.getConnection()) {
-            String query = "SELECT * FROM transactionaccount WHERE userID =?";
-            PreparedStatement ps = c.prepareStatement(query);
-            ps.setString(1, userID);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                result = new PaymentAccount(rs.getString("userID"), rs.getDouble("balance"));
-            }
-            DataSource.releaseConnection(c);
-            return result;
-        } catch (SQLException e) {
-            logger.error(e);
-        }
-        return result;
-    }
+	public static PaymentAccount get(String userID) {
+		PaymentAccount result = null;
+		try (Connection c = DataSource.getConnection()) {
+			String query = "SELECT * FROM transactionaccount WHERE userID =?";
+			PreparedStatement ps = c.prepareStatement(query);
+			ps.setString(1, userID);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				result = new PaymentAccount(rs.getString("userID"), rs.getDouble("balance"));
+			}
+			DataSource.releaseConnection(c);
+			return result;
+		} catch (SQLException e) {
+			logger.error(e);
+		}
+		return result;
+	}
 
-    public static PaymentAccount getAdmin(String userID) {
-        PaymentAccount result = null;
-        try ( Connection c = DataSource.getConnection()) {
-            String query = "SELECT transactionaccount.userID as userID, transactionaccount.balance as balance"
-                    + " FROM transactionaccount JOIN transactionadmin "
-                    + "ON transactionaccount.userID = transactionadmin.userID";
-            PreparedStatement ps = c.prepareStatement(query);
-            ps.setString(1, userID);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                result = new PaymentAccount(rs.getString("userID"), rs.getDouble("balance"));
-            }
-            DataSource.releaseConnection(c);
-            return result;
-        } catch (SQLException e) {
-            logger.error(e);
-        }
-        return result;
-    }
+	public static PaymentAccount getAdmin() {
+		PaymentAccount result = null;
+		try (Connection c = DataSource.getConnection()) {
+			String query = "SELECT transactionaccount.userID as userID, transactionaccount.balance as balance"
+					+ " FROM transactionaccount JOIN transactionadmin "
+					+ "ON transactionaccount.userID = transactionadmin.userID";
+			Statement ps = c.createStatement();
+			ResultSet rs = ps.executeQuery(query);
+			while (rs.next()) {
+				result = new PaymentAccount(rs.getString("userID"), rs.getDouble("balance"));
+			}
+			DataSource.releaseConnection(c);
+			return result;
+		} catch (SQLException e) {
+			logger.error(e);
+		}
+		return result;
+	}
 
-    public static boolean transferMoneyToAdmin(String userID, double amount) {
-        boolean result = false;
-        try ( Connection c = DataSource.getConnection()) {
-            c.setAutoCommit(false);
-            PaymentAccount user = get(userID);
-            PaymentAccount admin = getAdmin(userID);
+	public static boolean transferMoneyToAdmin(String userID, double amount) {
+		boolean result = false;
+		try (Connection c = DataSource.getConnection()) {
+			c.setAutoCommit(false);
+			PaymentAccount user = get(userID);
+			PaymentAccount admin = getAdmin();
 
-            String queryUpdate = "UPDATE transactionaccount SET balance =? WHERE userID =?";
-            String queryInsert = "INSERT INTO transactionhistory VALUE(null,?,?,now(),?)";
+			String queryUpdate = "UPDATE transactionaccount SET balance =? WHERE userID =?";
+			String queryInsert = "INSERT INTO transactionhistory VALUE(null,?,?,now(),?)";
 
-            PreparedStatement psUpdateUser = c.prepareStatement(queryUpdate);
-            PreparedStatement psUpdateAdmin = c.prepareStatement(queryUpdate);
-            PreparedStatement psInsert = c.prepareStatement(queryInsert);
+			PreparedStatement psUpdateUser = c.prepareStatement(queryUpdate);
+			PreparedStatement psUpdateAdmin = c.prepareStatement(queryUpdate);
+			PreparedStatement psInsert = c.prepareStatement(queryInsert);
 
-            psUpdateUser.setDouble(1, user.getBalance() - amount);
-            psUpdateUser.setString(2, userID);
+			psUpdateUser.setDouble(1, user.getBalance() - amount);
+			psUpdateUser.setString(2, userID);
 
-            psUpdateAdmin.setDouble(1, admin.getBalance() + amount);
-            psUpdateAdmin.setString(2, admin.getUserID());
+			psUpdateAdmin.setDouble(1, admin.getBalance() + amount);
+			psUpdateAdmin.setString(2, admin.getUserId());
 
-            psInsert.setString(1, userID);
-            psInsert.setString(2, admin.getUserID());
-            psInsert.setDouble(3, amount);
+			psInsert.setString(1, userID);
+			psInsert.setString(2, admin.getUserId());
+			psInsert.setDouble(3, amount);
 
-            try {
-                psUpdateUser.executeUpdate();
-                psUpdateAdmin.executeUpdate();
-                psInsert.executeUpdate();
-                c.commit();
-            } catch (SQLException e) {
-                c.rollback();
+			try {
+				psUpdateUser.executeUpdate();
+				psUpdateAdmin.executeUpdate();
+				psInsert.executeUpdate();
+				c.commit();
+			} catch (SQLException e) {
+				c.rollback();
 
-            }
-            DataSource.releaseConnection(c);
-            return result;
-        } catch (SQLException e) {
-            logger.error(e);
-        }
-        return result;
-    }
+			}
+			DataSource.releaseConnection(c);
+			return result;
+		} catch (SQLException e) {
+			logger.error(e);
+		}
+		return result;
+	}
 
 }

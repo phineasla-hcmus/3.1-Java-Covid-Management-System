@@ -57,11 +57,12 @@ public class CreateUserPasswordController {
     }
 
     private void resolveChangePassword(WorkerStateEvent e, boolean result) throws IOException {
-        // TODO@leesuby
         if (result)
             App.setRoot("view/UserScreen");
         else {
-            // Something went wrong in the database
+            Alert a = new Alert(Alert.AlertType.WARNING);
+            a.setContentText("Có lỗi xảy ra , mời bạn nhập lại!!!");
+            a.show();
         }
     }
 }

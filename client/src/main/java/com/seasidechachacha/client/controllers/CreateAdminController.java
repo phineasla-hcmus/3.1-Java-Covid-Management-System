@@ -85,8 +85,6 @@ public class CreateAdminController {
         createAdminTask.setOnSucceeded(e -> {
             boolean result = createAdminTask.getValue();
             if (result) {
-                // TODO@leesuby: này để test màn hình login khi mới tạo tkhoan admin , mốt có
-                // database thì cho vô admin luôn
                 try {
                     Alert a = new Alert(Alert.AlertType.INFORMATION);
                     a.setHeaderText("Thông báo!!!");
@@ -94,11 +92,9 @@ public class CreateAdminController {
                     a.show();
                     App.setRoot("view/Login");
                 } catch (IOException e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
+                    logger.error(e1);
                 }
             } else {
-                // TODO: show alert on screen
                 Alert a = new Alert(Alert.AlertType.INFORMATION);
                 a.setHeaderText("Thông báo!!!");
                 a.setContentText("Khởi tạo tài khoản Admin không thành công.\n Xin hãy khởi tạo lại!");

@@ -107,7 +107,10 @@ public class LoginController {
 
     private void resolveIsBanned(WorkerStateEvent e, boolean isBanned) throws IOException {
         if (isBanned) {
-            // TODO@leesuby THIS MANAGER IS BANNED, KICK HIM
+            Alert a = new Alert(Alert.AlertType.INFORMATION);
+            a.setHeaderText("Thông báo");
+            a.setContentText("Tài khoản của bạn đã bị khóa!!!\n Xin hãy liên hệ Admin để biết thêm chi tiết");
+            a.show();
         } else {
             App.setRoot("view/ModeratorScreen");
         }

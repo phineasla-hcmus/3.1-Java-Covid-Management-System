@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 import com.seasidechachacha.client.global.Session;
+import com.seasidechachacha.client.global.TaskExecutor;
 import com.seasidechachacha.client.payment.PaymentService;
 import com.seasidechachacha.client.payment.RespondException;
 import com.seasidechachacha.common.payment.ErrorResponseType;
@@ -98,6 +99,8 @@ public class PaymentController {
                 logger.error(throwable);
             }
         });
+
+        TaskExecutor.execute(getBalanceTask);
     }
 
     private void paymentThread(String userId, double amount) {

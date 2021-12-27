@@ -13,9 +13,9 @@ public class PaymentDao {
 
 	private static Logger logger = LogManager.getLogger(PaymentDao.class);
 
-	public static void main(String[] args) {
-		System.out.println(addPaymentAcc("1", 1000));
-	}
+	// public static void main(String[] args) {
+	// 	System.out.println(addPaymentAcc("1", 1000));
+	// }
 
 	public static boolean addPaymentAcc(String userID, double amount) {
 		try (Connection c = DataSource.getConnection()) {

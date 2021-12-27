@@ -5,16 +5,13 @@ public class TreatmentPlaceHistory {
 	private String treatID;
 	private String time;
 	private String name;
-	private String street;
-	private FullAddress fullAddress;
+	private String address;
 
-	public TreatmentPlaceHistory(String userID, String treatID, String wardId, String time, String name, String street) {
+	public TreatmentPlaceHistory(String userID, String treatID, String time, String name, String address) {
 		this.userID = userID;
 		this.treatID = treatID;
 		this.time = time;
 		this.name = name;
-		this.street = street;
-		this.fullAddress = new FullAddress(wardId);
 	}
 
 	public String getUserID() {
@@ -48,21 +45,4 @@ public class TreatmentPlaceHistory {
 	public void setName(String name) {
 		this.name = name;
 	}
-
-	public String getStreet() {
-		return street;
-	}
-
-	public void setStreet(String street) {
-		this.street = street;
-	}
-
-	public FullAddress getFullAddress() {
-		return fullAddress;
-	}
-
-	public void setFullAddress(FullAddress fullAddress) {
-		this.fullAddress = fullAddress;
-	}
-
 }

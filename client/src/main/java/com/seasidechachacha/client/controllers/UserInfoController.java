@@ -25,9 +25,11 @@ import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.Pagination;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -204,13 +206,13 @@ public class UserInfoController {
 
         for (int i = page; i < page + itemsPerPage(); i++) {
             TableView<PaymentHistory> table = new TableView<PaymentHistory>();
-            
+
             TableColumn idCol = new TableColumn("Mã thanh toán");
             idCol.setCellValueFactory(
                     new PropertyValueFactory<PaymentHistory, Integer>("transactionID"));
 
             idCol.setMinWidth(200);
-            
+
             TableColumn paymentCol = new TableColumn("Ngày thanh toán");
             paymentCol.setCellValueFactory(
                     new PropertyValueFactory<PaymentHistory, String>("paymentTime"));
@@ -351,8 +353,35 @@ public class UserInfoController {
             dateCol.setMinWidth(100);
 
             TableColumn stateCol = new TableColumn("Trạng thái");
-            stateCol.setCellValueFactory(
-                    new PropertyValueFactory<ManagedUserHistory, Integer>("state"));
+//            stateCol.setCellValueFactory(
+//                    new PropertyValueFactory<ManagedUserHistory, Integer>("state"));
+            Callback<TableColumn<ManagedUserHistory, String>, TableCell<ManagedUserHistory, String>> cellFactory1
+                    = //
+                    new Callback<TableColumn<ManagedUserHistory, String>, TableCell<ManagedUserHistory, String>>() {
+                @Override
+                public TableCell call(final TableColumn<ManagedUserHistory, String> param) {
+                    final TableCell<Object, String> cell = new TableCell<Object, String>() {
+
+                        @Override
+                        public void updateItem(String item, boolean empty) {
+                            super.updateItem(item, empty);
+                            if (empty) {
+                                setGraphic(null);
+                                setText(null);
+                            } else {
+                                if (getTableRow() != null) {
+                                    ManagedUserHistory history = (ManagedUserHistory) getTableRow().getItem();
+                                    setText("F" + String.valueOf(ManagerDao.getCurrentStateByTime(userId, history.getDate())));
+                                }
+
+                            }
+                        }
+                    };
+                    cell.setAlignment(Pos.CENTER);
+                    return cell;
+                }
+            };
+            stateCol.setCellFactory(cellFactory1);
 
             stateCol.setMinWidth(140);
 

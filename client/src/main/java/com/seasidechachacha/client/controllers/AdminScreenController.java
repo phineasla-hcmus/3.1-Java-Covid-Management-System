@@ -1,7 +1,6 @@
 package com.seasidechachacha.client.controllers;
 
 import java.io.IOException;
-import java.net.URL;
 
 import com.jfoenix.controls.JFXButton;
 import com.seasidechachacha.client.App;
@@ -10,16 +9,14 @@ import org.apache.logging.log4j.LogManager;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
-import javafx.scene.layout.BorderPane;
 
 public class AdminScreenController {
 
     private static final org.apache.logging.log4j.Logger logger = LogManager.getLogger(LoginController.class);
 
     @FXML
-    private JFXButton btn_all, btn_core, btn_xeom, btn_atom;
+    private JFXButton btn_all, btn_core, btn_xeom;
 
     @FXML
     private void handleButtonAction(ActionEvent event) throws IOException {
@@ -44,16 +41,5 @@ public class AdminScreenController {
                 logger.fatal(ex);
             }
         });
-    }
-
-    @FXML
-    private BorderPane mainBorderPane;
-
-    private void loadFXML(URL url) {
-        try {
-            FXMLLoader loader = new FXMLLoader(url);
-            mainBorderPane.setCenter(loader.load());
-        } catch (IOException e) {
-        }
     }
 }

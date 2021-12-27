@@ -54,10 +54,7 @@ public class ViewPersonalInfoController {
     private TableColumn<ManagedUser, String> numberCol, fullNameCol, birthYearCol, addressCol, statusCol;
 
     @FXML
-    private TableColumn<StateHistory, String> dateStatusCol;
-
-    @FXML
-    private TableColumn<StateHistory, Integer> currentStatusCol;
+    private TableColumn<StateHistory, String> dateStatusCol, currentStatusCol;
 
     @FXML
     private TableColumn<TreatmentPlaceHistory, String> datePlaceCol;
@@ -72,7 +69,7 @@ public class ViewPersonalInfoController {
     private Button btnChangeStatus, btnChangePlace;
 
     ChoiceDialog<String> statusDialog, placeDialog;
-    
+
     private String currentStatus, currentPlace, userId;
     private int currentState;
 
@@ -156,7 +153,6 @@ public class ViewPersonalInfoController {
     }
 
     public void resolveManagedUser(WorkerStateEvent e, ManagedUser user) throws IOException {
-//        this.currentUser = user;
         labelFullName.setText(user.getName());
         labelIdentityCard.setText(user.getUserId());
         labelBirthYear.setText(String.valueOf(user.getBirthYear()));
@@ -165,7 +161,6 @@ public class ViewPersonalInfoController {
         currentStatus = "F" + currentState;
         labelStatus.setText(currentStatus);
         TreatmentPlace treat = getCurrentTreatmentPlace(user.getUserId());
-//        currentPlace = treat.getName();
         if (treat != null) {
             labelTreatmentPlace.setText(treat.getName());
         }
@@ -325,14 +320,14 @@ public class ViewPersonalInfoController {
         return null;
     }
 
-    private TableColumn<StateHistory, Integer> getTableStatusByName(TableView<StateHistory> tableView, String name) {
-        for (TableColumn<StateHistory, ?> col : tableView.getColumns()) {
-            if (col.getText().equals(name)) {
-                return (TableColumn<StateHistory, Integer>) col;
-            }
-        }
-        return null;
-    }
+//    private TableColumn<StateHistory, Integer> getTableStatusByName(TableView<StateHistory> tableView, String name) {
+//        for (TableColumn<StateHistory, ?> col : tableView.getColumns()) {
+//            if (col.getText().equals(name)) {
+//                return (TableColumn<StateHistory, Integer>) col;
+//            }
+//        }
+//        return null;
+//    }
 
     private TableColumn<TreatmentPlaceHistory, String> getTableTreatColumnByName(TableView<TreatmentPlaceHistory> tableView, String name) {
         for (TableColumn<TreatmentPlaceHistory, ?> col : tableView.getColumns()) {
@@ -405,8 +400,36 @@ public class ViewPersonalInfoController {
         dateStatusCol = getTableStatusColumnByName(table, "Ngày");
         dateStatusCol.setCellValueFactory(new PropertyValueFactory<StateHistory, String>("time"));
 
-        currentStatusCol = getTableStatusByName(table, "Trạng thái");
-        currentStatusCol.setCellValueFactory(new PropertyValueFactory<StateHistory, Integer>("state"));
+        currentStatusCol = getTableStatusColumnByName(table, "Trạng thái");
+//        currentStatusCol.setCellValueFactory(new PropertyValueFactory<StateHistory, Integer>("state"));
+        Callback<TableColumn<StateHistory, String>, TableCell<StateHistory, String>> cellFactory1
+                = //
+                new Callback<TableColumn<StateHistory, String>, TableCell<StateHistory, String>>() {
+            @Override
+            public TableCell call(final TableColumn<StateHistory, String> param) {
+                final TableCell<Object, String> cell = new TableCell<Object, String>() {
+
+                    @Override
+                    public void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                            setText(null);
+                        } else {
+                            if (getTableRow() != null) {
+                                StateHistory state = (StateHistory) getTableRow().getItem();
+                                setText("F" + String.valueOf(ManagerDao.getCurrentStateByTime(state.getUserID(), state.getTime())));
+                            }
+
+                        }
+                    }
+                };
+                cell.setAlignment(Pos.CENTER);
+                return cell;
+            }
+        };
+        currentStatusCol.setCellFactory(cellFactory1);
+
     }
 
     public void setTableStatus(TableView<StateHistory> table, ObservableList<StateHistory> data) {

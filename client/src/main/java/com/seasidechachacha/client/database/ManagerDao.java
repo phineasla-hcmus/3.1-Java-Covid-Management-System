@@ -181,8 +181,8 @@ public class ManagerDao {
 	}
 
 	private static TreatmentPlaceHistory parseTreatmentPlaceHistory(ResultSet rs) throws SQLException {
-		return new TreatmentPlaceHistory(rs.getString("userID"), rs.getString("treatID"), rs.getString("wardId"),
-				rs.getString("time"), rs.getString("name"), rs.getString("street"));
+		return new TreatmentPlaceHistory(rs.getString("userID"), rs.getString("treatID"),
+				rs.getString("time"), rs.getString("name"), rs.getString("address"));
 	}
 
 	private static List<TreatmentPlaceHistory> parseTreatmentPlaceHistoryList(ResultSet rs) throws SQLException {
@@ -402,7 +402,6 @@ public class ManagerDao {
 			c.close();
 		} catch (SQLException e) {
 			logger.error(e);
-			e.printStackTrace();
 		}
 		return packageList;
 	}
@@ -421,75 +420,102 @@ public class ManagerDao {
 			c.close();
 		} catch (SQLException e) {
 			logger.error(e);
-			e.printStackTrace();
 		}
 		return packageList;
 	}
 
-	public static List<Package> getPackageListByName() {
+	public static List<Package> getSortedPackageListByName(String keyword) {
+                String query = "";
+                if (keyword.equals("")) {
+                    query = "SELECT * FROM package ORDER BY name ASC";
+                }
+                else {
+                    query = "SELECT * FROM package WHERE MATCH(name) AGAINST(?) ORDER BY name ASC";
+                }
 		List<Package> packageList = null;
 		try (Connection c = BasicConnection.getConnection()) {
-			String query = "SELECT * FROM package ORDER BY name ASC";
 			PreparedStatement ps = c.prepareStatement(query);
-			ResultSet rs = ps.executeQuery();
-			if (rs.next()) {
+                        if (!keyword.equals("")) {
+                            ps.setString(1, keyword);
+                        }
+                        try (ResultSet rs = ps.executeQuery()) {
 				packageList = parsePackageList(rs);
 			}
 			c.close();
 		} catch (SQLException e) {
 			logger.error(e);
-			e.printStackTrace();
 		}
 		return packageList;
 	}
 
-	public static List<Package> getPackageListByLimit() {
+	public static List<Package> getSortedPackageListByLimit(String keyword) {
+                String query = "";
+                if (keyword.equals("")) {
+                    query = "SELECT * FROM package ORDER BY limitPerPerson ASC";
+                }
+                else {
+                    query = "SELECT * FROM package WHERE MATCH(name) AGAINST(?) ORDER BY limitPerPerson ASC";
+                }
 		List<Package> packageList = null;
 		try (Connection c = BasicConnection.getConnection()) {
-			String query = "SELECT * FROM package ORDER BY limitPerPerson ASC";
 			PreparedStatement ps = c.prepareStatement(query);
-			ResultSet rs = ps.executeQuery();
-			if (rs.next()) {
+                        if (!keyword.equals("")) {
+                            ps.setString(1, keyword);
+                        }
+			try (ResultSet rs = ps.executeQuery()) {
 				packageList = parsePackageList(rs);
 			}
 			c.close();
 		} catch (SQLException e) {
 			logger.error(e);
-			e.printStackTrace();
 		}
 		return packageList;
 	}
 
-	public static List<Package> getPackageListByTime() {
+	public static List<Package> getSortedPackageListByTime(String keyword) {
+                String query = "";
+                if (keyword.equals("")) {
+                    query = "SELECT * FROM package ORDER BY dayCooldown ASC";
+                }
+                else {
+                    query = "SELECT * FROM package WHERE MATCH(name) AGAINST(?) ORDER BY dayCooldown ASC";
+                }
 		List<Package> packageList = null;
 		try (Connection c = BasicConnection.getConnection()) {
-			String query = "SELECT * FROM package ORDER BY dayCooldown ASC";
 			PreparedStatement ps = c.prepareStatement(query);
-			ResultSet rs = ps.executeQuery();
-			if (rs.next()) {
+                        if (!keyword.equals("")) {
+                            ps.setString(1, keyword);
+                        }
+			try (ResultSet rs = ps.executeQuery()) {
 				packageList = parsePackageList(rs);
 			}
 			c.close();
 		} catch (SQLException e) {
 			logger.error(e);
-			e.printStackTrace();
 		}
 		return packageList;
 	}
 
-	public static List<Package> getPackageListByPrice() {
+	public static List<Package> getSortedPackageListByPrice(String keyword) {
+                String query = "";
+                if (keyword.equals("")) {
+                    query = "SELECT * FROM package ORDER BY price ASC";
+                }
+                else {
+                    query = "SELECT * FROM package WHERE MATCH(name) AGAINST(?) ORDER BY price ASC";
+                }
 		List<Package> packageList = null;
 		try (Connection c = BasicConnection.getConnection()) {
-			String query = "SELECT * FROM package ORDER BY price ASC";
 			PreparedStatement ps = c.prepareStatement(query);
-			ResultSet rs = ps.executeQuery();
-			if (rs.next()) {
+                        if (!keyword.equals("")) {
+                            ps.setString(1, keyword);
+                        }
+			try (ResultSet rs = ps.executeQuery()) {
 				packageList = parsePackageList(rs);
 			}
 			c.close();
 		} catch (SQLException e) {
 			logger.error(e);
-			e.printStackTrace();
 		}
 		return packageList;
 	}
@@ -765,6 +791,25 @@ public class ManagerDao {
 		}
 		return currentState;
 	}
+        
+        public static int getCurrentStateByTime(String userID, String time) {
+		int currentState = -2;
+		try (Connection c = BasicConnection.getConnection()) {
+			String query = "SELECT * FROM statehistory WHERE userID = ? AND time = ?;";
+			PreparedStatement ps = c.prepareStatement(query);
+			ps.setString(1, userID);
+                        ps.setString(2, time);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				currentState = rs.getInt("state");
+			}
+			c.close();
+		} catch (SQLException e) {
+			logger.error(e);
+			e.printStackTrace();
+		}
+		return currentState;
+	}
 
 	public static TreatmentPlace getCurrentTreatmentPlace(String userID) {
 		TreatmentPlace result = null;
@@ -785,10 +830,19 @@ public class ManagerDao {
 		return result;
 	}
 
-	public static List<ManagedUser> getListByID() {
-		String query = "SELECT * FROM manageduser ORDER BY idCard ASC";
+	public static List<ManagedUser> getSortedListByID(String keyword) {
+		String query = "";
+                if (keyword.equals("")) {
+                    query = "SELECT * FROM manageduser ORDER BY idCard ASC";
+                }
+                else {
+                    query = "SELECT * FROM manageduser WHERE MATCH(fullName) AGAINST(?) ORDER BY idCard ASC";
+                }
 		List<ManagedUser> users;
 		try (Connection c = BasicConnection.getConnection(); PreparedStatement ps = c.prepareStatement(query)) {
+                        if (!keyword.equals("")) {
+                            ps.setString(1, keyword);
+                        }
 			try (ResultSet rs = ps.executeQuery()) {
 				users = parseList(rs);
 			}
@@ -799,10 +853,19 @@ public class ManagerDao {
 		return users;
 	}
 
-	public static List<ManagedUser> getListByBirthYear() {
-		String query = "SELECT * FROM manageduser ORDER BY yob ASC";
+	public static List<ManagedUser> getSortedListByBirthYear(String keyword) {
+		String query = "";
+                if (keyword.equals("")) {
+                    query = "SELECT * FROM manageduser ORDER BY yob ASC";
+                }
+                else {
+                    query = "SELECT * FROM manageduser WHERE MATCH(fullName) AGAINST(?) ORDER BY yob ASC";
+                }
 		List<ManagedUser> users;
 		try (Connection c = BasicConnection.getConnection(); PreparedStatement ps = c.prepareStatement(query)) {
+                        if (!keyword.equals("")) {
+                            ps.setString(1, keyword);
+                        }
 			try (ResultSet rs = ps.executeQuery()) {
 				users = parseList(rs);
 			}
@@ -813,10 +876,19 @@ public class ManagerDao {
 		return users;
 	}
 
-	public static List<ManagedUser> getListByName() {
-		String query = "SELECT * FROM manageduser ORDER BY fullName ASC";
+	public static List<ManagedUser> getSortedListByName(String keyword) {
+		String query = "";
+                if (keyword.equals("")) {
+                    query = "SELECT * FROM manageduser ORDER BY fullName ASC";
+                }
+                else {
+                    query = "SELECT * FROM manageduser WHERE MATCH(fullName) AGAINST(?) ORDER BY fullName ASC";
+                }
 		List<ManagedUser> users;
 		try (Connection c = BasicConnection.getConnection(); PreparedStatement ps = c.prepareStatement(query)) {
+                        if (!keyword.equals("")) {
+                            ps.setString(1, keyword);
+                        }
 			try (ResultSet rs = ps.executeQuery()) {
 				users = parseList(rs);
 			}
@@ -826,6 +898,30 @@ public class ManagerDao {
 		}
 		return users;
 	}
+        
+        public static List<ManagedUser> getSortedListByState(String keyword) {
+		String query = "";
+                if (keyword.equals("")) {
+                    query = "SELECT * FROM manageduser ORDER BY state ASC";
+                }
+                else {
+                    query = "SELECT * FROM manageduser WHERE MATCH(fullName) AGAINST(?) ORDER BY state ASC";
+                }
+		List<ManagedUser> users;
+		try (Connection c = BasicConnection.getConnection(); PreparedStatement ps = c.prepareStatement(query)) {
+                        if (!keyword.equals("")) {
+                            ps.setString(1, keyword);
+                        }
+			try (ResultSet rs = ps.executeQuery()) {
+				users = parseList(rs);
+			}
+		} catch (SQLException e) {
+			logger.error(e);
+			return Collections.emptyList();
+		}
+		return users;
+	}
+        
 
 	private static City parseCity(ResultSet rs) throws SQLException {
 		return new City(rs.getString("cityID"), rs.getString("cityName"));

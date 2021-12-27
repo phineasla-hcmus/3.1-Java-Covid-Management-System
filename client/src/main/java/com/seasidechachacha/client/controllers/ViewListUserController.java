@@ -44,6 +44,8 @@ public class ViewListUserController {
 
     @FXML
     private Pagination pagination;
+    
+    private String keyword = "";
 
     @FXML
     private void initialize() {
@@ -57,7 +59,7 @@ public class ViewListUserController {
             }
         });
         btnSearch.setOnAction(event -> {
-            String keyword = tfSearch.getText();
+            keyword = tfSearch.getText();
             if (!keyword.equals("")) {
                 getSearchResult(keyword);
             }
@@ -65,15 +67,18 @@ public class ViewListUserController {
         cbSort.getItems().addAll("ID", "Họ tên", "Năm sinh", "Trạng thái");
         cbSort.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
             if (newValue.equals("ID")) {
-                getSortedListManagedUserThread("idCard");
+                getSortedListManagedUserThread("idCard", keyword);
             } else if (newValue.equals("Họ tên")) {
-                getSortedListManagedUserThread("fullName");
+                getSortedListManagedUserThread("fullName", keyword);
             } else if (newValue.equals("Năm sinh")) {
-                getSortedListManagedUserThread("yob");
+                getSortedListManagedUserThread("yob", keyword);
+            } else if (newValue.equals("Trạng thái")) {
+                getSortedListManagedUserThread("state", keyword);
             }
         });
         tfSearch.textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.equals("")) {
+                keyword = "";
                 getListManagedUserThread();
             }
         });
@@ -96,16 +101,18 @@ public class ViewListUserController {
         TaskExecutor.execute(dataTask);
     }
 
-    private void getSortedListManagedUserThread(String label) {
+    private void getSortedListManagedUserThread(String label, String keyword) {
         Task<List<ManagedUser>> dataTask = new Task<List<ManagedUser>>() {
             @Override
             public List<ManagedUser> call() {
                 if (label.equals("idCard")) {
-                    return ManagerDao.getListByID();
+                    return ManagerDao.getSortedListByID(keyword);
                 } else if (label.equals("fullName")) {
-                    return ManagerDao.getListByName();
+                    return ManagerDao.getSortedListByName(keyword);
                 } else if (label.equals("yob")) {
-                    return ManagerDao.getListByBirthYear();
+                    return ManagerDao.getSortedListByBirthYear(keyword);
+                } else if (label.equals("state")) {
+                    return ManagerDao.getSortedListByState(keyword);
                 }
                 return null;
 
@@ -247,8 +254,6 @@ public class ViewListUserController {
             actionCol.setCellValueFactory(new PropertyValueFactory<>(""));
             Callback<TableColumn<ManagedUser, String>, TableCell<ManagedUser, String>> cellFactory = //
                     new Callback<TableColumn<ManagedUser, String>, TableCell<ManagedUser, String>>() {
-                        // TODO: TableCell is a raw type. References to generic type TableCell<S,T>
-                        // should be parameterized
                         @Override
                         public TableCell call(final TableColumn<ManagedUser, String> param) {
                             final TableCell<Object, String> cell = new TableCell<Object, String>() {

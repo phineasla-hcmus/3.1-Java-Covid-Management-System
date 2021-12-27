@@ -28,7 +28,7 @@ public class Admin {
         g.balance = user.getBalance();
     }
 
-    public static PaymentAccount getUser() {
+    public static PaymentAccount get() {
         return new PaymentAccount(g.userId, g.balance);
     }
 
@@ -36,7 +36,7 @@ public class Admin {
         return g.balance;
     }
 
-    public static String getUserId() {
+    public static String getId() {
         return g.userId;
     }
 }

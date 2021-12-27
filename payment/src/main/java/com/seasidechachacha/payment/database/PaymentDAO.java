@@ -1,5 +1,6 @@
 package com.seasidechachacha.payment.database;
 
+import com.seasidechachacha.payment.Admin;
 import com.seasidechachacha.payment.models.PaymentAccount;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -68,12 +69,19 @@ public class PaymentDao {
 		return result;
 	}
 
+	/**
+	 * This method depends on static {@link Admin#get()}
+	 * 
+	 * @param userID
+	 * @param amount
+	 * @return
+	 */
 	public static boolean transferMoneyToAdmin(String userID, double amount) {
 		boolean result = false;
 		try (Connection c = DataSource.getConnection()) {
 			c.setAutoCommit(false);
 			PaymentAccount user = get(userID);
-			PaymentAccount admin = getAdmin();
+			PaymentAccount admin = Admin.get();
 
 			String queryUpdate = "UPDATE transactionaccount SET balance =? WHERE userID =?";
 			String queryInsert = "INSERT INTO transactionhistory VALUE(null,?,?,now(),?)";

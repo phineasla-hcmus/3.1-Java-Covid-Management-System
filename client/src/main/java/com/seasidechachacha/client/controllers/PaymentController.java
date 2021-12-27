@@ -109,7 +109,7 @@ public class PaymentController {
         };
 
         payTask.setOnSucceeded(e -> {
-            // TODO: success
+            // TODO@leesuby success
             // Save to payment history for both user and admin
         });
 
@@ -122,7 +122,7 @@ public class PaymentController {
                 ErrorResponseType type = err.getType();
                 logger.error(type.name() + ": " + userId);
                 if (type == ErrorResponseType.INSUFFICIENT_FUNDS) {
-                    // TODO alert user
+                    // TODO@leesuby alert user
                 }
             } else {
                 // IOException, ClassNotFoundException

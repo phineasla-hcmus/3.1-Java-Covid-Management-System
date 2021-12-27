@@ -67,19 +67,14 @@ public class AdminDao {
         return user;
     }
 
-    public static boolean checkBanlist(String managerID) {
+    public static boolean isBanned(String managerID) throws SQLException {
         boolean flag = false;
-        try (Connection c = BasicConnection.getConnection();) {
+        try (Connection c = BasicConnection.getConnection()) {
             String query = "SELECT * FROM ban WHERE userID = ?;";
             PreparedStatement ps = c.prepareStatement(query);
             ps.setString(1, managerID);
             ResultSet rs = ps.executeQuery();
-            if (rs.next() != false) {
-                flag = true;
-            }
-
-        } catch (SQLException e) {
-            logger.error(e);
+            flag = rs.next();
         }
         return flag;
     }

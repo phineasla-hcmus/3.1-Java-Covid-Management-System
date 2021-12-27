@@ -216,7 +216,7 @@ public class ManageModeratorController {
     public void resolveShowModerator(WorkerStateEvent e, List<ActivityHistory> list) throws IOException {
         ManagePane.setVisible(true);
 
-        if (AdminDao.checkBanlist(ModeratorUsername.getSelectionModel().getSelectedItem().toString()) == false) {
+        if (AdminDao.isBanned(ModeratorUsername.getSelectionModel().getSelectedItem().toString()) == false) {
             activeChoice.setSelected(true);
         } else
             inactiveChoice.setSelected(true);

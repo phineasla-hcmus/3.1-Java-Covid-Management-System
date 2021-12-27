@@ -32,8 +32,4 @@ public class PaymentDao {
 		}
 		return false;
 	}
-
-	public static PaymentAccount get(String userId) {
-		try(Connection c = DataSource)
-	}
 }

@@ -72,49 +72,51 @@ public class BankDao {
 	/**
 	 * This method depends on static {@link Admin#get()}
 	 * 
-	 * @param userID
+	 * @param userId
 	 * @param amount
-	 * @return
+	 * @return transactionId if operation successful, else 0
 	 */
-	public static boolean transferMoneyToAdmin(String userID, double amount) {
-		boolean result = false;
+	public static long transferMoneyToAdmin(String userId, double amount) {
+		long transactionId = 0;
 		try (Connection c = DataSource.getConnection()) {
 			c.setAutoCommit(false);
-			BankAccount user = get(userID);
+			BankAccount user = get(userId);
 			BankAccount admin = Admin.get();
 
-			String queryUpdate = "UPDATE transactionaccount SET balance =? WHERE userID =?";
-			String queryInsert = "INSERT INTO transactionhistory VALUE(null,?,?,now(),?)";
+			String queryUpdate = "UPDATE transactionaccount SET balance=? WHERE userID=?";
+			String queryLog = "INSERT INTO transactionhistory VALUE(NULL,?,?,NOW(),?)";
 
 			PreparedStatement psUpdateUser = c.prepareStatement(queryUpdate);
 			PreparedStatement psUpdateAdmin = c.prepareStatement(queryUpdate);
-			PreparedStatement psInsert = c.prepareStatement(queryInsert);
+			PreparedStatement psLog = c.prepareStatement(queryLog, Statement.RETURN_GENERATED_KEYS);
 
 			psUpdateUser.setDouble(1, user.getBalance() - amount);
-			psUpdateUser.setString(2, userID);
+			psUpdateUser.setString(2, userId);
 
 			psUpdateAdmin.setDouble(1, admin.getBalance() + amount);
 			psUpdateAdmin.setString(2, admin.getUserId());
 
-			psInsert.setString(1, userID);
-			psInsert.setString(2, admin.getUserId());
-			psInsert.setDouble(3, amount);
+			psLog.setString(1, userId);
+			psLog.setString(2, admin.getUserId());
+			psLog.setDouble(3, amount);
 
 			try {
 				psUpdateUser.executeUpdate();
 				psUpdateAdmin.executeUpdate();
-				psInsert.executeUpdate();
+				psLog.executeUpdate();
+				ResultSet rs = psLog.getGeneratedKeys();
+				rs.next();
+				transactionId = rs.getLong(1);
 				c.commit();
-			} catch (SQLException e) {
+			} catch (SQLException commitException) {
 				c.rollback();
-
+				transactionId = 0;
 			}
 			DataSource.releaseConnection(c);
-			return result;
 		} catch (SQLException e) {
 			logger.error(e);
 		}
-		return result;
+		return transactionId;
 	}
 
 }

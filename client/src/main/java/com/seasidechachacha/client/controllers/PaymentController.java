@@ -53,11 +53,11 @@ public class PaymentController {
             if (e.getSource() == pay) { // đồng ý thanh toán
 
                 Alert alert = new Alert(AlertType.CONFIRMATION); // make sure người dùng thanh toán
-                alert.setTitle("Confirm Payment");
-                alert.setHeaderText("Are you sure want pay this cost?");
-                alert.setContentText("Remain balance: " + totalLabel.getText() + "\n" + "Balance need to pay: "
+                alert.setTitle("Xác nhận");
+                alert.setHeaderText("Hãy xác nhận thanh toán ?");
+                alert.setContentText("Số dư nợ phải trả : " + totalLabel.getText() + "\n" + "Số dư nợ còn lại : "
                         + balanceLabel.getText());
-
+                alert.show();
                 // option != null.
                 Optional<ButtonType> option = alert.showAndWait();
 
@@ -113,8 +113,10 @@ public class PaymentController {
         };
 
         payTask.setOnSucceeded(e -> {
-            // TODO@leesuby success
-            // Save to payment history for both user and admin
+            Alert alert = new Alert(AlertType.INFORMATION); // make sure người dùng thanh toán
+            alert.setTitle("Thông báo");
+            alert.setHeaderText("Thanh toán thành công!!!");
+            alert.show();
         });
 
         payTask.setOnFailed(e -> {
@@ -127,6 +129,10 @@ public class PaymentController {
                 logger.error(type.name() + ": " + userId);
                 if (type == ErrorResponseType.INSUFFICIENT_FUNDS) {
                     // TODO@leesuby alert user
+                    Alert alert = new Alert(AlertType.INFORMATION); // make sure người dùng thanh toán
+                    alert.setTitle("Thông báo");
+                    alert.setHeaderText("Số tiền trong tài khoản không đủ!!!\n Hãy nạp tiền thêm");
+                    alert.show();
                 }
             } else {
                 // IOException, ClassNotFoundException

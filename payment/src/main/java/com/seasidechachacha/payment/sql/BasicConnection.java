@@ -25,7 +25,7 @@ public class BasicConnection {
 	}
 
 	public static Connection getConnection() throws SQLException {
-		return DriverManager.getConnection(DatabaseConfig.getUrl() + "payment", DatabaseConfig.getUsername(),
+		return DriverManager.getConnection(DatabaseConfig.getUrl(), DatabaseConfig.getUsername(),
 				DatabaseConfig.getPassword());
 	}
 }

@@ -14,12 +14,14 @@ import com.seasidechachacha.common.payment.NewUserRequest;
 import com.seasidechachacha.common.payment.PaymentRequest;
 import com.seasidechachacha.common.payment.PaymentResponse;
 import com.seasidechachacha.common.payment.UserResponse;
+import com.seasidechachacha.payment.database.PaymentDao;
+import com.seasidechachacha.payment.models.PaymentAccount;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Receive a request and answer with a respone, then close the socket
+ * Receive a request and answer with a response, then close the socket
  */
 public class ClientHandler implements Runnable {
     private static final Logger logger = LogManager.getLogger(ClientHandler.class);
@@ -68,8 +70,8 @@ public class ClientHandler implements Runnable {
     }
 
     private void handleGetUserRequest(GetUserRequest req) throws IOException {
-        // TODO@changkho6310 Get PaymentAccount
-        double balance = 0;
+        PaymentAccount acc = PaymentDao.get(req.getUserId());
+        double balance = acc.getBalance();
         UserResponse res = new UserResponse(req.getUserId(), balance);
         ostream.writeObject(res);
         // If SQL fail, respond error
@@ -78,12 +80,13 @@ public class ClientHandler implements Runnable {
 
     private void handlePaymentRequest(PaymentRequest req) throws IOException {
         // TODO@changkho6310 Query for "balance" in PaymentAccount
+        
         double balance = 0;
         if (req.getTotal() > balance) {
             responseError(ErrorResponseType.INSUFFICIENT_FUNDS);
             return;
         }
-        double newBalance = balance - req.getTotal();
+        double amount = req.getTotal();
         // TODO@changkho6310 Update PaymentAccount
         // TODO@changkho6310 Insert into PaymentHistory, return paymentID
         long paymentId = 0;

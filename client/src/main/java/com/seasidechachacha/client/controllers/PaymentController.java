@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 import com.seasidechachacha.client.global.Session;
+import com.seasidechachacha.client.global.TaskExecutor;
 import com.seasidechachacha.client.payment.PaymentService;
 import com.seasidechachacha.client.payment.RespondException;
 import com.seasidechachacha.common.payment.ErrorResponseType;
@@ -34,12 +35,13 @@ public class PaymentController {
 
     // Số tiền cần phải trả, tổng từ Cart
     private double total;
-    // Số tiền hiện có trong tài khoảnz
+    // Số tiền hiện có trong tài khoản
     private double balance;
+   
 
     @FXML
     private void initialize() { // chỗ này lấy dữ liệu giá phải trả + tiền còn trong tài khoản của người dùng
-        balanceLabel.setText("0 VND");
+        totalLabel.setText("0 VND");
         getBalanceThread(Session.getUser().getUserId());
     }
 
@@ -98,6 +100,8 @@ public class PaymentController {
                 logger.error(throwable);
             }
         });
+        
+        TaskExecutor.execute(getBalanceTask);
     }
 
     private void paymentThread(String userId, double amount) {

@@ -26,6 +26,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 
 public class PaymentController {
+
     private static final Logger logger = LogManager.getLogger(PaymentController.class);
     private PaymentService paymentService = new PaymentService();
 
@@ -134,11 +135,8 @@ public class PaymentController {
         };
 
         payTask.setOnSucceeded(e -> {
-            
-            Alert alert = new Alert(AlertType.INFORMATION); // make sure người dùng thanh toán
-            alert.setTitle("Thông báo");
-            alert.setHeaderText("Thanh toán thành công!!!");
-            alert.show();
+            resolvePayTask(payTask.getValue());
+
         });
 
         payTask.setOnFailed(e -> {
@@ -150,6 +148,7 @@ public class PaymentController {
                 ErrorResponseType type = err.getType();
                 logger.error(type.name() + ": " + userId);
                 if (type == ErrorResponseType.INSUFFICIENT_FUNDS) {
+                   
                     Alert alert = new Alert(AlertType.INFORMATION); // make sure người dùng thanh toán
                     alert.setTitle("Thông báo");
                     alert.setHeaderText("Số tiền trong tài khoản không đủ!!!\n Hãy nạp tiền thêm");
@@ -160,5 +159,31 @@ public class PaymentController {
                 logger.error(throwable);
             }
         });
+    }
+
+    public void resolvePayTask(PaymentResponse p) {
+        Task<Boolean> addPay = new Task<Boolean>() {
+            @Override
+            public Boolean call() throws SQLException {
+                return PaymentDao.addPaymentHistory(p.getPaymentId(), Session.getUserId(), p.getTotal())
+                        && PaymentDao.clearCart(Session.getUserId());
+            }
+        };
+
+        addPay.setOnSucceeded(e -> {
+            if (addPay.getValue() == true) {
+                Alert alert = new Alert(AlertType.INFORMATION);
+                alert.setTitle("Thông báo");
+                alert.setHeaderText("Thanh toán thành công!!!");
+                alert.show();
+            } else {
+                Alert alert = new Alert(AlertType.INFORMATION);
+                alert.setTitle("Thông báo");
+                alert.setHeaderText("Thanh toán không thành công!!!");
+                alert.show();
+            }
+        });
+
+        TaskExecutor.execute(addPay);
     }
 }

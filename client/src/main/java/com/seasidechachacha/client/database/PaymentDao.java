@@ -113,6 +113,51 @@ public class PaymentDao {
         }
         return total;
     }
+    
+    /** clear pending payment after user pay
+     *
+     * @param userID
+     * @return
+     * @throws SQLException
+     */
+    
+    public static boolean clearPendingPayment(String userID) throws SQLException {
+        boolean result = false;
+        String sql = "DELETE FROM pendingpayment\n"
+                + "WHERE pendingpayment.orderID IN(\n"
+                + "SELECT p.orderID\n"
+                + "FROM pendingpayment as p JOIN orderhistory as o \n"
+                + "ON p.orderID = o.orderID AND o.userID=?)";
+        try ( Connection c = BasicConnection.getConnection()) {
+            PreparedStatement ps = c.prepareStatement(sql);
+            ps.setString(1, userID);
+            result = ps.executeUpdate() > 0;
+
+        }
+        return result;
+    }
+
+    /** after user payment , this will add a payment history to database for accounting
+     *
+     * @param tranID
+     * @param userID
+     * @param total
+     * @return
+     */
+    public static boolean addPaymentHistory(long tranID,String userID ,double total) throws SQLException{
+        boolean result = false ;
+        
+        try (Connection c = BasicConnection.getConnection()) {
+            String sql = "INSERT INTO paymenthistory VALUES (?,?,now(),?)";
+            PreparedStatement ps = c.prepareStatement(sql);
+            
+            ps.setLong(1, tranID);
+            ps.setString(2, userID);
+            ps.setDouble(3, total);
+            result = ps.executeUpdate() > 0;
+        }
+        return result;
+    }
 
     /**
      * Create a new {@code OrderHistory} record and {@code PendingPayment}.

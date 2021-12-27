@@ -1,11 +1,8 @@
 package com.seasidechachacha.client.controllers;
 
 import java.io.IOException;
-import java.net.URL;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.layout.BorderPane;
 import com.jfoenix.controls.JFXButton;
 import com.seasidechachacha.client.App;
 import javafx.scene.control.Button;
@@ -29,9 +26,6 @@ public class ModeratorScreenController {
     }
 
     @FXML
-    private BorderPane mainBorderPane;
-
-    @FXML
     private Button btnLogout;
 
     @FXML
@@ -43,13 +37,5 @@ public class ModeratorScreenController {
                 logger.fatal(ex);
             }
         });
-    }
-
-    private void loadFXML(URL url) {
-        try {
-            FXMLLoader loader = new FXMLLoader(url);
-            mainBorderPane.setCenter(loader.load());
-        } catch (IOException e) {
-        }
     }
 }

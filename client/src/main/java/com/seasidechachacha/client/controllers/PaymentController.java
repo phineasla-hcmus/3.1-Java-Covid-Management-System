@@ -36,8 +36,9 @@ public class PaymentController {
 
     // Số tiền cần phải trả, tổng từ Cart
     private double total;
-    // Số tiền hiện có trong tài khoảnz
+    // Số tiền hiện có trong tài khoản
     private double balance;
+   
 
     @FXML
     private void initialize() { // chỗ này lấy dữ liệu giá phải trả + tiền còn trong tài khoản của người dùng
@@ -109,7 +110,7 @@ public class PaymentController {
                 logger.error(throwable);
             }
         });
-
+        
         TaskExecutor.execute(getBalanceTask);
     }
 

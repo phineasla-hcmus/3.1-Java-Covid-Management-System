@@ -175,6 +175,11 @@ create table TransactionAccount
 	primary key (userID)
 );
 
+create table TransactionAdmin
+(
+	userID varchar(12),
+    primary key (userID)
+);
 create table TransactionHistory
 (
 	transactionID bigint AUTO_INCREMENT,

@@ -28,12 +28,12 @@
                </font>
             </Label>
             <Button fx:id="pay" layoutX="385.0" layoutY="394.0" mnemonicParsing="false" onAction="#handleButton" text="Thanh toán" />
-            <Label fx:id="balanceLabel" layoutX="418.0" layoutY="290.0" text="..." textFill="RED">
+            <Label fx:id="totalLabel" layoutX="418.0" layoutY="290.0" text="..." textFill="RED">
                <font>
                   <Font name="Calibri Light" size="14.0" />
                </font>
             </Label>
-            <Label fx:id="totalLabel" layoutX="418.0" layoutY="334.0" text="..." textFill="RED">
+            <Label fx:id="balanceLabel" layoutX="418.0" layoutY="334.0" text="..." textFill="RED">
                <font>
                   <Font name="Calibri Light" size="14.0" />
                </font>

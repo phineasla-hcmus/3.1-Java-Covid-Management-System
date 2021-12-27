@@ -8,7 +8,7 @@ public class DatabaseConfig {
 	private String url;
 	private String username;
 	private String password;
-	private String maxConnection;
+	private int maxConnection;
 
 	private static final DatabaseConfig config = new DatabaseConfig();
 
@@ -17,20 +17,22 @@ public class DatabaseConfig {
 		String usernameKey = "DATABASE_USERNAME";
 		String passwordKey = "DATABASE_PASSWORD";
 		String maxConnectionKey = "DATABASE_MAX_CONNECTION";
+                String maxConnectionEnv;
 		try (InputStream in = config.getClass().getResourceAsStream("/.dbconfig.properties")) {
 			if (in == null) {
 				config.url = System.getenv(urlKey);
 				config.username = System.getenv(usernameKey);
 				config.password = System.getenv(passwordKey);
-				config.maxConnection = System.getenv(maxConnectionKey);
+				maxConnectionEnv = System.getenv(maxConnectionKey);
 			} else {
 				Properties p = new Properties();
 				p.load(in);
 				config.url = p.getProperty(urlKey);
 				config.username = p.getProperty(usernameKey);
 				config.password = p.getProperty(passwordKey);
-				config.maxConnection = p.getProperty(maxConnectionKey);
+				maxConnectionEnv = p.getProperty(maxConnectionKey);
 			}
+                        config.maxConnection = Integer.parseInt(maxConnectionEnv);
 		}
 	}
 
@@ -47,6 +49,6 @@ public class DatabaseConfig {
 	}
 
 	public static int getMaxConnection() {
-		return Integer.parseInt(config.maxConnection);
+		return config.maxConnection;
 	}
 }

@@ -7,14 +7,19 @@ import com.seasidechachacha.client.global.TaskExecutor;
 
 import java.io.IOException;
 
+import org.apache.logging.log4j.Logger;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
+import org.apache.logging.log4j.LogManager;
 
 public class CreateUserPasswordController {
+    
+    private static final Logger logger = LogManager.getLogger(ManageModeratorController.class);
+    
     @FXML
     private TextField pass1;
     @FXML
@@ -58,7 +63,7 @@ public class CreateUserPasswordController {
 
     private void resolveChangePassword(WorkerStateEvent e, boolean result) throws IOException {
         if (result)
-            App.setRoot("view/UserScreen");
+            removeFirstLoginThread(Session.getUser().getUserId());
         else {
             Alert a = new Alert(Alert.AlertType.WARNING);
             a.setContentText("Có lỗi xảy ra , mời bạn nhập lại!!!");
@@ -75,19 +80,21 @@ public class CreateUserPasswordController {
         };
         removeFirstLoginTask.setOnSucceeded(e -> {
             try {
-                resolveRemoveFirstLogin(e, removeFirstLoginTask.getValue());
+                resolveRemoveFirstLogin(e, removeFirstLoginTask.getValue()); // Error in App#initializeMainScreen()
             } catch (IOException ex) {
-                // Error in App#initializeMainScreen()
+                logger.error(ex);
             }
         });
         TaskExecutor.execute(removeFirstLoginTask);
     }
 
-    private void resolveRemoveFirstLogin(WorkerStateEvent e, boolean result) {
+    private void resolveRemoveFirstLogin(WorkerStateEvent e, boolean result) throws IOException {
         if (result) {
-
+            App.setRoot("view/UserScreen");
         } else {
-
+            Alert a = new Alert(Alert.AlertType.WARNING);
+            a.setContentText("Có lỗi xảy ra , mời bạn nhập lại!!!");
+            a.show();
         }
     }
 }

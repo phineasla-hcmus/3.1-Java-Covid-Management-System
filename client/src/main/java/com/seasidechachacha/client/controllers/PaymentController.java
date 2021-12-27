@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Optional;
 
+import com.seasidechachacha.client.database.PaymentDao;
 import com.seasidechachacha.client.global.Session;
 import com.seasidechachacha.client.global.TaskExecutor;
 import com.seasidechachacha.client.payment.PaymentService;
@@ -38,12 +39,12 @@ public class PaymentController {
     private double total;
     // Số tiền hiện có trong tài khoản
     private double balance;
-   
 
     @FXML
     private void initialize() { // chỗ này lấy dữ liệu giá phải trả + tiền còn trong tài khoản của người dùng
         // balanceLabel.setText("0 VND");
-        getBalanceThread(Session.getUser().getUserId());
+        getPendingPaymentTotalPriceThread(Session.getUserId());
+        getBalanceThread(Session.getUserId());
     }
 
     @FXML
@@ -65,7 +66,7 @@ public class PaymentController {
                 if (option.get() == null) {
 
                 } else if (option.get() == ButtonType.OK) { // đồng ý thanh toán , trừ vô tài khoản của người dùng
-                    paymentThread(Session.getUser().getUserId(), total);
+                    paymentThread(Session.getUserId(), total);
                 } else if (option.get() == ButtonType.CANCEL) { // không có gì xảy ra
 
                 }
@@ -73,14 +74,24 @@ public class PaymentController {
         }
     }
 
-    // private void getPendingPaymentTotalPriceThread(String userId) {
-    //     Task<Double> getPendingPaymentTotalPriceTask = new Task<Double>() {
-    //         @Override
-    //         public Double call() throws SQLException {
-    //             return 
-    //         }
-    //     }
-    // }
+    private void getPendingPaymentTotalPriceThread(String userId) {
+        Task<Double> getPendingPaymentTotalPriceTask = new Task<Double>() {
+            @Override
+            public Double call() throws SQLException {
+                return PaymentDao.getPendingPaymentTotalPrice(userId);
+            }
+        };
+
+        getPendingPaymentTotalPriceTask.setOnSucceeded(e -> {
+            double total = getPendingPaymentTotalPriceTask.getValue();
+            totalLabel.setText(total + " VND");
+        });
+        getPendingPaymentTotalPriceTask.setOnFailed(e -> {
+            Throwable throwable = getPendingPaymentTotalPriceTask.getException();
+            logger.error(throwable);
+        });
+        TaskExecutor.execute(getPendingPaymentTotalPriceTask);
+    }
 
     private void getBalanceThread(String userId) {
         Task<UserResponse> getBalanceTask = new Task<UserResponse>() {
@@ -110,7 +121,7 @@ public class PaymentController {
                 logger.error(throwable);
             }
         });
-        
+
         TaskExecutor.execute(getBalanceTask);
     }
 

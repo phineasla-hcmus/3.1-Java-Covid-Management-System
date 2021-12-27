@@ -31,4 +31,8 @@ public class Session {
     public static User getUser() {
         return new User(g.userId, g.roleId);
     }
+
+    public static String getUserId() {
+        return g.userId;
+    }
 }

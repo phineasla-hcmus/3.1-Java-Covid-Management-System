@@ -9,7 +9,7 @@ public class PaymentAccount {
 		this.balance = balance;
 	}
 
-	public String getUserID() {
+	public String getUserId() {
 		return userID;
 	}
 

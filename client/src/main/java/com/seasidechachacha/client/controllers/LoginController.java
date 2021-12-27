@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 import com.seasidechachacha.client.App;
+import com.seasidechachacha.client.database.AdminDao;
 import com.seasidechachacha.client.database.UserDao;
 import com.seasidechachacha.client.global.Session;
 import com.seasidechachacha.client.global.TaskExecutor;
@@ -64,6 +65,54 @@ public class LoginController {
         TaskExecutor.execute(loginTask);
     }
 
+    public void resolveLogin(WorkerStateEvent e, User user) throws IOException {
+        if (user == null) {
+            Alert a = new Alert(Alert.AlertType.WARNING);
+            a.setContentText("Xin kiểm tra lại tên đăng nhập hoặc mật khẩu!");
+            a.show();
+            return;
+        }
+        Session.setUser(user);
+        int roleId = user.getRoleId();
+        if (roleId == 1) {
+            App.setRoot("view/AdminScreen");
+        } else if (roleId == 2) {
+            isBannedThread(user.getUserId());
+        } else if (roleId == 3) {
+            isNewUserThread(user.getUserId());
+        }
+    }
+
+    private void isBannedThread(String managerId) {
+        Task<Boolean> isBannedTask = new Task<Boolean>() {
+            @Override
+            public Boolean call() throws SQLException {
+                return AdminDao.isBanned(managerId);
+            }
+        };
+
+        isBannedTask.setOnSucceeded(e -> {
+            try {
+                resolveIsBanned(e, isBannedTask.getValue());
+            } catch (IOException ex) {
+                logger.error(ex);
+            }
+        });
+        isBannedTask.setOnFailed(e -> {
+            Throwable throwable = isBannedTask.getException();
+            logger.error(throwable);
+        });
+        TaskExecutor.execute(isBannedTask);
+    }
+
+    private void resolveIsBanned(WorkerStateEvent e, boolean isBanned) throws IOException {
+        if (isBanned) {
+            // TODO@leesuby THIS MANAGER IS BANNED, KICK HIM
+        } else {
+            App.setRoot("view/ModeratorScreen");
+        }
+    }
+
     /**
      * Create and execute database request for checking new user, which then
      * will be forwarded to resolveIsNewUser
@@ -86,24 +135,6 @@ public class LoginController {
             }
         });
         TaskExecutor.execute(isNewUserTask);
-    }
-
-    public void resolveLogin(WorkerStateEvent e, User user) throws IOException {
-        if (user == null) {
-            Alert a = new Alert(Alert.AlertType.WARNING);
-            a.setContentText("Xin kiểm tra lại tên đăng nhập hoặc mật khẩu!");
-            a.show();
-            return;
-        }
-        Session.setUser(user);
-        int roleId = user.getRoleId();
-        if (roleId == 1) {
-            App.setRoot("view/AdminScreen");
-        } else if (roleId == 2) {
-            App.setRoot("view/ModeratorScreen");
-        } else if (roleId == 3) {
-            isNewUserThread(user.getUserId());
-        }
     }
 
     public void resolveIsNewUser(WorkerStateEvent e, boolean isNewUser) throws IOException {

@@ -86,24 +86,6 @@ public class UserDao {
 	}
 
 	/**
-	 * Check if the User table is empty, useful for checking first time system boot
-	 * 
-	 * @return true if User table is empty, else false
-	 * @throws SQLException
-	 */
-	public static boolean isEmpty() throws SQLException {
-		String query = "SELECT EXISTS (SELECT 1 FROM User)";
-		Boolean isEmpty = null;
-		try (Connection c = BasicConnection.getConnection(); Statement s = c.createStatement()) {
-			ResultSet rs = s.executeQuery(query);
-			while (rs.next()) {
-				isEmpty = !rs.getBoolean(1);
-			}
-		}
-		return isEmpty;
-	}
-
-	/**
 	 * Check if the User is first time loged in
 	 * 
 	 * @return true if User exist in NewUser table, else false
@@ -120,6 +102,50 @@ public class UserDao {
 			}
 		}
 		return isFirst;
+	}
+
+	/**
+	 * Remove user from NewUser table, use after user have changed their first
+	 * password
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	public static boolean removeFirstLogin(String userId) {
+		boolean result = false;
+		try (Connection c = BasicConnection.getConnection()) {
+			String query = "DELETE FROM NewUser WHERE userID=?";
+			PreparedStatement ps = c.prepareStatement(query);
+			ps.setString(1, userId);
+			try {
+				result = ps.executeUpdate() > 0;
+			} catch (SQLException commitException) {
+				logger.error(commitException);
+				c.rollback();
+				result = false;
+			}
+		} catch (SQLException e) {
+			logger.error("Error create connection or rollback", e);
+		}
+		return result;
+	}
+
+	/**
+	 * Check if the User table is empty, useful for checking first time system boot
+	 * 
+	 * @return true if User table is empty, else false
+	 * @throws SQLException
+	 */
+	public static boolean isEmpty() throws SQLException {
+		String query = "SELECT EXISTS (SELECT 1 FROM User)";
+		Boolean isEmpty = null;
+		try (Connection c = BasicConnection.getConnection(); Statement s = c.createStatement()) {
+			ResultSet rs = s.executeQuery(query);
+			while (rs.next()) {
+				isEmpty = !rs.getBoolean(1);
+			}
+		}
+		return isEmpty;
 	}
 
 	/**

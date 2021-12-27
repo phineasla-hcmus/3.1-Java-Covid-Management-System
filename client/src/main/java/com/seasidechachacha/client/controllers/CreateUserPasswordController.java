@@ -65,4 +65,29 @@ public class CreateUserPasswordController {
             a.show();
         }
     }
+
+    private void removeFirstLoginThread(String userId) {
+        Task<Boolean> removeFirstLoginTask = new Task<Boolean>() {
+            @Override
+            public Boolean call() {
+                return UserDao.removeFirstLogin(userId);
+            }
+        };
+        removeFirstLoginTask.setOnSucceeded(e -> {
+            try {
+                resolveRemoveFirstLogin(e, removeFirstLoginTask.getValue());
+            } catch (IOException ex) {
+                // Error in App#initializeMainScreen()
+            }
+        });
+        TaskExecutor.execute(removeFirstLoginTask);
+    }
+
+    private void resolveRemoveFirstLogin(WorkerStateEvent e, boolean result) {
+        if (result) {
+
+        } else {
+
+        }
+    }
 }

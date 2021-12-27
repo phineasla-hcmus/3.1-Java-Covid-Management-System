@@ -606,7 +606,6 @@ public class ManagerDao {
 			PreparedStatement ps = c.prepareStatement(deleteInPackage);
 			ps.setInt(1, packageID);
 			result = ps.executeUpdate() > 0;
-			c.close();
 		} catch (SQLException e) {
 			logger.error(e);
 		}

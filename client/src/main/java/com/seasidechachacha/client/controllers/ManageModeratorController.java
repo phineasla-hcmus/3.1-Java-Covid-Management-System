@@ -13,6 +13,9 @@ import com.seasidechachacha.client.database.AdminDao;
 import com.seasidechachacha.client.models.ActivityHistory;
 import com.seasidechachacha.client.models.User;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -29,6 +32,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 
 public class ManageModeratorController {
+    private static final Logger logger = LogManager.getLogger(ManageModeratorController.class);
 
     @FXML
     private Button viewButton, updateButton;
@@ -215,11 +219,15 @@ public class ManageModeratorController {
 
     public void resolveShowModerator(WorkerStateEvent e, List<ActivityHistory> list) throws IOException {
         ManagePane.setVisible(true);
-
-        if (AdminDao.isBanned(ModeratorUsername.getSelectionModel().getSelectedItem().toString()) == false) {
-            activeChoice.setSelected(true);
-        } else
-            inactiveChoice.setSelected(true);
+        String modId = ModeratorUsername.getSelectionModel().getSelectedItem().toString();
+        try {
+            if (AdminDao.isBanned(modId) == false) {
+                activeChoice.setSelected(true);
+            } else
+                inactiveChoice.setSelected(true);
+        } catch (SQLException e1) {
+            logger.error(e1);
+        }
 
         listAct = FXCollections.observableArrayList(list);
 

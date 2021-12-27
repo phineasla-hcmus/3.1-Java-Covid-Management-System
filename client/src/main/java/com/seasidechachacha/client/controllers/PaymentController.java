@@ -1,6 +1,7 @@
 package com.seasidechachacha.client.controllers;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Optional;
 
 import com.seasidechachacha.client.global.Session;
@@ -40,7 +41,7 @@ public class PaymentController {
 
     @FXML
     private void initialize() { // chỗ này lấy dữ liệu giá phải trả + tiền còn trong tài khoản của người dùng
-        balanceLabel.setText("0 VND");
+        // balanceLabel.setText("0 VND");
         getBalanceThread(Session.getUser().getUserId());
     }
 
@@ -70,6 +71,15 @@ public class PaymentController {
             }
         }
     }
+
+    // private void getPendingPaymentTotalPriceThread(String userId) {
+    //     Task<Double> getPendingPaymentTotalPriceTask = new Task<Double>() {
+    //         @Override
+    //         public Double call() throws SQLException {
+    //             return 
+    //         }
+    //     }
+    // }
 
     private void getBalanceThread(String userId) {
         Task<UserResponse> getBalanceTask = new Task<UserResponse>() {

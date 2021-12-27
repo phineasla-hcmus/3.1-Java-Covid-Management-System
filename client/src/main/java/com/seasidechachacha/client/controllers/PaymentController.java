@@ -134,6 +134,7 @@ public class PaymentController {
         };
 
         payTask.setOnSucceeded(e -> {
+            
             Alert alert = new Alert(AlertType.INFORMATION); // make sure người dùng thanh toán
             alert.setTitle("Thông báo");
             alert.setHeaderText("Thanh toán thành công!!!");
@@ -149,7 +150,6 @@ public class PaymentController {
                 ErrorResponseType type = err.getType();
                 logger.error(type.name() + ": " + userId);
                 if (type == ErrorResponseType.INSUFFICIENT_FUNDS) {
-                    // TODO@leesuby alert user
                     Alert alert = new Alert(AlertType.INFORMATION); // make sure người dùng thanh toán
                     alert.setTitle("Thông báo");
                     alert.setHeaderText("Số tiền trong tài khoản không đủ!!!\n Hãy nạp tiền thêm");

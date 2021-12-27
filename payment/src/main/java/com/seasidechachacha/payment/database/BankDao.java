@@ -1,7 +1,7 @@
 package com.seasidechachacha.payment.database;
 
 import com.seasidechachacha.payment.Admin;
-import com.seasidechachacha.payment.models.PaymentAccount;
+import com.seasidechachacha.payment.models.BankAccount;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -13,9 +13,9 @@ import org.apache.logging.log4j.Logger;
 import com.seasidechachacha.payment.sql.DataSource;
 import java.sql.ResultSet;
 
-public class PaymentDao {
+public class BankDao {
 
-	private static Logger logger = LogManager.getLogger(PaymentDao.class);
+	private static Logger logger = LogManager.getLogger(BankDao.class);
 
 	public static boolean register(String userID, double amount) {
 		try (Connection c = DataSource.getConnection()) {
@@ -32,15 +32,15 @@ public class PaymentDao {
 		return false;
 	}
 
-	public static PaymentAccount get(String userID) {
-		PaymentAccount result = null;
+	public static BankAccount get(String userID) {
+		BankAccount result = null;
 		try (Connection c = DataSource.getConnection()) {
 			String query = "SELECT * FROM transactionaccount WHERE userID =?";
 			PreparedStatement ps = c.prepareStatement(query);
 			ps.setString(1, userID);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				result = new PaymentAccount(rs.getString("userID"), rs.getDouble("balance"));
+				result = new BankAccount(rs.getString("userID"), rs.getDouble("balance"));
 			}
 			DataSource.releaseConnection(c);
 			return result;
@@ -50,8 +50,8 @@ public class PaymentDao {
 		return result;
 	}
 
-	public static PaymentAccount getAdmin() {
-		PaymentAccount result = null;
+	public static BankAccount getAdmin() {
+		BankAccount result = null;
 		try (Connection c = DataSource.getConnection()) {
 			String query = "SELECT transactionaccount.userID as userID, transactionaccount.balance as balance"
 					+ " FROM transactionaccount JOIN transactionadmin "
@@ -59,7 +59,7 @@ public class PaymentDao {
 			Statement ps = c.createStatement();
 			ResultSet rs = ps.executeQuery(query);
 			while (rs.next()) {
-				result = new PaymentAccount(rs.getString("userID"), rs.getDouble("balance"));
+				result = new BankAccount(rs.getString("userID"), rs.getDouble("balance"));
 			}
 			DataSource.releaseConnection(c);
 			return result;
@@ -80,8 +80,8 @@ public class PaymentDao {
 		boolean result = false;
 		try (Connection c = DataSource.getConnection()) {
 			c.setAutoCommit(false);
-			PaymentAccount user = get(userID);
-			PaymentAccount admin = Admin.get();
+			BankAccount user = get(userID);
+			BankAccount admin = Admin.get();
 
 			String queryUpdate = "UPDATE transactionaccount SET balance =? WHERE userID =?";
 			String queryInsert = "INSERT INTO transactionhistory VALUE(null,?,?,now(),?)";

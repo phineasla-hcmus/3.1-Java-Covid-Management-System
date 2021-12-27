@@ -1,6 +1,6 @@
 package com.seasidechachacha.payment;
 
-import com.seasidechachacha.payment.models.PaymentAccount;
+import com.seasidechachacha.payment.models.BankAccount;
 
 public class Admin {
     private static final Admin g = new Admin();
@@ -23,13 +23,13 @@ public class Admin {
      * 
      * @param user
      */
-    public static void set(PaymentAccount user) {
+    public static void set(BankAccount user) {
         g.userId = user.getUserId();
         g.balance = user.getBalance();
     }
 
-    public static PaymentAccount get() {
-        return new PaymentAccount(g.userId, g.balance);
+    public static BankAccount get() {
+        return new BankAccount(g.userId, g.balance);
     }
 
     public static double getBalance() {

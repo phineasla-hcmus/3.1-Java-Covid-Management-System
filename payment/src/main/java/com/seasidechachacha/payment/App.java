@@ -22,7 +22,7 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 
 import com.seasidechachacha.common.DatabaseConfig;
-import com.seasidechachacha.payment.database.PaymentDao;
+import com.seasidechachacha.payment.database.BankDao;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -89,7 +89,7 @@ public class App {
         // SSLContext sc = initializeSSLContext();
         // SSLServerSocketFactory ssf = (SSLServerSocketFactory)
         // sc.getServerSocketFactory();
-        Admin.set(PaymentDao.getAdmin());
+        Admin.set(BankDao.getAdmin());
 
         initializeKeystore();
         SSLServerSocketFactory ssf = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();

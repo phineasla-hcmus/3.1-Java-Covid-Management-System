@@ -14,8 +14,8 @@ import com.seasidechachacha.common.payment.NewUserRequest;
 import com.seasidechachacha.common.payment.PaymentRequest;
 import com.seasidechachacha.common.payment.PaymentResponse;
 import com.seasidechachacha.common.payment.UserResponse;
-import com.seasidechachacha.payment.database.PaymentDao;
-import com.seasidechachacha.payment.models.PaymentAccount;
+import com.seasidechachacha.payment.database.BankDao;
+import com.seasidechachacha.payment.models.BankAccount;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -70,7 +70,7 @@ public class ClientHandler implements Runnable {
     }
 
     private void handleGetUserRequest(GetUserRequest req) throws IOException {
-        PaymentAccount acc = PaymentDao.get(req.getUserId());
+        BankAccount acc = BankDao.get(req.getUserId());
         double balance = acc.getBalance();
         UserResponse res = new UserResponse(req.getUserId(), balance);
         ostream.writeObject(res);

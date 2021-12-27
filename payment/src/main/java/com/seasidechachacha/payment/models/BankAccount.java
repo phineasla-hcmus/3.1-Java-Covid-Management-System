@@ -1,16 +1,16 @@
 package com.seasidechachacha.payment.models;
 
-public class PaymentAccount {
-	private String userID;
+public class BankAccount {
+	private String userId;
 	private double balance;
 
-	public PaymentAccount(String userID, double balance) {
-		this.userID = userID;
+	public BankAccount(String userID, double balance) {
+		this.userId = userID;
 		this.balance = balance;
 	}
 
 	public String getUserId() {
-		return userID;
+		return userId;
 	}
 
 	public double getBalance() {

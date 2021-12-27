@@ -59,7 +59,7 @@ public class CreateUserPasswordController {
     private void resolveChangePassword(WorkerStateEvent e, boolean result) throws IOException {
         // TODO@leesuby
         if (result)
-            App.initializeMainScreen(); // này là screen moderator :))
+            App.setRoot("view/UserScreen");
         else {
             // Something went wrong in the database
         }

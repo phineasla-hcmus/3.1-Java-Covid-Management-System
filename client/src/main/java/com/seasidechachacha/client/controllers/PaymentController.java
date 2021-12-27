@@ -34,7 +34,7 @@ public class PaymentController {
 
     // Số tiền cần phải trả, tổng từ Cart
     private double total;
-    // Số tiền hiện có trong tài khoản
+    // Số tiền hiện có trong tài khoảnz
     private double balance;
 
     @FXML

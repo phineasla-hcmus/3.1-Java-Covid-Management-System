@@ -163,6 +163,7 @@ create table PaymentHistory
 create table PendingPayment
 (
 	orderID bigint,
+    userID varchar(12),
     primary key (orderID),
 	foreign key (orderID) references OrderHistory(orderID)
 );

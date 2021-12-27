@@ -124,10 +124,7 @@ public class PaymentDao {
     public static boolean clearPendingPayment(String userID) throws SQLException {
         boolean result = false;
         String sql = "DELETE FROM pendingpayment\n"
-                + "WHERE pendingpayment.orderID IN(\n"
-                + "SELECT p.orderID\n"
-                + "FROM pendingpayment as p JOIN orderhistory as o \n"
-                + "ON p.orderID = o.orderID AND o.userID=?)";
+                + "WHERE pendingpayment.userID = ?";
         try ( Connection c = BasicConnection.getConnection()) {
             PreparedStatement ps = c.prepareStatement(sql);
             ps.setString(1, userID);
@@ -180,7 +177,7 @@ public class PaymentDao {
         // NULL for AUTO_INCREMENT
         String sql = "INSERT INTO OrderHistory SELECT NULL,?,NOW(),SUM(quantity*price) FROM CartItem WHERE userID=?";
         String itemSql = "INSERT INTO OrderItem SELECT ?,packageID,quantity,price FROM CartItem WHERE userID=?";
-        String pendingPaymentSql = "INSERT INTO PendingPayment VALUES(?)";
+        String pendingPaymentSql = "INSERT INTO PendingPayment VALUES(?,?)";
         try (Connection c = BasicConnection.getConnection()) {
             c.setAutoCommit(false);
             PreparedStatement orderStmt = c.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -197,6 +194,7 @@ public class PaymentDao {
                 orderId = rs.getLong(1);
 
                 pendingPaymentStmt.setLong(1, orderId);
+                pendingPaymentStmt.setString(2, userId);
                 pendingPaymentStmt.executeUpdate();
                 itemStmt.setLong(1, orderId);
                 itemStmt.executeUpdate();

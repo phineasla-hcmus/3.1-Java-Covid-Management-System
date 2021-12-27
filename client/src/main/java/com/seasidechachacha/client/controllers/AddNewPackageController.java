@@ -14,6 +14,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
+import javafx.util.converter.NumberStringConverter;
 
 public class AddNewPackageController {
 
@@ -27,8 +29,6 @@ public class AddNewPackageController {
 
     private ManagerDao manager = new ManagerDao(Session.getUser().getUserId());
 
-//    @FXML
-//    private ComboBox cbDayCooldown;
     @FXML
     private void goBack() {
         try {
@@ -43,7 +43,6 @@ public class AddNewPackageController {
         btnAdd.setOnAction(event -> {
             if (isValid()) {
                 if (manager.addPackage(getCurrentInput())) {
-                    // TODO
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Thông báo");
                     alert.setHeaderText("Quản lý nhu yếu phẩm");
@@ -61,6 +60,8 @@ public class AddNewPackageController {
             }
 
         });
+
+        tfLimit.setTextFormatter(new TextFormatter<>(new NumberStringConverter()));
     }
 
     private Package getCurrentInput() {

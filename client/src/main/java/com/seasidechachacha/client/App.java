@@ -18,7 +18,6 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.kordamp.bootstrapfx.BootstrapFX;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -59,25 +58,6 @@ public class App extends Application {
                     + droppedTasks.size()
                     + " tasks will not be executed");
         }
-    }
-
-    public static void initializeMainScreen() throws IOException {
-        scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
-        String initialPane = "";
-
-        if (role.equals("moderator")) {
-            setRoot("view/ModeratorScreen");
-            initialPane = "view/ViewListUser.fxml";
-        } else if (role.equals("admin")) {
-            setRoot("view/AdminScreen");
-        } else {
-            setRoot("view/UserScreen");
-        }
-        pn_all = (ScrollPane) scene.lookup("#pn_all");
-
-        Pane newLoadedPane = FXMLLoader.load(App.class.getResource(initialPane));
-        pn_all.setContent(newLoadedPane);
-        pn_all.toFront();
     }
 
     public static void setCurrentPane(String pane, String fxml, TableRow<Object> tableRow) throws IOException {

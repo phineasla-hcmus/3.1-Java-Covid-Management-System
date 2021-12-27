@@ -247,8 +247,6 @@ public class ViewListUserController {
             actionCol.setCellValueFactory(new PropertyValueFactory<>(""));
             Callback<TableColumn<ManagedUser, String>, TableCell<ManagedUser, String>> cellFactory = //
                     new Callback<TableColumn<ManagedUser, String>, TableCell<ManagedUser, String>>() {
-                        // TODO: TableCell is a raw type. References to generic type TableCell<S,T>
-                        // should be parameterized
                         @Override
                         public TableCell call(final TableColumn<ManagedUser, String> param) {
                             final TableCell<Object, String> cell = new TableCell<Object, String>() {

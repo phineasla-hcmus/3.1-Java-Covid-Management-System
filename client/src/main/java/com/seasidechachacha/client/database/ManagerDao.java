@@ -181,8 +181,8 @@ public class ManagerDao {
 	}
 
 	private static TreatmentPlaceHistory parseTreatmentPlaceHistory(ResultSet rs) throws SQLException {
-		return new TreatmentPlaceHistory(rs.getString("userID"), rs.getString("treatID"), rs.getString("wardId"),
-				rs.getString("time"), rs.getString("name"), rs.getString("street"));
+		return new TreatmentPlaceHistory(rs.getString("userID"), rs.getString("treatID"),
+				rs.getString("time"), rs.getString("name"), rs.getString("address"));
 	}
 
 	private static List<TreatmentPlaceHistory> parseTreatmentPlaceHistoryList(ResultSet rs) throws SQLException {
@@ -754,6 +754,25 @@ public class ManagerDao {
 			String query = "SELECT * FROM statehistory WHERE userID = ? ORDER BY time DESC LIMIT 1;";
 			PreparedStatement ps = c.prepareStatement(query);
 			ps.setString(1, userID);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				currentState = rs.getInt("state");
+			}
+			c.close();
+		} catch (SQLException e) {
+			logger.error(e);
+			e.printStackTrace();
+		}
+		return currentState;
+	}
+        
+        public static int getCurrentStateByTime(String userID, String time) {
+		int currentState = -2;
+		try (Connection c = BasicConnection.getConnection()) {
+			String query = "SELECT * FROM statehistory WHERE userID = ? AND time = ?;";
+			PreparedStatement ps = c.prepareStatement(query);
+			ps.setString(1, userID);
+                        ps.setString(2, time);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
 				currentState = rs.getInt("state");

@@ -128,6 +128,10 @@ public class UserInfoController {
     }
 
     public void resolveOrderHistory(WorkerStateEvent e, List<Invoice> list) throws IOException {
+        if (list == null || list.isEmpty()) {
+            getPaymentHistoryThread(userId);
+            return;
+        }
         dataOrder = list;
         if (dataOrder.size() % rowsPerPage() == 0) {
             paginationConsumption.setPageCount(dataOrder.size() / rowsPerPage());

@@ -56,32 +56,34 @@ public class PaymentDao {
      * @param offset
      * @return
      */
-    public static List<Invoice> getPendingPaymentList(String userId, int limit, int offset) {
-        List<Invoice> result = new ArrayList<>();
-        try (Connection c = BasicConnection.getConnection()) {
-            String query = "SELECT t.orderID,timeOrder,SUM(orderItemQuantity) AS totalItems,totalOrderMoney,t.userID \n"
-                    + "FROM orderhistory t \n"
-                    + "INNER JOIN orderitem p \n"
-                    + "ON t.orderID=p.orderID \n"
-                    + "GROUP BY t.orderID \n"
-                    + "HAVING t.userID=? \n"
-                    + "WHERE t.orderID NOT IN \n"
-                    + "(SELECT orderID FROM PaymentHistory) \n"
-                    + "LIMIT ? OFFSET ?;";
-            PreparedStatement ps = c.prepareStatement(query);
-            ps.setString(1, userId);
-            ps.setInt(2, limit);
-            ps.setInt(3, offset);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                result.add(parseInvoice(rs));
-            }
-            rs.close();
-        } catch (SQLException e) {
-            logger.error(e);
-        }
-        return result;
-    }
+    // public static List<Invoice> getPendingPaymentList(String userId, int limit,
+    // int offset) {
+    // List<Invoice> result = new ArrayList<>();
+    // try (Connection c = BasicConnection.getConnection()) {
+    // String query = "SELECT t.orderID,timeOrder,SUM(orderItemQuantity) AS
+    // totalItems,totalOrderMoney,t.userID \n"
+    // + "FROM orderhistory t \n"
+    // + "INNER JOIN orderitem p \n"
+    // + "ON t.orderID=p.orderID \n"
+    // + "GROUP BY t.orderID \n"
+    // + "HAVING t.userID=? \n"
+    // + "WHERE t.orderID NOT IN \n"
+    // + "(SELECT orderID FROM PaymentHistory) \n"
+    // + "LIMIT ? OFFSET ?;";
+    // PreparedStatement ps = c.prepareStatement(query);
+    // ps.setString(1, userId);
+    // ps.setInt(2, limit);
+    // ps.setInt(3, offset);
+    // ResultSet rs = ps.executeQuery();
+    // while (rs.next()) {
+    // result.add(parseInvoice(rs));
+    // }
+    // rs.close();
+    // } catch (SQLException e) {
+    // logger.error(e);
+    // }
+    // return result;
+    // }
 
     private static Invoice parseInvoice(ResultSet rs) throws SQLException {
         return new Invoice(rs.getInt("orderID"), rs.getString("timeOrder"), rs.getInt("totalItems"),
@@ -111,8 +113,8 @@ public class PaymentDao {
     }
 
     /**
-     * Create a new {@code OrderHistory} record and copy items
-     * from {@code CartItem} to {@code OrderItem}.
+     * Create a new {@code OrderHistory} record and {@code PendingPayment}.
+     * Then copy items from {@code CartItem} to {@code OrderItem}.
      * <p>
      * <b>Note: this method doesn't:</b>
      * <ol>
@@ -120,7 +122,6 @@ public class PaymentDao {
      * <li>Accumulate ManagedUser.debt. See
      * {@link PaymentDao#getCartTotalPrice(String)}
      * </li>
-     * <li>Create new {@code PendingPayment} record</li>
      * </ol>
      * </p>
      * 
@@ -132,9 +133,11 @@ public class PaymentDao {
         // NULL for AUTO_INCREMENT
         String sql = "INSERT INTO OrderHistory SELECT NULL,?,NOW(),SUM(quantity*price) FROM CartItem WHERE userID=?";
         String itemSql = "INSERT INTO OrderItem SELECT ?,packageID,quantity,price FROM CartItem WHERE userID=?";
+        String pendingPaymentSql = "INSERT INTO PendingPayment VALUES(?)";
         try (Connection c = BasicConnection.getConnection()) {
             c.setAutoCommit(false);
             PreparedStatement orderStmt = c.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement pendingPaymentStmt = c.prepareStatement(pendingPaymentSql);
             PreparedStatement itemStmt = c.prepareStatement(itemSql);
             orderStmt.setString(1, userId);
             orderStmt.setString(2, userId);
@@ -146,6 +149,8 @@ public class PaymentDao {
                 rs.next();
                 orderId = rs.getLong(1);
 
+                pendingPaymentStmt.setLong(1, orderId);
+                pendingPaymentStmt.executeUpdate();
                 itemStmt.setLong(1, orderId);
                 itemStmt.executeUpdate();
                 c.commit();
@@ -283,7 +288,9 @@ public class PaymentDao {
     }
 
     private static CartItem parseCartItem(ResultSet rs) throws SQLException {
-        float totalPrice = Integer.parseInt(rs.getString("quantity")) * Float.parseFloat(rs.getString("price").substring(0, (rs.getString("price").length()) - 4));
-        return new CartItem(rs.getString("userID"), rs.getString("name"), rs.getString("quantity"),rs.getString("price"), Float.toString(totalPrice));
+        float totalPrice = Integer.parseInt(rs.getString("quantity"))
+                * Float.parseFloat(rs.getString("price").substring(0, (rs.getString("price").length()) - 4));
+        return new CartItem(rs.getString("userID"), rs.getString("name"), rs.getString("quantity"),
+                rs.getString("price"), Float.toString(totalPrice));
     }
 }

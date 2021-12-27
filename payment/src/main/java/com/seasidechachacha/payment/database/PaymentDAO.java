@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.seasidechachacha.payment.models.PaymentAccount;
 import com.seasidechachacha.payment.sql.DataSource;
 
 public class PaymentDao {
@@ -17,7 +18,7 @@ public class PaymentDao {
 	// 	System.out.println(addPaymentAcc("1", 1000));
 	// }
 
-	public static boolean addPaymentAcc(String userID, double amount) {
+	public static boolean register(String userID, double amount) {
 		try (Connection c = DataSource.getConnection()) {
 			String query = "INSERT INTO transactionaccount(userID, balance) VALUES(?,?);";
 			PreparedStatement ps = c.prepareStatement(query);
@@ -30,5 +31,9 @@ public class PaymentDao {
 			logger.error(e);
 		}
 		return false;
+	}
+
+	public static PaymentAccount get(String userId) {
+		try(Connection c = DataSource)
 	}
 }

@@ -402,7 +402,6 @@ public class ManagerDao {
 			c.close();
 		} catch (SQLException e) {
 			logger.error(e);
-			e.printStackTrace();
 		}
 		return packageList;
 	}
@@ -421,75 +420,102 @@ public class ManagerDao {
 			c.close();
 		} catch (SQLException e) {
 			logger.error(e);
-			e.printStackTrace();
 		}
 		return packageList;
 	}
 
-	public static List<Package> getPackageListByName() {
+	public static List<Package> getSortedPackageListByName(String keyword) {
+                String query = "";
+                if (keyword.equals("")) {
+                    query = "SELECT * FROM package ORDER BY name ASC";
+                }
+                else {
+                    query = "SELECT * FROM package WHERE MATCH(name) AGAINST(?) ORDER BY name ASC";
+                }
 		List<Package> packageList = null;
 		try (Connection c = BasicConnection.getConnection()) {
-			String query = "SELECT * FROM package ORDER BY name ASC";
 			PreparedStatement ps = c.prepareStatement(query);
-			ResultSet rs = ps.executeQuery();
-			if (rs.next()) {
+                        if (!keyword.equals("")) {
+                            ps.setString(1, keyword);
+                        }
+                        try (ResultSet rs = ps.executeQuery()) {
 				packageList = parsePackageList(rs);
 			}
 			c.close();
 		} catch (SQLException e) {
 			logger.error(e);
-			e.printStackTrace();
 		}
 		return packageList;
 	}
 
-	public static List<Package> getPackageListByLimit() {
+	public static List<Package> getSortedPackageListByLimit(String keyword) {
+                String query = "";
+                if (keyword.equals("")) {
+                    query = "SELECT * FROM package ORDER BY limitPerPerson ASC";
+                }
+                else {
+                    query = "SELECT * FROM package WHERE MATCH(name) AGAINST(?) ORDER BY limitPerPerson ASC";
+                }
 		List<Package> packageList = null;
 		try (Connection c = BasicConnection.getConnection()) {
-			String query = "SELECT * FROM package ORDER BY limitPerPerson ASC";
 			PreparedStatement ps = c.prepareStatement(query);
-			ResultSet rs = ps.executeQuery();
-			if (rs.next()) {
+                        if (!keyword.equals("")) {
+                            ps.setString(1, keyword);
+                        }
+			try (ResultSet rs = ps.executeQuery()) {
 				packageList = parsePackageList(rs);
 			}
 			c.close();
 		} catch (SQLException e) {
 			logger.error(e);
-			e.printStackTrace();
 		}
 		return packageList;
 	}
 
-	public static List<Package> getPackageListByTime() {
+	public static List<Package> getSortedPackageListByTime(String keyword) {
+                String query = "";
+                if (keyword.equals("")) {
+                    query = "SELECT * FROM package ORDER BY dayCooldown ASC";
+                }
+                else {
+                    query = "SELECT * FROM package WHERE MATCH(name) AGAINST(?) ORDER BY dayCooldown ASC";
+                }
 		List<Package> packageList = null;
 		try (Connection c = BasicConnection.getConnection()) {
-			String query = "SELECT * FROM package ORDER BY dayCooldown ASC";
 			PreparedStatement ps = c.prepareStatement(query);
-			ResultSet rs = ps.executeQuery();
-			if (rs.next()) {
+                        if (!keyword.equals("")) {
+                            ps.setString(1, keyword);
+                        }
+			try (ResultSet rs = ps.executeQuery()) {
 				packageList = parsePackageList(rs);
 			}
 			c.close();
 		} catch (SQLException e) {
 			logger.error(e);
-			e.printStackTrace();
 		}
 		return packageList;
 	}
 
-	public static List<Package> getPackageListByPrice() {
+	public static List<Package> getSortedPackageListByPrice(String keyword) {
+                String query = "";
+                if (keyword.equals("")) {
+                    query = "SELECT * FROM package ORDER BY price ASC";
+                }
+                else {
+                    query = "SELECT * FROM package WHERE MATCH(name) AGAINST(?) ORDER BY price ASC";
+                }
 		List<Package> packageList = null;
 		try (Connection c = BasicConnection.getConnection()) {
-			String query = "SELECT * FROM package ORDER BY price ASC";
 			PreparedStatement ps = c.prepareStatement(query);
-			ResultSet rs = ps.executeQuery();
-			if (rs.next()) {
+                        if (!keyword.equals("")) {
+                            ps.setString(1, keyword);
+                        }
+			try (ResultSet rs = ps.executeQuery()) {
 				packageList = parsePackageList(rs);
 			}
 			c.close();
 		} catch (SQLException e) {
 			logger.error(e);
-			e.printStackTrace();
 		}
 		return packageList;
 	}

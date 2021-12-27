@@ -53,7 +53,7 @@ public class ViewListPackageController {
     private ManagerDao manager = new ManagerDao(Session.getUser().getUserId());
 
 
-    private String keyword;
+    private String keyword = "";
 
     @FXML
     private void initialize() {
@@ -81,17 +81,18 @@ public class ViewListPackageController {
         cbSort.getItems().addAll("Tên gói", "Mức giới hạn", "Thời gian giới hạn", "Đơn giá");
         cbSort.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
             if (newValue.equals("Tên gói")) {
-                getSortedListPackageThread("name");
+                getSortedListPackageThread("name", keyword);
             } else if (newValue.equals("Mức giới hạn")) {
-                getSortedListPackageThread("limit");
+                getSortedListPackageThread("limit", keyword);
             } else if (newValue.equals("Thời gian giới hạn")) {
-                getSortedListPackageThread("time");
+                getSortedListPackageThread("time", keyword);
             } else if (newValue.equals("Đơn giá")) {
-                getSortedListPackageThread("price");
+                getSortedListPackageThread("price", keyword);
             }
         });
         tfSearch.textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.equals("")) {
+                keyword = "";
                 getListPackageThread();
                 btnFilter.setVisible(false);
             }
@@ -111,8 +112,8 @@ public class ViewListPackageController {
         ComboBox<String> cbPrice = new ComboBox<>();
         cbPrice.getItems().addAll("10000 - 100000", "100000 - 500000", "500000 - 1000000");
         dialogPane.setContent(new VBox(8, labelDay, cbDay, labelPrice, cbPrice));
-        Optional<String> result = dialog.showAndWait();
-        if (result.isPresent()) {
+        Optional<ButtonType> result = dialog.showAndWait();
+        if (result.get() == ButtonType.OK) {
             if (cbDay.getValue() == null && cbPrice.getValue() == null) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Thông báo");
@@ -239,18 +240,18 @@ public class ViewListPackageController {
         TaskExecutor.execute(dataTask);
     }
 
-    private void getSortedListPackageThread(String label) {
+    private void getSortedListPackageThread(String label, String keyword) {
         Task<List<Package>> dataTask = new Task<List<Package>>() {
             @Override
             public List<Package> call() {
                 if (label.equals("name")) {
-                    return ManagerDao.getPackageListByName();
+                    return ManagerDao.getSortedPackageListByName(keyword);
                 } else if (label.equals("limit")) {
-                    return ManagerDao.getPackageListByLimit();
+                    return ManagerDao.getSortedPackageListByLimit(keyword);
                 } else if (label.equals("time")) {
-                    return ManagerDao.getPackageListByTime();
+                    return ManagerDao.getSortedPackageListByTime(keyword);
                 } else if (label.equals("price")) {
-                    return ManagerDao.getPackageListByPrice();
+                    return ManagerDao.getSortedPackageListByPrice(keyword);
                 }
                 return null;
 
@@ -326,13 +327,6 @@ public class ViewListPackageController {
         int displace = data.size() % rowsPerPage();
         lastIndex = data.size() / rowsPerPage();
 
-//        if (displace > 0) {
-//            lastIndex = data.size() / rowsPerPage();
-//        } 
-//        else {
-//            lastIndex = data.size() / rowsPerPage() - 1;
-//
-//        }
         VBox box = new VBox(5);
         int page = pageIndex * itemsPerPage();
 
@@ -401,7 +395,6 @@ public class ViewListPackageController {
             };
 
             editCol.setCellFactory(cellFactory);
-//            editCol.setMinWidth(160);
 
             TableColumn deleteCol = new TableColumn();
             deleteCol.setCellValueFactory(new PropertyValueFactory<>(""));
@@ -433,7 +426,6 @@ public class ViewListPackageController {
                                         alert.showAndWait();
 
                                         data.remove(pack);
-//                                        table.refresh();
                                     } else {
                                         Alert alert = new Alert(Alert.AlertType.ERROR);
                                         alert.setTitle("Thông báo");
@@ -455,7 +447,6 @@ public class ViewListPackageController {
             };
 
             deleteCol.setCellFactory(cellFactory1);
-//            deleteCol.setMinWidth(160);
 
             table.getColumns().addAll(numCol, nameCol, limitCol, dayCol, priceCol, editCol, deleteCol);
             table.setItems(FXCollections.observableArrayList(data));

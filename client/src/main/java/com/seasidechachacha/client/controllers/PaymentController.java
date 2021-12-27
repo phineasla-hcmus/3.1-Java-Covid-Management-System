@@ -60,7 +60,6 @@ public class PaymentController {
                 alert.setHeaderText("Hãy xác nhận thanh toán ?");
                 alert.setContentText("Số dư nợ phải trả : " + totalLabel.getText() + "\n" + "Số dư nợ còn lại : "
                         + balanceLabel.getText());
-                alert.show();
                 // option != null.
                 Optional<ButtonType> option = alert.showAndWait();
 
@@ -84,7 +83,7 @@ public class PaymentController {
         };
 
         getPendingPaymentTotalPriceTask.setOnSucceeded(e -> {
-            double total = getPendingPaymentTotalPriceTask.getValue();
+            total = getPendingPaymentTotalPriceTask.getValue();
             totalLabel.setText(total + " VND");
         });
         getPendingPaymentTotalPriceTask.setOnFailed(e -> {
@@ -136,7 +135,6 @@ public class PaymentController {
 
         payTask.setOnSucceeded(e -> {
             resolvePayTask(payTask.getValue());
-
         });
 
         payTask.setOnFailed(e -> {
@@ -148,7 +146,7 @@ public class PaymentController {
                 ErrorResponseType type = err.getType();
                 logger.error(type.name() + ": " + userId);
                 if (type == ErrorResponseType.INSUFFICIENT_FUNDS) {
-                   
+
                     Alert alert = new Alert(AlertType.INFORMATION); // make sure người dùng thanh toán
                     alert.setTitle("Thông báo");
                     alert.setHeaderText("Số tiền trong tài khoản không đủ!!!\n Hãy nạp tiền thêm");
@@ -159,19 +157,21 @@ public class PaymentController {
                 logger.error(throwable);
             }
         });
+
+        TaskExecutor.execute(payTask);
     }
 
     public void resolvePayTask(PaymentResponse p) {
-        Task<Boolean> addPay = new Task<Boolean>() {
+        Task<Boolean> addPaymentHistory = new Task<Boolean>() {
             @Override
             public Boolean call() throws SQLException {
                 return PaymentDao.addPaymentHistory(p.getPaymentId(), Session.getUserId(), p.getTotal())
-                        && PaymentDao.clearCart(Session.getUserId());
+                        && PaymentDao.clearPendingPayment(Session.getUserId());
             }
         };
 
-        addPay.setOnSucceeded(e -> {
-            if (addPay.getValue() == true) {
+        addPaymentHistory.setOnSucceeded(e -> {
+            if (addPaymentHistory.getValue() == true) {
                 Alert alert = new Alert(AlertType.INFORMATION);
                 alert.setTitle("Thông báo");
                 alert.setHeaderText("Thanh toán thành công!!!");
@@ -184,6 +184,6 @@ public class PaymentController {
             }
         });
 
-        TaskExecutor.execute(addPay);
+        TaskExecutor.execute(addPaymentHistory);
     }
 }

@@ -127,5 +127,4 @@ public class App extends Application {
         playground();
         launch();
     }
-
 }

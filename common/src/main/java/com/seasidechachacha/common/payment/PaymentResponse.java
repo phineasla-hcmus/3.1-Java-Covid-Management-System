@@ -1,6 +1,8 @@
 package com.seasidechachacha.common.payment;
 
-public class PaymentResponse {
+import java.io.Serializable;
+
+public class PaymentResponse implements Serializable {
     private long paymentId;
     private double total;
 

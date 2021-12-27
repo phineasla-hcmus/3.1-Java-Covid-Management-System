@@ -76,6 +76,7 @@ public class LoginController {
         int roleId = user.getRoleId();
         if (roleId == 1) {
             App.setRoot("view/AdminScreen");
+            App.setCurrentPane("pn_all", "view/AddNewModerator", null);
         } else if (roleId == 2) {
             isBannedThread(user.getUserId());
         } else if (roleId == 3) {
@@ -113,6 +114,7 @@ public class LoginController {
             a.show();
         } else {
             App.setRoot("view/ModeratorScreen");
+            App.setCurrentPane("pn_all", "view/ViewListUser", null);
         }
     }
 
@@ -145,6 +147,7 @@ public class LoginController {
             App.setRoot("view/CreateUserPassword");
         } else {
             App.setRoot("view/UserScreen");
+            App.setCurrentPane("pn_all", "view/UserInfo", null);
         }
     }
 }

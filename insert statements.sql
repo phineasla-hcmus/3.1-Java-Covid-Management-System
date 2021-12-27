@@ -30,8 +30,8 @@ INSERT INTO `package` (`packageID`,`name`,`limitPerPerson`,`dayCooldown`,`price`
 INSERT INTO `package` (`packageID`,`name`,`limitPerPerson`,`dayCooldown`,`price`) VALUES (10,'Nước biển sâu sạch thông mũi trẻ em Xisat (75ml)',3,15,27000.000);
 
 INSERT INTO `manageduser` (`idCard`,`fullName`,`yob`,`relatedPerson`,`debt`, `address`, `state`) VALUES ('079157952250','Hong Du-shik',1990,'',0,'16 Lê Lai', 1);
-INSERT INTO `manageduser` (`idCard`,`fullName`,`yob`,`relatedPerson`,`debt`, `address`, `state`) VALUES ('079510193347','Nguyễn Lê Bảo Huyên',1985,'79932368028',0,'69 Lê Lợi', 0);
-INSERT INTO `manageduser` (`idCard`,`fullName`,`yob`,`relatedPerson`,`debt`, `address`, `state`) VALUES ('079732769898','Thập Cẩm Đào',2001,'79510193347',0,'69 Lê Lợi', 0);
+INSERT INTO `manageduser` (`idCard`,`fullName`,`yob`,`relatedPerson`,`debt`, `address`, `state`) VALUES ('079510193347','Nguyễn Lê Bảo Huyên',1985,'079932368028',0,'69 Lê Lợi', 0);
+INSERT INTO `manageduser` (`idCard`,`fullName`,`yob`,`relatedPerson`,`debt`, `address`, `state`) VALUES ('079732769898','Thập Cẩm Đào',2001,'079510193347',0,'69 Lê Lợi', 0);
 INSERT INTO `manageduser` (`idCard`,`fullName`,`yob`,`relatedPerson`,`debt`, `address`, `state`) VALUES ('079932368028','Đậu Y Khoa',2002,'',0,'23A Phan Văn Bảy', 2);
 INSERT INTO `manageduser` (`idCard`,`fullName`,`yob`,`relatedPerson`,`debt`, `address`, `state`) VALUES ('079941055479','Đỗ Yên Bình',1969,'',0,'5 Đường số 1', 2);
 INSERT INTO `manageduser` (`idCard`,`fullName`,`yob`,`relatedPerson`,`debt`,`address`, `state`) VALUES ('079111222333','Nguyễn Văn A',1950,'079941055479',0,'5 Đường số 7', 2);

@@ -66,19 +66,13 @@ public class AddNewUserController {
                         alert.showAndWait();
                         refreshInput();
                     } else {
-                        Alert alert = new Alert(AlertType.ERROR);
-                        alert.setTitle("Thông báo");
-                        alert.setHeaderText("Quản lý người liên quan Covid19");
-                        alert.setContentText("Người dùng đã tồn tại!");
-
-                        alert.showAndWait();
+                        showAlert("Quản lý người liên quan Covid19", "Người dùng đã tồn tại!");
                     }
                 }
             } catch (SQLException ex) {
                 logger.fatal(ex);
             }
         });
-        // cbCurrentStatus.getItems().addAll("F0", "F1", "F2");
         List<City> city = getCityList();
         for (int i = 0; i < city.size(); i++) {
             cbCity.getItems().add(city.get(i).getCityName());
@@ -125,36 +119,60 @@ public class AddNewUserController {
 
     private boolean isValid() {
         boolean valid = true;
+        String header = "Thêm mới người liên quan Covid19";
         if (tfFullName.getText().equals("") || tfIdentityCard.getText().equals("")
                 || tfBirthYear.getText().equals("")) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Thông báo");
-            alert.setHeaderText("Thêm mới người dùng");
-            alert.setContentText("Vui lòng điền đầy đủ thông tin!");
-
-            alert.showAndWait();
+            showAlert(header, "Vui lòng điền đầy đủ thông tin!");
             valid = false;
-        } else if (cbCity.getValue().equals("") || cbDistrict.getValue().equals("") || cbWard.getValue().equals("")
-                || cbRelated.getValue().equals("")) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Thông báo");
-            alert.setHeaderText("Thêm mới người dùng");
-            alert.setContentText("Vui lòng chọn trạng thái, địa chỉ nơi ở và người liên quan!");
-
-            alert.showAndWait();
+        } else if (cbCity.getValue() == null || cbDistrict.getValue() == null || cbWard.getValue() == null
+                || cbRelated.getValue() == null) {
+            showAlert(header, "Vui lòng chọn trạng thái, địa chỉ nơi ở và người liên quan!");
             valid = false;
-        }
+        } else if (isNumberExisted(tfFullName.getText())) {
+            showAlert(header, "Vui lòng chỉ điền chữ cho họ tên!");
+            valid = false;
+        } else if (isCharacterExisted(tfIdentityCard.getText()) || isCharacterExisted(tfBirthYear.getText())) {
+            showAlert(header, "Vui lòng chỉ điền số cho chứng minh nhân dân và năm sinh!");
+            valid = false;
+        } 
         return valid;
+    }
+
+    private boolean isCharacterExisted(String content) {
+        for (int i = 0; i < content.length(); i++) {
+            if (Character.isLetter(content.charAt(i))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isNumberExisted(String content) {
+        for (int i = 0; i < content.length(); i++) {
+            if (Character.isDigit(content.charAt(i))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void showAlert(String header, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Thông báo");
+        alert.setHeaderText(header);
+        alert.setContentText(message);
+
+        alert.showAndWait();
     }
 
     private void refreshInput() {
         tfFullName.setText("");
         tfBirthYear.setText("");
         tfIdentityCard.setText("");
-        cbCity.getItems().clear();
-        cbDistrict.getItems().clear();
-        cbWard.getItems().clear();
-        cbRelated.getItems().clear();
+        cbCity.getSelectionModel().clearSelection();
+        cbDistrict.getSelectionModel().clearSelection();
+        cbWard.getSelectionModel().clearSelection();
+        cbRelated.getSelectionModel().clearSelection();
     }
 
     private ManagedUser getCurrentInput() {

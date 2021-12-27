@@ -746,32 +746,32 @@ public class ManagerDao {
 	// Cập nhật thông tin người liên quan Covid19
 	// Trạng thái → người liên đới phải thay đổi theo
 	public boolean setState(String userID, int state) {
-		switch (state) {
-		case -1: {
-			return setStateIndividual(userID, -1)
-					&& addMesssage("Update userID = " + userID + ", set state = " + String.valueOf(state));
-		}
-		case 0: {
-			ArrayList<String> childrens = getChildrens(userID);
-			for (int i = 0; i < childrens.size(); i++) {
-				setStateF1(childrens.get(i));
-			}
-			return setStateIndividual(userID, 0)
-					&& addMesssage("Update userID = " + userID + ", set state = " + String.valueOf(state));
-		}
-		case 1: {
-			return setStateF1(userID)
-					&& addMesssage("Update userID = " + userID + ", set state = " + String.valueOf(state));
-		}
-		case 2: {
-			removeChildren(userID);
-			return setStateIndividual(userID, state)
-					&& addMesssage("Update userID = " + userID + ", set state = " + String.valueOf(state));
-		}
-		default: {
-			return false;
-		}
-		}
+            switch (state) {
+                case -1: {
+                    return setStateIndividual(userID, -1)
+                            && addMesssage("Update userID = " + userID + ", set state = " + String.valueOf(state));
+                }
+                case 0: {
+                    ArrayList<String> childrens = getChildrens(userID);
+                    for (int i = 0; i < childrens.size(); i++) {
+                        setStateF1(childrens.get(i));
+                    }
+                    return setStateIndividual(userID, 0)
+                            && addMesssage("Update userID = " + userID + ", set state = " + String.valueOf(state));
+                }
+                case 1: {
+                    return setStateF1(userID)
+                            && addMesssage("Update userID = " + userID + ", set state = " + String.valueOf(state));
+                }
+                case 2: {
+                    removeChildren(userID);
+                    return setStateIndividual(userID, state)
+                            && addMesssage("Update userID = " + userID + ", set state = " + String.valueOf(state));
+                }
+                default: {
+                    return false;
+                }
+            }
 	}
 
 	public static int getCurrentState(String userID) {
@@ -787,7 +787,6 @@ public class ManagerDao {
 			c.close();
 		} catch (SQLException e) {
 			logger.error(e);
-			e.printStackTrace();
 		}
 		return currentState;
 	}
@@ -806,7 +805,6 @@ public class ManagerDao {
 			c.close();
 		} catch (SQLException e) {
 			logger.error(e);
-			e.printStackTrace();
 		}
 		return currentState;
 	}
@@ -825,7 +823,6 @@ public class ManagerDao {
 			c.close();
 		} catch (SQLException e) {
 			logger.error(e);
-			e.printStackTrace();
 		}
 		return result;
 	}
@@ -1353,7 +1350,7 @@ public class ManagerDao {
 	public static List<String> getUserIDList() {
 		List<String> results = new ArrayList<String>();
 		try (Connection c = BasicConnection.getConnection()) {
-			String query = "SELECT idCard FROM manageduser;";
+			String query = "SELECT idCard FROM manageduser WHERE state <= 1;";
 			PreparedStatement ps = c.prepareStatement(query);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {

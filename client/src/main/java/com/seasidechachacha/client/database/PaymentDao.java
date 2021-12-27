@@ -45,6 +45,11 @@ public class PaymentDao {
         return results;
     }
 
+    private static Invoice parseInvoice(ResultSet rs) throws SQLException {
+        return new Invoice(rs.getInt("orderID"), rs.getString("timeOrder"), rs.getInt("totalItems"),
+                rs.getFloat("totalOrderMoney"));
+    }
+
     /**
      * Get a list from {@code OrderHistory} where not in {@code PaymentHistory}
      * 
@@ -85,20 +90,19 @@ public class PaymentDao {
     // return result;
     // }
 
-    private static Invoice parseInvoice(ResultSet rs) throws SQLException {
-        return new Invoice(rs.getInt("orderID"), rs.getString("timeOrder"), rs.getInt("totalItems"),
-                rs.getFloat("totalOrderMoney"));
-    }
-
     /**
-     * Sum of all CartItem of a ManagedUser
+     * Get total price of PendingPayment orders
+     * @see {@link PaymentDao#logCart(String)} for adding order to PendingPayment
      * 
      * @param userId
      * @return
+     * @throws SQLException
      */
-    public static double getCartTotalPrice(String userId) {
+    public static double getPendingPaymentTotalPrice(String userId) throws SQLException {
         double total = 0;
-        String sql = "SELECT SUM(quantity*price) FROM CartItem WHERE userID=?";
+        String sql = "SELECT SUM(totalOrderMoney) FROM OrderHistory \n"
+                + "AND userId=? \n"
+                + "WHERE EXIST (SELECT 1 FROM PendingPayment WHERE PendingPayment.orderID = OrderHistory.orderID);";
         try (Connection c = BasicConnection.getConnection()) {
             PreparedStatement ps = c.prepareStatement(sql);
             ps.setString(1, userId);
@@ -106,8 +110,6 @@ public class PaymentDao {
             if (rs.next()) {
                 total = rs.getDouble(1);
             }
-        } catch (SQLException e) {
-            logger.error(e);
         }
         return total;
     }
@@ -259,6 +261,25 @@ public class PaymentDao {
             logger.error("Error create connection or rollback", e);
         }
         return result;
+    }
+
+    /**
+     * @param userId
+     * @return Sum of all CartItem of a ManagedUser
+     * @throws SQLException
+     */
+    public static double getCartTotalPrice(String userId) throws SQLException {
+        double total = 0;
+        String sql = "SELECT SUM(quantity*price) FROM CartItem WHERE userID=?";
+        try (Connection c = BasicConnection.getConnection()) {
+            PreparedStatement ps = c.prepareStatement(sql);
+            ps.setString(1, userId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                total = rs.getDouble(1);
+            }
+        }
+        return total;
     }
 
     /**

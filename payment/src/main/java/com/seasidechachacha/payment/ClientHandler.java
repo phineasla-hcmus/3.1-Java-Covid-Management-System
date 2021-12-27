@@ -14,8 +14,8 @@ import com.seasidechachacha.common.payment.NewUserRequest;
 import com.seasidechachacha.common.payment.PaymentRequest;
 import com.seasidechachacha.common.payment.PaymentResponse;
 import com.seasidechachacha.common.payment.UserResponse;
-import com.seasidechachacha.payment.database.PaymentDao;
-import com.seasidechachacha.payment.models.PaymentAccount;
+import com.seasidechachacha.payment.database.BankDao;
+import com.seasidechachacha.payment.models.BankAccount;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -61,16 +61,18 @@ public class ClientHandler implements Runnable {
     }
 
     private void handleNewUserRequest(NewUserRequest req) throws IOException {
-        // TODO@changkho6310 Insert into PaymentAccount, return userID
-        String userId = "RETURN_FROM_QUERY";
-        UserResponse res = new UserResponse(userId, req.getDeposit());
-        ostream.writeObject(res);
-        // If SQL fail, respond error
-        // responseError(ErrorResponseType.ID_EXISTED);
+        boolean result = BankDao.register(req.getUserId(), req.getDeposit());
+        if (result) {
+            UserResponse res = new UserResponse(req.getUserId(), req.getDeposit());
+            ostream.writeObject(res);
+        } else {
+            // If SQL fail, respond error
+            responseError(ErrorResponseType.ID_EXISTED);
+        }
     }
 
     private void handleGetUserRequest(GetUserRequest req) throws IOException {
-        PaymentAccount acc = PaymentDao.get(req.getUserId());
+        BankAccount acc = BankDao.get(req.getUserId());
         double balance = acc.getBalance();
         UserResponse res = new UserResponse(req.getUserId(), balance);
         ostream.writeObject(res);
@@ -79,21 +81,21 @@ public class ClientHandler implements Runnable {
     }
 
     private void handlePaymentRequest(PaymentRequest req) throws IOException {
-        // TODO@changkho6310 Query for "balance" in PaymentAccount
-        
-        double balance = 0;
-        if (req.getTotal() > balance) {
-            responseError(ErrorResponseType.INSUFFICIENT_FUNDS);
-            return;
-        }
+        // TODO Currently server will trust the client not to overspend,
+        // causing negative balance in user account
+        // double balance = 0;
+        // if (req.getTotal() > balance) {
+        // responseError(ErrorResponseType.INSUFFICIENT_FUNDS);
+        // return;
+        // }
         double amount = req.getTotal();
-        // TODO@changkho6310 Update PaymentAccount
-        // TODO@changkho6310 Insert into PaymentHistory, return paymentID
-        long paymentId = 0;
-        PaymentResponse res = new PaymentResponse(paymentId, req.getTotal());
+        long transactionId = BankDao.transferMoneyToAdmin(req.getUserId(), amount);
+        if (transactionId == 0) {
+            // If SQL fail, respond error
+            responseError(ErrorResponseType.ID_NOT_FOUND);
+        }
+        PaymentResponse res = new PaymentResponse(transactionId, req.getTotal());
         ostream.writeObject(res);
-        // If SQL fail, respond error
-        // responseError(ErrorResponseType.ID_NOT_FOUND);
     }
 
     private void responseError(ErrorResponseType type) throws IOException {

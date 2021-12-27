@@ -101,8 +101,8 @@ public class PaymentDao {
     public static double getPendingPaymentTotalPrice(String userId) throws SQLException {
         double total = 0;
         String sql = "SELECT SUM(totalOrderMoney) FROM OrderHistory \n"
-                + "AND userId=? \n"
-                + "WHERE EXIST (SELECT 1 FROM PendingPayment WHERE PendingPayment.orderID = OrderHistory.orderID);";
+                + "WHERE userId=? \n"
+                + "AND EXISTS (SELECT 1 FROM PendingPayment WHERE PendingPayment.orderID = OrderHistory.orderID);";
         try (Connection c = BasicConnection.getConnection()) {
             PreparedStatement ps = c.prepareStatement(sql);
             ps.setString(1, userId);

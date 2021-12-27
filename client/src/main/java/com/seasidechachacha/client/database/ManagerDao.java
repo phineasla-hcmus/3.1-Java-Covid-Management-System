@@ -804,10 +804,19 @@ public class ManagerDao {
 		return result;
 	}
 
-	public static List<ManagedUser> getListByID() {
-		String query = "SELECT * FROM manageduser ORDER BY idCard ASC";
+	public static List<ManagedUser> getSortedListByID(String keyword) {
+		String query = "";
+                if (keyword.equals("")) {
+                    query = "SELECT * FROM manageduser ORDER BY idCard ASC";
+                }
+                else {
+                    query = "SELECT * FROM manageduser WHERE MATCH(fullName) AGAINST(?) ORDER BY idCard ASC";
+                }
 		List<ManagedUser> users;
 		try (Connection c = BasicConnection.getConnection(); PreparedStatement ps = c.prepareStatement(query)) {
+                        if (!keyword.equals("")) {
+                            ps.setString(1, keyword);
+                        }
 			try (ResultSet rs = ps.executeQuery()) {
 				users = parseList(rs);
 			}
@@ -818,10 +827,19 @@ public class ManagerDao {
 		return users;
 	}
 
-	public static List<ManagedUser> getListByBirthYear() {
-		String query = "SELECT * FROM manageduser ORDER BY yob ASC";
+	public static List<ManagedUser> getSortedListByBirthYear(String keyword) {
+		String query = "";
+                if (keyword.equals("")) {
+                    query = "SELECT * FROM manageduser ORDER BY yob ASC";
+                }
+                else {
+                    query = "SELECT * FROM manageduser WHERE MATCH(fullName) AGAINST(?) ORDER BY yob ASC";
+                }
 		List<ManagedUser> users;
 		try (Connection c = BasicConnection.getConnection(); PreparedStatement ps = c.prepareStatement(query)) {
+                        if (!keyword.equals("")) {
+                            ps.setString(1, keyword);
+                        }
 			try (ResultSet rs = ps.executeQuery()) {
 				users = parseList(rs);
 			}
@@ -832,10 +850,19 @@ public class ManagerDao {
 		return users;
 	}
 
-	public static List<ManagedUser> getListByName() {
-		String query = "SELECT * FROM manageduser ORDER BY fullName ASC";
+	public static List<ManagedUser> getSortedListByName(String keyword) {
+		String query = "";
+                if (keyword.equals("")) {
+                    query = "SELECT * FROM manageduser ORDER BY fullName ASC";
+                }
+                else {
+                    query = "SELECT * FROM manageduser WHERE MATCH(fullName) AGAINST(?) ORDER BY fullName ASC";
+                }
 		List<ManagedUser> users;
 		try (Connection c = BasicConnection.getConnection(); PreparedStatement ps = c.prepareStatement(query)) {
+                        if (!keyword.equals("")) {
+                            ps.setString(1, keyword);
+                        }
 			try (ResultSet rs = ps.executeQuery()) {
 				users = parseList(rs);
 			}
@@ -845,6 +872,30 @@ public class ManagerDao {
 		}
 		return users;
 	}
+        
+        public static List<ManagedUser> getSortedListByState(String keyword) {
+		String query = "";
+                if (keyword.equals("")) {
+                    query = "SELECT * FROM manageduser ORDER BY state ASC";
+                }
+                else {
+                    query = "SELECT * FROM manageduser WHERE MATCH(fullName) AGAINST(?) ORDER BY state ASC";
+                }
+		List<ManagedUser> users;
+		try (Connection c = BasicConnection.getConnection(); PreparedStatement ps = c.prepareStatement(query)) {
+                        if (!keyword.equals("")) {
+                            ps.setString(1, keyword);
+                        }
+			try (ResultSet rs = ps.executeQuery()) {
+				users = parseList(rs);
+			}
+		} catch (SQLException e) {
+			logger.error(e);
+			return Collections.emptyList();
+		}
+		return users;
+	}
+        
 
 	private static City parseCity(ResultSet rs) throws SQLException {
 		return new City(rs.getString("cityID"), rs.getString("cityName"));

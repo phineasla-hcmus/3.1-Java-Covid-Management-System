@@ -18,11 +18,12 @@ import org.apache.logging.log4j.Logger;
  * DAO for CartItem, OrderHistory and OrderItem
  */
 public class PaymentDao {
+
     private static Logger logger = LogManager.getLogger(PaymentDao.class);
 
     public static List<Invoice> getHistoryList(String userId, int limit, int offset) {
         List<Invoice> results = new ArrayList<Invoice>();
-        try (Connection c = BasicConnection.getConnection()) {
+        try ( Connection c = BasicConnection.getConnection()) {
             String query = "SELECT t.orderID,timeOrder,SUM(orderItemQuantity) AS totalItems,totalOrderMoney,t.userID \n"
                     + "FROM orderhistory t \n"
                     + "INNER JOIN orderitem p \n"
@@ -51,11 +52,42 @@ public class PaymentDao {
     }
 
     /**
+     *
+     * @param userid
+     * @param packageid
+     * @param limitBuy
+     * @return quantity of package which user has bought based on limit buy of package 
+     */
+    
+    public static int quantityOfBoughtPackage(String userid, int packageid, int limitBuy) {
+        int result = 0;
+        try ( Connection c = BasicConnection.getConnection()) {
+            String query = "SELECT SUM(orderItemQuantity) as totalBuy\n"
+                    + "FROM orderhistory as oh JOIN user as u\n"
+                    + "ON oh.userID=u.userID AND u.userID=? \n"
+                    + "JOIN orderitem as oi ON oi.orderID=oh.orderID AND oi.packageID=? \n"
+                    + "WHERE datediff(now(),oh.timeOrder) < ?";
+            PreparedStatement ps = c.prepareStatement(query);
+            ps.setString(1, userid);
+            ps.setInt(2, packageid);
+            ps.setInt(3, limitBuy);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                result = rs.getInt("totalBuy");
+            }
+            rs.close();
+        } catch (SQLException e) {
+            logger.error(e);
+        }
+        return result;
+    }
+
+    /**
      * Get a list from {@code OrderHistory} where not in {@code PaymentHistory}
-     * 
+     *
      * @see <a href="https://stackoverflow.com/a/21338705/12405558">
-     *      Select records where not in another table
-     *      </a>
+     * Select records where not in another table
+     * </a>
      * @param userId
      * @param limit
      * @param offset
@@ -92,8 +124,10 @@ public class PaymentDao {
 
     /**
      * Get total price of PendingPayment orders
-     * @see {@link PaymentDao#logCart(String)} for adding order to PendingPayment
-     * 
+     *
+     * @see {@link PaymentDao#logCart(String)} for adding order to
+     * PendingPayment
+     *
      * @param userId
      * @return
      * @throws SQLException
@@ -103,7 +137,7 @@ public class PaymentDao {
         String sql = "SELECT SUM(totalOrderMoney) FROM OrderHistory \n"
                 + "WHERE userId=? \n"
                 + "AND EXISTS (SELECT 1 FROM PendingPayment WHERE PendingPayment.orderID = OrderHistory.orderID);";
-        try (Connection c = BasicConnection.getConnection()) {
+        try ( Connection c = BasicConnection.getConnection()) {
             PreparedStatement ps = c.prepareStatement(sql);
             ps.setString(1, userId);
             ResultSet rs = ps.executeQuery();
@@ -113,14 +147,14 @@ public class PaymentDao {
         }
         return total;
     }
-    
-    /** clear pending payment after user pay
+
+    /**
+     * clear pending payment after user pay
      *
      * @param userID
      * @return
      * @throws SQLException
      */
-    
     public static boolean clearPendingPayment(String userID) throws SQLException {
         boolean result = false;
         String sql = "DELETE FROM pendingpayment\n"
@@ -134,20 +168,22 @@ public class PaymentDao {
         return result;
     }
 
-    /** after user payment , this will add a payment history to database for accounting
+    /**
+     * after user payment , this will add a payment history to database for
+     * accounting
      *
      * @param tranID
      * @param userID
      * @param total
      * @return
      */
-    public static boolean addPaymentHistory(long tranID,String userID ,double total) throws SQLException{
-        boolean result = false ;
-        
-        try (Connection c = BasicConnection.getConnection()) {
+    public static boolean addPaymentHistory(long tranID, String userID, double total) throws SQLException {
+        boolean result = false;
+
+        try ( Connection c = BasicConnection.getConnection()) {
             String sql = "INSERT INTO paymenthistory VALUES (?,?,now(),?)";
             PreparedStatement ps = c.prepareStatement(sql);
-            
+
             ps.setLong(1, tranID);
             ps.setString(2, userID);
             ps.setDouble(3, total);
@@ -157,8 +193,8 @@ public class PaymentDao {
     }
 
     /**
-     * Create a new {@code OrderHistory} record and {@code PendingPayment}.
-     * Then copy items from {@code CartItem} to {@code OrderItem}.
+     * Create a new {@code OrderHistory} record and {@code PendingPayment}. Then
+     * copy items from {@code CartItem} to {@code OrderItem}.
      * <p>
      * <b>Note: this method doesn't:</b>
      * <ol>
@@ -168,7 +204,7 @@ public class PaymentDao {
      * </li>
      * </ol>
      * </p>
-     * 
+     *
      * @param userId
      * @return {@code orderId} if all operations success, else 0
      */
@@ -178,7 +214,7 @@ public class PaymentDao {
         String sql = "INSERT INTO OrderHistory SELECT NULL,?,NOW(),SUM(quantity*price) FROM CartItem WHERE userID=?";
         String itemSql = "INSERT INTO OrderItem SELECT ?,packageID,quantity,price FROM CartItem WHERE userID=?";
         String pendingPaymentSql = "INSERT INTO PendingPayment VALUES(?,?)";
-        try (Connection c = BasicConnection.getConnection()) {
+        try ( Connection c = BasicConnection.getConnection()) {
             c.setAutoCommit(false);
             PreparedStatement orderStmt = c.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             PreparedStatement pendingPaymentStmt = c.prepareStatement(pendingPaymentSql);
@@ -212,17 +248,17 @@ public class PaymentDao {
 
     /**
      * Create new CartItem record
-     * 
+     *
      * @param userId
      * @param packageId
      * @param quantity
-     * @param price     the current price of the package, not the total price of
-     *                  CartItem
+     * @param price the current price of the package, not the total price of
+     * CartItem
      * @return true if operation success
      */
     public static boolean addToCart(String userId, int packageId, int quantity, double price) {
         boolean result = false;
-        try (Connection c = BasicConnection.getConnection()) {
+        try ( Connection c = BasicConnection.getConnection()) {
             c.setAutoCommit(false);
             String sql = "INSERT INTO CartItem VALUES (?,?,?,?);";
             PreparedStatement ps = c.prepareStatement(sql);
@@ -247,7 +283,7 @@ public class PaymentDao {
 
     /**
      * Create new CartItem record, with "price" from {@code Package} table
-     * 
+     *
      * @param userId
      * @param packageId
      * @param quantity
@@ -255,7 +291,7 @@ public class PaymentDao {
      */
     public static boolean addToCart(String userId, int packageId, int quantity) {
         boolean result = false;
-        try (Connection c = BasicConnection.getConnection()) {
+        try ( Connection c = BasicConnection.getConnection()) {
             c.setAutoCommit(false);
             String sql = "INSERT INTO CartItem SELECT ?,?,?,price FROM Package WHERE packageID=?";
             PreparedStatement ps = c.prepareStatement(sql);
@@ -280,14 +316,14 @@ public class PaymentDao {
     /**
      * Clear user's CartItem. This usually use with
      * {@link PaymentDao#logCart(String)}
-     * 
+     *
      * @param userId
      * @return true if operation success
      */
     public static boolean clearCart(String userId) {
         boolean result = false;
         System.out.println(userId);
-        try (Connection c = BasicConnection.getConnection()) {
+        try ( Connection c = BasicConnection.getConnection()) {
             c.setAutoCommit(false);
             String sql = "DELETE FROM CartItem WHERE userId=?";
 
@@ -314,7 +350,7 @@ public class PaymentDao {
     public static double getCartTotalPrice(String userId) throws SQLException {
         double total = 0;
         String sql = "SELECT SUM(quantity*price) FROM CartItem WHERE userID=?";
-        try (Connection c = BasicConnection.getConnection()) {
+        try ( Connection c = BasicConnection.getConnection()) {
             PreparedStatement ps = c.prepareStatement(sql);
             ps.setString(1, userId);
             ResultSet rs = ps.executeQuery();
@@ -327,19 +363,19 @@ public class PaymentDao {
 
     /**
      * View user's CartItem list.
-     * 
+     *
      * @param userId
      * @return list of {@code CartItem}
      */
     public static List<CartItem> getCart(String userId) {
         List<CartItem> result = new ArrayList<CartItem>();
-        try (Connection c = BasicConnection.getConnection()) {
+        try ( Connection c = BasicConnection.getConnection()) {
             String sql = "SELECT userID,name,quantity,package.price AS price \n"
                     + "FROM CartItem JOIN Package ON CartItem.packageID=Package.packageID \n"
                     + "WHERE userId=?";
             PreparedStatement ps = c.prepareStatement(sql);
             ps.setString(1, userId);
-            try (ResultSet rs = ps.executeQuery()) {
+            try ( ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     result.add(parseCartItem(rs));
                 }

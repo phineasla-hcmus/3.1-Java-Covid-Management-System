@@ -95,8 +95,20 @@ public class BuyPackageController {
                                 Alert a = new Alert(Alert.AlertType.WARNING);
                                 a.setContentText("Số lượng mua lớn hơn giới hạn cho phép, xin hãy nhập lại !!!");
                                 a.show();
-                            } else
-                                addCartThread(listP.get(i).getPackageID());
+                            } else {
+                                String userid = Session.getUser().getUserId();
+                                int packageid = listP.get(i).getPackageID();
+                                int limitperPerson = listP.get(i).getLimitPerPerson();
+                                int daycooldown = listP.get(i).getDayCooldown();
+
+                                if (limitperPerson <= PaymentDao.quantityOfBoughtPackage(userid, packageid, daycooldown)) {
+                                    Alert a = new Alert(Alert.AlertType.WARNING);
+                                    a.setContentText("Bạn đã mua sản phẩm này vượt quá giới hạn cho phép trong vòng " + Integer.toString(daycooldown) + " ngày!!!\nHãy đặt lại sau vài ngày nữa");
+                                    a.show();
+                                } else {
+                                    addCartThread(packageid);
+                                }
+                            }
                         } else {
                             Alert a = new Alert(Alert.AlertType.WARNING);
                             a.setContentText("Xin kiểm tra lại số lượng nhập !!!");
@@ -110,10 +122,10 @@ public class BuyPackageController {
                 a.show();
             }
         });
-        packageTable.setOnMouseClicked(e->{
-            
+        packageTable.setOnMouseClicked(e -> {
+
             choosePackage.setText(packageTable.getSelectionModel().getSelectedItem().getName());
-        
+
         });
     }
 
@@ -149,12 +161,12 @@ public class BuyPackageController {
             @Override
             public Boolean call() throws SQLException {
                 double price = 0;
-                    for (int i = 0; i < listP.size(); i++) {
-                        if (listP.get(i).getName()
-                                .equalsIgnoreCase(choosePackage.getText())) {
-                            price = listP.get(i).getPrice();
-                        }
+                for (int i = 0; i < listP.size(); i++) {
+                    if (listP.get(i).getName()
+                            .equalsIgnoreCase(choosePackage.getText())) {
+                        price = listP.get(i).getPrice();
                     }
+                }
                 int quantityNum = Integer.parseInt(quantity.getText());
                 String totalCostString = totalCost.getText().substring(0, totalCost.getText().length() - 6);
                 double totalCostNum = Double.parseDouble(totalCostString);

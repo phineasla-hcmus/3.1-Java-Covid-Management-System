@@ -15,6 +15,7 @@ import com.seasidechachacha.client.models.District;
 import com.seasidechachacha.client.models.TreatmentPlace;
 import com.seasidechachacha.client.models.Ward;
 import com.seasidechachacha.client.utils.Alert;
+import com.seasidechachacha.client.utils.Validation;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -31,7 +32,7 @@ public class AddNewTreatmentPlaceController {
     private static final Logger logger = LogManager.getLogger(AddNewTreatmentPlaceController.class);
 
     @FXML
-    private TextField tfName, tfCapacity, tfReception;
+    private TextField tfName, tfCapacity;
 
     @FXML
     private ComboBox<String> cbCity, cbDistrict, cbWard;
@@ -94,20 +95,40 @@ public class AddNewTreatmentPlaceController {
 
     private boolean isValid() {
         boolean valid = true;
-        if (tfName.getText().equals("") || tfReception.getText().equals("") || tfCapacity.getText().equals("")) {
+        if (tfName.getText().equals("") || tfCapacity.getText().equals("")) {
             Alert.showAlert(AlertType.WARNING, "Thêm mới địa điểm điều trị/cách ly", "Vui lòng điền đầy đủ thông tin!");
             valid = false;
-        } else if (cbCity.getValue().equals("") || cbDistrict.getValue().equals("") || cbWard.getValue().equals("")) {
+        } else if (cbCity.getValue() == null || cbDistrict.getValue() == null || cbWard.getValue() == null) {
             Alert.showAlert(AlertType.WARNING, "Thêm mới địa điểm điều trị/cách ly", "Vui lòng chọn địa chỉ của địa điểm điều trị!");
+            valid = false;
+        } else if (!checkPlaceName(tfName.getText()) || !checkPlaceCapacity(tfCapacity.getText())) {
             valid = false;
         }
         return valid;
     }
 
+    private boolean checkPlaceName(String name) {
+        if (!Validation.isCharacterExisted(name)) {
+            Alert.showAlert(AlertType.WARNING, "Thêm mới địa điểm điều trị/cách ly", "Tên địa điểm điều trị/cách ly phải bao gồm chữ cái!");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean checkPlaceCapacity(String capacity) {
+        if (Validation.isCharacterExisted(capacity)) {
+            Alert.showAlert(AlertType.WARNING, "Thêm mới địa điểm điều trị/cách ly", "Sức chứa của địa điểm điều trị/cách ly phải là ký tự số!");
+            return false;
+        } else if (Integer.valueOf(capacity) < 100 || Integer.valueOf(capacity) > 1000) {
+            Alert.showAlert(AlertType.WARNING, "Thêm mới địa điểm điều trị/cách ly", "Sức chứa của địa điểm điều trị/cách ly phải nằm trong khoảng 100 - 1000!");
+            return false;
+        }
+        return true;
+    }
+
     private void refreshInput() {
         tfName.setText("");
         tfCapacity.setText("");
-        tfReception.setText("");
         cbCity.getItems().clear();
         cbDistrict.getItems().clear();
         cbWard.getItems().clear();
@@ -117,9 +138,8 @@ public class AddNewTreatmentPlaceController {
         TreatmentPlace treat = null;
         String name = tfName.getText();
         int capacity = Integer.valueOf(tfCapacity.getText());
-        int reception = Integer.valueOf(tfReception.getText());
         String address = cbCity.getValue() + ", " + cbDistrict.getValue() + ", " + cbWard.getValue();
-        treat = new TreatmentPlace(0, name, address, capacity, reception);
+        treat = new TreatmentPlace(0, name, address, capacity, 0);
         return treat;
     }
 

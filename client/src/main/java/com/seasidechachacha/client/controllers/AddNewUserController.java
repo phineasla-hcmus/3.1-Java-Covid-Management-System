@@ -141,8 +141,27 @@ public class AddNewUserController {
         } else if (Validation.isCharacterExisted(tfIdentityCard.getText()) || Validation.isCharacterExisted(tfBirthYear.getText())) {
             showAlert(header, "Vui lòng chỉ điền số cho chứng minh nhân dân và năm sinh!");
             valid = false;
+        } else if (!checkIdentityCard(header, tfIdentityCard.getText()) || !checkBirthYear(header, Integer.valueOf(tfBirthYear.getText()))) {
+            valid = false;
         }
         return valid;
+    }
+    
+    private boolean checkIdentityCard(String header, String idCard) {
+        // CMND phải là 9 hoặc 12 chữ số
+        if (idCard.length() != 9 && idCard.length() != 12) {
+            showAlert(header, "Chứng minh nhân dân phải có 9 hoặc 12 chữ số!");
+            return false;
+        }
+        return true;
+    }
+    
+    private boolean checkBirthYear(String header, Integer birthYear) {
+        if (birthYear >= 1903 && birthYear <= 2021) return true;
+        else {
+            showAlert(header, "Năm sinh phải nằm trong khoảng 1903 - 2021");
+            return false;
+        }
     }
 
     private void showAlert(String header, String message) {

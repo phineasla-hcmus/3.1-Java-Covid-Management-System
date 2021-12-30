@@ -7,11 +7,15 @@ import java.util.Optional;
 import com.seasidechachacha.client.database.PaymentDao;
 import com.seasidechachacha.client.global.Session;
 import com.seasidechachacha.client.global.TaskExecutor;
+import com.seasidechachacha.client.models.CartItem;
 import com.seasidechachacha.client.payment.PaymentService;
 import com.seasidechachacha.client.payment.RespondException;
 import com.seasidechachacha.common.payment.ErrorResponseType;
 import com.seasidechachacha.common.payment.PaymentResponse;
 import com.seasidechachacha.common.payment.UserResponse;
+import java.util.List;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,8 +28,28 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 public class PaymentController {
+    @FXML
+    private TableView<CartItem> OrderHistory;
+
+    @FXML
+    private TableColumn<CartItem, String> packageName;
+
+    @FXML
+    private TableColumn<CartItem, String> packageQuantity;
+
+    @FXML
+    private TableColumn<CartItem, String> packagePrice;
+
+    @FXML
+    private TableColumn<CartItem, String> totalPrice;
+    
+    private ObservableList<CartItem> listItems;
+
 
     private static final Logger logger = LogManager.getLogger(PaymentController.class);
     private PaymentService paymentService = new PaymentService();
@@ -43,7 +67,7 @@ public class PaymentController {
 
     @FXML
     private void initialize() { // chỗ này lấy dữ liệu giá phải trả + tiền còn trong tài khoản của người dùng
-        // balanceLabel.setText("0 VND");
+        getOrderUnpaidThread(Session.getUserId());
         getPendingPaymentTotalPriceThread(Session.getUserId());
         getBalanceThread(Session.getUserId());
     }
@@ -72,6 +96,31 @@ public class PaymentController {
                 }
             }
         }
+    }
+    
+    private void getOrderUnpaidThread(String userId) {
+        Task<List<CartItem>> getOrderUnpaidTask = new Task<List<CartItem>>() {
+            @Override
+            public List<CartItem> call() throws SQLException {
+                return PaymentDao.getOrderUnPaid(userId);
+            }
+        };
+
+        getOrderUnpaidTask.setOnSucceeded(e -> {
+            List<CartItem> list = getOrderUnpaidTask.getValue();
+
+            listItems = FXCollections.observableArrayList(list);
+
+            packageName.setCellValueFactory(new PropertyValueFactory<CartItem, String>("name"));
+            packageQuantity.setCellValueFactory(new PropertyValueFactory<CartItem, String>("quantity"));
+            packagePrice.setCellValueFactory(new PropertyValueFactory<CartItem, String>("price"));
+            totalPrice.setCellValueFactory(new PropertyValueFactory<CartItem, String>("totalPrice"));
+
+            OrderHistory.setItems(listItems);
+
+        });
+
+        TaskExecutor.execute(getOrderUnpaidTask);
     }
 
     private void getPendingPaymentTotalPriceThread(String userId) {

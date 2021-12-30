@@ -2,42 +2,53 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.seasidechachacha.client.controllers.PaymentController">
+<VBox prefHeight="800.0" prefWidth="800.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.seasidechachacha.client.controllers.PaymentController">
    <children>
       <AnchorPane id="AnchorPane" prefHeight="800.0" prefWidth="800.0">
          <children>
-            <ImageView fitHeight="168.0" fitWidth="216.0" layoutX="310.0" layoutY="105.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="168.0" fitWidth="216.0" layoutX="310.0" layoutY="24.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../img/pay-removebg-preview.png" />
                </image>
             </ImageView>
-            <Label layoutX="231.0" layoutY="289.0" text="Số dư nợ phải trả:" textFill="#115a8f">
+            <Label layoutX="225.0" layoutY="518.0" text="Số dư nợ phải trả:" textFill="#115a8f">
                <font>
                   <Font name="Tahoma Bold" size="14.0" />
                </font>
             </Label>
-            <Label layoutX="171.0" layoutY="333.0" prefHeight="17.0" prefWidth="187.0" text="Số dư còn trong tài khoản:" textFill="#115d94">
+            <Label layoutX="165.0" layoutY="563.0" prefHeight="17.0" prefWidth="187.0" text="Số dư còn trong tài khoản:" textFill="#115d94">
                <font>
                   <Font name="Tahoma Bold" size="14.0" />
                </font>
             </Label>
-            <Button fx:id="pay" layoutX="385.0" layoutY="394.0" mnemonicParsing="false" onAction="#handleButton" text="Thanh toán" />
-            <Label fx:id="totalLabel" layoutX="418.0" layoutY="290.0" text="..." textFill="RED">
+            <Button fx:id="pay" layoutX="374.0" layoutY="624.0" mnemonicParsing="false" onAction="#handleButton" text="Thanh toán" />
+            <Label fx:id="totalLabel" layoutX="412.0" layoutY="519.0" text="..." textFill="RED">
                <font>
                   <Font name="Calibri Light" size="14.0" />
                </font>
             </Label>
-            <Label fx:id="balanceLabel" layoutX="418.0" layoutY="334.0" text="..." textFill="RED">
+            <Label fx:id="balanceLabel" layoutX="412.0" layoutY="563.0" text="..." textFill="RED">
                <font>
                   <Font name="Calibri Light" size="14.0" />
                </font>
             </Label>
+            <TableView fx:id="OrderHistory" layoutX="100.0" layoutY="256.0" prefHeight="219.0" prefWidth="647.0" stylesheets="@../css/style.css">
+               <columns>
+                  <TableColumn fx:id="packageName" prefWidth="343.0" text="Tên gói nhu yếu phẩm" />
+                  <TableColumn fx:id="packageQuantity" prefWidth="66.0" text="Số lượng" />
+                  <TableColumn fx:id="packagePrice" prefWidth="110.0" text="Đơn giá" />
+                  <TableColumn fx:id="totalPrice" prefWidth="125.0" text="Tổng tiền" />
+               </columns>
+            </TableView>
+            <Label layoutX="100.0" layoutY="223.0" styleClass="sub-label" text="Các đơn hàng chưa thanh toán:" />
          </children>
       </AnchorPane>
    </children>

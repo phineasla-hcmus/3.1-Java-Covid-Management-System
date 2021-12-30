@@ -404,7 +404,7 @@ public class PaymentDao {
             ps.setString(1, userId);
             try ( ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    result.add(parseCartItem(rs));
+                    result.add(parseCartItem(rs,1));
                 }
             }
         } catch (SQLException e) {
@@ -414,10 +414,39 @@ public class PaymentDao {
         return result;
     }
 
-    private static CartItem parseCartItem(ResultSet rs) throws SQLException {
-        float totalPrice = Integer.parseInt(rs.getString("quantity"))
-                * Float.parseFloat(rs.getString("price").substring(0, (rs.getString("price").length()) - 4));
-        return new CartItem(rs.getString("userID"), rs.getString("name"), rs.getString("quantity"),
-                rs.getString("price"), Float.toString(totalPrice));
+    private static CartItem parseCartItem(ResultSet rs, int type) throws SQLException {
+        if (type == 1) {
+            float totalPrice = Integer.parseInt(rs.getString("quantity"))
+                    * Float.parseFloat(rs.getString("price").substring(0, (rs.getString("price").length()) - 4));
+            return new CartItem(rs.getString("userID"), rs.getString("name"), rs.getString("quantity"),
+                    rs.getString("price"), Float.toString(totalPrice));
+        } else {
+            return new CartItem(rs.getString("userID"), rs.getString("name"), rs.getString("quantity"),
+                    rs.getString("price"), rs.getString("totalprice"));
+        }
     }
+
+    public static List<CartItem> getOrderUnPaid(String userId) {
+        List<CartItem> result = new ArrayList<CartItem>();
+        try ( Connection c = BasicConnection.getConnection()) {
+            String sql = "SELECT userID,name,orderItemQuantity as quantity, orderItemPrice as price , totalOrderMoney as totalprice\n"
+                    + "FROM orderhistory as oh JOIN orderitem as oi\n"
+                    + "ON oh.orderID=oi.orderID AND oh.userID=?\n"
+                    + "JOIN package as p ON p.packageID=oi.packageID\n"
+                    + "WHERE oh.orderID IN (SELECT p.orderID\n"
+                    + "			    FROM pendingpayment p)";
+            PreparedStatement ps = c.prepareStatement(sql);
+            ps.setString(1, userId);
+            try ( ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    result.add(parseCartItem(rs, 2));
+                }
+            }
+        } catch (SQLException e) {
+            logger.error(e);
+        }
+
+        return result;
+    }
+    
 }

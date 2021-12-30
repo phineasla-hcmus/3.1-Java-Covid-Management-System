@@ -320,15 +320,6 @@ public class ViewPersonalInfoController {
         return null;
     }
 
-//    private TableColumn<StateHistory, Integer> getTableStatusByName(TableView<StateHistory> tableView, String name) {
-//        for (TableColumn<StateHistory, ?> col : tableView.getColumns()) {
-//            if (col.getText().equals(name)) {
-//                return (TableColumn<StateHistory, Integer>) col;
-//            }
-//        }
-//        return null;
-//    }
-
     private TableColumn<TreatmentPlaceHistory, String> getTableTreatColumnByName(TableView<TreatmentPlaceHistory> tableView, String name) {
         for (TableColumn<TreatmentPlaceHistory, ?> col : tableView.getColumns()) {
             if (col.getText().equals(name)) {
@@ -401,7 +392,6 @@ public class ViewPersonalInfoController {
         dateStatusCol.setCellValueFactory(new PropertyValueFactory<StateHistory, String>("time"));
 
         currentStatusCol = getTableStatusColumnByName(table, "Trạng thái");
-//        currentStatusCol.setCellValueFactory(new PropertyValueFactory<StateHistory, Integer>("state"));
         Callback<TableColumn<StateHistory, String>, TableCell<StateHistory, String>> cellFactory1
                 = //
                 new Callback<TableColumn<StateHistory, String>, TableCell<StateHistory, String>>() {
@@ -443,7 +433,7 @@ public class ViewPersonalInfoController {
         datePlaceCol.setCellValueFactory(new PropertyValueFactory<TreatmentPlaceHistory, String>("time"));
 
         placeCol = getTableTreatByName(table, "Nơi điều trị");
-        placeCol.setCellValueFactory(new PropertyValueFactory<TreatmentPlaceHistory, Integer>("treatID"));
+        placeCol.setCellValueFactory(new PropertyValueFactory<TreatmentPlaceHistory, Integer>("name"));
     }
 
     public void setTableTreat(TableView<TreatmentPlaceHistory> table, ObservableList<TreatmentPlaceHistory> data) {

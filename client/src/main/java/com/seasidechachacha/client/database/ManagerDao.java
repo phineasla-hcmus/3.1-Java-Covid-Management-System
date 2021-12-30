@@ -26,6 +26,8 @@ import com.seasidechachacha.client.models.City;
 import com.seasidechachacha.client.models.District;
 import com.seasidechachacha.client.models.ManagedUser;
 import com.seasidechachacha.client.models.ManagedUserHistory;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Manager những operations cần log lại như add, update, delete,... thì k xài
@@ -111,7 +113,7 @@ public class ManagerDao {
 	}
 
 	private static StateHistory parseStateHistory(ResultSet rs) throws SQLException {
-		return new StateHistory(rs.getString("userID"), rs.getString("time"), rs.getInt("state"));
+		return new StateHistory(rs.getString("userID"), parseDate(rs.getString("time")), rs.getInt("state"));
 	}
 
 	private static List<StateHistory> parseStateHistoryList(ResultSet rs) throws SQLException {
@@ -121,6 +123,12 @@ public class ManagerDao {
 		}
 		return stateHistoryList;
 	}
+        
+        public static String parseDate(String date) {
+            LocalDateTime datetime = LocalDateTime.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            String formatDate = datetime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+            return formatDate;
+        }
 
 	// for testing purpose
 	public static List<StateHistory> getStateHistoryList(String userID) {
@@ -182,7 +190,7 @@ public class ManagerDao {
 
 	private static TreatmentPlaceHistory parseTreatmentPlaceHistory(ResultSet rs) throws SQLException {
 		return new TreatmentPlaceHistory(rs.getString("userID"), rs.getString("treatID"),
-				rs.getString("time"), rs.getString("name"), rs.getString("address"));
+				parseDate(rs.getString("time")), rs.getString("name"), rs.getString("address"));
 	}
 
 	private static List<TreatmentPlaceHistory> parseTreatmentPlaceHistoryList(ResultSet rs) throws SQLException {
@@ -1381,7 +1389,7 @@ public class ManagerDao {
 	}
 
 	private static PaymentHistory parsePaymentHistory(ResultSet rs) throws SQLException {
-		return new PaymentHistory(rs.getInt("transactionID"), rs.getString("paymentTime"), rs.getFloat("totalMoney"));
+		return new PaymentHistory(rs.getInt("transactionID"), parseDate(rs.getString("paymentTime")), rs.getFloat("totalMoney"));
 	}
 
 	private static List<String> getAllTimeFromStateAndTreatmentPlaceHistory(String userID) {
@@ -1443,7 +1451,7 @@ public class ManagerDao {
 		List<String> timeList = getAllTimeFromStateAndTreatmentPlaceHistory(userID);
 
 		for (int i = 0; i < timeList.size(); i++) {
-			timeList.get(i).concat(" 23:59:59");
+//			timeList.get(i).concat(" 23:59:59");
 			int state = getStateAtDate(userID, timeList.get(i));
 			if (state == -1) {
 				results.add(new ManagedUserHistory(timeList.get(i), state, ""));

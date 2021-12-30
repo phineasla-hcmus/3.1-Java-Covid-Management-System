@@ -178,7 +178,7 @@ public class ViewListTreatmentPlaceController {
     }
 
     public int rowsPerPage() {
-        return 10;
+        return 5;
     }
 
 }

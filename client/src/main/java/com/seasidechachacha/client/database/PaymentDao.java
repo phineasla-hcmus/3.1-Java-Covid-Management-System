@@ -46,7 +46,7 @@ public class PaymentDao {
     }
 
     private static Invoice parseInvoice(ResultSet rs) throws SQLException {
-        return new Invoice(rs.getInt("orderID"), rs.getString("timeOrder"), rs.getInt("totalItems"),
+        return new Invoice(rs.getInt("orderID"), ManagerDao.parseDate(rs.getString("timeOrder")), rs.getInt("totalItems"),
                 rs.getFloat("totalOrderMoney"));
     }
 

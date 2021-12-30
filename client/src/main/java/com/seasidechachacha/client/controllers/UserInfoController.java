@@ -357,8 +357,6 @@ public class UserInfoController {
             dateCol.setMinWidth(100);
 
             TableColumn stateCol = new TableColumn("Trạng thái");
-//            stateCol.setCellValueFactory(
-//                    new PropertyValueFactory<ManagedUserHistory, Integer>("state"));
             Callback<TableColumn<ManagedUserHistory, String>, TableCell<ManagedUserHistory, String>> cellFactory1
                     = //
                     new Callback<TableColumn<ManagedUserHistory, String>, TableCell<ManagedUserHistory, String>>() {

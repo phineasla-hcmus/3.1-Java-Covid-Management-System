@@ -319,7 +319,7 @@ public class ViewListPackageController {
     }
 
     public int rowsPerPage() {
-        return 10;
+        return 5;
     }
 
     public VBox createPage(int pageIndex) {

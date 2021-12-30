@@ -14,7 +14,9 @@ import com.seasidechachacha.client.global.Session;
 import com.seasidechachacha.client.models.City;
 import com.seasidechachacha.client.models.District;
 import com.seasidechachacha.client.models.ManagedUser;
+import com.seasidechachacha.client.models.TreatmentPlace;
 import com.seasidechachacha.client.models.Ward;
+import com.seasidechachacha.client.utils.Validation;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,14 +36,14 @@ public class AddNewUserController {
     private TextField tfFullName, tfBirthYear, tfIdentityCard;
 
     @FXML
-    private ComboBox<String> cbCity, cbDistrict, cbWard, cbRelated;
+    private ComboBox<String> cbCity, cbDistrict, cbWard, cbRelated, cbPlace;
 
     private ManagerDao manager = new ManagerDao(Session.getUser().getUserId());
 
     @FXML
     private Button btnAddNewPerson;
 
-    private int currentState;
+    private int currentState, treatID;
 
     @FXML
     private void goBack() {
@@ -57,7 +59,7 @@ public class AddNewUserController {
         btnAddNewPerson.setOnAction(event -> {
             try {
                 if (isValid()) {
-                    if (manager.addNewUser(getCurrentInput(), currentState)) {
+                    if (manager.addNewUser(getCurrentInput(), currentState, treatID)) {
                         Alert alert = new Alert(AlertType.INFORMATION);
                         alert.setTitle("Thông báo");
                         alert.setHeaderText("Quản lý người liên quan Covid19");
@@ -115,6 +117,11 @@ public class AddNewUserController {
         for (int i = 0; i < relatedList.size(); i++) {
             cbRelated.getItems().add(relatedList.get(i));
         }
+        
+        List<TreatmentPlace> placeList = manager.getTreatmentPlaceList();
+        for (int i = 0; i < placeList.size(); i++) {
+            cbPlace.getItems().add(placeList.get(i).getName());
+        }
     }
 
     private boolean isValid() {
@@ -125,35 +132,17 @@ public class AddNewUserController {
             showAlert(header, "Vui lòng điền đầy đủ thông tin!");
             valid = false;
         } else if (cbCity.getValue() == null || cbDistrict.getValue() == null || cbWard.getValue() == null
-                || cbRelated.getValue() == null) {
-            showAlert(header, "Vui lòng chọn trạng thái, địa chỉ nơi ở và người liên quan!");
+                || cbRelated.getValue() == null || cbPlace.getValue() == null) {
+            showAlert(header, "Vui lòng chọn trạng thái, địa chỉ nơi ở, người liên quan và địa điểm điều trị!");
             valid = false;
-        } else if (isNumberExisted(tfFullName.getText())) {
+        } else if (Validation.isNumberExisted(tfFullName.getText())) {
             showAlert(header, "Vui lòng chỉ điền chữ cho họ tên!");
             valid = false;
-        } else if (isCharacterExisted(tfIdentityCard.getText()) || isCharacterExisted(tfBirthYear.getText())) {
+        } else if (Validation.isCharacterExisted(tfIdentityCard.getText()) || Validation.isCharacterExisted(tfBirthYear.getText())) {
             showAlert(header, "Vui lòng chỉ điền số cho chứng minh nhân dân và năm sinh!");
             valid = false;
-        } 
+        }
         return valid;
-    }
-
-    private boolean isCharacterExisted(String content) {
-        for (int i = 0; i < content.length(); i++) {
-            if (Character.isLetter(content.charAt(i))) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean isNumberExisted(String content) {
-        for (int i = 0; i < content.length(); i++) {
-            if (Character.isDigit(content.charAt(i))) {
-                return true;
-            }
-        }
-        return false;
     }
 
     private void showAlert(String header, String message) {
@@ -173,6 +162,7 @@ public class AddNewUserController {
         cbDistrict.getSelectionModel().clearSelection();
         cbWard.getSelectionModel().clearSelection();
         cbRelated.getSelectionModel().clearSelection();
+        cbPlace.getSelectionModel().clearSelection();
     }
 
     private ManagedUser getCurrentInput() {
@@ -184,6 +174,8 @@ public class AddNewUserController {
 
         currentState = manager.getCurrentState(cbRelated.getValue()) + 1;
         user = new ManagedUser(ID, name, birthYear, cbRelated.getValue(), 0, address, currentState);
+        
+        treatID = manager.getTreatmentPlaceIDByName(cbPlace.getValue());
 
         return user;
     }

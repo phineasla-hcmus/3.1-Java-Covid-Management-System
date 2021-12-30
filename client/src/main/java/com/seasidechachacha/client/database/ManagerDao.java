@@ -100,20 +100,20 @@ public class ManagerDao {
 		return result;
 	}
 
-	public boolean addNewUser(ManagedUser user) throws SQLException {
-		return UserDao.register(new User(user.getUserId(), user.getUserId(), 3)) && addManagedUser(user)
+	public boolean addNewUser(ManagedUser user, int treatID) throws SQLException {
+		return UserDao.register(new User(user.getUserId(), user.getUserId(), 3)) && addManagedUser(user) && addTreatmentPlaceHistory(user.getUserId(), treatID)
 				&& addMesssage("Add new user (userID : " + user.getUserId() + ").");
 	}
 
-	public boolean addNewUser(ManagedUser user, int state) throws SQLException {
-		if (addNewUser(user)) {
+	public boolean addNewUser(ManagedUser user, int state, int treatID) throws SQLException {
+		if (addNewUser(user, treatID)) {
 			return setState(user.getUserId(), state);
 		}
 		return false;
 	}
 
 	private static StateHistory parseStateHistory(ResultSet rs) throws SQLException {
-		return new StateHistory(rs.getString("userID"), parseDate(rs.getString("time")), rs.getInt("state"));
+		return new StateHistory(rs.getString("userID"), rs.getString("time"), rs.getInt("state"));
 	}
 
 	private static List<StateHistory> parseStateHistoryList(ResultSet rs) throws SQLException {
@@ -123,13 +123,7 @@ public class ManagerDao {
 		}
 		return stateHistoryList;
 	}
-        
-        public static String parseDate(String date) {
-            LocalDateTime datetime = LocalDateTime.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-            String formatDate = datetime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-            return formatDate;
-        }
-
+       
 	// for testing purpose
 	public static List<StateHistory> getStateHistoryList(String userID) {
 		List<StateHistory> stateHistoryList = null;
@@ -138,7 +132,7 @@ public class ManagerDao {
 			PreparedStatement ps = c.prepareStatement(query);
 			ps.setString(1, userID);
 			ResultSet rs = ps.executeQuery();
-			if (rs.next()) {
+			if (rs != null) {
 				stateHistoryList = parseStateHistoryList(rs);
 			}
 			c.close();
@@ -190,7 +184,7 @@ public class ManagerDao {
 
 	private static TreatmentPlaceHistory parseTreatmentPlaceHistory(ResultSet rs) throws SQLException {
 		return new TreatmentPlaceHistory(rs.getString("userID"), rs.getString("treatID"),
-				parseDate(rs.getString("time")), rs.getString("name"), rs.getString("address"));
+				rs.getString("time"), rs.getString("name"), rs.getString("address"));
 	}
 
 	private static List<TreatmentPlaceHistory> parseTreatmentPlaceHistoryList(ResultSet rs) throws SQLException {
@@ -211,7 +205,7 @@ public class ManagerDao {
 			// ps.setInt(2, limit);
 			// ps.setInt(3, offset);
 			ResultSet rs = ps.executeQuery();
-			if (rs.next()) {
+			if (rs != null) {
 				treatmentPlaceHistoryList = parseTreatmentPlaceHistoryList(rs);
 			}
 			c.close();
@@ -1389,7 +1383,7 @@ public class ManagerDao {
 	}
 
 	private static PaymentHistory parsePaymentHistory(ResultSet rs) throws SQLException {
-		return new PaymentHistory(rs.getInt("transactionID"), parseDate(rs.getString("paymentTime")), rs.getFloat("totalMoney"));
+		return new PaymentHistory(rs.getInt("transactionID"), rs.getString("paymentTime"), rs.getFloat("totalMoney"));
 	}
 
 	private static List<String> getAllTimeFromStateAndTreatmentPlaceHistory(String userID) {

@@ -19,6 +19,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -29,6 +30,8 @@ public class BuyPackageController {
 
     private List<Package> listP;
 
+    @FXML
+    private TextField choosePackage;
     @FXML
     private Label totalCost;
 
@@ -42,9 +45,6 @@ public class BuyPackageController {
     private TableColumn<Package, String> numberCol, nameCol, limitCol, dayCol, priceCol;
 
     private ObservableList<Package> listPackage;
-
-    @FXML
-    private ChoiceBox choosePackage;
 
     @FXML
     private TextField searchText, quantity;
@@ -71,7 +71,7 @@ public class BuyPackageController {
                     double price = 0;
                     for (int i = 0; i < listP.size(); i++) {
                         if (listP.get(i).getName()
-                                .equalsIgnoreCase(choosePackage.getSelectionModel().getSelectedItem().toString())) {
+                                .equalsIgnoreCase(choosePackage.getText())) {
                             price = listP.get(i).getPrice();
                         }
                     }
@@ -85,10 +85,10 @@ public class BuyPackageController {
         });
 
         acceptButton.setOnAction(e -> {
-            if (choosePackage.getSelectionModel() != null) {
+            if (!choosePackage.getText().equalsIgnoreCase("")) {
                 for (int i = 0; i < listP.size(); i++) {
                     if (listP.get(i).getName()
-                            .equalsIgnoreCase(choosePackage.getSelectionModel().getSelectedItem().toString())) {
+                            .equalsIgnoreCase(choosePackage.getText())) {
 
                         if (quantity.getText() != "" && quantity.getText().matches("\\d+")) {
                             if (Integer.parseInt(quantity.getText()) > listP.get(i).getLimitPerPerson()) {
@@ -110,6 +110,11 @@ public class BuyPackageController {
                 a.show();
             }
         });
+        packageTable.setOnMouseClicked(e->{
+            
+            choosePackage.setText(packageTable.getSelectionModel().getSelectedItem().getName());
+        
+        });
     }
 
     private void getPackageThread() {
@@ -127,10 +132,6 @@ public class BuyPackageController {
 
     public void resolveGetListPackage(WorkerStateEvent e, List<Package> list) {
         listP = list;
-
-        for (int i = 0; i < list.size(); i++) {
-            choosePackage.getItems().add(list.get(i).getName());
-        }
 
         listPackage = FXCollections.observableArrayList(list);
 
@@ -150,7 +151,7 @@ public class BuyPackageController {
                 double price = 0;
                     for (int i = 0; i < listP.size(); i++) {
                         if (listP.get(i).getName()
-                                .equalsIgnoreCase(choosePackage.getSelectionModel().getSelectedItem().toString())) {
+                                .equalsIgnoreCase(choosePackage.getText())) {
                             price = listP.get(i).getPrice();
                         }
                     }

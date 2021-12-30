@@ -5,6 +5,7 @@ import com.seasidechachacha.client.database.ManagerDao;
 import com.seasidechachacha.client.global.Session;
 import com.seasidechachacha.client.global.TaskExecutor;
 import com.seasidechachacha.client.models.Package;
+import com.seasidechachacha.client.utils.Alert;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import java.io.IOException;
@@ -16,7 +17,7 @@ import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
@@ -51,7 +52,6 @@ public class ViewListPackageController {
     private Pagination pagination;
 
     private ManagerDao manager = new ManagerDao(Session.getUser().getUserId());
-
 
     private String keyword = "";
 
@@ -115,12 +115,7 @@ public class ViewListPackageController {
         Optional<ButtonType> result = dialog.showAndWait();
         if (result.get() == ButtonType.OK) {
             if (cbDay.getValue() == null && cbPrice.getValue() == null) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Thông báo");
-                alert.setHeaderText("Lọc nhu yếu phẩm");
-                alert.setContentText("Vui lòng chọn tiêu chí!");
-
-                alert.showAndWait();
+                Alert.showAlert(AlertType.WARNING, "Lọc nhu yếu phẩm", "Vui lòng chọn tiêu chí!");
                 return;
             }
             int minDay = 0, maxDay = 0;
@@ -286,12 +281,7 @@ public class ViewListPackageController {
 
     public void resolveListPackage(WorkerStateEvent e, List<Package> list) throws IOException {
         if (list == null || list.isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Thông báo");
-            alert.setHeaderText("Quản lý nhu yếu phẩm");
-            alert.setContentText("Không tìm thấy gói nhu yếu phẩm phù hợp!");
-
-            alert.showAndWait();
+            Alert.showAlert(AlertType.WARNING, "Quản lý nhu yếu phẩm", "Không tìm thấy gói nhu yếu phẩm phù hợp!");
             return;
         }
         data = list;
@@ -417,22 +407,10 @@ public class ViewListPackageController {
                                     Package pack = getTableRow().getItem();
                                     int packID = pack.getPackageID();
                                     if (manager.deletePackage(packID)) {
-
-                                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                                        alert.setTitle("Thông báo");
-                                        alert.setHeaderText("Quản lý nhu yếu phẩm");
-                                        alert.setContentText("Xoá nhu yếu phẩm thành công!");
-
-                                        alert.showAndWait();
-
+                                        Alert.showAlert(AlertType.INFORMATION, "Quản lý nhu yếu phẩm", "Xoá nhu yếu phẩm thành công!");
                                         data.remove(pack);
                                     } else {
-                                        Alert alert = new Alert(Alert.AlertType.ERROR);
-                                        alert.setTitle("Thông báo");
-                                        alert.setHeaderText("Quản lý nhu yếu phẩm");
-                                        alert.setContentText("Không thể xoá nhu yếu phẩm này!");
-
-                                        alert.showAndWait();
+                                        Alert.showAlert(AlertType.WARNING, "Quản lý nhu yếu phẩm", "Không thể xoá nhu yếu phẩm này!");
                                     }
 
                                 });

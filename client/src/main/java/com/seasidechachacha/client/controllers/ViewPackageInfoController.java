@@ -5,6 +5,7 @@ import com.seasidechachacha.client.database.ManagerDao;
 import com.seasidechachacha.client.global.Session;
 import com.seasidechachacha.client.global.TaskExecutor;
 import com.seasidechachacha.client.models.Package;
+import com.seasidechachacha.client.utils.Alert;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,7 +16,7 @@ import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
@@ -65,12 +66,7 @@ public class ViewPackageInfoController {
 
             if (result.isPresent()) {
                 if (manager.updatePackageName(packageID, result.get())) {
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Thông báo");
-                    alert.setHeaderText("Cập nhật thông tin nhu yếu phẩm");
-                    alert.setContentText("Thay đổi tên gói thành công!");
-
-                    alert.showAndWait();
+                    Alert.showAlert(AlertType.INFORMATION, "Cập nhật thông tin nhu yếu phẩm", "Thay đổi tên gói thành công!");
                 }
                 labelName.setText(result.get());
             }
@@ -83,12 +79,7 @@ public class ViewPackageInfoController {
 
             if (result.isPresent()) {
                 if (manager.updatePackageLimitPerPerson(packageID, Integer.valueOf(result.get()))) {
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Thông báo");
-                    alert.setHeaderText("Cập nhật thông tin nhu yếu phẩm");
-                    alert.setContentText("Thay đổi mức giới hạn thành công!");
-
-                    alert.showAndWait();
+                    Alert.showAlert(AlertType.INFORMATION, "Cập nhật thông tin nhu yếu phẩm", "Thay đổi mức giới hạn thành công!");
                 }
 
                 labelLimit.setText(result.get());
@@ -103,12 +94,7 @@ public class ViewPackageInfoController {
 
             if (result.isPresent()) {
                 if (manager.updatePackageDayCooldown(packageID, Integer.valueOf(result.get()))) {
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Thông báo");
-                    alert.setHeaderText("Cập nhật thông tin nhu yếu phẩm");
-                    alert.setContentText("Thay đổi thời gian giới hạn thành công!");
-
-                    alert.showAndWait();
+                    Alert.showAlert(AlertType.INFORMATION, "Cập nhật thông tin nhu yếu phẩm", "Thay đổi thời gian giới hạn thành công!");
                 }
                 labelDay.setText(result.get());
             }
@@ -122,12 +108,7 @@ public class ViewPackageInfoController {
 
             if (result.isPresent()) {
                 if (manager.updatePackagePrice(packageID, Integer.valueOf(result.get()))) {
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Thông báo");
-                    alert.setHeaderText("Cập nhật thông tin nhu yếu phẩm");
-                    alert.setContentText("Thay đổi đơn giá thành công!");
-
-                    alert.showAndWait();
+                    Alert.showAlert(AlertType.INFORMATION, "Cập nhật thông tin nhu yếu phẩm", "Thay đổi đơn giá thành công!");
                 }
                 labelPrice.setText(result.get());
             }

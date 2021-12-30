@@ -9,6 +9,7 @@ import com.seasidechachacha.client.database.ManagerDao;
 import com.seasidechachacha.client.global.Session;
 import com.seasidechachacha.client.global.TaskExecutor;
 import com.seasidechachacha.client.models.TreatmentPlace;
+import com.seasidechachacha.client.utils.Alert;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,7 +17,7 @@ import org.apache.logging.log4j.Logger;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
@@ -33,9 +34,8 @@ public class ViewTreatmentPlaceInfoController {
     private Button btnChangeName, btnChangeCapacity, btnChangeReception;
 
     private int treatID;
-    
-    private AdminDao admin = new AdminDao(Session.getUser().getUserId());
 
+    private AdminDao admin = new AdminDao(Session.getUser().getUserId());
 
     private void getTreatmentPlaceThread() {
         Task<TreatmentPlace> dataTask = new Task<TreatmentPlace>() {
@@ -68,12 +68,7 @@ public class ViewTreatmentPlaceInfoController {
 
             if (result.isPresent()) {
                 if (admin.updateTreatmentPlaceName(treatID, result.get())) {
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Thông báo");
-                    alert.setHeaderText("Cập nhật thông tin địa điểm điều trị/cách ly");
-                    alert.setContentText("Thay đổi tên địa điểm điều trị/cách ly thành công!");
-
-                    alert.showAndWait();
+                    Alert.showAlert(AlertType.INFORMATION, "Cập nhật thông tin địa điểm điều trị/cách ly", "Thay đổi tên địa điểm thành công!");
                 }
                 labelName.setText(result.get());
             }
@@ -87,12 +82,7 @@ public class ViewTreatmentPlaceInfoController {
 
             if (result.isPresent()) {
                 if (admin.updateTreatmentPlaceCapacity(treatID, Integer.valueOf(result.get()))) {
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Thông báo");
-                    alert.setHeaderText("Cập nhật thông tin địa điểm điều trị/cách ly");
-                    alert.setContentText("Thay đổi sức chứa địa điểm điều trị/cách ly thành công!");
-
-                    alert.showAndWait();
+                    Alert.showAlert(AlertType.INFORMATION, "Cập nhật thông tin địa điểm điều trị/cách ly", "Thay đổi sức chứa thành công!");
                 }
 
                 labelCapacity.setText(result.get());
@@ -107,12 +97,7 @@ public class ViewTreatmentPlaceInfoController {
 
             if (result.isPresent()) {
                 if (admin.updateTreatmentPlaceCurrentReception(treatID, Integer.valueOf(result.get()))) {
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Thông báo");
-                    alert.setHeaderText("Cập nhật thông tin địa điểm điều trị/cách ly");
-                    alert.setContentText("Thay đổi số lượng tiếp nhận hiện tại của địa điểm điều trị/cách ly thành công!");
-
-                    alert.showAndWait();
+                    Alert.showAlert(AlertType.INFORMATION, "Cập nhật thông tin địa điểm điều trị/cách ly", "Thay đổi số lượng tiếp nhận hiện tại thành công!");
                 }
                 labelReception.setText(result.get());
             }

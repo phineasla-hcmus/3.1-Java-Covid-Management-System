@@ -5,6 +5,7 @@ import com.seasidechachacha.client.database.ManagedUserDao;
 import com.seasidechachacha.client.database.ManagerDao;
 import com.seasidechachacha.client.global.TaskExecutor;
 import com.seasidechachacha.client.models.ManagedUser;
+import com.seasidechachacha.client.utils.Alert;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import java.io.IOException;
@@ -16,7 +17,7 @@ import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Pagination;
@@ -147,12 +148,7 @@ public class ViewListUserController {
 
     public void resolveListManagedUser(WorkerStateEvent e, List<ManagedUser> list) throws IOException {
         if (list == null || list.isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Thông báo");
-            alert.setHeaderText("Quản lý người liên quan Covid19");
-            alert.setContentText("Không tìm thấy người dùng phù hợp!");
-
-            alert.showAndWait();
+            Alert.showAlert(AlertType.WARNING, "Quản lý người liên quan Covid19", "Không tìm thấy người dùng phù hợp!");
             return;
         }
         data = list;

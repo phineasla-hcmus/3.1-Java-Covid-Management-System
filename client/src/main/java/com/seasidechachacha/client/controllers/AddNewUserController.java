@@ -16,13 +16,13 @@ import com.seasidechachacha.client.models.District;
 import com.seasidechachacha.client.models.ManagedUser;
 import com.seasidechachacha.client.models.TreatmentPlace;
 import com.seasidechachacha.client.models.Ward;
+import com.seasidechachacha.client.utils.Alert;
 import com.seasidechachacha.client.utils.Validation;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -60,15 +60,10 @@ public class AddNewUserController {
             try {
                 if (isValid()) {
                     if (manager.addNewUser(getCurrentInput(), currentState, treatID)) {
-                        Alert alert = new Alert(AlertType.INFORMATION);
-                        alert.setTitle("Thông báo");
-                        alert.setHeaderText("Quản lý người liên quan Covid19");
-                        alert.setContentText("Thêm mới người dùng thành công!");
-
-                        alert.showAndWait();
+                        Alert.showAlert(AlertType.INFORMATION, "Quản lý người liên quan Covid19", "Thêm mới người dùng thành công!");
                         refreshInput();
                     } else {
-                        showAlert("Quản lý người liên quan Covid19", "Người dùng đã tồn tại!");
+                        Alert.showAlert(AlertType.WARNING, "Quản lý người liên quan Covid19", "Người dùng đã tồn tại!");
                     }
                 }
             } catch (SQLException ex) {
@@ -129,17 +124,17 @@ public class AddNewUserController {
         String header = "Thêm mới người liên quan Covid19";
         if (tfFullName.getText().equals("") || tfIdentityCard.getText().equals("")
                 || tfBirthYear.getText().equals("")) {
-            showAlert(header, "Vui lòng điền đầy đủ thông tin!");
+            Alert.showAlert(AlertType.WARNING, header, "Vui lòng điền đầy đủ thông tin!");
             valid = false;
         } else if (cbCity.getValue() == null || cbDistrict.getValue() == null || cbWard.getValue() == null
                 || cbRelated.getValue() == null || cbPlace.getValue() == null) {
-            showAlert(header, "Vui lòng chọn trạng thái, địa chỉ nơi ở, người liên quan và địa điểm điều trị!");
+            Alert.showAlert(AlertType.WARNING, header, "Vui lòng chọn trạng thái, địa chỉ nơi ở, người liên quan và địa điểm điều trị!");
             valid = false;
         } else if (Validation.isNumberExisted(tfFullName.getText())) {
-            showAlert(header, "Vui lòng chỉ điền chữ cho họ tên!");
+            Alert.showAlert(AlertType.WARNING, header, "Vui lòng chỉ điền chữ cho họ tên!");
             valid = false;
         } else if (Validation.isCharacterExisted(tfIdentityCard.getText()) || Validation.isCharacterExisted(tfBirthYear.getText())) {
-            showAlert(header, "Vui lòng chỉ điền số cho chứng minh nhân dân và năm sinh!");
+            Alert.showAlert(AlertType.WARNING, header, "Vui lòng chỉ điền số cho chứng minh nhân dân và năm sinh!");
             valid = false;
         } else if (!checkIdentityCard(header, tfIdentityCard.getText()) || !checkBirthYear(header, Integer.valueOf(tfBirthYear.getText()))) {
             valid = false;
@@ -150,7 +145,7 @@ public class AddNewUserController {
     private boolean checkIdentityCard(String header, String idCard) {
         // CMND phải là 9 hoặc 12 chữ số
         if (idCard.length() != 9 && idCard.length() != 12) {
-            showAlert(header, "Chứng minh nhân dân phải có 9 hoặc 12 chữ số!");
+            Alert.showAlert(AlertType.WARNING, header, "Chứng minh nhân dân phải có 9 hoặc 12 chữ số!");
             return false;
         }
         return true;
@@ -159,18 +154,9 @@ public class AddNewUserController {
     private boolean checkBirthYear(String header, Integer birthYear) {
         if (birthYear >= 1903 && birthYear <= 2021) return true;
         else {
-            showAlert(header, "Năm sinh phải nằm trong khoảng 1903 - 2021");
+            Alert.showAlert(AlertType.WARNING, header, "Năm sinh phải nằm trong khoảng 1903 - 2021");
             return false;
         }
-    }
-
-    private void showAlert(String header, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Thông báo");
-        alert.setHeaderText(header);
-        alert.setContentText(message);
-
-        alert.showAndWait();
     }
 
     private void refreshInput() {

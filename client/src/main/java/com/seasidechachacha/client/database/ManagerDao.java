@@ -362,11 +362,15 @@ public class ManagerDao {
 		boolean result = false;
 		try (Connection c = BasicConnection.getConnection()) {
 			try {
+                                // Update số lượng tiếp nhận hiện tại
+                                String update = "UPDATE treatmentplace SET currentReception = currentReception + 1 WHERE treatID = ?";
+                                PreparedStatement pu = c.prepareStatement(update);
+                                pu.setInt(1, treatmentID);
 				String query = "INSERT INTO treatmentplacehistory(userID, time, treatID) VALUES (?, NOW(), ?);";
 				PreparedStatement ps = c.prepareStatement(query);
 				ps.setString(1, userID);
 				ps.setInt(2, treatmentID);
-				result = ps.executeUpdate() > 0;
+				result = pu.executeUpdate() > 0 && ps.executeUpdate() > 0;
 				c.close();
 			} catch (SQLException e1) {
 				logger.error(e1);

@@ -10,6 +10,8 @@ import java.util.List;
 
 import com.seasidechachacha.client.App;
 import com.seasidechachacha.client.database.ManagerDao;
+import static com.seasidechachacha.client.database.ManagerDao.getTreatmentPlaceByID;
+import static com.seasidechachacha.client.database.ManagerDao.getTreatmentPlaceIDByName;
 import com.seasidechachacha.client.global.Session;
 import com.seasidechachacha.client.models.City;
 import com.seasidechachacha.client.models.District;
@@ -112,7 +114,7 @@ public class AddNewUserController {
         for (int i = 0; i < relatedList.size(); i++) {
             cbRelated.getItems().add(relatedList.get(i));
         }
-        
+
         List<TreatmentPlace> placeList = manager.getTreatmentPlaceList();
         for (int i = 0; i < placeList.size(); i++) {
             cbPlace.getItems().add(placeList.get(i).getName());
@@ -136,12 +138,22 @@ public class AddNewUserController {
         } else if (Validation.isCharacterExisted(tfIdentityCard.getText()) || Validation.isCharacterExisted(tfBirthYear.getText())) {
             Alert.showAlert(AlertType.WARNING, header, "Vui lòng chỉ điền số cho chứng minh nhân dân và năm sinh!");
             valid = false;
-        } else if (!checkIdentityCard(header, tfIdentityCard.getText()) || !checkBirthYear(header, Integer.valueOf(tfBirthYear.getText()))) {
+        } else if (!checkIdentityCard(header, tfIdentityCard.getText()) || !checkBirthYear(header, Integer.valueOf(tfBirthYear.getText()))
+                || !checkTreatmentCapacity(header, getTreatmentPlaceIDByName(cbPlace.getValue().toString()))) {
             valid = false;
         }
         return valid;
     }
-    
+
+    private boolean checkTreatmentCapacity(String header, int treatID) {
+        TreatmentPlace t = getTreatmentPlaceByID(treatID);
+        if (t.isFull()) {
+            Alert.showAlert(AlertType.WARNING, header, "Địa điểm điều trị này đã hết chỗ!");
+            return false;
+        }
+        return true;
+    }
+
     private boolean checkIdentityCard(String header, String idCard) {
         // CMND phải là 9 hoặc 12 chữ số
         if (idCard.length() != 9 && idCard.length() != 12) {
@@ -150,10 +162,11 @@ public class AddNewUserController {
         }
         return true;
     }
-    
+
     private boolean checkBirthYear(String header, Integer birthYear) {
-        if (birthYear >= 1903 && birthYear <= 2021) return true;
-        else {
+        if (birthYear >= 1903 && birthYear <= 2021) {
+            return true;
+        } else {
             Alert.showAlert(AlertType.WARNING, header, "Năm sinh phải nằm trong khoảng 1903 - 2021");
             return false;
         }
@@ -179,7 +192,7 @@ public class AddNewUserController {
 
         currentState = manager.getCurrentState(cbRelated.getValue()) + 1;
         user = new ManagedUser(ID, name, birthYear, cbRelated.getValue(), 0, address, currentState);
-        
+
         treatID = manager.getTreatmentPlaceIDByName(cbPlace.getValue());
 
         return user;

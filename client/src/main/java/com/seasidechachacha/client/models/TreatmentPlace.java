@@ -55,5 +55,9 @@ public class TreatmentPlace {
     public void setCurrentReception(int currentReception) {
         this.currentReception = currentReception;
     }
+    
+    public boolean isFull() {
+        return currentReception == capacity;
+    }
 
 }

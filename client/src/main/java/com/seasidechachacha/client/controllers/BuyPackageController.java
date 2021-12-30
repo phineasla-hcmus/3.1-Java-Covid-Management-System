@@ -89,30 +89,35 @@ public class BuyPackageController {
                 for (int i = 0; i < listP.size(); i++) {
                     if (listP.get(i).getName()
                             .equalsIgnoreCase(choosePackage.getText())) {
-
-                        if (quantity.getText() != "" && quantity.getText().matches("\\d+")) {
-                            if (Integer.parseInt(quantity.getText()) > listP.get(i).getLimitPerPerson()) {
-                                Alert a = new Alert(Alert.AlertType.WARNING);
-                                a.setContentText("Số lượng mua lớn hơn giới hạn cho phép, xin hãy nhập lại !!!");
+                        String userid = Session.getUser().getUserId();
+                        int packageid = listP.get(i).getPackageID();
+                        int limitperPerson = listP.get(i).getLimitPerPerson();
+                        int daycooldown = listP.get(i).getDayCooldown();
+                        if(PaymentDao.isExistOnCart(userid, packageid))
+                        {
+                            Alert a = new Alert(Alert.AlertType.WARNING);
+                                a.setContentText("Sản phẩm này bạn đã đặt trong giỏ hàng !!!\nHãy hủy đơn hàng để có thể đặt lại sản phẩm");
                                 a.show();
-                            } else {
-                                String userid = Session.getUser().getUserId();
-                                int packageid = listP.get(i).getPackageID();
-                                int limitperPerson = listP.get(i).getLimitPerPerson();
-                                int daycooldown = listP.get(i).getDayCooldown();
-
-                                if (limitperPerson <= PaymentDao.quantityOfBoughtPackage(userid, packageid, daycooldown)) {
+                        } else {
+                            if (quantity.getText() != "" && quantity.getText().matches("\\d+")) {
+                                if (Integer.parseInt(quantity.getText()) > listP.get(i).getLimitPerPerson()) {
                                     Alert a = new Alert(Alert.AlertType.WARNING);
-                                    a.setContentText("Bạn đã mua sản phẩm này vượt quá giới hạn cho phép trong vòng " + Integer.toString(daycooldown) + " ngày!!!\nHãy đặt lại sau vài ngày nữa");
+                                    a.setContentText("Số lượng mua lớn hơn giới hạn cho phép, xin hãy nhập lại !!!");
                                     a.show();
                                 } else {
-                                    addCartThread(packageid);
+                                    if (limitperPerson <= PaymentDao.quantityOfBoughtPackage(userid, packageid, daycooldown)) {
+                                        Alert a = new Alert(Alert.AlertType.WARNING);
+                                        a.setContentText("Bạn đã mua sản phẩm này vượt quá giới hạn cho phép trong vòng " + Integer.toString(daycooldown) + " ngày!!!\nHãy đặt lại sau vài ngày nữa");
+                                        a.show();
+                                    } else {
+                                        addCartThread(packageid);
+                                    }
                                 }
+                            } else {
+                                Alert a = new Alert(Alert.AlertType.WARNING);
+                                a.setContentText("Xin kiểm tra lại số lượng nhập !!!");
+                                a.show();
                             }
-                        } else {
-                            Alert a = new Alert(Alert.AlertType.WARNING);
-                            a.setContentText("Xin kiểm tra lại số lượng nhập !!!");
-                            a.show();
                         }
                     }
                 }

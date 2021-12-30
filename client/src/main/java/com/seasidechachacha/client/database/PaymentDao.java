@@ -83,6 +83,33 @@ public class PaymentDao {
     }
 
     /**
+     * Check if package user order existed on cart
+     * @param userid
+     * @param packageid
+     * @return 
+     */
+    public static boolean isExistOnCart(String userid,int packageid)
+    {
+        boolean result = false;
+        try ( Connection c = BasicConnection.getConnection()) {
+            String query = "SELECT *\n"
+                    + "FROM cartitem as c JOIN user as u\n"
+                    + "ON c.userID=u.userID and u.userID=? and c.packageID=?";
+            
+            PreparedStatement ps = c.prepareStatement(query);
+            ps.setString(1, userid);
+            ps.setInt(2, packageid);
+
+            ResultSet rs = ps.executeQuery();
+            if(rs.next())
+                result=true;
+            rs.close();
+        } catch (SQLException e) {
+            logger.error(e);
+        }
+        return result;
+    }
+    /**
      * Get a list from {@code OrderHistory} where not in {@code PaymentHistory}
      *
      * @see <a href="https://stackoverflow.com/a/21338705/12405558">

@@ -14,12 +14,14 @@ import com.seasidechachacha.client.models.City;
 import com.seasidechachacha.client.models.District;
 import com.seasidechachacha.client.models.TreatmentPlace;
 import com.seasidechachacha.client.models.Ward;
+import com.seasidechachacha.client.utils.Alert;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
@@ -44,20 +46,10 @@ public class AddNewTreatmentPlaceController {
         btnAdd.setOnAction(event -> {
             if (isValid()) {
                 if (admin.addTreatmentPlace(getCurrentInput())) {
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Thông báo");
-                    alert.setHeaderText("Quản lý địa điểm điều trị/cách ly");
-                    alert.setContentText("Thêm mới địa điểm điều trị/cách ly thành công!");
-                    
-                    alert.showAndWait();
+                    Alert.showAlert(AlertType.INFORMATION, "Quản lý địa điểm điều trị/cách ly", "Thêm mới địa điểm điều trị/cách ly thành công!");
                     refreshInput();
                 } else {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Thông báo");
-                    alert.setHeaderText("Quản lý địa điểm điều trị/cách ly");
-                    alert.setContentText("Địa điểm điều trị đã tồn tại!");
-                    
-                    alert.showAndWait();
+                    Alert.showAlert(AlertType.WARNING, "Quản lý địa điểm điều trị/cách ly", "Địa điểm điều trị đã tồn tại!");
                 }
             }
         });
@@ -103,20 +95,10 @@ public class AddNewTreatmentPlaceController {
     private boolean isValid() {
         boolean valid = true;
         if (tfName.getText().equals("") || tfReception.getText().equals("") || tfCapacity.getText().equals("")) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Thông báo");
-            alert.setHeaderText("Thêm mới địa điểm điều trị/cách ly");
-            alert.setContentText("Vui lòng điền đầy đủ thông tin!");
-
-            alert.showAndWait();
+            Alert.showAlert(AlertType.WARNING, "Thêm mới địa điểm điều trị/cách ly", "Vui lòng điền đầy đủ thông tin!");
             valid = false;
         } else if (cbCity.getValue().equals("") || cbDistrict.getValue().equals("") || cbWard.getValue().equals("")) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Thông báo");
-            alert.setHeaderText("Thêm mới địa điểm điều trị/cách ly");
-            alert.setContentText("Vui lòng chọn địa chỉ của địa điểm điều trị!");
-
-            alert.showAndWait();
+            Alert.showAlert(AlertType.WARNING, "Thêm mới địa điểm điều trị/cách ly", "Vui lòng chọn địa chỉ của địa điểm điều trị!");
             valid = false;
         }
         return valid;

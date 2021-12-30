@@ -14,13 +14,15 @@ import com.seasidechachacha.client.global.Session;
 import com.seasidechachacha.client.models.City;
 import com.seasidechachacha.client.models.District;
 import com.seasidechachacha.client.models.ManagedUser;
+import com.seasidechachacha.client.models.TreatmentPlace;
 import com.seasidechachacha.client.models.Ward;
+import com.seasidechachacha.client.utils.Alert;
+import com.seasidechachacha.client.utils.Validation;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -34,14 +36,14 @@ public class AddNewUserController {
     private TextField tfFullName, tfBirthYear, tfIdentityCard;
 
     @FXML
-    private ComboBox<String> cbCity, cbDistrict, cbWard, cbRelated;
+    private ComboBox<String> cbCity, cbDistrict, cbWard, cbRelated, cbPlace;
 
     private ManagerDao manager = new ManagerDao(Session.getUser().getUserId());
 
     @FXML
     private Button btnAddNewPerson;
 
-    private int currentState;
+    private int currentState, treatID;
 
     @FXML
     private void goBack() {
@@ -57,16 +59,11 @@ public class AddNewUserController {
         btnAddNewPerson.setOnAction(event -> {
             try {
                 if (isValid()) {
-                    if (manager.addNewUser(getCurrentInput(), currentState)) {
-                        Alert alert = new Alert(AlertType.INFORMATION);
-                        alert.setTitle("Thông báo");
-                        alert.setHeaderText("Quản lý người liên quan Covid19");
-                        alert.setContentText("Thêm mới người dùng thành công!");
-
-                        alert.showAndWait();
+                    if (manager.addNewUser(getCurrentInput(), currentState, treatID)) {
+                        Alert.showAlert(AlertType.INFORMATION, "Quản lý người liên quan Covid19", "Thêm mới người dùng thành công!");
                         refreshInput();
                     } else {
-                        showAlert("Quản lý người liên quan Covid19", "Người dùng đã tồn tại!");
+                        Alert.showAlert(AlertType.WARNING, "Quản lý người liên quan Covid19", "Người dùng đã tồn tại!");
                     }
                 }
             } catch (SQLException ex) {
@@ -115,6 +112,11 @@ public class AddNewUserController {
         for (int i = 0; i < relatedList.size(); i++) {
             cbRelated.getItems().add(relatedList.get(i));
         }
+        
+        List<TreatmentPlace> placeList = manager.getTreatmentPlaceList();
+        for (int i = 0; i < placeList.size(); i++) {
+            cbPlace.getItems().add(placeList.get(i).getName());
+        }
     }
 
     private boolean isValid() {
@@ -122,47 +124,39 @@ public class AddNewUserController {
         String header = "Thêm mới người liên quan Covid19";
         if (tfFullName.getText().equals("") || tfIdentityCard.getText().equals("")
                 || tfBirthYear.getText().equals("")) {
-            showAlert(header, "Vui lòng điền đầy đủ thông tin!");
+            Alert.showAlert(AlertType.WARNING, header, "Vui lòng điền đầy đủ thông tin!");
             valid = false;
         } else if (cbCity.getValue() == null || cbDistrict.getValue() == null || cbWard.getValue() == null
-                || cbRelated.getValue() == null) {
-            showAlert(header, "Vui lòng chọn trạng thái, địa chỉ nơi ở và người liên quan!");
+                || cbRelated.getValue() == null || cbPlace.getValue() == null) {
+            Alert.showAlert(AlertType.WARNING, header, "Vui lòng chọn trạng thái, địa chỉ nơi ở, người liên quan và địa điểm điều trị!");
             valid = false;
-        } else if (isNumberExisted(tfFullName.getText())) {
-            showAlert(header, "Vui lòng chỉ điền chữ cho họ tên!");
+        } else if (Validation.isNumberExisted(tfFullName.getText())) {
+            Alert.showAlert(AlertType.WARNING, header, "Vui lòng chỉ điền chữ cho họ tên!");
             valid = false;
-        } else if (isCharacterExisted(tfIdentityCard.getText()) || isCharacterExisted(tfBirthYear.getText())) {
-            showAlert(header, "Vui lòng chỉ điền số cho chứng minh nhân dân và năm sinh!");
+        } else if (Validation.isCharacterExisted(tfIdentityCard.getText()) || Validation.isCharacterExisted(tfBirthYear.getText())) {
+            Alert.showAlert(AlertType.WARNING, header, "Vui lòng chỉ điền số cho chứng minh nhân dân và năm sinh!");
             valid = false;
-        } 
+        } else if (!checkIdentityCard(header, tfIdentityCard.getText()) || !checkBirthYear(header, Integer.valueOf(tfBirthYear.getText()))) {
+            valid = false;
+        }
         return valid;
     }
-
-    private boolean isCharacterExisted(String content) {
-        for (int i = 0; i < content.length(); i++) {
-            if (Character.isLetter(content.charAt(i))) {
-                return true;
-            }
+    
+    private boolean checkIdentityCard(String header, String idCard) {
+        // CMND phải là 9 hoặc 12 chữ số
+        if (idCard.length() != 9 && idCard.length() != 12) {
+            Alert.showAlert(AlertType.WARNING, header, "Chứng minh nhân dân phải có 9 hoặc 12 chữ số!");
+            return false;
         }
-        return false;
+        return true;
     }
-
-    private boolean isNumberExisted(String content) {
-        for (int i = 0; i < content.length(); i++) {
-            if (Character.isDigit(content.charAt(i))) {
-                return true;
-            }
+    
+    private boolean checkBirthYear(String header, Integer birthYear) {
+        if (birthYear >= 1903 && birthYear <= 2021) return true;
+        else {
+            Alert.showAlert(AlertType.WARNING, header, "Năm sinh phải nằm trong khoảng 1903 - 2021");
+            return false;
         }
-        return false;
-    }
-
-    private void showAlert(String header, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Thông báo");
-        alert.setHeaderText(header);
-        alert.setContentText(message);
-
-        alert.showAndWait();
     }
 
     private void refreshInput() {
@@ -173,6 +167,7 @@ public class AddNewUserController {
         cbDistrict.getSelectionModel().clearSelection();
         cbWard.getSelectionModel().clearSelection();
         cbRelated.getSelectionModel().clearSelection();
+        cbPlace.getSelectionModel().clearSelection();
     }
 
     private ManagedUser getCurrentInput() {
@@ -184,6 +179,8 @@ public class AddNewUserController {
 
         currentState = manager.getCurrentState(cbRelated.getValue()) + 1;
         user = new ManagedUser(ID, name, birthYear, cbRelated.getValue(), 0, address, currentState);
+        
+        treatID = manager.getTreatmentPlaceIDByName(cbPlace.getValue());
 
         return user;
     }

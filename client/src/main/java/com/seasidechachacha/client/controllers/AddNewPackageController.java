@@ -6,12 +6,14 @@ import com.seasidechachacha.client.App;
 import com.seasidechachacha.client.database.ManagerDao;
 import com.seasidechachacha.client.global.Session;
 import com.seasidechachacha.client.models.Package;
+import com.seasidechachacha.client.utils.Alert;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
@@ -43,19 +45,10 @@ public class AddNewPackageController {
         btnAdd.setOnAction(event -> {
             if (isValid()) {
                 if (manager.addPackage(getCurrentInput())) {
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Thông báo");
-                    alert.setHeaderText("Quản lý nhu yếu phẩm");
-                    alert.setContentText("Thêm mới nhu yếu phẩm thành công!");
-                    alert.showAndWait();
+                    Alert.showAlert(AlertType.INFORMATION, "Quản lý nhu yếu phẩm", "Thêm mới nhu yếu phẩm thành công!");
                     refreshInput();
                 } else {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Thông báo");
-                    alert.setHeaderText("Quản lý nhu yếu phẩm");
-                    alert.setContentText("Nhu yếu phẩm đã tồn tại!");
-
-                    alert.showAndWait();
+                    Alert.showAlert(AlertType.WARNING, "Quản lý nhu yếu phẩm", "Nhu yếu phẩm đã tồn tại!");
                 }
             }
 
@@ -77,20 +70,10 @@ public class AddNewPackageController {
     private boolean isValid() {
         boolean valid = true;
         if (tfName.getText().equals("") || tfLimit.getText().equals("") || tfDayCooldown.getText().equals("") || tfPrice.getText().equals("")) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Thông báo");
-            alert.setHeaderText("Thêm mới nhu yếu phẩm");
-            alert.setContentText("Vui lòng điền đầy đủ thông tin!");
-
-            alert.showAndWait();
+            Alert.showAlert(AlertType.WARNING, "Thêm mới nhu yếu phẩm", "Vui lòng điền đầy đủ thông tin!");
             valid = false;
         } else if (Integer.valueOf(tfLimit.getText()) <= 0 || Integer.valueOf(tfDayCooldown.getText()) <= 0 || Integer.valueOf(tfPrice.getText()) <= 0) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Thông báo");
-            alert.setHeaderText("Thêm mới nhu yếu phẩm");
-            alert.setContentText("Vui lòng điền số lớn hơn 0 cho các trường thông tin là số!");
-
-            alert.showAndWait();
+            Alert.showAlert(AlertType.WARNING, "Thêm mới nhu yếu phẩm", "Vui lòng điền số lớn hơn 0 cho các trường thông tin là số!");
             valid = false;
         }
         return valid;

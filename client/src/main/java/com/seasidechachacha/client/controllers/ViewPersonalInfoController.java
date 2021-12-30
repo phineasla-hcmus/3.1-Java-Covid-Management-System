@@ -11,6 +11,7 @@ import com.seasidechachacha.client.models.ManagedUser;
 import com.seasidechachacha.client.models.StateHistory;
 import com.seasidechachacha.client.models.TreatmentPlace;
 import com.seasidechachacha.client.models.TreatmentPlaceHistory;
+import com.seasidechachacha.client.utils.Alert;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,7 +26,7 @@ import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
-import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
@@ -97,19 +98,9 @@ public class ViewPersonalInfoController {
                         break;
                 }
                 if (state > currentState) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Thông báo");
-                    alert.setHeaderText("Cập nhật thông tin người liên quan Covid19");
-                    alert.setContentText("Chỉ có thể thay đổi trạng thái từ F2->F1, F2->F0, F1->F0!");
-
-                    alert.showAndWait();
+                    Alert.showAlert(AlertType.WARNING, "Cập nhật thông tin người liên quan Covid19", "Chỉ có thể thay đổi trạng thái từ F2->F1, F2->F0, F1->F0!");
                 } else if (manager.setState(userId, state)) {
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Thông báo");
-                    alert.setHeaderText("Cập nhật thông tin người liên quan Covid19");
-                    alert.setContentText("Thay đổi trạng thái thành công");
-
-                    alert.showAndWait();
+                    Alert.showAlert(AlertType.INFORMATION, "Cập nhật thông tin người liên quan Covid19", "Thay đổi trạng thái thành công!");
                     labelStatus.setText(result.get());
 
                 }
@@ -122,12 +113,7 @@ public class ViewPersonalInfoController {
             if (result.isPresent()) {
                 int treatID = ManagerDao.getTreatmentPlaceIDByName(result.get());
                 if (manager.addTreatmentPlaceHistory(userId, treatID)) {
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Thông báo");
-                    alert.setHeaderText("Cập nhật thông tin người liên quan Covid19");
-                    alert.setContentText("Thay đổi địa điểm điều trị thành công");
-
-                    alert.showAndWait();
+                    Alert.showAlert(AlertType.INFORMATION, "Cập nhật thông tin người liên quan Covid19", "Thay đổi địa điểm điều trị thành công!");
                     labelTreatmentPlace.setText(result.get());
 
                 }

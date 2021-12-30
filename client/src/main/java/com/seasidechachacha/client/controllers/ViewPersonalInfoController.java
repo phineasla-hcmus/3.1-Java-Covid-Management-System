@@ -99,10 +99,10 @@ public class ViewPersonalInfoController {
                 }
                 if (state > currentState) {
                     Alert.showAlert(AlertType.WARNING, "Cập nhật thông tin người liên quan Covid19", "Chỉ có thể thay đổi trạng thái từ F2->F1, F2->F0, F1->F0!");
-                } else if (manager.setState(userId, state)) {
+                } else if (state != currentState && manager.setState(userId, state)) {
                     Alert.showAlert(AlertType.INFORMATION, "Cập nhật thông tin người liên quan Covid19", "Thay đổi trạng thái thành công!");
                     labelStatus.setText(result.get());
-
+                    getManagedUserThread();
                 }
             }
         });
@@ -110,12 +110,15 @@ public class ViewPersonalInfoController {
             placeDialog.setTitle("Thay đổi nơi điều trị/cách ly");
             placeDialog.setHeaderText("Nơi điều trị/cách ly hiện tại");
             Optional<String> result = placeDialog.showAndWait();
-            if (result.isPresent()) {
+            if (result.isPresent() && !currentPlace.equals(result.get())) {
                 int treatID = ManagerDao.getTreatmentPlaceIDByName(result.get());
-                if (manager.addTreatmentPlaceHistory(userId, treatID)) {
+                TreatmentPlace t = ManagerDao.getTreatmentPlaceByID(treatID);
+                if (t.isFull()) {
+                    Alert.showAlert(AlertType.WARNING, "Cập nhật thông tin người liên quan Covid19", "Địa điểm điều trị này đã hết chỗ!");
+                } else if (manager.addTreatmentPlaceHistory(userId, treatID)) {
                     Alert.showAlert(AlertType.INFORMATION, "Cập nhật thông tin người liên quan Covid19", "Thay đổi địa điểm điều trị thành công!");
                     labelTreatmentPlace.setText(result.get());
-
+                    getManagedUserThread();
                 }
             }
         });
@@ -147,8 +150,9 @@ public class ViewPersonalInfoController {
         currentStatus = "F" + currentState;
         labelStatus.setText(currentStatus);
         TreatmentPlace treat = getCurrentTreatmentPlace(user.getUserId());
+        currentPlace = treat.getName();
         if (treat != null) {
-            labelTreatmentPlace.setText(treat.getName());
+            labelTreatmentPlace.setText(currentPlace);
         }
 
         String status[] = {"F0", "F1", "F2"};

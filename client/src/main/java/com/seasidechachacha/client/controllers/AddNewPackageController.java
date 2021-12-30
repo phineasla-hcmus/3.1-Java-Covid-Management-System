@@ -7,6 +7,7 @@ import com.seasidechachacha.client.database.ManagerDao;
 import com.seasidechachacha.client.global.Session;
 import com.seasidechachacha.client.models.Package;
 import com.seasidechachacha.client.utils.Alert;
+import com.seasidechachacha.client.utils.Validation;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -54,7 +55,7 @@ public class AddNewPackageController {
 
         });
 
-        tfLimit.setTextFormatter(new TextFormatter<>(new NumberStringConverter()));
+//        tfLimit.setTextFormatter(new TextFormatter<>(new NumberStringConverter()));
     }
 
     private Package getCurrentInput() {
@@ -72,11 +73,32 @@ public class AddNewPackageController {
         if (tfName.getText().equals("") || tfLimit.getText().equals("") || tfDayCooldown.getText().equals("") || tfPrice.getText().equals("")) {
             Alert.showAlert(AlertType.WARNING, "Thêm mới nhu yếu phẩm", "Vui lòng điền đầy đủ thông tin!");
             valid = false;
+        } else if (!checkPackageName(tfName.getText()) || !checkPackagePrice(Integer.valueOf(tfPrice.getText()))) {
+            valid = false;
+        } else if (Validation.isCharacterExisted(tfLimit.getText()) || Validation.isCharacterExisted(tfDayCooldown.getText()) || Validation.isCharacterExisted(tfPrice.getText())) {
+            Alert.showAlert(AlertType.WARNING, "Thêm mới nhu yếu phẩm", "Mức giới hạn, thời gian giới hạn và đơn giá chỉ bao gồm ký tự số!");
+            valid = false;
         } else if (Integer.valueOf(tfLimit.getText()) <= 0 || Integer.valueOf(tfDayCooldown.getText()) <= 0 || Integer.valueOf(tfPrice.getText()) <= 0) {
-            Alert.showAlert(AlertType.WARNING, "Thêm mới nhu yếu phẩm", "Vui lòng điền số lớn hơn 0 cho các trường thông tin là số!");
+            Alert.showAlert(AlertType.WARNING, "Thêm mới nhu yếu phẩm", "Vui lòng điền số lớn hơn 0 mức giới hạn, đơn giá và thời gian giới hạn!");
             valid = false;
         }
         return valid;
+    }
+
+    private boolean checkPackageName(String name) {
+        if (!Validation.isCharacterExisted(name)) {
+            Alert.showAlert(AlertType.WARNING, "Thêm mới nhu yếu phẩm", "Tên gói nhu yếu phẩm phải bao gồm chữ cái!");
+            return false;
+        }
+        return true;
+    }
+    
+    private boolean checkPackagePrice(int price) {
+        if (price < 10000 || price > 1000000) {
+            Alert.showAlert(AlertType.WARNING, "Thêm mới nhu yếu phẩm", "Giá của nhu yếu phẩm phải nằm trong khoảng 10000 - 1000000!");
+            return false;
+        }
+        return true;
     }
 
     private void refreshInput() {

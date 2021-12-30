@@ -332,7 +332,7 @@ public class ViewListPackageController {
             nameCol.setCellValueFactory(
                     new PropertyValueFactory<Package, String>("name"));
 
-            nameCol.setMinWidth(340);
+            nameCol.setMinWidth(300);
 
             TableColumn limitCol = new TableColumn("Mức giới hạn");
             limitCol.setCellValueFactory(
@@ -344,7 +344,7 @@ public class ViewListPackageController {
             dayCol.setCellValueFactory(
                     new PropertyValueFactory<Package, String>("dayCooldown"));
 
-            dayCol.setMinWidth(80);
+            dayCol.setMinWidth(160);
 
             TableColumn priceCol = new TableColumn("Đơn giá");
             priceCol.setCellValueFactory(

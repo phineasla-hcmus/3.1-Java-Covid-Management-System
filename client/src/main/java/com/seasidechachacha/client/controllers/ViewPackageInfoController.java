@@ -19,9 +19,15 @@ import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
 
 public class ViewPackageInfoController {
 
@@ -52,6 +58,36 @@ public class ViewPackageInfoController {
             }
         });
         TaskExecutor.execute(dataTask);
+    }
+
+    private int getDayCooldown(ComboBox<String> cbFirst, ComboBox<String> cbSecond, ComboBox<String> cbThird,
+            TextField tfFirst, TextField tfSecond, TextField tfThird) {
+        int day = 0;
+        if (tfThird.isVisible()) {
+            day += Integer.valueOf(tfThird.getText());
+        }
+        if (tfSecond.isVisible()) {
+            if (cbSecond.getValue().toString().equals("ngày")) {
+                day += Integer.valueOf(tfSecond.getText());
+            } else if (cbSecond.getValue().toString().equals("tuần")) {
+                day += 7 * Integer.valueOf(tfSecond.getText());
+            }
+        }
+        int first = Integer.valueOf(tfFirst.getText());
+        switch (cbFirst.getValue().toString()) {
+            case "tháng":
+                day += 30 * first;
+                break;
+            case "tuần":
+                day += 7 * first;
+                break;
+            case "ngày":
+                day += first;
+                break;
+            default:
+                break;
+        }
+        return day;
     }
 
     public void resolvePackage(WorkerStateEvent e, Package pack) throws IOException {
@@ -95,21 +131,108 @@ public class ViewPackageInfoController {
         });
 
         btnChangeDay.setOnAction(event -> {
-            Dialog dialog = new TextInputDialog(String.valueOf(pack.getDayCooldown()));
+            Dialog dialog = new Dialog<>();
             dialog.setTitle("Thay đổi thời gian giới hạn");
             dialog.setHeaderText("Thời gian giới hạn mới");
-            Optional<String> result = dialog.showAndWait();
+            DialogPane dialogPane = dialog.getDialogPane();
+            TextField tfFirst = new TextField();
+            ComboBox<String> cbFirst = new ComboBox<>();
+            cbFirst.getItems().addAll("ngày", "tuần", "tháng");
+            TextField tfSecond = new TextField();
+            ComboBox<String> cbSecond = new ComboBox<>();
+            cbSecond.getItems().addAll("ngày", "tuần");
+            TextField tfThird = new TextField();
+            ComboBox<String> cbThird = new ComboBox<>();
+            cbThird.getItems().addAll("ngày");
 
-            if (result.isPresent() && !result.get().equals(String.valueOf(pack.getDayCooldown()))) {
-                if (result.get().equals("")) {
+            int day = pack.getDayCooldown();
+            if (day >= 30) {
+                tfFirst.setText(String.valueOf(day / 30));
+                cbFirst.setValue("tháng");
+                day = day % 30;
+                if (day > 7) {
+                    tfSecond.setText(String.valueOf(day / 7));
+                    cbSecond.getItems().clear();
+                    cbSecond.getItems().addAll("ngày", "tuần");
+                    cbSecond.setValue("tuần");
+                    day = day % 7;
+                    tfThird.setText(String.valueOf(day));
+                }
+            } else if (day >= 7 && day < 30) {
+                tfFirst.setText(String.valueOf(day / 7));
+                cbFirst.setValue("tuần");
+                day = day % 7;
+                if (day != 0) {
+                    tfSecond.setText(String.valueOf(day));
+                    cbSecond.getItems().clear();
+                    cbSecond.getItems().addAll("ngày");
+                    cbSecond.setValue("ngày");
+                    tfThird.setVisible(false);
+                    cbThird.setVisible(false);
+                }
+            } else {
+                tfFirst.setText(String.valueOf(day));
+                cbFirst.setValue("ngày");
+                tfSecond.setVisible(false);
+                cbSecond.setVisible(false);
+                tfThird.setVisible(false);
+                cbThird.setVisible(false);
+            }
+
+            cbFirst.getSelectionModel().selectedItemProperty().addListener((opts, oldVal, newVal) -> {
+                cbSecond.getItems().clear();
+                if (newVal != null) {
+                    if (newVal.equals("tháng") || newVal.equals("tuần")) {
+                        cbSecond.setVisible(true);
+                        tfSecond.setVisible(true);
+                        if (newVal.equals("tháng")) {
+                            cbSecond.getItems().addAll("ngày", "tuần");
+                        } else if (newVal.equals("tuần")) {
+                            cbSecond.getItems().addAll("ngày");
+                        }
+                    } else {
+                        cbSecond.setVisible(false);
+                        tfSecond.setVisible(false);
+                    }
+                }
+            });
+
+            cbSecond.getSelectionModel().selectedItemProperty().addListener((opts, oldVal, newVal) -> {
+                cbThird.getItems().clear();
+                if (newVal != null) {
+                    if (newVal.equals("tuần")) {
+                        cbThird.setVisible(true);
+                        tfThird.setVisible(true);
+                        cbThird.getItems().addAll("ngày");
+                    } else {
+                        cbThird.setVisible(false);
+                        tfThird.setVisible(false);
+                    }
+                }
+            });
+
+            dialogPane.getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+            dialogPane.setContent(new VBox(8, new HBox(8, tfFirst, cbFirst), new HBox(8, tfSecond, cbSecond), new HBox(8, tfThird, cbThird)));
+            Optional<ButtonType> result = dialog.showAndWait();
+
+            int newday = getDayCooldown(cbFirst, cbSecond, cbThird, tfFirst, tfSecond, tfThird);
+            if (result.get() == ButtonType.OK) {
+                if ((tfFirst.isVisible() && tfFirst.getText().equals(""))
+                        || (tfSecond.isVisible() && tfSecond.getText().equals("")) || (tfThird.isVisible() && tfThird.getText().equals(""))) {
                     Alert.showAlert(AlertType.WARNING, "Cập nhật thông tin nhu yếu phẩm", "Vui lòng nhập thời gian giới hạn mới!");
-                } else if (Validation.isCharacterExisted(result.get()) || Integer.valueOf(result.get()) <= 0) {
-                    Alert.showAlert(AlertType.WARNING, "Cập nhật thông tin nhu yếu phẩm", "Thời gian giới hạn phải là ký tự số và lớn hơn 0!");
-                } else if (manager.updatePackageDayCooldown(packageID, Integer.valueOf(result.get()))) {
+                } else if (Validation.isCharacterExisted(tfFirst.getText())
+                        || Validation.isCharacterExisted(tfSecond.getText()) || Validation.isCharacterExisted(tfThird.getText())) {
+                    Alert.showAlert(AlertType.WARNING, "Cập nhật thông tin nhu yếu phẩm", "Thời gian giới hạn chỉ bao gồm ký tự số!");
+                } else if ((tfFirst.isVisible() && Integer.valueOf(tfFirst.getText()) <= 0)
+                        || (tfSecond.isVisible() && Integer.valueOf(tfSecond.getText()) <= 0)
+                        || (tfThird.isVisible() && Integer.valueOf(tfThird.getText()) <= 0)) {
+                    Alert.showAlert(AlertType.WARNING, "Cập nhật thông tin nhu yếu phẩm", "Thời gian giới hạn phải lớn hơn 0!");
+                } else if (manager.updatePackageDayCooldown(packageID, newday)) {
                     Alert.showAlert(AlertType.INFORMATION, "Cập nhật thông tin nhu yếu phẩm", "Thay đổi thời gian giới hạn thành công!");
-                    labelDay.setText(result.get());
+                    labelDay.setText(String.valueOf(newday));
                 }
             }
+
         });
 
         btnChangePrice.setOnAction(event -> {

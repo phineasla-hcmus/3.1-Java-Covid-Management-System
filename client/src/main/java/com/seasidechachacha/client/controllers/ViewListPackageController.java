@@ -126,12 +126,12 @@ public class ViewListPackageController {
                         minDay = 1;
                         maxDay = 7;
                         break;
-                    case "1 tuần - 4 tuần":
+                    case "1 tuần - 1 tháng":
                         minDay = 7;
-                        maxDay = 28;
+                        maxDay = 30;
                         break;
                     case "1 tháng - 5 tháng":
-                        minDay = 31;
+                        minDay = 30;
                         maxDay = 155;
                         break;
                     default:
@@ -457,7 +457,7 @@ public class ViewListPackageController {
                                     int packID = pack.getPackageID();
                                     if (manager.deletePackage(packID)) {
                                         Alert.showAlert(AlertType.INFORMATION, "Quản lý nhu yếu phẩm", "Xoá nhu yếu phẩm thành công!");
-                                        data.remove(pack);
+                                        getListPackageThread();
                                     } else {
                                         Alert.showAlert(AlertType.WARNING, "Quản lý nhu yếu phẩm", "Không thể xoá nhu yếu phẩm này!");
                                     }

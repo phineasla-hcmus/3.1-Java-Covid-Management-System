@@ -18,8 +18,6 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
-import javafx.util.converter.NumberStringConverter;
 
 public class AddNewPackageController {
 
@@ -97,8 +95,6 @@ public class AddNewPackageController {
             }
 
         });
-
-//        tfLimit.setTextFormatter(new TextFormatter<>(new NumberStringConverter()));
     }
 
     private Package getCurrentInput() {

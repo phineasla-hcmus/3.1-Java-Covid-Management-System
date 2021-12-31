@@ -312,6 +312,28 @@ public class ViewListPackageController {
         return 5;
     }
 
+    public String parseDayCooldown(int day) {
+        String result = "";
+        if (day < 7) {
+            result += day + " ngày";
+        } else if (day >= 7 && day < 30) {
+            result += (day / 7) + " tuần ";
+            if (day % 7 > 0) {
+                result += (day % 7) + " ngày";
+            }
+        } else {
+            result += (day / 30) + " tháng ";
+            day = day % 30;
+            if (day >= 7 && day < 30) {
+                result += (day / 7) + " tuần ";
+                if (day % 7 > 0) {
+                    result += (day % 7) + " ngày";
+                }
+            }
+        }
+        return result;
+    }
+
     public VBox createPage(int pageIndex) {
         int lastIndex = 0;
         int displace = data.size() % rowsPerPage();
@@ -340,11 +362,38 @@ public class ViewListPackageController {
 
             limitCol.setMinWidth(80);
 
-            TableColumn dayCol = new TableColumn("Thời gian giới hạn (ngày)");
-            dayCol.setCellValueFactory(
-                    new PropertyValueFactory<Package, String>("dayCooldown"));
+            TableColumn dayCol = new TableColumn("Thời gian giới hạn");
+//            dayCol.setCellValueFactory(
+//                    new PropertyValueFactory<Package, String>("dayCooldown"));
 
             dayCol.setMinWidth(160);
+
+            Callback<TableColumn<Package, String>, TableCell<Package, String>> cellFactory1
+                    = //
+                    new Callback<TableColumn<Package, String>, TableCell<Package, String>>() {
+                @Override
+                public TableCell call(final TableColumn<Package, String> param) {
+                    final TableCell<Object, String> cell = new TableCell<Object, String>() {
+
+                        @Override
+                        public void updateItem(String item, boolean empty) {
+                            super.updateItem(item, empty);
+                            if (empty) {
+                                setGraphic(null);
+                                setText(null);
+                            } else {
+                                if (getTableRow() != null) {
+                                    Package pack = (Package) getTableRow().getItem();
+                                    setText(parseDayCooldown(pack.getDayCooldown()));
+                                }
+
+                            }
+                        }
+                    };
+                    return cell;
+                }
+            };
+            dayCol.setCellFactory(cellFactory1);
 
             TableColumn priceCol = new TableColumn("Đơn giá");
             priceCol.setCellValueFactory(
@@ -388,7 +437,7 @@ public class ViewListPackageController {
 
             TableColumn deleteCol = new TableColumn();
             deleteCol.setCellValueFactory(new PropertyValueFactory<>(""));
-            Callback<TableColumn<Package, String>, TableCell<Package, String>> cellFactory1
+            Callback<TableColumn<Package, String>, TableCell<Package, String>> cellFactory2
                     = //
                     new Callback<TableColumn<Package, String>, TableCell<Package, String>>() {
                 @Override
@@ -424,7 +473,7 @@ public class ViewListPackageController {
                 }
             };
 
-            deleteCol.setCellFactory(cellFactory1);
+            deleteCol.setCellFactory(cellFactory2);
 
             table.getColumns().addAll(numCol, nameCol, limitCol, dayCol, priceCol, editCol, deleteCol);
             table.setItems(FXCollections.observableArrayList(data));

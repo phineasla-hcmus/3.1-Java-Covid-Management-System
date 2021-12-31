@@ -3,6 +3,7 @@ package com.seasidechachacha.client.utils;
 public class Validation {
 
     public static boolean isCharacterExisted(String content) {
+        if (content.length() == 0) return false;
         for (int i = 0; i < content.length(); i++) {
             if (Character.isLetter(content.charAt(i))) {
                 return true;

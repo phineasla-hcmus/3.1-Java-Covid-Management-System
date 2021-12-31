@@ -16,6 +16,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert.AlertType;
 
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.util.converter.NumberStringConverter;
@@ -25,7 +26,10 @@ public class AddNewPackageController {
     private static final Logger logger = LogManager.getLogger(AddNewPackageController.class);
 
     @FXML
-    private TextField tfName, tfLimit, tfPrice, tfDayCooldown;
+    private TextField tfName, tfLimit, tfPrice, tfFirst, tfSecond, tfThird;
+
+    @FXML
+    private ComboBox cbFirst, cbSecond, cbThird;
 
     @FXML
     private Button btnAdd;
@@ -43,6 +47,45 @@ public class AddNewPackageController {
 
     @FXML
     public void initialize() {
+        tfSecond.setVisible(false);
+        cbSecond.setVisible(false);
+        tfThird.setVisible(false);
+        cbThird.setVisible(false);
+
+        String[] units = {"ngày", "tuần", "tháng"};
+        cbFirst.getItems().addAll(units);
+        cbFirst.getSelectionModel().selectedItemProperty().addListener((opts, oldVal, newVal) -> {
+            cbSecond.getItems().clear();
+            if (newVal != null) {
+                if (newVal.equals("tháng") || newVal.equals("tuần")) {
+                    cbSecond.setVisible(true);
+                    tfSecond.setVisible(true);
+                    if (newVal.equals("tháng")) {
+                        cbSecond.getItems().addAll("ngày", "tuần");
+                    } else if (newVal.equals("tuần")) {
+                        cbSecond.getItems().addAll("ngày");
+                    }
+                } else {
+                    cbSecond.setVisible(false);
+                    tfSecond.setVisible(false);
+                }
+            }
+        });
+
+        cbSecond.getSelectionModel().selectedItemProperty().addListener((opts, oldVal, newVal) -> {
+            cbThird.getItems().clear();
+            if (newVal != null) {
+                if (newVal.equals("tuần")) {
+                    cbThird.setVisible(true);
+                    tfThird.setVisible(true);
+                    cbThird.getItems().addAll("ngày");
+                } else {
+                    cbThird.setVisible(false);
+                    tfThird.setVisible(false);
+                }
+            }
+        });
+
         btnAdd.setOnAction(event -> {
             if (isValid()) {
                 if (manager.addPackage(getCurrentInput())) {
@@ -62,23 +105,61 @@ public class AddNewPackageController {
         Package pack = null;
         String name = tfName.getText();
         int limit = Integer.valueOf(tfLimit.getText());
-        int day = Integer.valueOf(tfDayCooldown.getText());
+        int day = getDayCooldown();
         double price = Double.valueOf(tfPrice.getText());
         pack = new Package(0, name, limit, day, price);
         return pack;
     }
 
+    private int getDayCooldown() {
+        int day = 0;
+        if (tfThird.isVisible()) {
+            day += Integer.valueOf(tfThird.getText());
+        }
+        if (tfSecond.isVisible()) {
+            if (cbSecond.getValue().toString().equals("ngày")) {
+                day += Integer.valueOf(tfSecond.getText());
+            } else if (cbSecond.getValue().toString().equals("tuần")) {
+                day += 7 * Integer.valueOf(tfSecond.getText());
+            }
+        }
+        int first = Integer.valueOf(tfFirst.getText());
+        switch (cbFirst.getValue().toString()) {
+            case "tháng":
+                day += 30 * first;
+                break;
+            case "tuần":
+                day += 7 * first;
+                break;
+            case "ngày":
+                day += first;
+                break;
+            default:
+                break;
+        }
+        return day;
+    }
+
     private boolean isValid() {
         boolean valid = true;
-        if (tfName.getText().equals("") || tfLimit.getText().equals("") || tfDayCooldown.getText().equals("") || tfPrice.getText().equals("")) {
+        if (tfName.getText().equals("") || tfLimit.getText().equals("") || (tfFirst.isVisible() && tfFirst.getText().equals(""))
+                || (tfSecond.isVisible() && tfSecond.getText().equals("")) || (tfThird.isVisible() && tfThird.getText().equals(""))
+                || tfPrice.getText().equals("")) {
             Alert.showAlert(AlertType.WARNING, "Thêm mới nhu yếu phẩm", "Vui lòng điền đầy đủ thông tin!");
+            valid = false;
+        } else if ((cbFirst.isVisible() && cbFirst.getValue() == null) || (cbSecond.isVisible() && cbSecond.getValue() == null)
+                || (cbThird.isVisible() && cbThird.getValue() == null)) {
+            Alert.showAlert(AlertType.WARNING, "Thêm mới nhu yếu phẩm", "Vui lòng chọn đơn vị ngày, tuần, tháng!");
             valid = false;
         } else if (!checkPackageName(tfName.getText()) || !checkPackagePrice(Integer.valueOf(tfPrice.getText()))) {
             valid = false;
-        } else if (Validation.isCharacterExisted(tfLimit.getText()) || Validation.isCharacterExisted(tfDayCooldown.getText()) || Validation.isCharacterExisted(tfPrice.getText())) {
+        } else if (Validation.isCharacterExisted(tfLimit.getText()) || Validation.isCharacterExisted(tfFirst.getText())
+                || Validation.isCharacterExisted(tfSecond.getText()) || Validation.isCharacterExisted(tfThird.getText()) || Validation.isCharacterExisted(tfPrice.getText())) {
             Alert.showAlert(AlertType.WARNING, "Thêm mới nhu yếu phẩm", "Mức giới hạn, thời gian giới hạn và đơn giá chỉ bao gồm ký tự số!");
             valid = false;
-        } else if (Integer.valueOf(tfLimit.getText()) <= 0 || Integer.valueOf(tfDayCooldown.getText()) <= 0 || Integer.valueOf(tfPrice.getText()) <= 0) {
+        } else if (Integer.valueOf(tfLimit.getText()) <= 0 || (tfFirst.isVisible() && Integer.valueOf(tfFirst.getText()) <= 0)
+                || (tfSecond.isVisible() && Integer.valueOf(tfSecond.getText()) <= 0)
+                || (tfThird.isVisible() && Integer.valueOf(tfThird.getText()) <= 0) || Integer.valueOf(tfPrice.getText()) <= 0) {
             Alert.showAlert(AlertType.WARNING, "Thêm mới nhu yếu phẩm", "Vui lòng điền số lớn hơn 0 mức giới hạn, đơn giá và thời gian giới hạn!");
             valid = false;
         }
@@ -92,7 +173,7 @@ public class AddNewPackageController {
         }
         return true;
     }
-    
+
     private boolean checkPackagePrice(int price) {
         if (price < 10000 || price > 1000000) {
             Alert.showAlert(AlertType.WARNING, "Thêm mới nhu yếu phẩm", "Giá của nhu yếu phẩm phải nằm trong khoảng 10000 - 1000000!");
@@ -104,7 +185,12 @@ public class AddNewPackageController {
     private void refreshInput() {
         tfName.setText("");
         tfLimit.setText("");
-        tfDayCooldown.setText("");
+        tfFirst.setText("");
+        cbFirst.getSelectionModel().clearSelection();
+        tfSecond.setVisible(false);
+        cbSecond.setVisible(false);
+        tfThird.setVisible(false);
+        cbThird.setVisible(false);
         tfPrice.setText("");
     }
 

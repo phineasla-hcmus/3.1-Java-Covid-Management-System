@@ -26,6 +26,7 @@ import com.seasidechachacha.client.models.City;
 import com.seasidechachacha.client.models.District;
 import com.seasidechachacha.client.models.ManagedUser;
 import com.seasidechachacha.client.models.ManagedUserHistory;
+import com.seasidechachacha.client.models.OrderDetail;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -1560,4 +1561,28 @@ public class ManagerDao {
 		}
 		return results;
 	}
+        
+        private static OrderDetail parseOrderDetail(ResultSet rs) throws SQLException {
+            return new OrderDetail(rs.getString("name"), rs.getInt("orderItemQuantity"), rs.getInt("orderItemPrice"));
+	}
+        
+        public static List<OrderDetail> getOrderDetailById(int orderID) {
+            List<OrderDetail> results = new ArrayList<OrderDetail>();
+            try (Connection c = BasicConnection.getConnection()) {
+                    String query = "SELECT p.name, oi.orderItemQuantity, oi.orderItemPrice\n" +
+                                    "FROM orderitem oi\n" +
+                                    "JOIN package p ON oi.packageID = p.packageID\n" +
+                                    "WHERE orderID = ?";
+                    PreparedStatement ps = c.prepareStatement(query);
+                    ps.setInt(1, orderID);
+                    ResultSet rs = ps.executeQuery();
+                    while (rs.next()) {
+                            results.add(parseOrderDetail(rs));
+                    }
+                    c.close();
+            } catch (SQLException e) {
+                    logger.error(e);
+            }
+            return results;
+        }
 }

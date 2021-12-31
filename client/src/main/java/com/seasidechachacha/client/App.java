@@ -1,14 +1,18 @@
 package com.seasidechachacha.client;
 
+import com.seasidechachacha.client.controllers.ViewOrderDetailController;
 import java.io.IOException;
 
 import com.seasidechachacha.client.controllers.ViewPackageInfoController;
 import com.seasidechachacha.client.controllers.ViewPersonalInfoController;
 import com.seasidechachacha.client.controllers.ViewTreatmentPlaceInfoController;
+import com.seasidechachacha.client.database.ManagerDao;
 import com.seasidechachacha.client.database.UserDao;
 import com.seasidechachacha.client.global.SSLConfig;
 import com.seasidechachacha.client.global.TaskExecutor;
+import com.seasidechachacha.client.models.Invoice;
 import com.seasidechachacha.client.models.ManagedUser;
+import com.seasidechachacha.client.models.OrderDetail;
 import com.seasidechachacha.client.models.Package;
 import com.seasidechachacha.client.models.TreatmentPlace;
 import com.seasidechachacha.common.DatabaseConfig;
@@ -34,7 +38,6 @@ public class App extends Application {
     private static final Logger logger = LogManager.getLogger(App.class);
     private static Scene scene;
     private static ScrollPane pn_all;
-    private static String role = "admin";
 
     @Override
     public void start(Stage stage) throws IOException, SQLException {
@@ -77,6 +80,12 @@ public class App extends Application {
                 ViewTreatmentPlaceInfoController controller = fxmlLoader
                         .<ViewTreatmentPlaceInfoController>getController();
                 controller.setup(treat);
+            } else if (fxml.equals("view/ViewOrderDetail")) {
+                Invoice invoice = (Invoice) tableRow.getItem();
+                List<OrderDetail> detail = ManagerDao.getOrderDetailById(invoice.getInvoiceId());
+                ViewOrderDetailController controller = fxmlLoader
+                        .<ViewOrderDetailController>getController();
+                controller.setup(detail);
             }
             pn_all = (ScrollPane) scene.lookup("#pn_all");
 

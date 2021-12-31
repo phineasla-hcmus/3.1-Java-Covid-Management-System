@@ -1,5 +1,6 @@
 package com.seasidechachacha.client.controllers;
 
+import com.seasidechachacha.client.App;
 import static com.seasidechachacha.client.database.ManagedUserDao.get;
 import static com.seasidechachacha.client.database.ManagerDao.getCurrentState;
 import static com.seasidechachacha.client.database.ManagerDao.getCurrentTreatmentPlace;
@@ -27,6 +28,7 @@ import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Pagination;
 import javafx.scene.control.TableCell;
@@ -281,46 +283,44 @@ public class UserInfoController {
             moneyCol.setCellValueFactory(
                     new PropertyValueFactory<Invoice, Float>("totalOrderMoney"));
 
-            moneyCol.setMinWidth(200);
+            moneyCol.setMinWidth(120);
 
-            // TableColumn actionCol = new TableColumn("");
-            // actionCol.setCellValueFactory(new PropertyValueFactory<>(""));
-            // Callback<TableColumn<ManagedUser, String>, TableCell<ManagedUser, String>>
-            // cellFactory
-            // = //
-            // new Callback<TableColumn<ManagedUser, String>, TableCell<ManagedUser,
-            // String>>() {
-            // @Override
-            // public TableCell call(final TableColumn<ManagedUser, String> param) {
-            // final TableCell<Object, String> cell = new TableCell<Object, String>() {
-            // final Button btn = new Button("Xem chi tiết");
-            //
-            // @Override
-            // public void updateItem(String item, boolean empty) {
-            // super.updateItem(item, empty);
-            // if (empty) {
-            // setGraphic(null);
-            // setText(null);
-            // } else {
-            // btn.setOnAction(event -> {
-            // try {
-            // App.setCurrentPane("pn_all", "view/ViewPersonalInfo", getTableRow());
-            // } catch (IOException ex) {
-            // logger.fatal(ex);
-            // }
-            // });
-            // setGraphic(btn);
-            // setText(null);
-            // }
-            // }
-            // };
-            // cell.setAlignment(Pos.CENTER);
-            // return cell;
-            // }
-            // };
-            //
-            // actionCol.setCellFactory(cellFactory);
-            table.getColumns().addAll(orderCol, dateCol, totalCol, moneyCol);
+            TableColumn actionCol = new TableColumn("");
+            actionCol.setCellValueFactory(new PropertyValueFactory<>(""));
+            Callback<TableColumn<Invoice, String>, TableCell<Invoice, String>> cellFactory
+                    = //
+                    new Callback<TableColumn<Invoice, String>, TableCell<Invoice, String>>() {
+                @Override
+                public TableCell call(final TableColumn<Invoice, String> param) {
+                    final TableCell<Object, String> cell = new TableCell<Object, String>() {
+                        final Button btn = new Button("Chi tiết");
+
+                        @Override
+                        public void updateItem(String item, boolean empty) {
+                            super.updateItem(item, empty);
+                            if (empty) {
+                                setGraphic(null);
+                                setText(null);
+                            } else {
+                                btn.setOnAction(event -> {
+                                    try {
+                                        App.setCurrentPane("pn_all", "view/ViewOrderDetail", getTableRow());
+                                    } catch (IOException ex) {
+                                        logger.fatal(ex);
+                                    }
+                                });
+                                setGraphic(btn);
+                                setText(null);
+                            }
+                        }
+                    };
+                    cell.setAlignment(Pos.CENTER);
+                    return cell;
+                }
+            };
+
+            actionCol.setCellFactory(cellFactory);
+            table.getColumns().addAll(orderCol, dateCol, totalCol, moneyCol, actionCol);
             table.setItems(FXCollections.observableArrayList(dataOrder));
             if (lastIndex == pageIndex) {
                 table.setItems(FXCollections.observableArrayList(

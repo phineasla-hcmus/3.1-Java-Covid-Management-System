@@ -102,7 +102,8 @@ public class ManagerDao {
 	}
 
 	public boolean addNewUser(ManagedUser user, int treatID) throws SQLException {
-		return UserDao.register(new User(user.getUserId(), user.getUserId(), 3)) && addManagedUser(user) && addTreatmentPlaceHistory(user.getUserId(), treatID)
+		return UserDao.register(new User(user.getUserId(), user.getUserId(), 3)) && addManagedUser(user)
+				&& addTreatmentPlaceHistory(user.getUserId(), treatID)
 				&& addMesssage("Add new user (userID : " + user.getUserId() + ").");
 	}
 
@@ -124,7 +125,7 @@ public class ManagerDao {
 		}
 		return stateHistoryList;
 	}
-       
+
 	// for testing purpose
 	public static List<StateHistory> getStateHistoryList(String userID) {
 		List<StateHistory> stateHistoryList = null;
@@ -184,8 +185,8 @@ public class ManagerDao {
 	}
 
 	private static TreatmentPlaceHistory parseTreatmentPlaceHistory(ResultSet rs) throws SQLException {
-		return new TreatmentPlaceHistory(rs.getString("userID"), rs.getString("treatID"),
-				rs.getString("time"), rs.getString("name"), rs.getString("address"));
+		return new TreatmentPlaceHistory(rs.getString("userID"), rs.getString("treatID"), rs.getString("time"),
+				rs.getString("name"), rs.getString("address"));
 	}
 
 	private static List<TreatmentPlaceHistory> parseTreatmentPlaceHistoryList(ResultSet rs) throws SQLException {
@@ -363,10 +364,10 @@ public class ManagerDao {
 		boolean result = false;
 		try (Connection c = BasicConnection.getConnection()) {
 			try {
-                                // Update số lượng tiếp nhận hiện tại
-                                String update = "UPDATE treatmentplace SET currentReception = currentReception + 1 WHERE treatID = ?";
-                                PreparedStatement pu = c.prepareStatement(update);
-                                pu.setInt(1, treatmentID);
+				// Update số lượng tiếp nhận hiện tại
+				String update = "UPDATE treatmentplace SET currentReception = currentReception + 1 WHERE treatID = ?";
+				PreparedStatement pu = c.prepareStatement(update);
+				pu.setInt(1, treatmentID);
 				String query = "INSERT INTO treatmentplacehistory(userID, time, treatID) VALUES (?, NOW(), ?);";
 				PreparedStatement ps = c.prepareStatement(query);
 				ps.setString(1, userID);
@@ -432,20 +433,19 @@ public class ManagerDao {
 	}
 
 	public static List<Package> getSortedPackageListByName(String keyword) {
-                String query = "";
-                if (keyword.equals("")) {
-                    query = "SELECT * FROM package ORDER BY name ASC";
-                }
-                else {
-                    query = "SELECT * FROM package WHERE MATCH(name) AGAINST(?) ORDER BY name ASC";
-                }
+		String query = "";
+		if (keyword.equals("")) {
+			query = "SELECT * FROM package ORDER BY name ASC";
+		} else {
+			query = "SELECT * FROM package WHERE MATCH(name) AGAINST(?) ORDER BY name ASC";
+		}
 		List<Package> packageList = null;
 		try (Connection c = BasicConnection.getConnection()) {
 			PreparedStatement ps = c.prepareStatement(query);
-                        if (!keyword.equals("")) {
-                            ps.setString(1, keyword);
-                        }
-                        try (ResultSet rs = ps.executeQuery()) {
+			if (!keyword.equals("")) {
+				ps.setString(1, keyword);
+			}
+			try (ResultSet rs = ps.executeQuery()) {
 				packageList = parsePackageList(rs);
 			}
 			c.close();
@@ -456,19 +456,18 @@ public class ManagerDao {
 	}
 
 	public static List<Package> getSortedPackageListByLimit(String keyword) {
-                String query = "";
-                if (keyword.equals("")) {
-                    query = "SELECT * FROM package ORDER BY limitPerPerson ASC";
-                }
-                else {
-                    query = "SELECT * FROM package WHERE MATCH(name) AGAINST(?) ORDER BY limitPerPerson ASC";
-                }
+		String query = "";
+		if (keyword.equals("")) {
+			query = "SELECT * FROM package ORDER BY limitPerPerson ASC";
+		} else {
+			query = "SELECT * FROM package WHERE MATCH(name) AGAINST(?) ORDER BY limitPerPerson ASC";
+		}
 		List<Package> packageList = null;
 		try (Connection c = BasicConnection.getConnection()) {
 			PreparedStatement ps = c.prepareStatement(query);
-                        if (!keyword.equals("")) {
-                            ps.setString(1, keyword);
-                        }
+			if (!keyword.equals("")) {
+				ps.setString(1, keyword);
+			}
 			try (ResultSet rs = ps.executeQuery()) {
 				packageList = parsePackageList(rs);
 			}
@@ -480,19 +479,18 @@ public class ManagerDao {
 	}
 
 	public static List<Package> getSortedPackageListByTime(String keyword) {
-                String query = "";
-                if (keyword.equals("")) {
-                    query = "SELECT * FROM package ORDER BY dayCooldown ASC";
-                }
-                else {
-                    query = "SELECT * FROM package WHERE MATCH(name) AGAINST(?) ORDER BY dayCooldown ASC";
-                }
+		String query = "";
+		if (keyword.equals("")) {
+			query = "SELECT * FROM package ORDER BY dayCooldown ASC";
+		} else {
+			query = "SELECT * FROM package WHERE MATCH(name) AGAINST(?) ORDER BY dayCooldown ASC";
+		}
 		List<Package> packageList = null;
 		try (Connection c = BasicConnection.getConnection()) {
 			PreparedStatement ps = c.prepareStatement(query);
-                        if (!keyword.equals("")) {
-                            ps.setString(1, keyword);
-                        }
+			if (!keyword.equals("")) {
+				ps.setString(1, keyword);
+			}
 			try (ResultSet rs = ps.executeQuery()) {
 				packageList = parsePackageList(rs);
 			}
@@ -504,19 +502,18 @@ public class ManagerDao {
 	}
 
 	public static List<Package> getSortedPackageListByPrice(String keyword) {
-                String query = "";
-                if (keyword.equals("")) {
-                    query = "SELECT * FROM package ORDER BY price ASC";
-                }
-                else {
-                    query = "SELECT * FROM package WHERE MATCH(name) AGAINST(?) ORDER BY price ASC";
-                }
+		String query = "";
+		if (keyword.equals("")) {
+			query = "SELECT * FROM package ORDER BY price ASC";
+		} else {
+			query = "SELECT * FROM package WHERE MATCH(name) AGAINST(?) ORDER BY price ASC";
+		}
 		List<Package> packageList = null;
 		try (Connection c = BasicConnection.getConnection()) {
 			PreparedStatement ps = c.prepareStatement(query);
-                        if (!keyword.equals("")) {
-                            ps.setString(1, keyword);
-                        }
+			if (!keyword.equals("")) {
+				ps.setString(1, keyword);
+			}
 			try (ResultSet rs = ps.executeQuery()) {
 				packageList = parsePackageList(rs);
 			}
@@ -683,25 +680,6 @@ public class ManagerDao {
 				+ String.valueOf(p.getDayCooldown()) + ", set price = " + String.valueOf(p.getPrice()));
 	}
 
-	private static boolean setStateIndividual(String userID, int state) {
-		boolean result = false;
-		try (Connection c = BasicConnection.getConnection()) {
-			try {
-				String query = "INSERT INTO statehistory(userID, time, state) VALUES (?, NOW(), ?);";
-				PreparedStatement ps = c.prepareStatement(query);
-				ps.setString(1, userID);
-				ps.setInt(2, state);
-				result = ps.executeUpdate() > 0;
-				c.close();
-			} catch (SQLException e1) {
-				logger.error(e1);
-			}
-		} catch (SQLException e) {
-			logger.error(e);
-		}
-		return result;
-	}
-
 	private static ArrayList<String> getChildrens(String userID) {
 		ArrayList<String> childrens = new ArrayList<String>();
 
@@ -741,44 +719,131 @@ public class ManagerDao {
 		return result;
 	}
 
+	private static boolean setStateIndividual(String userID, int state) {
+		boolean result = false;
+		try (Connection c = BasicConnection.getConnection()) {
+			try {
+				String query = "INSERT INTO statehistory(userID, time, state) VALUES (?, NOW(), ?);";
+				PreparedStatement ps = c.prepareStatement(query);
+				ps.setString(1, userID);
+				ps.setInt(2, state);
+				result = ps.executeUpdate() > 0;
+				c.close();
+			} catch (SQLException e1) {
+				logger.error(e1);
+			}
+		} catch (SQLException e) {
+			logger.error(e);
+		}
+		return result;
+	}
+
 	private static boolean setStateF1(String userID) {
-		ArrayList<String> childrens = getChildrens(userID);
-		for (int i = 0; i < childrens.size(); i++) {
-			setStateIndividual(childrens.get(i), 2);
-			removeChildren(childrens.get(i));
+		ArrayList<String> F2s = getChildrens(userID);
+		for (int i = 0; i < F2s.size(); i++) {
+			ArrayList<String> F3s = getChildrens(F2s.get(i));
+			for (int k = 0; k < F3s.size(); k++) {
+				setStateIndividual(F3s.get(k), 3);
+			}
+			setStateIndividual(F2s.get(i), 2);
 		}
 		return setStateIndividual(userID, 1);
+	}
+
+	private static void removeFather(String userID) {
+		try (Connection c = BasicConnection.getConnection()) {
+			try {
+				String query = "UPDATE manageduser SET relatedId = null WHERE userId = ?;";
+				PreparedStatement ps = c.prepareStatement(query);
+				ps.setString(1, userID);
+				ps.execute();
+			} catch (SQLException e1) {
+				logger.error(e1);
+			}
+		} catch (SQLException e) {
+			logger.error(e);
+		}
+	}
+
+	private void setFather(String userID, String FatherID) {
+		try (Connection c = BasicConnection.getConnection()) {
+			try {
+				String query = "UPDATE manageduser SET relatedId = ? WHERE userId = ?;";
+				PreparedStatement ps = c.prepareStatement(query);
+				ps.setString(1, FatherID);
+				ps.setString(2, userID);
+				ps.execute();
+			} catch (SQLException e1) {
+				logger.error(e1);
+			}
+		} catch (SQLException e) {
+			logger.error(e);
+		}
 	}
 
 	// Cập nhật thông tin người liên quan Covid19
 	// Trạng thái → người liên đới phải thay đổi theo
 	public boolean setState(String userID, int state) {
-            switch (state) {
-                case -1: {
-                    return setStateIndividual(userID, -1)
-                            && addMesssage("Update userID = " + userID + ", set state = " + String.valueOf(state));
-                }
-                case 0: {
-                    ArrayList<String> childrens = getChildrens(userID);
-                    for (int i = 0; i < childrens.size(); i++) {
-                        setStateF1(childrens.get(i));
-                    }
-                    return setStateIndividual(userID, 0)
-                            && addMesssage("Update userID = " + userID + ", set state = " + String.valueOf(state));
-                }
-                case 1: {
-                    return setStateF1(userID)
-                            && addMesssage("Update userID = " + userID + ", set state = " + String.valueOf(state));
-                }
-                case 2: {
-                    removeChildren(userID);
-                    return setStateIndividual(userID, state)
-                            && addMesssage("Update userID = " + userID + ", set state = " + String.valueOf(state));
-                }
-                default: {
-                    return false;
-                }
-            }
+		switch (state) {
+		case -1: {
+			return setStateIndividual(userID, -1)
+					&& addMesssage("Update userID = " + userID + ", set state = " + String.valueOf(state));
+		}
+		case 0: {
+			ManagedUser father = getFather(userID);
+			if (father != null) {
+				int currentState = getCurrentState(userID);
+				if (currentState == 3) {
+					removeFather(userID);
+					setFather(father.getUserId(), userID);
+					setStateF1(father.getUserId());
+				} else {
+					removeFather(userID);
+				}
+			}
+			ArrayList<String> F1s = getChildrens(userID);
+			for (int i = 0; i < F1s.size(); i++) {
+				setStateF1(F1s.get(i));
+			}
+			return setStateIndividual(userID, 0)
+					&& addMesssage("Update userID = " + userID + ", set state = " + String.valueOf(state));
+		}
+		case 1: {
+			boolean result;
+			ManagedUser father = getFather(userID);
+			if (father != null) {
+				result = setState(father.getUserId(), 0);
+			} else {
+				result = setStateF1(userID);
+			}
+			return result && addMesssage("Update userID = " + userID + ", set state = " + String.valueOf(state));
+		}
+		case 2: {
+			removeChildren(userID);
+			return setStateIndividual(userID, state)
+					&& addMesssage("Update userID = " + userID + ", set state = " + String.valueOf(state));
+		}
+		default: {
+			return false;
+		}
+		}
+	}
+
+	private static ManagedUser getFather(String userID) {
+		ManagedUser user = null;
+		try (Connection c = BasicConnection.getConnection()) {
+			String query = "SELECT * FROM manageduser f WHERE f.idCard IN (SELECT relatedPerson FROM manageduser c WHERE c.idCard = ?);";
+			PreparedStatement ps = c.prepareStatement(query);
+			ps.setString(1, userID);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				user = parse(rs);
+			}
+			c.close();
+		} catch (SQLException e) {
+			logger.error(e);
+		}
+		return user;
 	}
 
 	public static int getCurrentState(String userID) {
@@ -797,14 +862,14 @@ public class ManagerDao {
 		}
 		return currentState;
 	}
-        
-        public static int getCurrentStateByTime(String userID, String time) {
+
+	public static int getCurrentStateByTime(String userID, String time) {
 		int currentState = -2;
 		try (Connection c = BasicConnection.getConnection()) {
 			String query = "SELECT * FROM statehistory WHERE userID = ? AND time = ?;";
 			PreparedStatement ps = c.prepareStatement(query);
 			ps.setString(1, userID);
-                        ps.setString(2, time);
+			ps.setString(2, time);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
 				currentState = rs.getInt("state");
@@ -836,17 +901,16 @@ public class ManagerDao {
 
 	public static List<ManagedUser> getSortedListByID(String keyword) {
 		String query = "";
-                if (keyword.equals("")) {
-                    query = "SELECT * FROM manageduser ORDER BY idCard ASC";
-                }
-                else {
-                    query = "SELECT * FROM manageduser WHERE MATCH(fullName) AGAINST(?) ORDER BY idCard ASC";
-                }
+		if (keyword.equals("")) {
+			query = "SELECT * FROM manageduser ORDER BY idCard ASC";
+		} else {
+			query = "SELECT * FROM manageduser WHERE MATCH(fullName) AGAINST(?) ORDER BY idCard ASC";
+		}
 		List<ManagedUser> users;
 		try (Connection c = BasicConnection.getConnection(); PreparedStatement ps = c.prepareStatement(query)) {
-                        if (!keyword.equals("")) {
-                            ps.setString(1, keyword);
-                        }
+			if (!keyword.equals("")) {
+				ps.setString(1, keyword);
+			}
 			try (ResultSet rs = ps.executeQuery()) {
 				users = parseList(rs);
 			}
@@ -859,17 +923,16 @@ public class ManagerDao {
 
 	public static List<ManagedUser> getSortedListByBirthYear(String keyword) {
 		String query = "";
-                if (keyword.equals("")) {
-                    query = "SELECT * FROM manageduser ORDER BY yob ASC";
-                }
-                else {
-                    query = "SELECT * FROM manageduser WHERE MATCH(fullName) AGAINST(?) ORDER BY yob ASC";
-                }
+		if (keyword.equals("")) {
+			query = "SELECT * FROM manageduser ORDER BY yob ASC";
+		} else {
+			query = "SELECT * FROM manageduser WHERE MATCH(fullName) AGAINST(?) ORDER BY yob ASC";
+		}
 		List<ManagedUser> users;
 		try (Connection c = BasicConnection.getConnection(); PreparedStatement ps = c.prepareStatement(query)) {
-                        if (!keyword.equals("")) {
-                            ps.setString(1, keyword);
-                        }
+			if (!keyword.equals("")) {
+				ps.setString(1, keyword);
+			}
 			try (ResultSet rs = ps.executeQuery()) {
 				users = parseList(rs);
 			}
@@ -882,17 +945,16 @@ public class ManagerDao {
 
 	public static List<ManagedUser> getSortedListByName(String keyword) {
 		String query = "";
-                if (keyword.equals("")) {
-                    query = "SELECT * FROM manageduser ORDER BY fullName ASC";
-                }
-                else {
-                    query = "SELECT * FROM manageduser WHERE MATCH(fullName) AGAINST(?) ORDER BY fullName ASC";
-                }
+		if (keyword.equals("")) {
+			query = "SELECT * FROM manageduser ORDER BY fullName ASC";
+		} else {
+			query = "SELECT * FROM manageduser WHERE MATCH(fullName) AGAINST(?) ORDER BY fullName ASC";
+		}
 		List<ManagedUser> users;
 		try (Connection c = BasicConnection.getConnection(); PreparedStatement ps = c.prepareStatement(query)) {
-                        if (!keyword.equals("")) {
-                            ps.setString(1, keyword);
-                        }
+			if (!keyword.equals("")) {
+				ps.setString(1, keyword);
+			}
 			try (ResultSet rs = ps.executeQuery()) {
 				users = parseList(rs);
 			}
@@ -902,20 +964,19 @@ public class ManagerDao {
 		}
 		return users;
 	}
-        
-        public static List<ManagedUser> getSortedListByState(String keyword) {
+
+	public static List<ManagedUser> getSortedListByState(String keyword) {
 		String query = "";
-                if (keyword.equals("")) {
-                    query = "SELECT * FROM manageduser ORDER BY state ASC";
-                }
-                else {
-                    query = "SELECT * FROM manageduser WHERE MATCH(fullName) AGAINST(?) ORDER BY state ASC";
-                }
+		if (keyword.equals("")) {
+			query = "SELECT * FROM manageduser ORDER BY state ASC";
+		} else {
+			query = "SELECT * FROM manageduser WHERE MATCH(fullName) AGAINST(?) ORDER BY state ASC";
+		}
 		List<ManagedUser> users;
 		try (Connection c = BasicConnection.getConnection(); PreparedStatement ps = c.prepareStatement(query)) {
-                        if (!keyword.equals("")) {
-                            ps.setString(1, keyword);
-                        }
+			if (!keyword.equals("")) {
+				ps.setString(1, keyword);
+			}
 			try (ResultSet rs = ps.executeQuery()) {
 				users = parseList(rs);
 			}
@@ -925,7 +986,6 @@ public class ManagerDao {
 		}
 		return users;
 	}
-        
 
 	private static City parseCity(ResultSet rs) throws SQLException {
 		return new City(rs.getString("cityID"), rs.getString("cityName"));
@@ -1068,23 +1128,6 @@ public class ManagerDao {
 		default:
 			throw new IllegalArgumentException("Unexpected value: " + currentState);
 		}
-	}
-
-	private static ManagedUser getFather(String userID) {
-		ManagedUser user = null;
-		try (Connection c = BasicConnection.getConnection()) {
-			String query = "SELECT * FROM manageduser f WHERE f.idCard IN (SELECT relatedPerson FROM manageduser c WHERE c.idCard = ?);";
-			PreparedStatement ps = c.prepareStatement(query);
-			ps.setString(1, userID);
-			ResultSet rs = ps.executeQuery();
-			if (rs.next()) {
-				user = parse(rs);
-			}
-			c.close();
-		} catch (SQLException e) {
-			logger.error(e);
-		}
-		return user;
 	}
 
 	private static List<ManagedUser> getChildList(String userID) {
@@ -1331,8 +1374,8 @@ public class ManagerDao {
 		List<BalanceStatistic> result = null;
 		try (Connection c = BasicConnection.getConnection()) {
 			String query = "SELECT MONTH(o1.timeOrder) as \"month\" , sum(o1.totalOrderMoney) as total,o1.timeOrder\n"
-					+ "FROM orderhistory as o1 \n" + "GROUP BY MONTH(o1.timeOrder)\n"
-					+ "HAVING YEAR(o1.timeOrder)=?\n" + "ORDER BY MONTH(o1.timeOrder)";
+					+ "FROM orderhistory as o1 \n" + "GROUP BY MONTH(o1.timeOrder)\n" + "HAVING YEAR(o1.timeOrder)=?\n"
+					+ "ORDER BY MONTH(o1.timeOrder)";
 
 			PreparedStatement ps = c.prepareStatement(query);
 			ps.setString(1, year);
@@ -1450,7 +1493,7 @@ public class ManagerDao {
 		List<String> timeList = getAllTimeFromStateAndTreatmentPlaceHistory(userID);
 
 		for (int i = 0; i < timeList.size(); i++) {
-                        timeList.set(i, timeList.get(i) + " 23:59:59");
+			timeList.set(i, timeList.get(i) + " 23:59:59");
 			int state = getStateAtDate(userID, timeList.get(i));
 			if (state == -1) {
 				results.add(new ManagedUserHistory(timeList.get(i), state, ""));
@@ -1561,28 +1604,26 @@ public class ManagerDao {
 		}
 		return results;
 	}
-        
-        private static OrderDetail parseOrderDetail(ResultSet rs) throws SQLException {
-            return new OrderDetail(rs.getString("name"), rs.getInt("orderItemQuantity"), rs.getInt("orderItemPrice"));
+
+	private static OrderDetail parseOrderDetail(ResultSet rs) throws SQLException {
+		return new OrderDetail(rs.getString("name"), rs.getInt("orderItemQuantity"), rs.getInt("orderItemPrice"));
 	}
-        
-        public static List<OrderDetail> getOrderDetailById(int orderID) {
-            List<OrderDetail> results = new ArrayList<OrderDetail>();
-            try (Connection c = BasicConnection.getConnection()) {
-                    String query = "SELECT p.name, oi.orderItemQuantity, oi.orderItemPrice\n" +
-                                    "FROM orderitem oi\n" +
-                                    "JOIN package p ON oi.packageID = p.packageID\n" +
-                                    "WHERE orderID = ?";
-                    PreparedStatement ps = c.prepareStatement(query);
-                    ps.setInt(1, orderID);
-                    ResultSet rs = ps.executeQuery();
-                    while (rs.next()) {
-                            results.add(parseOrderDetail(rs));
-                    }
-                    c.close();
-            } catch (SQLException e) {
-                    logger.error(e);
-            }
-            return results;
-        }
+
+	public static List<OrderDetail> getOrderDetailById(int orderID) {
+		List<OrderDetail> results = new ArrayList<OrderDetail>();
+		try (Connection c = BasicConnection.getConnection()) {
+			String query = "SELECT p.name, oi.orderItemQuantity, oi.orderItemPrice\n" + "FROM orderitem oi\n"
+					+ "JOIN package p ON oi.packageID = p.packageID\n" + "WHERE orderID = ?";
+			PreparedStatement ps = c.prepareStatement(query);
+			ps.setInt(1, orderID);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				results.add(parseOrderDetail(rs));
+			}
+			c.close();
+		} catch (SQLException e) {
+			logger.error(e);
+		}
+		return results;
+	}
 }

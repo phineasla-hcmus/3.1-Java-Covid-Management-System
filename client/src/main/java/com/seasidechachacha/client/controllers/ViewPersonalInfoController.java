@@ -398,7 +398,9 @@ public class ViewPersonalInfoController {
                         } else {
                             if (getTableRow() != null) {
                                 StateHistory state = (StateHistory) getTableRow().getItem();
-                                setText("F" + String.valueOf(ManagerDao.getCurrentStateByTime(state.getUserID(), state.getTime())));
+                                if (state != null) {
+                                    setText("F" + String.valueOf(ManagerDao.getCurrentStateByTime(state.getUserID(), state.getTime())));
+                                }
                             }
 
                         }

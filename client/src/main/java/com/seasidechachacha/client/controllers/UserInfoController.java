@@ -354,7 +354,7 @@ public class UserInfoController {
             dateCol.setCellValueFactory(
                     new PropertyValueFactory<ManagedUserHistory, String>("date"));
 
-            dateCol.setMinWidth(100);
+            dateCol.setMinWidth(160);
 
             TableColumn stateCol = new TableColumn("Trạng thái");
             Callback<TableColumn<ManagedUserHistory, String>, TableCell<ManagedUserHistory, String>> cellFactory1
@@ -373,7 +373,7 @@ public class UserInfoController {
                             } else {
                                 if (getTableRow() != null) {
                                     ManagedUserHistory history = (ManagedUserHistory) getTableRow().getItem();
-                                    setText("F" + String.valueOf(ManagerDao.getCurrentStateByTime(userId, history.getDate())));
+                                    setText("F" + String.valueOf(ManagerDao.getStateAtDate(userId, history.getDate())));
                                 }
 
                             }
@@ -391,7 +391,7 @@ public class UserInfoController {
             placeCol.setCellValueFactory(
                     new PropertyValueFactory<ManagedUserHistory, String>("treatmentPlaceName"));
 
-            placeCol.setMinWidth(460);
+            placeCol.setMinWidth(400);
 
             table.getColumns().addAll(dateCol, stateCol, placeCol);
             table.setItems(FXCollections.observableArrayList(dataManaged));

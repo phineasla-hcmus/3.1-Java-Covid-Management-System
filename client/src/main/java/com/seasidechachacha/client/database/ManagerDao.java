@@ -1409,7 +1409,7 @@ public class ManagerDao {
 		return results;
 	}
 
-	private static int getStateAtDate(String userID, String date) {
+	public static int getStateAtDate(String userID, String date) {
 		int result = -2;
 		try (Connection c = BasicConnection.getConnection()) {
 			String query = "SELECT state FROM statehistory WHERE userID = ? AND time <= ? ORDER BY time DESC LIMIT 1;";
@@ -1450,7 +1450,7 @@ public class ManagerDao {
 		List<String> timeList = getAllTimeFromStateAndTreatmentPlaceHistory(userID);
 
 		for (int i = 0; i < timeList.size(); i++) {
-//			timeList.get(i).concat(" 23:59:59");
+                        timeList.set(i, timeList.get(i) + " 23:59:59");
 			int state = getStateAtDate(userID, timeList.get(i));
 			if (state == -1) {
 				results.add(new ManagedUserHistory(timeList.get(i), state, ""));

@@ -819,6 +819,10 @@ public class ManagerDao {
 			return result && addMesssage("Update userID = " + userID + ", set state = " + String.valueOf(state));
 		}
 		case 2: {
+			return setStateIndividual(userID, state)
+					&& addMesssage("Update userID = " + userID + ", set state = " + String.valueOf(state));
+		}
+		case 3: {
 			removeChildren(userID);
 			return setStateIndividual(userID, state)
 					&& addMesssage("Update userID = " + userID + ", set state = " + String.valueOf(state));
@@ -1074,14 +1078,13 @@ public class ManagerDao {
 		return results;
 	}
 
-	// Lấy trạng thái hiện tại của người liên quan covid19
+        // Lấy trạng thái hiện tại của người liên quan covid19
 	public static List<ManagedUser> getRelatedManagedUser(String userID) {
 		int currentState = getCurrentState(userID);
 		List<ManagedUser> users = new ArrayList<ManagedUser>();
 
 		switch (currentState) {
-		case 0:
-		case -1: {
+		case 0: case -1: {
 			ManagedUser F0 = getFather(userID);
 			if (F0 != null) {
 				users.add(F0);
@@ -1095,6 +1098,13 @@ public class ManagerDao {
 					List<ManagedUser> F2 = getChildList(F1.get(i).getUserId());
 					if (F2.size() != 0) {
 						users.addAll(F2);
+
+						for (int k = 0; k < F2.size(); k++) {
+							List<ManagedUser> F3 = getChildList(F2.get(k).getUserId());
+							if (F3.size() != 0) {
+								users.addAll(F3);
+							}
+						}
 					}
 				}
 			}
@@ -1109,6 +1119,12 @@ public class ManagerDao {
 			List<ManagedUser> F2 = getChildList(userID);
 			if (F2.size() != 0) {
 				users.addAll(F2);
+				for (int i = 0; i < F2.size(); i++) {
+					List<ManagedUser> F3 = getChildList(F2.get(i).getUserId());
+					if (F3.size() != 0) {
+						users.addAll(F3);
+					}
+				}
 			}
 			return users;
 		}
@@ -1122,13 +1138,25 @@ public class ManagerDao {
 					users.add(F0);
 				}
 			}
+			List<ManagedUser> F3 = getChildList(userID);
+			if (F3.size() != 0) {
+				users.addAll(F3);
+			}
 			return users;
-
+		}
+                case 3: {
+			ManagedUser Fx = getFather(userID);
+			while(Fx != null) {
+				users.add(Fx);
+				Fx = getFather(Fx.getUserId());
+			}
+			return users;
 		}
 		default:
 			throw new IllegalArgumentException("Unexpected value: " + currentState);
 		}
 	}
+
 
 	private static List<ManagedUser> getChildList(String userID) {
 		List<ManagedUser> users = null;
@@ -1544,13 +1572,25 @@ public class ManagerDao {
 
 	// Lọc gói nhu yếu phẩm theo giá
 	public static List<Package> filterPackageByPrice(String keyword, double lowest, double highest) {
+                String query = "";
+                if (keyword.equals("")) {
+                    query = "SELECT * FROM package WHERE price BETWEEN ? AND ? ORDER BY price ASC";
+                }
+                else {
+                    query = "SELECT * FROM package WHERE MATCH(name) AGAINST(?) and price BETWEEN ? AND ? ORDER BY price ASC";
+                }
 		List<Package> results = new ArrayList<Package>();
 		try (Connection c = BasicConnection.getConnection()) {
-			String query = "SELECT * FROM package WHERE MATCH(name) AGAINST(?) and price BETWEEN ? AND ? ORDER BY price ASC";
 			PreparedStatement ps = c.prepareStatement(query);
-			ps.setString(1, keyword);
-			ps.setDouble(2, lowest);
-			ps.setDouble(3, highest);
+                        if (keyword.equals("")) {
+                            ps.setDouble(1, lowest);
+                            ps.setDouble(2, highest);
+                        }
+                        else {
+                            ps.setString(1, keyword);
+                            ps.setDouble(2, lowest);
+                            ps.setDouble(3, highest);
+                        }
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				results.add(parsePackage(rs));
@@ -1564,13 +1604,25 @@ public class ManagerDao {
 
 	// Lọc gói nhu yếu phẩm theo thời gian giới hạn
 	public static List<Package> filterPackageByDayCooldown(String keyword, int lowest, int highest) {
+                String query = "";
+                if (keyword.equals("")) {
+                    query = "SELECT * FROM package WHERE dayCooldown BETWEEN ? AND ? ORDER BY dayCooldown ASC";
+                }
+                else {
+                    query = "SELECT * FROM package WHERE MATCH(name) AGAINST(?) and dayCooldown BETWEEN ? AND ? ORDER BY dayCooldown ASC";
+                }
 		List<Package> results = new ArrayList<Package>();
 		try (Connection c = BasicConnection.getConnection()) {
-			String query = "SELECT * FROM package WHERE MATCH(name) AGAINST(?) and dayCooldown BETWEEN ? AND ? ORDER BY dayCooldown ASC";
 			PreparedStatement ps = c.prepareStatement(query);
-			ps.setString(1, keyword);
-			ps.setInt(2, lowest);
-			ps.setInt(3, highest);
+                        if (keyword.equals("")) {
+                            ps.setInt(1, lowest);
+                            ps.setInt(2, highest);
+                        }
+                        else {
+                            ps.setString(1, keyword);
+                            ps.setInt(2, lowest);
+                            ps.setInt(3, highest);
+                        }
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				results.add(parsePackage(rs));
@@ -1585,15 +1637,29 @@ public class ManagerDao {
 	// Lọc gói nhu yếu phẩm theo giá và thời gian giới hạn
 	public static List<Package> filterPackageByPriceAndDay(String keyword, int minDay, int maxDay, double lowestPrice,
 			double highestPrice) {
+                String query = "";
+                if (keyword.equals("")) {
+                    query = "SELECT * FROM package WHERE dayCooldown BETWEEN ? AND ? and price BETWEEN ? AND ? ORDER BY dayCooldown ASC, price ASC";
+                }
+                else {
+                    query = "SELECT * FROM package WHERE MATCH(name) AGAINST(?) and dayCooldown BETWEEN ? AND ? and price BETWEEN ? AND ? ORDER BY dayCooldown ASC, price ASC";
+                }
 		List<Package> results = new ArrayList<Package>();
 		try (Connection c = BasicConnection.getConnection()) {
-			String query = "SELECT * FROM package WHERE MATCH(name) AGAINST(?) and dayCooldown BETWEEN ? AND ? and price BETWEEN ? AND ? ORDER BY dayCooldown ASC, price ASC";
 			PreparedStatement ps = c.prepareStatement(query);
-			ps.setString(1, keyword);
-			ps.setInt(2, minDay);
-			ps.setInt(3, maxDay);
-			ps.setDouble(4, lowestPrice);
-			ps.setDouble(5, highestPrice);
+                        if (keyword.equals("")) {
+                            ps.setInt(1, minDay);
+                            ps.setInt(2, maxDay);
+                            ps.setDouble(3, lowestPrice);
+                            ps.setDouble(4, highestPrice);
+                        }
+                        else {
+                            ps.setString(1, keyword);
+                            ps.setInt(2, minDay);
+                            ps.setInt(3, maxDay);
+                            ps.setDouble(4, lowestPrice);
+                            ps.setDouble(5, highestPrice);
+                        }
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				results.add(parsePackage(rs));

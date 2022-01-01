@@ -57,7 +57,6 @@ public class ViewListPackageController {
 
     @FXML
     private void initialize() {
-        btnFilter.setVisible(false);
         btnFilter.setOnAction(event -> {
             showFilterDialog();
         });

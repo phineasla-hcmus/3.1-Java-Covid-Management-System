@@ -150,14 +150,13 @@ public class ViewPackageInfoController {
                 tfFirst.setText(String.valueOf(day / 30));
                 cbFirst.setValue("tháng");
                 day = day % 30;
-                if (day > 7) {
-                    tfSecond.setText(String.valueOf(day / 7));
-                    cbSecond.getItems().clear();
-                    cbSecond.getItems().addAll("ngày", "tuần");
-                    cbSecond.setValue("tuần");
-                    day = day % 7;
-                    tfThird.setText(String.valueOf(day));
-                }
+                cbSecond.getItems().clear();
+                cbSecond.getItems().addAll("ngày", "tuần");
+                tfSecond.setText(String.valueOf(day / 7));
+                cbSecond.setValue("tuần");
+                day = day % 7;
+                tfThird.setText(String.valueOf(day));
+                cbThird.setValue("ngày");
             } else if (day >= 7 && day < 30) {
                 tfFirst.setText(String.valueOf(day / 7));
                 cbFirst.setValue("tuần");
@@ -189,6 +188,8 @@ public class ViewPackageInfoController {
                             cbSecond.getItems().addAll("ngày", "tuần");
                         } else if (newVal.equals("tuần")) {
                             cbSecond.getItems().addAll("ngày");
+                            tfThird.setVisible(false);
+                            cbThird.setVisible(false);
                         }
                     } else {
                         cbSecond.setVisible(false);
@@ -215,21 +216,31 @@ public class ViewPackageInfoController {
             dialogPane.setContent(new VBox(8, new HBox(8, tfFirst, cbFirst), new HBox(8, tfSecond, cbSecond), new HBox(8, tfThird, cbThird)));
             Optional<ButtonType> result = dialog.showAndWait();
 
-            int newday = getDayCooldown(cbFirst, cbSecond, cbThird, tfFirst, tfSecond, tfThird);
+            boolean valid = true;
             if (result.get() == ButtonType.OK) {
                 if ((tfFirst.isVisible() && tfFirst.getText().equals(""))
                         || (tfSecond.isVisible() && tfSecond.getText().equals("")) || (tfThird.isVisible() && tfThird.getText().equals(""))) {
                     Alert.showAlert(AlertType.WARNING, "Cập nhật thông tin nhu yếu phẩm", "Vui lòng nhập thời gian giới hạn mới!");
+                    valid = false;
                 } else if (Validation.isCharacterExisted(tfFirst.getText())
                         || Validation.isCharacterExisted(tfSecond.getText()) || Validation.isCharacterExisted(tfThird.getText())) {
                     Alert.showAlert(AlertType.WARNING, "Cập nhật thông tin nhu yếu phẩm", "Thời gian giới hạn chỉ bao gồm ký tự số!");
-                } else if ((tfFirst.isVisible() && Integer.valueOf(tfFirst.getText()) <= 0)
-                        || (tfSecond.isVisible() && Integer.valueOf(tfSecond.getText()) <= 0)
-                        || (tfThird.isVisible() && Integer.valueOf(tfThird.getText()) <= 0)) {
-                    Alert.showAlert(AlertType.WARNING, "Cập nhật thông tin nhu yếu phẩm", "Thời gian giới hạn phải lớn hơn 0!");
-                } else if (manager.updatePackageDayCooldown(packageID, newday)) {
+                    valid = false;
+                } else if ((tfFirst.isVisible() && Integer.valueOf(tfFirst.getText()) < 0)
+                        || (tfSecond.isVisible() && Integer.valueOf(tfSecond.getText()) < 0)
+                        || (tfThird.isVisible() && Integer.valueOf(tfThird.getText()) < 0)) {
+                    Alert.showAlert(AlertType.WARNING, "Cập nhật thông tin nhu yếu phẩm", "Thời gian giới hạn phải lớn hơn hoặc bằng 0!");
+                    valid = false;
+                }
+                if (valid == false) {
+                    return;
+                }
+                int newday = getDayCooldown(cbFirst, cbSecond, cbThird, tfFirst, tfSecond, tfThird);
+
+                if (manager.updatePackageDayCooldown(packageID, newday)) {
                     Alert.showAlert(AlertType.INFORMATION, "Cập nhật thông tin nhu yếu phẩm", "Thay đổi thời gian giới hạn thành công!");
                     labelDay.setText(String.valueOf(newday));
+                    getPackageThread();
                 }
             }
 

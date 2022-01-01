@@ -3,7 +3,7 @@ package com.seasidechachacha.client.controllers;
 import com.seasidechachacha.client.database.UserDao;
 import com.seasidechachacha.client.global.Session;
 import com.seasidechachacha.client.global.TaskExecutor;
-import com.seasidechachacha.client.models.User;
+import com.seasidechachacha.client.utils.Alert;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 
@@ -22,8 +23,6 @@ public class ChangePasswordController {
     private PasswordField pfCurrentPass, pfNewPass, pfConfirmPass;
     @FXML
     private Button btnChangePassword;
-    // current user
-    private User user = Session.getUser();
 
     @FXML
     private void initialize() {
@@ -31,13 +30,22 @@ public class ChangePasswordController {
             String currentPass = pfCurrentPass.getText();
             String newPass = pfNewPass.getText();
             String confirmPass = pfConfirmPass.getText();
-            if (!currentPass.isBlank()
-                    && !newPass.isBlank()
-                    && !confirmPass.isBlank()
-                    && newPass == confirmPass) {
+            if (currentPass.isBlank()
+                    || newPass.isBlank()
+                    || confirmPass.isBlank()) {
+                Alert.showAlert(AlertType.WARNING, "Thay đổi mật khẩu", "Vui lòng điền đầy đủ thông tin!");
+            } else if (!newPass.equals(confirmPass)) {
+                Alert.showAlert(AlertType.WARNING, "Thay đổi mật khẩu", "Mật khẩu mới không giống với mật khẩu xác nhận!");
+            } else {
                 changePasswordThread(currentPass, newPass);
             }
         });
+    }
+
+    private void refreshInput() {
+        pfCurrentPass.setText("");
+        pfNewPass.setText("");
+        pfConfirmPass.setText("");
     }
 
     private void changePasswordThread(String currentPass, String newPass) {
@@ -63,9 +71,10 @@ public class ChangePasswordController {
 
     private void resolveChangePassword(WorkerStateEvent ev, boolean result) {
         if (result) {
-            // Success
+            Alert.showAlert(AlertType.INFORMATION, "Thay đổi mật khẩu", "Thay đổi mật khẩu thành công!");
+            refreshInput();
         } else {
-            // Wrong oldPassword
+            Alert.showAlert(AlertType.WARNING, "Thay đổi mật khẩu", "Vui lòng kiểm tra lại mật khẩu hiện tại!");
         }
     }
 }

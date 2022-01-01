@@ -39,12 +39,14 @@
                         <JFXButton fx:id="btnInfo" graphicTextGap="35.0" layoutY="71.0" onAction="#handleButtonAction" prefHeight="43.0" prefWidth="250.0" ripplerFill="#1f86da" styleClass="navigation-item" text="        Xem thông tin cá nhân" />
                         <JFXButton fx:id="btnPackage" graphicTextGap="35.0" layoutY="114.0" onAction="#handleButtonAction" prefHeight="43.0" prefWidth="250.0" styleClass="navigation-item" text="            Chọn mua gói nhu yếu phẩm" />
                         <JFXButton fx:id="btnPayment" graphicTextGap="35.0" layoutX="12.0" layoutY="200.0" onAction="#handleButtonAction" prefHeight="43.0" prefWidth="250.0" styleClass="navigation-item" text="Thanh toán chi phí" />
+                        <JFXButton fx:id="btnChangePassword" graphicTextGap="35.0" layoutX="12.0" layoutY="243.0" onAction="#handleButtonAction" prefHeight="43.0" prefWidth="250.0" styleClass="navigation-item" text="Thay đổi mật khẩu" />
                         <FontAwesomeIconView fill="#3c3b3b" glyphName="ARCHIVE" layoutX="13.0" layoutY="139.0" size="15" />
                         <FontAwesomeIconView fill="#3c3b3b" glyphName="USER_CIRCLE" layoutX="13.0" layoutY="97.0" size="15" />
                         <FontAwesomeIconView fill="#3c3b3b" glyphName="CREDIT_CARD" layoutX="12.0" layoutY="227.0" size="15" />
+                        <FontAwesomeIconView fill="#3c3b3b" glyphName="LOCK" layoutX="16.0" layoutY="271.0" size="15" />
                         <Button fx:id="btnLogout" layoutX="51.0" layoutY="564.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="190.0" text="Đăng xuất" />
-                  <JFXButton fx:id="btnViewCart" graphicTextGap="35.0" layoutX="12.0" layoutY="157.0" onAction="#handleButtonAction" prefHeight="43.0" prefWidth="250.0" styleClass="navigation-item" text="Thông tin đặt hàng" />
-                  <FontAwesomeIconView glyphName="SHOPPING_CART" layoutX="13.0" layoutY="183.0" size="15" />
+                        <JFXButton fx:id="btnViewCart" graphicTextGap="35.0" layoutX="12.0" layoutY="157.0" onAction="#handleButtonAction" prefHeight="43.0" prefWidth="250.0" styleClass="navigation-item" text="Thông tin đặt hàng" />
+                        <FontAwesomeIconView glyphName="SHOPPING_CART" layoutX="13.0" layoutY="183.0" size="15" />
                     </children>
                     <effect>
                         <DropShadow />

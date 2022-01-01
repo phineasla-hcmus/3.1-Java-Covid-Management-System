@@ -12,7 +12,7 @@ public class ModeratorScreenController {
 
     private static final org.apache.logging.log4j.Logger logger = LogManager.getLogger(LoginController.class);
     @FXML
-    private JFXButton btn_all, btn_core, btn_xeom;
+    private JFXButton btn_all, btn_core, btn_xeom, btnChangePassword;
 
     @FXML
     private void handleButtonAction(ActionEvent event) throws IOException {
@@ -22,6 +22,8 @@ public class ModeratorScreenController {
             App.setCurrentPane("pn_all", "view/ViewListPackage", null);
         } else if (event.getSource() == btn_xeom) {
             App.setCurrentPane("pn_all", "view/ModeratorStatistic", null);
+        } else if (event.getSource() == btnChangePassword) {
+            App.setCurrentPane("pn_all", "view/ChangePassword", null);
         }
     }
 

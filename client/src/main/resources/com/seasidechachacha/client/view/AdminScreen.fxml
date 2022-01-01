@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="803.0" prefWidth="1047.0" xmlns="http://javafx.com/javafx/13" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.seasidechachacha.client.controllers.AdminScreenController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="803.0" prefWidth="1047.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.seasidechachacha.client.controllers.AdminScreenController">
     <children>
         <AnchorPane id="AnchorPane" prefHeight="800.0" prefWidth="1050.0" style="-fx-background-color: #fff;">
             <children>
@@ -36,12 +36,14 @@
                                 <DropShadow />
                             </effect>
                         </AnchorPane>
-                        <JFXButton fx:id="btn_all" graphicTextGap="35.0" layoutY="71.0" onAction="#handleButtonAction" prefHeight="43.0" prefWidth="250.0" ripplerFill="#1f86da" styleClass="navigation-item" text="Tạo tài khoản" />
+                        <JFXButton fx:id="btn_all" graphicTextGap="35.0" layoutY="71.0" onAction="#handleButtonAction" prefHeight="43.0" prefWidth="250.0" ripplerFill="#1f86da" styleClass="navigation-item" text="         Tạo tài khoản" />
                         <JFXButton fx:id="btn_core" graphicTextGap="35.0" layoutY="114.0" onAction="#handleButtonAction" prefHeight="43.0" prefWidth="250.0" styleClass="navigation-item" text="        Quản lý thông tin tài khoản" />
-                        <JFXButton fx:id="btn_xeom" graphicTextGap="35.0" layoutY="157.0" onAction="#handleButtonAction" prefHeight="43.0" prefWidth="250.0" styleClass="navigation-item" text="Quản lý địa điểm" />
+                        <JFXButton fx:id="btn_xeom" graphicTextGap="35.0" layoutY="157.0" onAction="#handleButtonAction" prefHeight="43.0" prefWidth="250.0" styleClass="navigation-item" text="       Quản lý địa điểm" />
+                        <JFXButton fx:id="btnChangePassword" graphicTextGap="35.0" layoutX="12.0" layoutY="200.0" onAction="#handleButtonAction" prefHeight="43.0" prefWidth="250.0" styleClass="navigation-item" text="Thay đổi mật khẩu" />
                         <FontAwesomeIconView fill="#3c3b3b" glyphName="ADDRESS_BOOK" layoutX="13.0" layoutY="139.0" size="15" />
-                        <FontAwesomeIconView fill="#3c3b3b" glyphName="USER_PLUS" layoutX="11.0" layoutY="99.0" size="15" text="" />
-                        <FontAwesomeIconView fill="#3c3b3b" glyphName="HOSPITAL_ALT" layoutX="14.0" layoutY="183.0" size="15" />
+                        <FontAwesomeIconView fill="#3c3b3b" glyphName="USER_PLUS" layoutX="11.0" layoutY="99.0" size="15" />
+                        <FontAwesomeIconView fill="#3c3b3b" glyphName="HOSPITAL_ALT" layoutX="13.0" layoutY="183.0" size="15" />
+                        <FontAwesomeIconView fill="#3c3b3b" glyphName="LOCK" layoutX="14.0" layoutY="227.0" size="15" />
                         <Button fx:id="btnLogout" layoutX="52.0" layoutY="541.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="191.0" text="Đăng xuất" />
                     </children>
                     <effect>

@@ -14,7 +14,7 @@ public class UserScreenController {
     private static final Logger logger = LogManager.getLogger(LoginController.class);
 
     @FXML
-    private JFXButton btnInfo, btnPackage, btnPayment ,btnViewCart;
+    private JFXButton btnInfo, btnPackage, btnPayment, btnViewCart, btnChangePassword;
     
     @FXML
     private Button btnLogout;
@@ -40,6 +40,8 @@ public class UserScreenController {
             App.setCurrentPane("pn_all", "view/viewCartItem", null);
         } else if(event.getSource() == btnPayment){
             App.setCurrentPane("pn_all", "view/Payment", null);
+        } else if (event.getSource() == btnChangePassword) {
+            App.setCurrentPane("pn_all", "view/ChangePassword", null);
         }
     }
 }

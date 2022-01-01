@@ -16,7 +16,7 @@ public class AdminScreenController {
     private static final org.apache.logging.log4j.Logger logger = LogManager.getLogger(LoginController.class);
 
     @FXML
-    private JFXButton btn_all, btn_core, btn_xeom;
+    private JFXButton btn_all, btn_core, btn_xeom, btnChangePassword;
 
     @FXML
     private void handleButtonAction(ActionEvent event) throws IOException {
@@ -26,6 +26,8 @@ public class AdminScreenController {
             App.setCurrentPane("pn_all", "view/ManageModerator", null);
         } else if (event.getSource() == btn_xeom) {
             App.setCurrentPane("pn_all", "view/ViewListTreatmentPlace", null);
+        } else if (event.getSource() == btnChangePassword) {
+            App.setCurrentPane("pn_all", "view/ChangePassword", null);
         }
     }
 

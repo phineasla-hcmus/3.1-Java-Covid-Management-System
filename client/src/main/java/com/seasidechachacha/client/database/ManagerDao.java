@@ -1400,7 +1400,7 @@ public class ManagerDao {
 	public static List<String> getUserIDList() {
 		List<String> results = new ArrayList<String>();
 		try (Connection c = BasicConnection.getConnection()) {
-			String query = "SELECT idCard FROM manageduser WHERE state <= 1;";
+			String query = "SELECT idCard FROM manageduser WHERE state <= 2;";
 			PreparedStatement ps = c.prepareStatement(query);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {

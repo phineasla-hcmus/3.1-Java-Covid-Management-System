@@ -94,11 +94,14 @@ public class ViewPersonalInfoController {
                     case "F2":
                         state = 2;
                         break;
+                    case "F3":
+                        state = 3;
+                        break;
                     default:
                         break;
                 }
                 if (state > currentState) {
-                    Alert.showAlert(AlertType.WARNING, "Cập nhật thông tin người liên quan Covid19", "Chỉ có thể thay đổi trạng thái từ F2->F1, F2->F0, F1->F0!");
+                    Alert.showAlert(AlertType.WARNING, "Cập nhật thông tin người liên quan Covid19", "Thay đổi trạng thái không hợp lệ!");
                 } else if (state != currentState && manager.setState(userId, state)) {
                     Alert.showAlert(AlertType.INFORMATION, "Cập nhật thông tin người liên quan Covid19", "Thay đổi trạng thái thành công!");
                     labelStatus.setText(result.get());
@@ -155,7 +158,7 @@ public class ViewPersonalInfoController {
             labelTreatmentPlace.setText(currentPlace);
         }
 
-        String status[] = {"F0", "F1", "F2"};
+        String status[] = {"F0", "F1", "F2", "F3"};
 
         statusDialog = new ChoiceDialog<String>(currentStatus, status);
         statusDialog.setResultConverter((ButtonType type) -> {

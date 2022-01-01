@@ -109,6 +109,7 @@ public class ViewPackageInfoController {
                 } else if (manager.updatePackageName(packageID, result.get())) {
                     Alert.showAlert(AlertType.INFORMATION, "Cập nhật thông tin nhu yếu phẩm", "Thay đổi tên gói thành công!");
                     labelName.setText(result.get());
+                    getPackageThread();
                 }
             }
         });
@@ -126,6 +127,7 @@ public class ViewPackageInfoController {
                 } else if (manager.updatePackageLimitPerPerson(packageID, Integer.valueOf(result.get()))) {
                     Alert.showAlert(AlertType.INFORMATION, "Cập nhật thông tin nhu yếu phẩm", "Thay đổi mức giới hạn thành công!");
                     labelLimit.setText(result.get());
+                    getPackageThread();
                 }
             }
         });
@@ -260,6 +262,7 @@ public class ViewPackageInfoController {
                 } else if (manager.updatePackagePrice(packageID, Integer.valueOf(result.get()))) {
                     Alert.showAlert(AlertType.INFORMATION, "Cập nhật thông tin nhu yếu phẩm", "Thay đổi đơn giá thành công!");
                     labelPrice.setText(result.get());
+                    getPackageThread();
                 }
             }
         });

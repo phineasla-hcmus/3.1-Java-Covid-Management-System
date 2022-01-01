@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox xmlns="http://javafx.com/javafx/13" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.seasidechachacha.client.controllers.ViewTreatmentPlaceInfoController">
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.seasidechachacha.client.controllers.ViewTreatmentPlaceInfoController">
     <children>
         <Label alignment="TOP_CENTER" prefHeight="30.0" prefWidth="803.0" styleClass="main-label" text="Thông tin địa điểm điều trị/cách ly">
         </Label>
@@ -69,11 +69,6 @@
                                 <Font size="14.0" />
                             </font>
                         </Label>
-                  <Button fx:id="btnChangeReception" mnemonicParsing="false">
-                     <graphic>
-                        <FontAwesomeIconView fill="WHITE" glyphName="EDIT" />
-                     </graphic>
-                  </Button>
                     </children>
                 </HBox>
             <HBox layoutX="14.0" layoutY="73.0" prefHeight="20.0" prefWidth="637.0" spacing="30.0">

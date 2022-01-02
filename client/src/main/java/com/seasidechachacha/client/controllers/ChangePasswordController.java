@@ -35,7 +35,8 @@ public class ChangePasswordController {
                     || confirmPass.isBlank()) {
                 Alert.showAlert(AlertType.WARNING, "Thay đổi mật khẩu", "Vui lòng điền đầy đủ thông tin!");
             } else if (!newPass.equals(confirmPass)) {
-                Alert.showAlert(AlertType.WARNING, "Thay đổi mật khẩu", "Mật khẩu mới không giống với mật khẩu xác nhận!");
+                Alert.showAlert(AlertType.WARNING, "Thay đổi mật khẩu",
+                        "Mật khẩu mới không giống với mật khẩu xác nhận!");
             } else {
                 changePasswordThread(currentPass, newPass);
             }
@@ -58,12 +59,8 @@ public class ChangePasswordController {
 
         changePasswordTask.setOnSucceeded(ev -> {
             Boolean result = changePasswordTask.getValue();
-            if (result == null) {
-                // How did we get here
-                logger.error("Bug in DAO changePassword");
-            } else {
-                resolveChangePassword(ev, result);
-            }
+            resolveChangePassword(ev, result);
+
         });
 
         TaskExecutor.execute(changePasswordTask);

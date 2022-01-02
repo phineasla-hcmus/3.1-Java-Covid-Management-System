@@ -66,8 +66,8 @@ public class CreateAdminController {
                 PaymentService ps = new PaymentService();
                 // Admin will start at 0
                 try {
-                    ps.requestNewUser(user.getUserId(), 0);
-                    // If requestNewUser doesn't throw anything -> succeeded
+                    ps.requestNewAdmin(user.getUserId());
+                    // If requestNewAdmin doesn't throw anything -> succeeded
                     return true;
                 } catch (RespondException e) {
                     // ErrorResponseType.ID_EXISTED

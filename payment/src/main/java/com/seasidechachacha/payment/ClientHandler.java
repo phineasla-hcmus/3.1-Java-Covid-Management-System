@@ -10,6 +10,7 @@ import java.net.Socket;
 import com.seasidechachacha.common.payment.ErrorResponse;
 import com.seasidechachacha.common.payment.ErrorResponseType;
 import com.seasidechachacha.common.payment.GetUserRequest;
+import com.seasidechachacha.common.payment.NewAdminRequest;
 import com.seasidechachacha.common.payment.NewUserRequest;
 import com.seasidechachacha.common.payment.PaymentRequest;
 import com.seasidechachacha.common.payment.PaymentResponse;
@@ -51,6 +52,8 @@ public class ClientHandler implements Runnable {
                 handleGetUserRequest((GetUserRequest) raw);
             } else if (raw instanceof NewUserRequest) {
                 handleNewUserRequest((NewUserRequest) raw);
+            } else if (raw instanceof NewAdminRequest) {
+                handleNewAdminRequest((NewAdminRequest) raw);
             } else {
                 responseError(ErrorResponseType.INVALID_REQUEST);
             }
@@ -71,6 +74,19 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    private void handleNewAdminRequest(NewAdminRequest req) throws IOException {
+        boolean result = BankDao.registerAdmin(req.getUserId());
+        if (result) {
+            Admin.set(new BankAccount(req.getUserId(), 0));
+            UserResponse res = new UserResponse(req.getUserId(), 0);
+            ostream.writeObject(res);
+        }
+        else {
+            // If SQL fail, respond error
+            responseError(ErrorResponseType.ID_EXISTED);
+        }
+    }
+
     private void handleGetUserRequest(GetUserRequest req) throws IOException {
         BankAccount acc = BankDao.get(req.getUserId());
         double balance = acc.getBalance();
@@ -81,7 +97,7 @@ public class ClientHandler implements Runnable {
     }
 
     private void handlePaymentRequest(PaymentRequest req) throws IOException {
-        // TODO Currently server will trust the client not to overspend,
+        // TODO Currently server will trust the client not to overspend
         // causing negative balance in user account
         // double balance = 0;
         // if (req.getTotal() > balance) {

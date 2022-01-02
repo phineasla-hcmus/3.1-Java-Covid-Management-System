@@ -5,24 +5,11 @@ import com.seasidechachacha.payment.models.BankAccount;
 public class Admin {
     private static final Admin g = new Admin();
     private String userId;
+    /**
+     * @note balance never get updated
+     */
     private double balance;
 
-    /**
-     * Must only be used in Login, Logout
-     * 
-     * @param userId
-     * @param roleId
-     */
-    public static void setUser(String userId, double balance) {
-        g.userId = userId;
-        g.balance = balance;
-    }
-
-    /**
-     * Must only be used in Login, Logout
-     * 
-     * @param user
-     */
     public static void set(BankAccount user) {
         g.userId = user.getUserId();
         g.balance = user.getBalance();
@@ -32,6 +19,9 @@ public class Admin {
         return new BankAccount(g.userId, g.balance);
     }
 
+    /**
+     * @note balance never get updated
+     */
     public static double getBalance() {
         return g.balance;
     }

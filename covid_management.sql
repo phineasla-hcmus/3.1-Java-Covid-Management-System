@@ -159,6 +159,14 @@ create table PaymentHistory
 );
 
 -- BỎ DO KHÔNG CÓ THỜI GIAN
+-- Một lần trả tiền có thể có nhiều order
+create table PaymentOrderHistory
+(
+	transactionID bigint,
+	orderID bigint,
+	primary key (transactionID)
+);
+
 -- Log của những order chưa được trả tiền
 create table PendingPayment
 (
@@ -179,8 +187,10 @@ create table TransactionAccount
 create table TransactionAdmin
 (
 	userID varchar(12),
+	balance decimal(10,3),
     primary key (userID)
 );
+
 create table TransactionHistory
 (
 	transactionID bigint AUTO_INCREMENT,

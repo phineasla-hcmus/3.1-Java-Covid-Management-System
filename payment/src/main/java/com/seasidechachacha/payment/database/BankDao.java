@@ -18,8 +18,16 @@ public class BankDao {
 	private static Logger logger = LogManager.getLogger(BankDao.class);
 
 	public static boolean register(String userID, double amount) {
+		return register(userID, 0, "transactionaccount");
+	}
+
+	public static boolean registerAdmin(String userID) {
+		return register(userID, 0, "transactionadmin");
+	}
+
+	private static boolean register(String userID, double amount, String table) {
 		try (Connection c = DataSource.getConnection()) {
-			String query = "INSERT INTO transactionaccount(userID, balance) VALUES(?,?);";
+			String query = "INSERT INTO " + table + "(userID, balance) VALUES(?,?);";
 			PreparedStatement ps = c.prepareStatement(query);
 			ps.setString(1, userID);
 			ps.setDouble(2, amount);
@@ -43,26 +51,27 @@ public class BankDao {
 				result = new BankAccount(rs.getString("userID"), rs.getDouble("balance"));
 			}
 			DataSource.releaseConnection(c);
-			return result;
 		} catch (SQLException e) {
 			logger.error(e);
 		}
 		return result;
 	}
 
+	/**
+	 * The system only allows for 1 admin
+	 * 
+	 * @return
+	 */
 	public static BankAccount getAdmin() {
 		BankAccount result = null;
 		try (Connection c = DataSource.getConnection()) {
-			String query = "SELECT transactionaccount.userID as userID, transactionaccount.balance as balance"
-					+ " FROM transactionaccount JOIN transactionadmin "
-					+ "ON transactionaccount.userID = transactionadmin.userID";
+			String query = "SELECT userID, balance FROM transactionadmin";
 			Statement ps = c.createStatement();
 			ResultSet rs = ps.executeQuery(query);
 			while (rs.next()) {
 				result = new BankAccount(rs.getString("userID"), rs.getDouble("balance"));
 			}
 			DataSource.releaseConnection(c);
-			return result;
 		} catch (SQLException e) {
 			logger.error(e);
 		}
@@ -73,10 +82,11 @@ public class BankDao {
 	 * This method depends on static {@link Admin#get()}
 	 * 
 	 * @param userId
-	 * @param amount
+	 * @param amount a positive number
 	 * @return transactionId if operation successful, else 0
 	 */
 	public static long transferMoneyToAdmin(String userId, double amount) {
+		amount = Math.abs(amount);
 		long transactionId = 0;
 		try (Connection c = DataSource.getConnection()) {
 			c.setAutoCommit(false);

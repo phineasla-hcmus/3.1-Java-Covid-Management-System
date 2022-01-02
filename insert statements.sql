@@ -75,7 +75,8 @@ insert into orderitem values(3,2,1,89000);
 insert into orderitem values(4,10,3,27000);
 insert into orderitem values(5,8,1,610000);
 
-INSERT INTO transactionaccount VALUES("admin-123456",0);
+INSERT INTO transactionadmin VALUES("admin-123456",0);
+
 INSERT INTO transactionaccount VALUES("079111222333",1000000);
 INSERT INTO transactionaccount VALUES("079157952250",1500000);
 INSERT INTO transactionaccount VALUES("079510193347",2000000);

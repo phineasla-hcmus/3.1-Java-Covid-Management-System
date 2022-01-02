@@ -11,6 +11,7 @@ import javax.net.ssl.SSLSocketFactory;
 import com.seasidechachacha.client.global.SSLConfig;
 import com.seasidechachacha.common.payment.ErrorResponse;
 import com.seasidechachacha.common.payment.GetUserRequest;
+import com.seasidechachacha.common.payment.NewAdminRequest;
 import com.seasidechachacha.common.payment.NewUserRequest;
 import com.seasidechachacha.common.payment.PaymentRequest;
 import com.seasidechachacha.common.payment.PaymentResponse;
@@ -50,6 +51,11 @@ public class PaymentService {
         return (UserResponse) request(new NewUserRequest(userId, amount));
     }
 
+    public UserResponse requestNewAdmin(String userId) throws IOException,
+            ClassNotFoundException, RespondException {
+        return (UserResponse) request(new NewAdminRequest(userId));
+    }
+
     public Serializable request(Serializable req) throws IOException,
             ClassNotFoundException, RespondException {
         SSLSocket s = createSocket();
@@ -66,14 +72,6 @@ public class PaymentService {
             return raw;
         }
     }
-
-    // private PrintWriter createPrintWriter(Socket s) throws IOException {
-    // return new PrintWriter(s.getOutputStream(), true);
-    // }
-
-    // private BufferedReader createBufferedReader(Socket s) throws IOException {
-    // return new BufferedReader(new InputStreamReader(s.getInputStream()));
-    // }
 
     // public static void initialize() throws IOException, KeyStoreException,
     // NoSuchAlgorithmException,

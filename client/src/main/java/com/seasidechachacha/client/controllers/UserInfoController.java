@@ -18,6 +18,7 @@ import com.seasidechachacha.client.models.ManagedUserHistory;
 import com.seasidechachacha.client.models.Invoice;
 import com.seasidechachacha.client.models.PaymentHistory;
 import com.seasidechachacha.client.models.TreatmentPlace;
+import java.sql.SQLException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -70,7 +71,27 @@ public class UserInfoController {
         if (treat != null) {
             labelTreatmentPlace.setText(treat.getName());
         }
-        labelDebt.setText(String.valueOf(getDebt(userId)));
+        getPendingPaymentTotalPriceThread(Session.getUserId()); // find debt
+      
+    }
+    
+private void getPendingPaymentTotalPriceThread(String userId) {
+        Task<Double> getPendingPaymentTotalPriceTask = new Task<Double>() {
+            @Override
+            public Double call() throws SQLException {
+                return PaymentDao.getPendingPaymentTotalPrice(userId);
+            }
+        };
+
+        getPendingPaymentTotalPriceTask.setOnSucceeded(e -> {
+            double total = getPendingPaymentTotalPriceTask.getValue();
+            labelDebt.setText(total + " VND");
+        });
+        getPendingPaymentTotalPriceTask.setOnFailed(e -> {
+            Throwable throwable = getPendingPaymentTotalPriceTask.getException();
+            logger.error(throwable);
+        });
+        TaskExecutor.execute(getPendingPaymentTotalPriceTask);
     }
 
     private void getManagedHistoryThread(String userID) {

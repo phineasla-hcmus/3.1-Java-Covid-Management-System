@@ -43,7 +43,7 @@ public class CreateAdminController {
             a.show();
         } else if (username.getText().isEmpty() || pass1.getText().isEmpty()) {
             Alert a = new Alert(Alert.AlertType.WARNING);
-            a.setContentText("Vui lòng nhập Username và Password");
+            a.setContentText("Vui lòng nhập Tên đăng nhập và mật khẩu");
             a.show();
         } else {
             int adminRoleId = 1; // Reminder purpose

@@ -223,8 +223,11 @@ public class ManageModeratorController {
         try {
             if (AdminDao.isBanned(modId) == false) {
                 activeChoice.setSelected(true);
-            } else
+                inactiveChoice.setSelected(false);
+            } else{
                 inactiveChoice.setSelected(true);
+                activeChoice.setSelected(false);
+            }
         } catch (SQLException e1) {
             logger.error(e1);
         }

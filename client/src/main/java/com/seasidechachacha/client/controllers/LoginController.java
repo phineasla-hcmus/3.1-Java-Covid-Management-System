@@ -35,9 +35,9 @@ public class LoginController {
         next.setOnAction(e -> {
             String userId = username.getText();
             String password = pass.getText();
-            if (!userId.isEmpty() && !password.isEmpty()) {
-                loginThread(userId, password);
-            }
+            
+            loginThread(userId, password);
+            
         });
     }
 

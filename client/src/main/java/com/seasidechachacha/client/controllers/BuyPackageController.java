@@ -122,7 +122,7 @@ public class BuyPackageController {
                             Alert.showAlert(AlertType.WARNING, "Chọn mua gói nhu yếu phẩm",
                                     "Sản phẩm này bạn đã đặt trong giỏ hàng !!!\nHãy hủy đơn hàng để có thể đặt lại sản phẩm");
                         } else {
-                            if (quantity.getText() != "" && quantity.getText().matches("\\d+")) {
+                            if (quantity.getText() != "" && quantity.getText().matches("\\d+") && Integer.parseInt(quantity.getText())>0) {
                                 if (Integer.parseInt(quantity.getText()) > listP.get(i).getLimitPerPerson()) {
                                     Alert.showAlert(AlertType.WARNING, "Chọn mua gói nhu yếu phẩm",
                                             "Số lượng mua lớn hơn giới hạn cho phép, xin hãy nhập lại !!!");

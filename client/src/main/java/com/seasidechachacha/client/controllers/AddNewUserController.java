@@ -12,14 +12,19 @@ import java.util.List;
 
 import com.seasidechachacha.client.App;
 import com.seasidechachacha.client.database.ManagerDao;
+import com.seasidechachacha.client.database.UserDao;
 import com.seasidechachacha.client.global.Session;
+import com.seasidechachacha.client.global.TaskExecutor;
 import com.seasidechachacha.client.models.City;
 import com.seasidechachacha.client.models.District;
 import com.seasidechachacha.client.models.ManagedUser;
 import com.seasidechachacha.client.models.TreatmentPlace;
 import com.seasidechachacha.client.models.Ward;
+import com.seasidechachacha.client.payment.PaymentService;
+import com.seasidechachacha.client.payment.RespondException;
 import com.seasidechachacha.client.utils.Alert;
 import com.seasidechachacha.client.utils.Validation;
+import com.seasidechachacha.common.payment.ErrorResponseType;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,6 +39,9 @@ import javafx.scene.control.TextField;
 public class AddNewUserController {
 
     private static final Logger logger = LogManager.getLogger(AddNewUserController.class);
+
+    // FREE 10 TRIỆU, THA HỒ MUA SẮM
+    public static final int START_BALANCE = 10000;
 
     @FXML
     private TextField tfFullName, tfBirthYear, tfIdentityCard;
@@ -60,19 +68,10 @@ public class AddNewUserController {
     @FXML
     private void initialize() {
         btnAddNewPerson.setOnAction(event -> {
-            try {
-                if (isValid()) {
-                    if (manager.addNewUser(getCurrentInput(), currentState, treatID)) {
-                        Alert.showAlert(AlertType.INFORMATION, "Quản lý người liên quan Covid19",
-                                "Thêm mới người dùng thành công!");
-                        refreshInput();
-                    } else {
-                        Alert.showAlert(AlertType.WARNING, "Quản lý người liên quan Covid19", "Người dùng đã tồn tại!");
-                    }
-                }
-            } catch (SQLException ex) {
-                logger.fatal(ex);
+            if (isValid()) {
+                addNewUserThread(getCurrentInput(), currentState, treatID);
             }
+
         });
         List<City> city = getCityList();
         for (int i = 0; i < city.size(); i++) {
@@ -123,7 +122,45 @@ public class AddNewUserController {
     }
 
     private void addNewUserThread(ManagedUser user, int state, int treatID) {
-        Task<Boolean> addNewUserTask;
+        Task<Boolean> addNewUserTask = new Task<Boolean>() {
+            @Override
+            public Boolean call() {
+                ManagedUser user = getCurrentInput();
+                PaymentService ps = new PaymentService();
+                try {
+                    if (!manager.addNewUser(user, currentState, treatID)
+                            || !UserDao.registerFirstLogin(user.getUserId()))
+                        return false;
+                } catch (SQLException e) {
+                    logger.error(e);
+                }
+                try {
+                    ps.requestNewUser(user.getUserId(), START_BALANCE);
+                } catch (RespondException e) {
+                    // ErrorResponseType.ID_EXISTED
+                    ErrorResponseType type = e.getType();
+                    logger.error(type.name() + ": " + user.getUserId());
+                    return false;
+                } catch (IOException | ClassNotFoundException e) {
+                    logger.error(e);
+                    return false;
+                }
+                return true;
+            }
+        };
+
+        addNewUserTask.setOnSucceeded(e -> {
+            boolean result = addNewUserTask.getValue();
+            if (result) {
+                Alert.showAlert(AlertType.INFORMATION, "Quản lý người liên quan Covid19",
+                        "Thêm mới người dùng thành công!");
+                refreshInput();
+            } else {
+                Alert.showAlert(AlertType.WARNING, "Quản lý người liên quan Covid19", "Người dùng đã tồn tại!");
+            }
+        });
+
+        TaskExecutor.execute(addNewUserTask);
     }
 
     private boolean isValid() {

@@ -102,7 +102,8 @@ public class ManagerDao {
 	}
 
 	public boolean addNewUser(ManagedUser user, int treatID) throws SQLException {
-		return UserDao.register(new User(user.getUserId(), user.getUserId(), 3)) && addManagedUser(user)
+		return UserDao.register(new User(user.getUserId(), user.getUserId(), 3))
+				&& addManagedUser(user)
 				&& addTreatmentPlaceHistory(user.getUserId(), treatID)
 				&& addMesssage("Add new user (userID : " + user.getUserId() + ").");
 	}

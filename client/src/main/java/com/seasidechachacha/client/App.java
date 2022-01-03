@@ -1,8 +1,11 @@
 package com.seasidechachacha.client;
 
-import com.seasidechachacha.client.controllers.ViewOrderDetailController;
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import com.seasidechachacha.client.controllers.ViewOrderDetailController;
 import com.seasidechachacha.client.controllers.ViewPackageInfoController;
 import com.seasidechachacha.client.controllers.ViewPersonalInfoController;
 import com.seasidechachacha.client.controllers.ViewTreatmentPlaceInfoController;
@@ -16,9 +19,6 @@ import com.seasidechachacha.client.models.OrderDetail;
 import com.seasidechachacha.client.models.Package;
 import com.seasidechachacha.client.models.TreatmentPlace;
 import com.seasidechachacha.common.DatabaseConfig;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

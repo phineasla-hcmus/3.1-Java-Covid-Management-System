@@ -1034,7 +1034,7 @@ public class ManagerDao {
 	}
 
 	public static List<District> getDistrictList(String cityID) {
-		List<District> results = null;
+		List<District> results = Collections.emptyList();
 		try (Connection c = BasicConnection.getConnection()) {
 			String query = "SELECT * FROM district WHERE cityID = ?;";
 			PreparedStatement ps = c.prepareStatement(query);

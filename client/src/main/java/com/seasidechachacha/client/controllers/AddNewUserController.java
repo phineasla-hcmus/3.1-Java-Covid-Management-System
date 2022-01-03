@@ -71,12 +71,9 @@ public class AddNewUserController {
             if (isValid()) {
                 addNewUserThread(getCurrentInput(), currentState, treatID);
             }
-
         });
-        List<City> city = getCityList();
-        for (int i = 0; i < city.size(); i++) {
-            cbCity.getItems().add(city.get(i).getCityName());
-        }
+        getCityListThread();
+
         cbCity.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
             String cityId = "";
             for (int i = 0; i < city.size(); i++) {
@@ -121,6 +118,62 @@ public class AddNewUserController {
         }
     }
 
+    private void getCityListThread() {
+        Task<List<City>> getCityListTask = new Task<List<City>>() {
+            @Override
+            public List<City> call() {
+                return getCityList();
+            }
+        };
+
+        getCityListTask.setOnSucceeded(e -> {
+            List<City> cities = getCityListTask.getValue();
+            for (int i = 0; i < cities.size(); i++) {
+                cbCity.getItems().add(cities.get(i).getCityName());
+            }
+        });
+
+        TaskExecutor.execute(getCityListTask);
+    }
+
+    private void getCityDistrictThread(String cityId) {
+        Task<List<District>> getDistrictListTask = new Task<List<District>>() {
+            @Override
+            public List<District> call() {
+                return getDistrictList(cityId);
+            }
+        };
+
+        getDistrictListTask.setOnSucceeded(e -> {
+            cbDistrict.getItems().clear();
+            List<District> districts = getDistrictListTask.getValue();
+            for (int i = 0; i < districts.size(); i++) {
+                cbDistrict.getItems().add(districts.get(i).getDistrictName());
+            }
+        });
+
+        TaskExecutor.execute(getDistrictListTask);
+    }
+
+    private void getWardListThread(String districtId) {
+        Task<List<Ward>> getWardListTask = new Task<List<Ward>>() {
+            @Override
+            public List<Ward> call() {
+                return getWardList(districtId);
+            }
+        };
+
+        getWardListTask.setOnSucceeded(e -> {
+            cbWard.getItems().clear();
+            List<Ward> wards = getWardListTask.getValue();
+            for (int i = 0; i < wards.size(); i++) {
+                cbWard.getItems().add(wards.get(i).getWardName());
+            }
+        });
+
+        TaskExecutor.execute(getWardListTask);
+    }
+
     private void addNewUserThread(ManagedUser user, int state, int treatID) {
         Task<Boolean> addNewUserTask = new Task<Boolean>() {
             @Override
@@ -152,11 +205,14 @@ public class AddNewUserController {
         addNewUserTask.setOnSucceeded(e -> {
             boolean result = addNewUserTask.getValue();
             if (result) {
-                Alert.showAlert(AlertType.INFORMATION, "Quản lý người liên quan Covid19",
+                Alert.showAlert(AlertType.INFORMATION,
+                        "Quản lý người liên quan Covid19",
                         "Thêm mới người dùng thành công!");
                 refreshInput();
             } else {
-                Alert.showAlert(AlertType.WARNING, "Quản lý người liên quan Covid19", "Người dùng đã tồn tại!");
+                Alert.showAlert(AlertType.WARNING,
+                        "Quản lý người liên quan Covid19",
+                        "Người dùng đã tồn tại!");
             }
         });
 

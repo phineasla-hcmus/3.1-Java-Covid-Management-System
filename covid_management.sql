@@ -199,8 +199,6 @@ create table TransactionHistory
 	paymentTime datetime,
 	totalMoney decimal(10,3),
 	primary key (transactionID),
-	foreign key (fromID) references TransactionAccount(userID),
-	foreign key (toID) references TransactionAccount(userID)
 );
 -- SCHEMA CỦA PAYMENT SERVER
 

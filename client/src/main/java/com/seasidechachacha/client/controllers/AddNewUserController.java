@@ -2,6 +2,8 @@ package com.seasidechachacha.client.controllers;
 
 import static com.seasidechachacha.client.database.ManagerDao.getCityList;
 import static com.seasidechachacha.client.database.ManagerDao.getDistrictList;
+import static com.seasidechachacha.client.database.ManagerDao.getTreatmentPlaceByID;
+import static com.seasidechachacha.client.database.ManagerDao.getTreatmentPlaceIDByName;
 import static com.seasidechachacha.client.database.ManagerDao.getWardList;
 
 import java.io.IOException;
@@ -10,8 +12,6 @@ import java.util.List;
 
 import com.seasidechachacha.client.App;
 import com.seasidechachacha.client.database.ManagerDao;
-import static com.seasidechachacha.client.database.ManagerDao.getTreatmentPlaceByID;
-import static com.seasidechachacha.client.database.ManagerDao.getTreatmentPlaceIDByName;
 import com.seasidechachacha.client.global.Session;
 import com.seasidechachacha.client.models.City;
 import com.seasidechachacha.client.models.District;
@@ -24,6 +24,7 @@ import com.seasidechachacha.client.utils.Validation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -62,7 +63,8 @@ public class AddNewUserController {
             try {
                 if (isValid()) {
                     if (manager.addNewUser(getCurrentInput(), currentState, treatID)) {
-                        Alert.showAlert(AlertType.INFORMATION, "Quản lý người liên quan Covid19", "Thêm mới người dùng thành công!");
+                        Alert.showAlert(AlertType.INFORMATION, "Quản lý người liên quan Covid19",
+                                "Thêm mới người dùng thành công!");
                         refreshInput();
                     } else {
                         Alert.showAlert(AlertType.WARNING, "Quản lý người liên quan Covid19", "Người dùng đã tồn tại!");
@@ -107,18 +109,21 @@ public class AddNewUserController {
                     }
                 });
             }
-
         });
 
-        List<String> relatedList = manager.getUserIDList();
+        List<String> relatedList = ManagerDao.getUserIDList();
         for (int i = 0; i < relatedList.size(); i++) {
             cbRelated.getItems().add(relatedList.get(i));
         }
 
-        List<TreatmentPlace> placeList = manager.getTreatmentPlaceList();
+        List<TreatmentPlace> placeList = ManagerDao.getTreatmentPlaceList();
         for (int i = 0; i < placeList.size(); i++) {
             cbPlace.getItems().add(placeList.get(i).getName());
         }
+    }
+
+    private void addNewUserThread(ManagedUser user, int state, int treatID) {
+        Task<Boolean> addNewUserTask;
     }
 
     private boolean isValid() {
@@ -130,15 +135,18 @@ public class AddNewUserController {
             valid = false;
         } else if (cbCity.getValue() == null || cbDistrict.getValue() == null || cbWard.getValue() == null
                 || cbRelated.getValue() == null || cbPlace.getValue() == null) {
-            Alert.showAlert(AlertType.WARNING, header, "Vui lòng chọn trạng thái, địa chỉ nơi ở, người liên quan và địa điểm điều trị!");
+            Alert.showAlert(AlertType.WARNING, header,
+                    "Vui lòng chọn trạng thái, địa chỉ nơi ở, người liên quan và địa điểm điều trị!");
             valid = false;
         } else if (Validation.isNumberExisted(tfFullName.getText())) {
             Alert.showAlert(AlertType.WARNING, header, "Vui lòng chỉ điền chữ cho họ tên!");
             valid = false;
-        } else if (Validation.isCharacterExisted(tfIdentityCard.getText()) || Validation.isCharacterExisted(tfBirthYear.getText())) {
+        } else if (Validation.isCharacterExisted(tfIdentityCard.getText())
+                || Validation.isCharacterExisted(tfBirthYear.getText())) {
             Alert.showAlert(AlertType.WARNING, header, "Vui lòng chỉ điền số cho chứng minh nhân dân và năm sinh!");
             valid = false;
-        } else if (!checkIdentityCard(header, tfIdentityCard.getText()) || !checkBirthYear(header, Integer.valueOf(tfBirthYear.getText()))
+        } else if (!checkIdentityCard(header, tfIdentityCard.getText())
+                || !checkBirthYear(header, Integer.valueOf(tfBirthYear.getText()))
                 || !checkTreatmentCapacity(header, getTreatmentPlaceIDByName(cbPlace.getValue().toString()))) {
             valid = false;
         }
@@ -190,10 +198,10 @@ public class AddNewUserController {
         int birthYear = Integer.valueOf(tfBirthYear.getText());
         String address = cbCity.getValue() + ", " + cbDistrict.getValue() + ", " + cbWard.getValue();
 
-        currentState = manager.getCurrentState(cbRelated.getValue()) + 1;
+        currentState = ManagerDao.getCurrentState(cbRelated.getValue()) + 1;
         user = new ManagedUser(ID, name, birthYear, cbRelated.getValue(), 0, address, currentState);
 
-        treatID = manager.getTreatmentPlaceIDByName(cbPlace.getValue());
+        treatID = ManagerDao.getTreatmentPlaceIDByName(cbPlace.getValue());
 
         return user;
     }

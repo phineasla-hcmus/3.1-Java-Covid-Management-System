@@ -93,11 +93,12 @@ public class BankDao {
 			BankAccount user = get(userId);
 			BankAccount admin = Admin.get();
 
-			String queryUpdate = "UPDATE transactionaccount SET balance=? WHERE userID=?";
+			String queryUpdateUser = "UPDATE transactionaccount SET balance=? WHERE userID=?";
+			String queryUpdateAdmin = "UPDATE transactionadmin SET balance=? WHERE userID=?";
 			String queryLog = "INSERT INTO transactionhistory VALUE(NULL,?,?,NOW(),?)";
 
-			PreparedStatement psUpdateUser = c.prepareStatement(queryUpdate);
-			PreparedStatement psUpdateAdmin = c.prepareStatement(queryUpdate);
+			PreparedStatement psUpdateUser = c.prepareStatement(queryUpdateUser);
+			PreparedStatement psUpdateAdmin = c.prepareStatement(queryUpdateAdmin);
 			PreparedStatement psLog = c.prepareStatement(queryLog, Statement.RETURN_GENERATED_KEYS);
 
 			psUpdateUser.setDouble(1, user.getBalance() - amount);

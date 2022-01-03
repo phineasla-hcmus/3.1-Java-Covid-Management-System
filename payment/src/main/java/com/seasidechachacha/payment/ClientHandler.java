@@ -80,8 +80,7 @@ public class ClientHandler implements Runnable {
             Admin.set(new BankAccount(req.getUserId(), 0));
             UserResponse res = new UserResponse(req.getUserId(), 0);
             ostream.writeObject(res);
-        }
-        else {
+        } else {
             // If SQL fail, respond error
             responseError(ErrorResponseType.ID_EXISTED);
         }
@@ -89,11 +88,14 @@ public class ClientHandler implements Runnable {
 
     private void handleGetUserRequest(GetUserRequest req) throws IOException {
         BankAccount acc = BankDao.get(req.getUserId());
-        double balance = acc.getBalance();
-        UserResponse res = new UserResponse(req.getUserId(), balance);
-        ostream.writeObject(res);
         // If SQL fail, respond error
-        // responseError(ErrorResponseType.ID_NOT_FOUND);
+        if (acc == null) {
+            responseError(ErrorResponseType.ID_NOT_FOUND);
+        } else {
+            double balance = acc.getBalance();
+            UserResponse res = new UserResponse(req.getUserId(), balance);
+            ostream.writeObject(res);
+        }
     }
 
     private void handlePaymentRequest(PaymentRequest req) throws IOException {

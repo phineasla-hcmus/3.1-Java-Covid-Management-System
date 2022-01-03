@@ -84,11 +84,6 @@ INSERT INTO transactionaccount VALUES("079732769898",1000000);
 INSERT INTO transactionaccount VALUES("079932368028",1200000);
 INSERT INTO transactionaccount VALUES("079941055479",1400000);
 
-INSERT INTO transactionadmin VALUES("admin-123456");
-
-INSERT INTO log VALUES("1","mod-19127203","thêm gói nhu yếu phẩm : cao sao vàng","2021-10-13 8:10:23");
-INSERT INTO log VALUES("2","mod-19127203","thêm người được quản lý mới : 079111222333","2021-10-13 8:10:23");
-INSERT INTO log VALUES("3","mod-19127203","thêm người được quản lý mới : 079157952250","2021-10-13 8:10:23");
 
 INSERT INTO `city` (`cityID`,`cityName`) VALUES ('01','Thành phố Hà Nội');
 INSERT INTO `city` (`cityID`,`cityName`) VALUES ('64','Tỉnh Gia Lai');

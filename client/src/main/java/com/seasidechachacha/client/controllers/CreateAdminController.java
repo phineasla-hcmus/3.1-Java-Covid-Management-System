@@ -2,6 +2,7 @@ package com.seasidechachacha.client.controllers;
 
 import com.seasidechachacha.client.App;
 import com.seasidechachacha.client.database.UserDao;
+import com.seasidechachacha.client.global.TaskExecutor;
 import com.seasidechachacha.client.models.User;
 import com.seasidechachacha.client.payment.PaymentService;
 import com.seasidechachacha.client.payment.RespondException;
@@ -101,5 +102,6 @@ public class CreateAdminController {
                 a.show();
             }
         });
+        TaskExecutor.execute(createAdminTask);
     }
 }

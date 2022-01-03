@@ -1,7 +1,5 @@
 package com.seasidechachacha.client.database;
 
-import com.seasidechachacha.client.models.BalanceStatistic;
-import com.seasidechachacha.client.models.ChangeStateStatistic;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,25 +8,25 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.seasidechachacha.client.models.StateHistory;
-import com.seasidechachacha.client.models.StateStatistic;
-import com.seasidechachacha.client.models.User;
-import com.seasidechachacha.client.models.Ward;
-import com.seasidechachacha.client.models.Package;
-import com.seasidechachacha.client.models.PackageStatistic;
-import com.seasidechachacha.client.models.PaymentHistory;
-import com.seasidechachacha.client.models.TreatmentPlace;
-import com.seasidechachacha.client.models.TreatmentPlaceHistory;
+import com.seasidechachacha.client.models.BalanceStatistic;
+import com.seasidechachacha.client.models.ChangeStateStatistic;
 import com.seasidechachacha.client.models.City;
 import com.seasidechachacha.client.models.District;
 import com.seasidechachacha.client.models.ManagedUser;
 import com.seasidechachacha.client.models.ManagedUserHistory;
 import com.seasidechachacha.client.models.OrderDetail;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import com.seasidechachacha.client.models.Package;
+import com.seasidechachacha.client.models.PackageStatistic;
+import com.seasidechachacha.client.models.PaymentHistory;
+import com.seasidechachacha.client.models.StateHistory;
+import com.seasidechachacha.client.models.StateStatistic;
+import com.seasidechachacha.client.models.TreatmentPlace;
+import com.seasidechachacha.client.models.TreatmentPlaceHistory;
+import com.seasidechachacha.client.models.User;
+import com.seasidechachacha.client.models.Ward;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Manager những operations cần log lại như add, update, delete,... thì k xài
@@ -1063,7 +1061,7 @@ public class ManagerDao {
 	}
 
 	public static List<Ward> getWardList(String districtID) {
-		List<Ward> results = null;
+		List<Ward> results = Collections.emptyList();
 		try (Connection c = BasicConnection.getConnection()) {
 			String query = "SELECT * FROM ward WHERE districtID = ?;";
 			PreparedStatement ps = c.prepareStatement(query);

@@ -74,39 +74,6 @@ public class AddNewUserController {
         });
         getCityListThread();
 
-        cbCity.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
-            String cityId = "";
-            for (int i = 0; i < city.size(); i++) {
-                if (city.get(i).getCityName().equals(newValue)) {
-                    cityId = city.get(i).getCityID();
-                    break;
-                }
-            }
-            cbDistrict.getItems().clear();
-            List<District> district = getDistrictList(cityId);
-            if (district != null) {
-                for (int i = 0; i < district.size(); i++) {
-                    cbDistrict.getItems().add(district.get(i).getDistrictName());
-                }
-                cbDistrict.getSelectionModel().selectedItemProperty().addListener((opts, oldVal, newVal) -> {
-                    String districtId = "";
-                    for (int i = 0; i < district.size(); i++) {
-                        if (district.get(i).getDistrictName().equals(newVal)) {
-                            districtId = district.get(i).getDistrictID();
-                            break;
-                        }
-                    }
-                    cbWard.getItems().clear();
-                    List<Ward> ward = getWardList(districtId);
-                    if (ward != null) {
-                        for (int i = 0; i < ward.size(); i++) {
-                            cbWard.getItems().add(ward.get(i).getWardName());
-                        }
-                    }
-                });
-            }
-        });
-
         List<String> relatedList = ManagerDao.getUserIDList();
         for (int i = 0; i < relatedList.size(); i++) {
             cbRelated.getItems().add(relatedList.get(i));
@@ -131,12 +98,48 @@ public class AddNewUserController {
             for (int i = 0; i < cities.size(); i++) {
                 cbCity.getItems().add(cities.get(i).getCityName());
             }
+
+            cbCity.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
+                String cityId = "";
+                for (int i = 0; i < cities.size(); i++) {
+                    if (cities.get(i).getCityName().equals(newValue)) {
+                        cityId = cities.get(i).getCityID();
+                        break;
+                    }
+                }
+
+                getDistrictListThread(cityId);
+
+                // cbDistrict.getItems().clear();
+                // List<District> district = getDistrictList(cityId);
+                // if (district != null) {
+                //     for (int i = 0; i < district.size(); i++) {
+                //         cbDistrict.getItems().add(district.get(i).getDistrictName());
+                //     }
+                //     cbDistrict.getSelectionModel().selectedItemProperty().addListener((opts, oldVal, newVal) -> {
+                //         String districtId = "";
+                //         for (int i = 0; i < district.size(); i++) {
+                //             if (district.get(i).getDistrictName().equals(newVal)) {
+                //                 districtId = district.get(i).getDistrictID();
+                //                 break;
+                //             }
+                //         }
+                //         cbWard.getItems().clear();
+                //         List<Ward> ward = getWardList(districtId);
+                //         if (ward != null) {
+                //             for (int i = 0; i < ward.size(); i++) {
+                //                 cbWard.getItems().add(ward.get(i).getWardName());
+                //             }
+                //         }
+                //     });
+                // }
+            });
         });
 
         TaskExecutor.execute(getCityListTask);
     }
 
-    private void getCityDistrictThread(String cityId) {
+    private void getDistrictListThread(String cityId) {
         Task<List<District>> getDistrictListTask = new Task<List<District>>() {
             @Override
             public List<District> call() {
@@ -150,6 +153,17 @@ public class AddNewUserController {
             for (int i = 0; i < districts.size(); i++) {
                 cbDistrict.getItems().add(districts.get(i).getDistrictName());
             }
+            cbDistrict.getSelectionModel().selectedItemProperty().addListener((opts, oldVal, newVal) -> {
+                String districtId = "";
+                for (int i = 0; i < districts.size(); i++) {
+                if (districts.get(i).getDistrictName().equals(newVal)) {
+                        districtId = districts.get(i).getDistrictID();
+                        break;
+                    }
+                }
+                getWardListThread(districtId);
+            });
+
         });
 
         TaskExecutor.execute(getDistrictListTask);

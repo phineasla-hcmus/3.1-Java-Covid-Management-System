@@ -89,12 +89,12 @@ public class ClientHandler implements Runnable {
     private void handleGetUserRequest(GetUserRequest req) throws IOException {
         BankAccount acc = BankDao.get(req.getUserId());
         // If SQL fail, respond error
-        if (acc == null) {
-            responseError(ErrorResponseType.ID_NOT_FOUND);
-        } else {
+        if (acc != null) {
             double balance = acc.getBalance();
             UserResponse res = new UserResponse(req.getUserId(), balance);
             ostream.writeObject(res);
+        } else {
+            responseError(ErrorResponseType.ID_NOT_FOUND);
         }
     }
 
@@ -124,12 +124,4 @@ public class ClientHandler implements Runnable {
     private void responseError(ErrorResponseType type, String message) throws IOException {
         ostream.writeObject(new ErrorResponse(type, message));
     }
-
-    // private PrintWriter createPrintWriter() throws IOException {
-    // return new PrintWriter(socket.getOutputStream(), true);
-    // }
-
-    // private BufferedReader createBufferedReader() throws IOException {
-    // return new BufferedReader(new InputStreamReader(socket.getInputStream()));
-    // }
 }

@@ -9,13 +9,18 @@ import java.util.List;
 
 import com.seasidechachacha.client.App;
 import com.seasidechachacha.client.database.AdminDao;
+import static com.seasidechachacha.client.database.ManagerDao.getCityList;
+import static com.seasidechachacha.client.database.ManagerDao.getDistrictList;
+import static com.seasidechachacha.client.database.ManagerDao.getWardList;
 import com.seasidechachacha.client.global.Session;
+import com.seasidechachacha.client.global.TaskExecutor;
 import com.seasidechachacha.client.models.City;
 import com.seasidechachacha.client.models.District;
 import com.seasidechachacha.client.models.TreatmentPlace;
 import com.seasidechachacha.client.models.Ward;
 import com.seasidechachacha.client.utils.Alert;
 import com.seasidechachacha.client.utils.Validation;
+import javafx.concurrent.Task;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -46,51 +51,115 @@ public class AddNewTreatmentPlaceController {
     private void initialize() {
         btnAdd.setOnAction(event -> {
             if (isValid()) {
-                if (admin.addTreatmentPlace(getCurrentInput())) {
-                    Alert.showAlert(AlertType.INFORMATION, "Quản lý địa điểm điều trị/cách ly", "Thêm mới địa điểm điều trị/cách ly thành công!");
-                    refreshInput();
-                } else {
-                    Alert.showAlert(AlertType.WARNING, "Quản lý địa điểm điều trị/cách ly", "Địa điểm điều trị đã tồn tại!");
-                }
+                addNewTreatmentPlaceThread();
             }
         });
-        List<City> city = getCityList();
-        for (int i = 0; i < city.size(); i++) {
-            cbCity.getItems().add(city.get(i).getCityName());
-        }
-        cbCity.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
-            String cityId = "";
-            for (int i = 0; i < city.size(); i++) {
-                if (city.get(i).getCityName().equals(newValue)) {
-                    cityId = city.get(i).getCityID();
-                    break;
+
+        getCityListThread();
+    }
+
+    private void addNewTreatmentPlaceThread() {
+        Task<Boolean> addNewTreatmentPlaceTask = new Task<Boolean>() {
+            @Override
+            public Boolean call() {
+                TreatmentPlace treat = getCurrentInput();
+                if (!admin.addTreatmentPlace(treat)) {
+                    return false;
                 }
+                return true;
             }
-            cbDistrict.getItems().clear();
-            List<District> district = getDistrictList(cityId);
-            if (district != null) {
-                for (int i = 0; i < district.size(); i++) {
-                    cbDistrict.getItems().add(district.get(i).getDistrictName());
-                }
-                cbDistrict.getSelectionModel().selectedItemProperty().addListener((opts, oldVal, newVal) -> {
-                    String districtId = "";
-                    for (int i = 0; i < district.size(); i++) {
-                        if (district.get(i).getDistrictName().equals(newVal)) {
-                            districtId = district.get(i).getDistrictID();
-                            break;
-                        }
-                    }
-                    cbWard.getItems().clear();
-                    List<Ward> ward = getWardList(districtId);
-                    if (ward != null) {
-                        for (int i = 0; i < ward.size(); i++) {
-                            cbWard.getItems().add(ward.get(i).getWardName());
-                        }
-                    }
-                });
+        };
+
+        addNewTreatmentPlaceTask.setOnSucceeded(e -> {
+            boolean result = addNewTreatmentPlaceTask.getValue();
+            if (result) {
+                Alert.showAlert(AlertType.INFORMATION, "Quản lý địa điểm điều trị/cách ly", "Thêm mới địa điểm điều trị/cách ly thành công!");
+                refreshInput();
+            } else {
+                Alert.showAlert(AlertType.WARNING, "Quản lý địa điểm điều trị/cách ly", "Địa điểm điều trị đã tồn tại!");
+            }
+        });
+
+        TaskExecutor.execute(addNewTreatmentPlaceTask);
+    }
+
+    private void getCityListThread() {
+        Task<List<City>> getCityListTask = new Task<List<City>>() {
+            @Override
+            public List<City> call() {
+                return getCityList();
+            }
+        };
+
+        getCityListTask.setOnSucceeded(e -> {
+            List<City> cities = getCityListTask.getValue();
+            for (int i = 0; i < cities.size(); i++) {
+                cbCity.getItems().add(cities.get(i).getCityName());
             }
 
+            cbCity.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
+                String cityId = "";
+                for (int i = 0; i < cities.size(); i++) {
+                    if (cities.get(i).getCityName().equals(newValue)) {
+                        cityId = cities.get(i).getCityID();
+                        break;
+                    }
+                }
+
+                getDistrictListThread(cityId);
+            });
         });
+
+        TaskExecutor.execute(getCityListTask);
+    }
+
+    private void getDistrictListThread(String cityId) {
+        Task<List<District>> getDistrictListTask = new Task<List<District>>() {
+            @Override
+            public List<District> call() {
+                return getDistrictList(cityId);
+            }
+        };
+
+        getDistrictListTask.setOnSucceeded(e -> {
+            cbDistrict.getItems().clear();
+            List<District> districts = getDistrictListTask.getValue();
+            for (int i = 0; i < districts.size(); i++) {
+                cbDistrict.getItems().add(districts.get(i).getDistrictName());
+            }
+            cbDistrict.getSelectionModel().selectedItemProperty().addListener((opts, oldVal, newVal) -> {
+                String districtId = "";
+                for (int i = 0; i < districts.size(); i++) {
+                    if (districts.get(i).getDistrictName().equals(newVal)) {
+                        districtId = districts.get(i).getDistrictID();
+                        break;
+                    }
+                }
+                getWardListThread(districtId);
+            });
+
+        });
+
+        TaskExecutor.execute(getDistrictListTask);
+    }
+
+    private void getWardListThread(String districtId) {
+        Task<List<Ward>> getWardListTask = new Task<List<Ward>>() {
+            @Override
+            public List<Ward> call() {
+                return getWardList(districtId);
+            }
+        };
+
+        getWardListTask.setOnSucceeded(e -> {
+            cbWard.getItems().clear();
+            List<Ward> wards = getWardListTask.getValue();
+            for (int i = 0; i < wards.size(); i++) {
+                cbWard.getItems().add(wards.get(i).getWardName());
+            }
+        });
+
+        TaskExecutor.execute(getWardListTask);
     }
 
     private boolean isValid() {

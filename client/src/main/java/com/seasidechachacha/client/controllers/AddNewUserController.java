@@ -69,20 +69,46 @@ public class AddNewUserController {
     private void initialize() {
         btnAddNewPerson.setOnAction(event -> {
             if (isValid()) {
-                addNewUserThread(getCurrentInput(), currentState, treatID);
+                addNewUserThread(treatID);
             }
         });
         getCityListThread();
+        getUserIDListThread();
+        getTreatmentPlaceListThread();
+    }
 
-        List<String> relatedList = ManagerDao.getUserIDList();
-        for (int i = 0; i < relatedList.size(); i++) {
-            cbRelated.getItems().add(relatedList.get(i));
-        }
+    private void getUserIDListThread() {
+        Task<List<String>> getRelatedListTask = new Task<List<String>>() {
+            @Override
+            public List<String> call() {
+                return ManagerDao.getUserIDList();
+            }
+        };
+        getRelatedListTask.setOnSucceeded(e -> {
+            List<String> relatedList = getRelatedListTask.getValue();
+            for (int i = 0; i < relatedList.size(); i++) {
+                cbRelated.getItems().add(relatedList.get(i));
+            }
+        });
 
-        List<TreatmentPlace> placeList = ManagerDao.getTreatmentPlaceList();
-        for (int i = 0; i < placeList.size(); i++) {
-            cbPlace.getItems().add(placeList.get(i).getName());
-        }
+        TaskExecutor.execute(getRelatedListTask);
+    }
+
+    private void getTreatmentPlaceListThread() {
+        Task<List<TreatmentPlace>> getRelatedListTask = new Task<List<TreatmentPlace>>() {
+            @Override
+            public List<TreatmentPlace> call() {
+                return ManagerDao.getTreatmentPlaceList();
+            }
+        };
+        getRelatedListTask.setOnSucceeded(e -> {
+            List<TreatmentPlace> placeList = getRelatedListTask.getValue();
+            for (int i = 0; i < placeList.size(); i++) {
+                cbPlace.getItems().add(placeList.get(i).getName());
+            }
+        });
+
+        TaskExecutor.execute(getRelatedListTask);
     }
 
     private void getCityListThread() {
@@ -109,30 +135,6 @@ public class AddNewUserController {
                 }
 
                 getDistrictListThread(cityId);
-
-                // cbDistrict.getItems().clear();
-                // List<District> district = getDistrictList(cityId);
-                // if (district != null) {
-                //     for (int i = 0; i < district.size(); i++) {
-                //         cbDistrict.getItems().add(district.get(i).getDistrictName());
-                //     }
-                //     cbDistrict.getSelectionModel().selectedItemProperty().addListener((opts, oldVal, newVal) -> {
-                //         String districtId = "";
-                //         for (int i = 0; i < district.size(); i++) {
-                //             if (district.get(i).getDistrictName().equals(newVal)) {
-                //                 districtId = district.get(i).getDistrictID();
-                //                 break;
-                //             }
-                //         }
-                //         cbWard.getItems().clear();
-                //         List<Ward> ward = getWardList(districtId);
-                //         if (ward != null) {
-                //             for (int i = 0; i < ward.size(); i++) {
-                //                 cbWard.getItems().add(ward.get(i).getWardName());
-                //             }
-                //         }
-                //     });
-                // }
             });
         });
 
@@ -156,7 +158,7 @@ public class AddNewUserController {
             cbDistrict.getSelectionModel().selectedItemProperty().addListener((opts, oldVal, newVal) -> {
                 String districtId = "";
                 for (int i = 0; i < districts.size(); i++) {
-                if (districts.get(i).getDistrictName().equals(newVal)) {
+                    if (districts.get(i).getDistrictName().equals(newVal)) {
                         districtId = districts.get(i).getDistrictID();
                         break;
                     }
@@ -188,7 +190,7 @@ public class AddNewUserController {
         TaskExecutor.execute(getWardListTask);
     }
 
-    private void addNewUserThread(ManagedUser user, int state, int treatID) {
+    private void addNewUserThread(int treatID) {
         Task<Boolean> addNewUserTask = new Task<Boolean>() {
             @Override
             public Boolean call() {
@@ -196,8 +198,9 @@ public class AddNewUserController {
                 PaymentService ps = new PaymentService();
                 try {
                     if (!manager.addNewUser(user, currentState, treatID)
-                            || !UserDao.registerFirstLogin(user.getUserId()))
+                            || !UserDao.registerFirstLogin(user.getUserId())) {
                         return false;
+                    }
                 } catch (SQLException e) {
                     logger.error(e);
                 }

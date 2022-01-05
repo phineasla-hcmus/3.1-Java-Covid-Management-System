@@ -5,9 +5,11 @@ import java.io.IOException;
 import com.seasidechachacha.client.App;
 import com.seasidechachacha.client.database.ManagerDao;
 import com.seasidechachacha.client.global.Session;
+import com.seasidechachacha.client.global.TaskExecutor;
 import com.seasidechachacha.client.models.Package;
 import com.seasidechachacha.client.utils.Alert;
 import com.seasidechachacha.client.utils.Validation;
+import javafx.concurrent.Task;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -86,15 +88,35 @@ public class AddNewPackageController {
 
         btnAdd.setOnAction(event -> {
             if (isValid()) {
-                if (manager.addPackage(getCurrentInput())) {
-                    Alert.showAlert(AlertType.INFORMATION, "Quản lý nhu yếu phẩm", "Thêm mới nhu yếu phẩm thành công!");
-                    refreshInput();
-                } else {
-                    Alert.showAlert(AlertType.WARNING, "Quản lý nhu yếu phẩm", "Nhu yếu phẩm đã tồn tại!");
-                }
+                addNewPackageThread();
             }
 
         });
+    }
+    
+    private void addNewPackageThread() {
+          Task<Boolean> addNewPackageTask = new Task<Boolean>() {
+            @Override
+            public Boolean call() {
+                Package pack = getCurrentInput();
+                if (!manager.addPackage(pack)) {
+                    return false;
+                }
+                return true;
+            }
+        };
+
+        addNewPackageTask.setOnSucceeded(e -> {
+            boolean result = addNewPackageTask.getValue();
+            if (result) {
+                Alert.showAlert(AlertType.INFORMATION, "Quản lý nhu yếu phẩm", "Thêm mới nhu yếu phẩm thành công!");
+                    refreshInput();
+            } else {
+                Alert.showAlert(AlertType.WARNING, "Quản lý nhu yếu phẩm", "Nhu yếu phẩm đã tồn tại!");
+            }
+        });
+
+        TaskExecutor.execute(addNewPackageTask);
     }
 
     private Package getCurrentInput() {

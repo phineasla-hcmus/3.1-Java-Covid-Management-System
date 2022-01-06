@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -659,24 +660,33 @@ public class ManagerDao {
 		return p;
 	}
 
-	public boolean addPackage(Package p) {
-		boolean result = false;
+	/**
+	 * 
+	 * @param p
+	 * @return {@code packageId} if all operations success, else 0
+	 */
+	public int addPackage(Package p) {
+		int result = 0;
 		try (Connection c = BasicConnection.getConnection()) {
 			String query = "INSERT INTO package(packageID, name, limitPerPerson, dayCooldown, price) VALUES (NULL,?,?,?,?);";
-			PreparedStatement ps = c.prepareStatement(query);
-			// ps.setString(1, p.getPackageID());
+			PreparedStatement ps = c.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 			ps.setString(1, p.getName());
 			ps.setInt(2, p.getLimitPerPerson());
 			ps.setInt(3, p.getDayCooldown());
 			ps.setDouble(4, p.getPrice());
-			result = ps.executeUpdate() > 0;
-			c.close();
+			ps.executeUpdate();
+			ResultSet rs = ps.getGeneratedKeys();
+			rs.next();
+			result = rs.getInt(1);
 		} catch (SQLException e) {
 			logger.error(e);
 		}
-		return result && addMesssage("Add packageID = " + p.getPackageID() + ", set name = " + p.getName()
+		if (addMesssage("Add packageID = " + p.getPackageID() + ", set name = " + p.getName()
 				+ ", set limitPerPerson = " + String.valueOf(p.getLimitPerPerson()) + ", set dayCooldown = "
-				+ String.valueOf(p.getDayCooldown()) + ", set price = " + String.valueOf(p.getPrice()));
+				+ String.valueOf(p.getDayCooldown()) + ", set price = " + String.valueOf(p.getPrice()))) {
+			return result;
+		} else
+			return 0;
 	}
 
 	private static ArrayList<String> getChildrens(String userID) {

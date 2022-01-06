@@ -70,6 +70,7 @@ public class ViewListPackageController {
                 logger.fatal(ex);
             }
         });
+        
         btnSearch.setOnAction(event -> {
             keyword = tfSearch.getText();
             if (!keyword.equals("")) {
@@ -362,8 +363,6 @@ public class ViewListPackageController {
             limitCol.setMinWidth(80);
 
             TableColumn dayCol = new TableColumn("Thời gian giới hạn");
-//            dayCol.setCellValueFactory(
-//                    new PropertyValueFactory<Package, String>("dayCooldown"));
 
             dayCol.setMinWidth(160);
 

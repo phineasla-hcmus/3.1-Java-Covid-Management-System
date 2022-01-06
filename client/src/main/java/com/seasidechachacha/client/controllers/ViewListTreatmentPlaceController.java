@@ -1,9 +1,12 @@
 package com.seasidechachacha.client.controllers;
 
 import com.seasidechachacha.client.App;
+import com.seasidechachacha.client.database.AdminDao;
 import com.seasidechachacha.client.database.ManagerDao;
+import com.seasidechachacha.client.global.Session;
 import com.seasidechachacha.client.global.TaskExecutor;
 import com.seasidechachacha.client.models.TreatmentPlace;
+import com.seasidechachacha.client.utils.Alert;
 import java.io.IOException;
 import java.util.List;
 import javafx.collections.FXCollections;
@@ -12,6 +15,7 @@ import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Pagination;
 import javafx.scene.control.TableCell;
@@ -33,6 +37,8 @@ public class ViewListTreatmentPlaceController {
 
     @FXML
     private Pagination pagination;
+
+    private AdminDao admin = new AdminDao(Session.getUser().getUserId());
 
     @FXML
     private void initialize() {
@@ -105,13 +111,13 @@ public class ViewListTreatmentPlaceController {
             nameCol.setCellValueFactory(
                     new PropertyValueFactory<TreatmentPlace, String>("name"));
 
-            nameCol.setMinWidth(180);
+            nameCol.setMinWidth(160);
 
             TableColumn addrCol = new TableColumn("Địa chỉ");
             addrCol.setCellValueFactory(
                     new PropertyValueFactory<TreatmentPlace, String>("address"));
 
-            addrCol.setMinWidth(225);
+            addrCol.setMinWidth(190);
 
             TableColumn capacityCol = new TableColumn("Sức chứa");
             capacityCol.setCellValueFactory(
@@ -160,7 +166,47 @@ public class ViewListTreatmentPlaceController {
 
             actionCol.setCellFactory(cellFactory);
 
-            table.getColumns().addAll(numCol, nameCol, addrCol, capacityCol, currentReceptionCol, actionCol);
+            TableColumn deleteCol = new TableColumn();
+            deleteCol.setCellValueFactory(new PropertyValueFactory<>(""));
+            Callback<TableColumn<TreatmentPlace, String>, TableCell<TreatmentPlace, String>> cellFactory2
+                    = //
+                    new Callback<TableColumn<TreatmentPlace, String>, TableCell<TreatmentPlace, String>>() {
+                @Override
+                public TableCell call(final TableColumn<TreatmentPlace, String> param) {
+                    final TableCell<TreatmentPlace, String> cell = new TableCell<TreatmentPlace, String>() {
+                        final Button btn = new Button("Xoá");
+
+                        @Override
+                        public void updateItem(String item, boolean empty) {
+                            super.updateItem(item, empty);
+                            if (empty) {
+                                setGraphic(null);
+                                setText(null);
+                            } else {
+                                btn.setOnAction(event -> {
+                                    TreatmentPlace treat = getTableRow().getItem();
+                                    int treatID = treat.getTreatID();
+                                    if (admin.deleteTreatmentPlace(treatID)) {
+                                        Alert.showAlert(AlertType.INFORMATION, "Quản lý địa điểm điều trị/cách ly", "Xoá địa điểm điều trị/cách ly thành công!");
+                                        getListTreatmentPlaceThread();
+                                    } else {
+                                        Alert.showAlert(AlertType.WARNING, "Quản lý địa điểm điều trị/cách ly", "Không thể xoá địa điểm điều trị/cách ly này!");
+                                    }
+
+                                });
+                                setGraphic(btn);
+                                setText(null);
+                            }
+                        }
+                    };
+                    cell.setAlignment(Pos.CENTER);
+                    return cell;
+                }
+            };
+
+            deleteCol.setCellFactory(cellFactory2);
+
+            table.getColumns().addAll(numCol, nameCol, addrCol, capacityCol, currentReceptionCol, actionCol, deleteCol);
             table.setItems(FXCollections.observableArrayList(data));
             if (lastIndex == pageIndex) {
                 table.setItems(FXCollections.observableArrayList(data.subList(pageIndex * rowsPerPage(), pageIndex * rowsPerPage() + displace)));

@@ -15,6 +15,7 @@ import com.seasidechachacha.client.models.ActivityHistory;
 import com.seasidechachacha.client.models.TreatmentPlace;
 
 public class AdminDao {
+
     private static Logger logger = LogManager.getLogger(AdminDao.class);
     private String adminID;
 
@@ -152,6 +153,40 @@ public class AdminDao {
             logger.error(e);
         }
         return result;
+    }
+
+    public boolean deleteTreatmentPlace(int treatID) {
+        boolean result = false;
+        if (getTreatmentPlaceByID(treatID).getCurrentReception() > 0) {
+            return result;
+        }
+        try (Connection c = BasicConnection.getConnection()) {
+            String query = "DELETE FROM treatmentplace WHERE treatID = ?;";
+            PreparedStatement ps = c.prepareStatement(query);
+            ps.setInt(1, treatID);
+            result = ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            logger.error(e);
+        }
+        return result;
+    }
+
+    public static TreatmentPlace getTreatmentPlaceByID(int treatID) {
+        TreatmentPlace p = null;
+        try (Connection c = BasicConnection.getConnection()) {
+            String query = "SELECT * FROM treatmentplace WHERE treatID = ?;";
+            PreparedStatement ps = c.prepareStatement(query);
+            ps.setInt(1, treatID);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                p = new TreatmentPlace(rs.getInt("treatID"), rs.getString("name"), rs.getString("address"),
+                        rs.getInt("capacity"), rs.getInt("currentReception"));
+            }
+            c.close();
+        } catch (SQLException e) {
+            logger.error(e);
+        }
+        return p;
     }
 
     public boolean updateTreatmentPlaceName(int treatID, String name) {

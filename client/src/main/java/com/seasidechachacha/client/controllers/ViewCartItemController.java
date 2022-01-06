@@ -36,6 +36,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
  * @author Admin
  */
 public class ViewCartItemController {
+
     @FXML
     private TableView<CartItem> CartItems;
 
@@ -59,6 +60,8 @@ public class ViewCartItemController {
 
     private ObservableList<CartItem> listCart;
 
+    private Double totalCostOfUnpaidOrder;
+
     @FXML
     private void initialize() {
 
@@ -76,7 +79,7 @@ public class ViewCartItemController {
             if (option.get() == null) {
 
             } else if (option.get() == ButtonType.OK) { // đồng ý đặt hàng
-                logCartThread();
+                getPendingPaymentTotalPriceThread(Session.getUserId());
             } else if (option.get() == ButtonType.CANCEL) { // không có gì xảy ra
 
             }
@@ -100,6 +103,31 @@ public class ViewCartItemController {
 
             }
         });
+    }
+
+    private void getPendingPaymentTotalPriceThread(String userId) {
+        Task<Double> getPendingPaymentTotalPriceTask = new Task<Double>() {
+            @Override
+            public Double call() throws SQLException {
+                return PaymentDao.getPendingPaymentTotalPrice(userId);
+            }
+        };
+
+        getPendingPaymentTotalPriceTask.setOnSucceeded((WorkerStateEvent e) -> {
+            totalCostOfUnpaidOrder = getPendingPaymentTotalPriceTask.getValue();
+            if (totalCostOfUnpaidOrder >= 1000000) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Thông báo");
+                alert.setHeaderText("Các đơn hàng trước chưa thanh toán của bạn lớn hơn 1 triệu!!!\nHãy thanh toán trước khi đặt đơn hàng mới.");
+                alert.show();
+            } else {
+                logCartThread();
+            }
+        });
+        getPendingPaymentTotalPriceTask.setOnFailed(e -> {
+
+        });
+        TaskExecutor.execute(getPendingPaymentTotalPriceTask);
     }
 
     private void getCartItemsThread() {

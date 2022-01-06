@@ -85,7 +85,7 @@ public class BankDao {
 	 * @param amount a positive number
 	 * @return transactionId if operation successful, else 0
 	 */
-	public static long transferMoneyToAdmin(String userId, double amount) {
+	public static long transferToAdmin(String userId, double amount) {
 		amount = Math.abs(amount);
 		long transactionId = 0;
 		try (Connection c = DataSource.getConnection()) {

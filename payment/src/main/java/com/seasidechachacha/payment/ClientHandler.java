@@ -26,13 +26,11 @@ import org.apache.logging.log4j.Logger;
  */
 public class ClientHandler implements Runnable {
     private static final Logger logger = LogManager.getLogger(ClientHandler.class);
-    // private Gson gson;
     private final Socket socket;
     private final ObjectOutputStream ostream;
     private final ObjectInputStream istream;
 
     public ClientHandler(Socket clientSocket) throws IOException {
-        // gson = new Gson();
         socket = clientSocket;
         ostream = new ObjectOutputStream(socket.getOutputStream());
         istream = new ObjectInputStream(socket.getInputStream());
@@ -99,15 +97,13 @@ public class ClientHandler implements Runnable {
     }
 
     private void handlePaymentRequest(PaymentRequest req) throws IOException {
-        // TODO Currently server will trust the client not to overspend
-        // causing negative balance in user account
-        // double balance = 0;
-        // if (req.getTotal() > balance) {
-        // responseError(ErrorResponseType.INSUFFICIENT_FUNDS);
-        // return;
-        // }
+        BankAccount user = BankDao.get(req.getUserId());
         double amount = req.getTotal();
-        long transactionId = BankDao.transferMoneyToAdmin(req.getUserId(), amount);
+        if (amount > user.getBalance()) {
+            responseError(ErrorResponseType.INSUFFICIENT_FUNDS);
+            return;
+        }
+        long transactionId = BankDao.transferToAdmin(req.getUserId(), amount);
         if (transactionId == 0) {
             // If SQL fail, respond error
             responseError(ErrorResponseType.ID_NOT_FOUND);

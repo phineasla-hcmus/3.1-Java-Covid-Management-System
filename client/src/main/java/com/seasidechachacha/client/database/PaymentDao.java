@@ -439,7 +439,7 @@ public class PaymentDao {
             ps.setString(1, userId);
             try ( ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    result.add(parseCartItem(rs, 2));
+                    result.add(parseCartItem(rs, 1));
                 }
             }
         } catch (SQLException e) {

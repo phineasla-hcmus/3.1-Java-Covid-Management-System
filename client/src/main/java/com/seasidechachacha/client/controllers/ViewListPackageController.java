@@ -50,7 +50,7 @@ public class ViewListPackageController {
 
     @FXML
     private Pagination pagination;
-    
+
     @FXML
     private Label labelEmpty;
 
@@ -65,12 +65,6 @@ public class ViewListPackageController {
         });
 
         getListPackageThread();
-        if (data == null || data.isEmpty()) {
-            pagination.setVisible(false);
-        }
-        else {
-            labelEmpty.setVisible(false);
-        }
 
         btnAdd.setOnAction(event -> {
             try {
@@ -291,9 +285,13 @@ public class ViewListPackageController {
     public void resolveListPackage(WorkerStateEvent e, List<Package> list) throws IOException {
         if (list == null || list.isEmpty()) {
 //            Alert.showAlert(AlertType.WARNING, "Quản lý nhu yếu phẩm", "Không tìm thấy gói nhu yếu phẩm phù hợp!");
+            labelEmpty.setVisible(true);
+            pagination.setVisible(false);
             return;
         }
         data = list;
+        labelEmpty.setVisible(false);
+        pagination.setVisible(true);
         if (data.size() % rowsPerPage() == 0) {
             pagination.setPageCount(data.size() / rowsPerPage());
 

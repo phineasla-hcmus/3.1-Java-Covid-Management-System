@@ -81,7 +81,7 @@ public class ManagerDao {
 	private boolean addManagedUser(ManagedUser user) {
 		boolean result = false;
 		try (Connection c = BasicConnection.getConnection()) {
-			String addManagedUser = "INSERT INTO manageduser(idCard, fullName, yob, relatedPerson, debt, address) VALUES(?,?,?,?,?,?);";
+			String addManagedUser = "INSERT INTO manageduser(idCard, fullName, yob, relatedPerson, debt, address, state) VALUES(?,?,?,?,?,?,?);";
 			PreparedStatement ps = c.prepareStatement(addManagedUser);
 			ps.setString(1, user.getUserId());
 			ps.setString(2, user.getName());
@@ -92,6 +92,7 @@ public class ManagerDao {
 			}
 			ps.setInt(5, user.getDebt());
 			ps.setString(6, user.getAddress());
+                        ps.setInt(7, user.getState());
 			result = ps.executeUpdate() > 0;
 			logger.info("User added : " + user.getUserId());
 		} catch (SQLException e) {
@@ -361,20 +362,37 @@ public class ManagerDao {
 		}
 		return t.getTreatID();
 	}
+        
+        public boolean updateTreatmentPlaceCapacity(int treatmentID) {
+                boolean result = false;
+                    try (Connection c = BasicConnection.getConnection()) {
+                            try {
+                                    // Update số lượng tiếp nhận hiện tại
+                                    String update = "UPDATE treatmentplace SET currentReception = currentReception + 1 WHERE treatID = ?;";
+                                    PreparedStatement pu = c.prepareStatement(update);
+                                    pu.setInt(1, treatmentID);
+                                    result = pu.executeUpdate() > 0;
+                                    c.close();
+                            } catch (SQLException e1) {
+                                    logger.error(e1);
+                            }
+                    } catch (SQLException e) {
+                            logger.error(e);
+                    }
+                return result;
+        }
 
 	public boolean addTreatmentPlaceHistory(String userID, int treatmentID) {
 		boolean result = false;
 		try (Connection c = BasicConnection.getConnection()) {
 			try {
 				// Update số lượng tiếp nhận hiện tại
-				String update = "UPDATE treatmentplace SET currentReception = currentReception + 1 WHERE treatID = ?";
-				PreparedStatement pu = c.prepareStatement(update);
-				pu.setInt(1, treatmentID);
+				result = updateTreatmentPlaceCapacity(treatmentID);
 				String query = "INSERT INTO treatmentplacehistory(userID, time, treatID) VALUES (?, NOW(), ?);";
 				PreparedStatement ps = c.prepareStatement(query);
 				ps.setString(1, userID);
 				ps.setInt(2, treatmentID);
-				result = pu.executeUpdate() > 0 && ps.executeUpdate() > 0;
+				result = ps.executeUpdate() > 0;
 				c.close();
 			} catch (SQLException e1) {
 				logger.error(e1);
@@ -1438,6 +1456,7 @@ public class ManagerDao {
 		} catch (SQLException e) {
 			logger.error(e);
 		}
+                System.out.println("result" + results.size());
 		return results;
 	}
 

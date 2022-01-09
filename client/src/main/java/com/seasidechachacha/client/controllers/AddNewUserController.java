@@ -25,6 +25,7 @@ import com.seasidechachacha.client.payment.RespondException;
 import com.seasidechachacha.client.utils.Alert;
 import com.seasidechachacha.client.utils.Validation;
 import com.seasidechachacha.common.payment.ErrorResponseType;
+import java.util.Calendar;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -73,7 +74,7 @@ public class AddNewUserController {
     private void initialize() {
         btnAddNewPerson.setOnAction(event -> {
             if (isValid()) {
-                addNewUserThread(treatID);
+                addNewUserThread();
             }
         });
         getCityListThread();
@@ -90,11 +91,14 @@ public class AddNewUserController {
         };
         getRelatedListTask.setOnSucceeded(e -> {
             List<String> relatedList = getRelatedListTask.getValue();
+            System.out.println(relatedList.size());
             // người đầu tiên bị nhiễm
             if (relatedList.size() == 0) {
                 labelRelated.setVisible(false);
                 cbRelated.setVisible(false);
             } else {
+                labelRelated.setVisible(true);
+                cbRelated.setVisible(true);
                 for (int i = 0; i < relatedList.size(); i++) {
                     cbRelated.getItems().add(relatedList.get(i));
                 }
@@ -200,7 +204,7 @@ public class AddNewUserController {
         TaskExecutor.execute(getWardListTask);
     }
 
-    private void addNewUserThread(int treatID) {
+    private void addNewUserThread() {
         Task<Boolean> addNewUserTask = new Task<Boolean>() {
             @Override
             public Boolean call() {
@@ -292,10 +296,10 @@ public class AddNewUserController {
     }
 
     private boolean checkBirthYear(String header, Integer birthYear) {
-        if (birthYear >= 1903 && birthYear <= 2021) {
+        if (birthYear >= 1903 && birthYear <= Calendar.getInstance().get(Calendar.YEAR)) {
             return true;
         } else {
-            Alert.showAlert(AlertType.WARNING, header, "Năm sinh phải nằm trong khoảng 1903 - 2021");
+            Alert.showAlert(AlertType.WARNING, header, "Năm sinh phải lớn hơn hoạc bằng 1903 và nhỏ hơn hoặc bằng năm hiện tại!");
             return false;
         }
     }
@@ -324,10 +328,11 @@ public class AddNewUserController {
         } // người đầu tiên bị nhiễm
         else {
             currentState = 0;
-            user = new ManagedUser(ID, name, birthYear, null, 0, address, currentState);
+            user = new ManagedUser(ID, name, birthYear, "", 0, address, currentState);
         }
 
         treatID = ManagerDao.getTreatmentPlaceIDByName(cbPlace.getValue());
+        System.out.println(treatID);
 
         return user;
     }

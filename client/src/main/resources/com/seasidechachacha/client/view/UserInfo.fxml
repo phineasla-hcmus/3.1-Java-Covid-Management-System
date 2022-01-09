@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox xmlns="http://javafx.com/javafx/13" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.seasidechachacha.client.controllers.UserInfoController">
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.seasidechachacha.client.controllers.UserInfoController">
     <children>
         <Label alignment="TOP_CENTER" prefHeight="30.0" prefWidth="803.0" styleClass="main-label" text="Thông tin cá nhân">
         </Label>
@@ -130,6 +130,11 @@
                 <Insets left="50.0" top="20.0" />
             </VBox.margin>
         </Label>
+        <Label fx:id="labelEmptyConsumption" alignment="CENTER" prefHeight="30.0" prefWidth="750.0" styleClass="sub-label" text="Bạn chưa tiêu thụ gói nhu yếu phẩm nào." textAlignment="CENTER">
+            <font>
+                <Font size="10.0" />
+            </font>
+        </Label> 
         <Pagination fx:id="paginationConsumption" maxWidth="700.0">
             <VBox.margin>
                 <Insets left="50.0" />
@@ -142,13 +147,13 @@
                         <Insets left="50.0" top="20.0" />
                     </padding>
                 </Label>
-                <Label fx:id="labelDebt" textFill="RED">
+                <Label fx:id="labelDebt" prefHeight="48.0" prefWidth="222.0" textFill="RED">
                     <padding>
                         <Insets left="50.0" top="20.0" />
                     </padding>
-               <font>
-                  <Font name="Tahoma Bold" size="14.0" />
-               </font>
+                    <font>
+                        <Font name="Tahoma Bold" size="14.0" />
+                    </font>
                 </Label>
             </children>
         </HBox>
@@ -157,6 +162,11 @@
                 <Insets left="50.0" top="20.0" />
             </VBox.margin>
         </Label>
+        <Label fx:id="labelEmptyPayment" alignment="CENTER" prefHeight="30.0" prefWidth="750.0" styleClass="sub-label" text="Bạn chưa thanh toán bất kỳ chi phí nào." textAlignment="CENTER">
+            <font>
+                <Font size="10.0" />
+            </font>
+        </Label> 
         <Pagination fx:id="paginationPayment" maxWidth="700.0">
             <VBox.margin>
                 <Insets left="50.0" />

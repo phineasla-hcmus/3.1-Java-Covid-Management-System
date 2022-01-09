@@ -17,9 +17,9 @@ import javafx.scene.control.TextField;
 import org.apache.logging.log4j.LogManager;
 
 public class CreateUserPasswordController {
-    
+
     private static final Logger logger = LogManager.getLogger(ManageModeratorController.class);
-    
+
     @FXML
     private TextField pass1;
     @FXML
@@ -62,9 +62,9 @@ public class CreateUserPasswordController {
     }
 
     private void resolveChangePassword(WorkerStateEvent e, boolean result) throws IOException {
-        if (result)
+        if (result) {
             removeFirstLoginThread(Session.getUser().getUserId());
-        else {
+        } else {
             Alert a = new Alert(Alert.AlertType.WARNING);
             a.setContentText("Có lỗi xảy ra , mời bạn nhập lại!!!");
             a.show();
@@ -91,6 +91,7 @@ public class CreateUserPasswordController {
     private void resolveRemoveFirstLogin(WorkerStateEvent e, boolean result) throws IOException {
         if (result) {
             App.setRoot("view/UserScreen");
+            App.setCurrentPane("pn_all", "view/UserInfo", null);
         } else {
             Alert a = new Alert(Alert.AlertType.WARNING);
             a.setContentText("Có lỗi xảy ra , mời bạn nhập lại!!!");

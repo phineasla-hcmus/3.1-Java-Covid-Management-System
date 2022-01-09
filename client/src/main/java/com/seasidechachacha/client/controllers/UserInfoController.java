@@ -51,6 +51,9 @@ public class UserInfoController {
     @FXML
     private Pagination paginationManaged, paginationConsumption, paginationPayment;
 
+    @FXML
+    private Label labelEmptyConsumption, labelEmptyPayment;
+
     private List<ManagedUserHistory> dataManaged;
     private List<Invoice> dataOrder;
     private List<PaymentHistory> dataPayment;
@@ -72,10 +75,10 @@ public class UserInfoController {
             labelTreatmentPlace.setText(treat.getName());
         }
         getPendingPaymentTotalPriceThread(Session.getUserId()); // find debt
-      
+
     }
-    
-private void getPendingPaymentTotalPriceThread(String userId) {
+
+    private void getPendingPaymentTotalPriceThread(String userId) {
         Task<Double> getPendingPaymentTotalPriceTask = new Task<Double>() {
             @Override
             public Double call() throws SQLException {
@@ -152,9 +155,14 @@ private void getPendingPaymentTotalPriceThread(String userId) {
 
     public void resolveOrderHistory(WorkerStateEvent e, List<Invoice> list) throws IOException {
         if (list == null || list.isEmpty()) {
+            labelEmptyConsumption.setVisible(true);
+            paginationConsumption.setVisible(false);
             getPaymentHistoryThread(userId);
             return;
         }
+
+        labelEmptyConsumption.setVisible(false);
+        paginationConsumption.setVisible(true);
         dataOrder = list;
         if (dataOrder.size() % rowsPerPage() == 0) {
             paginationConsumption.setPageCount(dataOrder.size() / rowsPerPage());
@@ -196,8 +204,12 @@ private void getPendingPaymentTotalPriceThread(String userId) {
 
     public void resolvePaymentHistory(WorkerStateEvent e, List<PaymentHistory> list) throws IOException {
         if (list == null || list.isEmpty()) {
+            labelEmptyPayment.setVisible(true);
+            paginationPayment.setVisible(false);
             return;
         }
+        labelEmptyPayment.setVisible(false);
+        paginationPayment.setVisible(true);
         dataPayment = list;
         if (dataPayment.size() % rowsPerPage() == 0) {
             paginationPayment.setPageCount(dataPayment.size() / rowsPerPage());

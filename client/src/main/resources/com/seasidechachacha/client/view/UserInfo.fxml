@@ -65,14 +65,14 @@
                         </Label>
                     </children>
                 </HBox>
-                <HBox layoutY="118.0" prefWidth="398.0" spacing="30.0" AnchorPane.topAnchor="118.0">
+                <HBox layoutY="148.0" prefHeight="20.0" prefWidth="650.0" spacing="30.0" AnchorPane.topAnchor="120.0">
                     <children>
                         <Label alignment="TOP_RIGHT" prefHeight="20.0" prefWidth="214.0" text="Địa chỉ nơi ở" textFill="#006abc">
                             <font>
                                 <Font name="System Bold" size="14.0" />
                             </font>
                         </Label>
-                        <Label fx:id="labelAddress" text="">
+                        <Label fx:id="labelAddress" prefHeight="20.0" prefWidth="401.0" text="">
                             <font>
                                 <Font size="14.0" />
                             </font>

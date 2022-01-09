@@ -78,7 +78,7 @@ public class ViewListPackageController {
             keyword = tfSearch.getText();
             if (!keyword.equals("")) {
                 getSearchResult(keyword);
-                btnFilter.setVisible(true);
+//                btnFilter.setVisible(true);
             }
         });
         cbSort.getItems().addAll("Tên gói", "Mức giới hạn", "Thời gian giới hạn", "Đơn giá");

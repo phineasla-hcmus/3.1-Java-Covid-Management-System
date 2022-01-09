@@ -42,17 +42,14 @@ public class AddNewUserController {
 
     private static final Logger logger = LogManager.getLogger(AddNewUserController.class);
 
-    // FREE 10 TRIỆU, THA HỒ MUA SẮM
-    public static final int START_BALANCE = 10000;
+    // FREE 1 TRIỆU, THA HỒ MUA SẮM
+    public static final int START_BALANCE = 1000000;
 
     @FXML
     private TextField tfFullName, tfBirthYear, tfIdentityCard;
 
     @FXML
     private ComboBox<String> cbCity, cbDistrict, cbWard, cbRelated, cbPlace;
-    
-    @FXML
-    private Label labelRelated;
 
     private ManagerDao manager = new ManagerDao(Session.getUser().getUserId());
 
@@ -91,16 +88,8 @@ public class AddNewUserController {
         };
         getRelatedListTask.setOnSucceeded(e -> {
             List<String> relatedList = getRelatedListTask.getValue();
-            // người đầu tiên bị nhiễm
-            if (relatedList.size() == 0) {
-                labelRelated.setVisible(false);
-                cbRelated.setVisible(false);
-            } else {
-                labelRelated.setVisible(true);
-                cbRelated.setVisible(true);
-                for (int i = 0; i < relatedList.size(); i++) {
-                    cbRelated.getItems().add(relatedList.get(i));
-                }
+            for (int i = 0; i < relatedList.size(); i++) {
+                cbRelated.getItems().add(relatedList.get(i));
             }
         });
 
@@ -257,9 +246,9 @@ public class AddNewUserController {
             Alert.showAlert(AlertType.WARNING, header, "Vui lòng điền đầy đủ thông tin!");
             valid = false;
         } else if (cbCity.getValue() == null || cbDistrict.getValue() == null || cbWard.getValue() == null
-                || (cbRelated.isVisible() && cbRelated.getValue() == null) || cbPlace.getValue() == null) {
+                || cbPlace.getValue() == null) {
             Alert.showAlert(AlertType.WARNING, header,
-                    "Vui lòng chọn trạng thái, địa chỉ nơi ở, người liên quan và địa điểm điều trị!");
+                    "Vui lòng chọn trạng thái, địa chỉ nơi ở và địa điểm điều trị!");
             valid = false;
         } else if (Validation.isNumberExisted(tfFullName.getText())) {
             Alert.showAlert(AlertType.WARNING, header, "Vui lòng chỉ điền chữ cho họ tên!");
@@ -321,11 +310,11 @@ public class AddNewUserController {
         int birthYear = Integer.valueOf(tfBirthYear.getText());
         String address = cbCity.getValue() + ", " + cbDistrict.getValue() + ", " + cbWard.getValue();
 
-        if (cbRelated.isVisible()) {
+        if (cbRelated.getValue() != null) {
             currentState = ManagerDao.getCurrentState(cbRelated.getValue()) + 1;
             user = new ManagedUser(ID, name, birthYear, cbRelated.getValue(), 0, address, currentState);
-        } // người đầu tiên bị nhiễm
-        else {
+        } else {
+            // ko chọn -> auto F0
             currentState = 0;
             user = new ManagedUser(ID, name, birthYear, "", 0, address, currentState);
         }

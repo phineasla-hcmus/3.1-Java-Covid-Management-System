@@ -10,13 +10,14 @@ INSERT INTO `user` (`userID`,`pwd`,`roleID`) VALUES ('079510193347','$31$16$D6ZO
 INSERT INTO `user` (`userID`,`pwd`,`roleID`) VALUES ('079732769898','$31$16$D6ZOfaeLxxpsbaT9L9QG_e-zTf1WcUtAPt0v2n9fknU',3);
 INSERT INTO `user` (`userID`,`pwd`,`roleID`) VALUES ('079932368028','$31$16$D6ZOfaeLxxpsbaT9L9QG_e-zTf1WcUtAPt0v2n9fknU',3);
 INSERT INTO `user` (`userID`,`pwd`,`roleID`) VALUES ('079941055479','$31$16$D6ZOfaeLxxpsbaT9L9QG_e-zTf1WcUtAPt0v2n9fknU',3);
+INSERT INTO `user` (`userID`,`pwd`,`roleID`) VALUES('079111222333', '$31$16$D6ZOfaeLxxpsbaT9L9QG_e-zTf1WcUtAPt0v2n9fknU', 3);
 INSERT INTO `user` (`userID`,`pwd`,`roleID`) VALUES ('admin-123456','$31$16$D6ZOfaeLxxpsbaT9L9QG_e-zTf1WcUtAPt0v2n9fknU',1);
 INSERT INTO `user` (`userID`,`pwd`,`roleID`) VALUES ('banned-mod01','$31$16$D6ZOfaeLxxpsbaT9L9QG_e-zTf1WcUtAPt0v2n9fknU',2);
 INSERT INTO `user` (`userID`,`pwd`,`roleID`) VALUES ('mod-18127077','$31$16$D6ZOfaeLxxpsbaT9L9QG_e-zTf1WcUtAPt0v2n9fknU',2);
 INSERT INTO `user` (`userID`,`pwd`,`roleID`) VALUES ('mod-19127203','$31$16$D6ZOfaeLxxpsbaT9L9QG_e-zTf1WcUtAPt0v2n9fknU',2);
 INSERT INTO `user` (`userID`,`pwd`,`roleID`) VALUES ('mod-19127268','$31$16$D6ZOfaeLxxpsbaT9L9QG_e-zTf1WcUtAPt0v2n9fknU',2);
 INSERT INTO `user` (`userID`,`pwd`,`roleID`) VALUES ('mod-19127511','$31$16$D6ZOfaeLxxpsbaT9L9QG_e-zTf1WcUtAPt0v2n9fknU',2);
-INSERT INTO `user` (`userID`,`pwd`,`roleID`) VALUES('079111222333', '$31$16$D6ZOfaeLxxpsbaT9L9QG_e-zTf1WcUtAPt0v2n9fknU', 3);
+
 
 INSERT INTO `package` (`packageID`,`name`,`limitPerPerson`,`dayCooldown`,`price`) VALUES (1,'Siro điều trị viêm đường hô hấp kèm theo ho Prospan (100ml)',2,7,68000.000);
 INSERT INTO `package` (`packageID`,`name`,`limitPerPerson`,`dayCooldown`,`price`) VALUES (2,'Khẩu trang than hoạt tính 4 lớp Pharmacity (50 cái/hộp)',1,30,89000.000);
@@ -29,12 +30,19 @@ INSERT INTO `package` (`packageID`,`name`,`limitPerPerson`,`dayCooldown`,`price`
 INSERT INTO `package` (`packageID`,`name`,`limitPerPerson`,`dayCooldown`,`price`) VALUES (9,'Eugica Sirô (Hộp 1 chai 100ml)',2,7,29000.000);
 INSERT INTO `package` (`packageID`,`name`,`limitPerPerson`,`dayCooldown`,`price`) VALUES (10,'Nước biển sâu sạch thông mũi trẻ em Xisat (75ml)',3,15,27000.000);
 
-INSERT INTO `manageduser` (`idCard`,`fullName`,`yob`,`relatedPerson`,`debt`, `address`, `state`) VALUES ('079157952250','Hong Du-shik',1990,'',0,'16 Lê Lai', 1);
-INSERT INTO `manageduser` (`idCard`,`fullName`,`yob`,`relatedPerson`,`debt`, `address`, `state`) VALUES ('079510193347','Nguyễn Lê Bảo Huyên',1985,'079932368028',0,'69 Lê Lợi', 0);
-INSERT INTO `manageduser` (`idCard`,`fullName`,`yob`,`relatedPerson`,`debt`, `address`, `state`) VALUES ('079732769898','Thập Cẩm Đào',2001,'079510193347',0,'69 Lê Lợi', 0);
-INSERT INTO `manageduser` (`idCard`,`fullName`,`yob`,`relatedPerson`,`debt`, `address`, `state`) VALUES ('079932368028','Đậu Y Khoa',2002,'',0,'23A Phan Văn Bảy', 2);
-INSERT INTO `manageduser` (`idCard`,`fullName`,`yob`,`relatedPerson`,`debt`, `address`, `state`) VALUES ('079941055479','Đỗ Yên Bình',1969,'',0,'5 Đường số 1', 2);
-INSERT INTO `manageduser` (`idCard`,`fullName`,`yob`,`relatedPerson`,`debt`,`address`, `state`) VALUES ('079111222333','Nguyễn Văn A',1950,'079941055479',0,'5 Đường số 7', 2);
+INSERT INTO `manageduser` (`idCard`,`fullName`,`yob`,`relatedPerson`,`debt`, `address`, `state`) VALUES ('079157952250','Hong Du-shik',1990,'079510193347',0,'Thành phố Hà Nội, Quận Ba Đình, Phường Phúc Xá', 1);
+INSERT INTO `manageduser` (`idCard`,`fullName`,`yob`,`relatedPerson`,`debt`, `address`, `state`) VALUES ('079510193347','Nguyễn Lê Bảo Huyên',1985,'',0,'Tỉnh Đồng Tháp, Thị Xã Hồng Ngự, Phường An Lộc', 0);
+INSERT INTO `manageduser` (`idCard`,`fullName`,`yob`,`relatedPerson`,`debt`, `address`, `state`) VALUES ('079732769898','Thập Cẩm Đào',2001,'',0,'Thành phố Hồ Chí Minh, Quận 1, Phường Bến Nghé', 0);
+INSERT INTO `manageduser` (`idCard`,`fullName`,`yob`,`relatedPerson`,`debt`, `address`, `state`) VALUES ('079932368028','Đậu Y Khoa',2002,'079157952250',0,'Tỉnh Lâm Đồng, Huyện Đam Rông, Xã Đạ Tông', 2);
+INSERT INTO `manageduser` (`idCard`,`fullName`,`yob`,`relatedPerson`,`debt`, `address`, `state`) VALUES ('079941055479','Đỗ Yên Bình',1969,'079157952250',0,'Tỉnh Gia Lai, Thị xã An Khê, Phường An Bình', 2);
+INSERT INTO `manageduser` (`idCard`,`fullName`,`yob`,`relatedPerson`,`debt`,`address`, `state`) VALUES ('079111222333','Nguyễn Văn A',1950,'079157952250',0,'Thành phố Hồ Chí Minh, Quận 1, Phường Đa Kao', 2);
+
+INSERT INTO `newuser` (`userID`) VALUES ('079157952250');
+INSERT INTO `newuser` (`userID`) VALUES ('079510193347');
+INSERT INTO `newuser` (`userID`) VALUES ('079732769898');
+INSERT INTO `newuser` (`userID`) VALUES ('079932368028');
+INSERT INTO `newuser` (`userID`) VALUES ('079941055479');
+INSERT INTO `newuser` (`userID`) VALUES ('079111222333');
 
 insert into statehistory values ('079157952250', '2021-11-30', 1);
 insert into statehistory values ('079157952250', '2021-10-30', 2);
@@ -44,12 +52,11 @@ insert into statehistory values ('079932368028', '2021-11-30', 2);
 insert into statehistory values ('079941055479', '2021-11-30', 2);
 insert into statehistory values ('079111222333', '2021-11-30', 2);
 
-INSERT INTO `treatmentplace` (`treatID`,`name`,`address`,`capacity`,`currentReception`) VALUES (79001,'Bệnh viện đa khoa Sài Gòn','Thành phố Hồ Chí Minh, Quận 1, Phường Bến Thành',1000,123);
-INSERT INTO `treatmentplace` (`treatID`,`name`,`address`,`capacity`,`currentReception`) VALUES (79024,'Bệnh viện Nhân Dân 115','Thành phố Hồ Chí Minh, Quận 10, Phường 12',1000,234);
-INSERT INTO `treatmentplace` (`treatID`,`name`,`address`,`capacity`,`currentReception`) VALUES (79048,'Bệnh viện Chợ Rẫy','Thành phố Hồ Chí Minh, Quận 5, Phường 12',1000,345);
-INSERT INTO `treatmentplace` (`treatID`,`name`,`address`,`capacity`,`currentReception`) VALUES (79051,'Bệnh viện Quận 1 - Cơ sở 1','Thành phố Hồ Chí Minh, Quận 1, Phường Tân Định',1000,456);
-INSERT INTO `treatmentplace` (`treatID`,`name`,`address`,`capacity`,`currentReception`) VALUES (87014,'Bệnh viện đa khoa Sa Đéc','Tỉnh Đồng Tháp, Thành Phố Sa Đéc, Phường 3',1000,567);
-
+INSERT INTO `treatmentplace` (`treatID`,`name`,`address`,`capacity`,`currentReception`) VALUES (79001,'Bệnh viện đa khoa Sài Gòn','Thành phố Hồ Chí Minh, Quận 1, Phường Bến Thành',1000,0);
+INSERT INTO `treatmentplace` (`treatID`,`name`,`address`,`capacity`,`currentReception`) VALUES (79024,'Bệnh viện Nhân Dân 115','Thành phố Hồ Chí Minh, Quận 10, Phường 12',1000,0);
+INSERT INTO `treatmentplace` (`treatID`,`name`,`address`,`capacity`,`currentReception`) VALUES (79048,'Bệnh viện Chợ Rẫy','Thành phố Hồ Chí Minh, Quận 5, Phường 12',1000,0);
+INSERT INTO `treatmentplace` (`treatID`,`name`,`address`,`capacity`,`currentReception`) VALUES (79051,'Bệnh viện Quận 1 - Cơ sở 1','Thành phố Hồ Chí Minh, Quận 1, Phường Tân Định',1000,0);
+INSERT INTO `treatmentplace` (`treatID`,`name`,`address`,`capacity`,`currentReception`) VALUES (87014,'Bệnh viện đa khoa Sa Đéc','Tỉnh Đồng Tháp, Thành Phố Sa Đéc, Phường 3',1000,0);
 
 insert into treatmentplacehistory values('079157952250', '2021-11-30', 79001);
 insert into treatmentplacehistory values('079157952250', '2021-10-30', 79024);
@@ -79,11 +86,11 @@ insert into orderitem values(5,8,1,610000);
 INSERT INTO transactionadmin VALUES("admin-123456",0);
 
 INSERT INTO transactionaccount VALUES("079111222333",1000000);
-INSERT INTO transactionaccount VALUES("079157952250",1500000);
-INSERT INTO transactionaccount VALUES("079510193347",2000000);
+INSERT INTO transactionaccount VALUES("079157952250",1000000);
+INSERT INTO transactionaccount VALUES("079510193347",1000000);
 INSERT INTO transactionaccount VALUES("079732769898",1000000);
-INSERT INTO transactionaccount VALUES("079932368028",1200000);
-INSERT INTO transactionaccount VALUES("079941055479",1400000);
+INSERT INTO transactionaccount VALUES("079932368028",1000000);
+INSERT INTO transactionaccount VALUES("079941055479",1000000);
 
 
 INSERT INTO `city` (`cityID`,`cityName`) VALUES ('01','Thành phố Hà Nội');

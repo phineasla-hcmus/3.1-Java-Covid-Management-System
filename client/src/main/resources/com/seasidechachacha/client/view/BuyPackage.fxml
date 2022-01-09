@@ -10,25 +10,13 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.seasidechachacha.client.controllers.BuyPackageController">
+<VBox stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/13" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.seasidechachacha.client.controllers.BuyPackageController">
    <children>
       <AnchorPane id="AnchorPane" prefHeight="800.0" prefWidth="800.0">
          <children>
             <Label layoutX="264.0" layoutY="51.0" styleClass="main-label" text="Chọn mua gói nhu yếu phẩm" />
             <Pagination fx:id="pagination" layoutX="35.0" layoutY="179.0" prefHeight="369.0" prefWidth="731.0">          
             </Pagination>
-<!--            <TableView fx:id="packageTable" layoutX="35.0" layoutY="179.0" prefHeight="369.0" prefWidth="731.0">
-               <columns>
-                  <TableColumn fx:id="numberCol" maxWidth="1000.0" prefWidth="106.4000244140625" text="STT" />
-                  <TableColumn fx:id="nameCol" maxWidth="6000.0" prefWidth="89.60003662109375" text="Tên gói" />
-                  <TableColumn fx:id="limitCol" maxWidth="2500.0" minWidth="0.0" prefWidth="179.199951171875" text="Mức giới hạn" />
-                  <TableColumn fx:id="dayCol" maxWidth="3000.0" minWidth="0.0" prefWidth="64.800048828125" text="Thời gian giới hạn" />
-                  <TableColumn fx:id="priceCol" maxWidth="2500.0" minWidth="0.0" prefWidth="188.0" text="Đơn giá" />
-               </columns>
-               <columnResizePolicy>
-                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-               </columnResizePolicy>
-            </TableView>-->
             <AnchorPane layoutX="35.0" layoutY="119.0" prefHeight="24.0" prefWidth="500.0">
                <children>
                   <TextField fx:id="tfSearch" prefHeight="26.0" prefWidth="430.0" promptText="Nhập từ khoá để tìm kiếm" styleClass="search-bar" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="70.0" AnchorPane.topAnchor="0.0" />

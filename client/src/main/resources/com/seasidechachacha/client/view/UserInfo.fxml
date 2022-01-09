@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.seasidechachacha.client.controllers.UserInfoController">
+<VBox xmlns="http://javafx.com/javafx/13" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.seasidechachacha.client.controllers.UserInfoController">
     <children>
         <Label alignment="TOP_CENTER" prefHeight="30.0" prefWidth="803.0" styleClass="main-label" text="Thông tin cá nhân">
         </Label>

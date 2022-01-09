@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.Pagination?>
 
-<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.seasidechachacha.client.controllers.ViewOrderDetailController">
+<VBox xmlns="http://javafx.com/javafx/13" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.seasidechachacha.client.controllers.ViewOrderDetailController">
     <children>
         <Label alignment="TOP_CENTER" prefHeight="30.0" prefWidth="803.0" styleClass="main-label" text="Chi tiết lịch sử tiêu thụ">
         </Label>

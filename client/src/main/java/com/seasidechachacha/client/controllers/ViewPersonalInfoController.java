@@ -158,7 +158,11 @@ public class ViewPersonalInfoController {
             labelTreatmentPlace.setText(currentPlace);
         }
 
-        String status[] = {"F0", "F1", "F2", "F3"};
+        List<String> status = new ArrayList<String>();
+        
+        for (int i = 0; i <= currentState; i++) {
+            status.add("F" + i);
+        }
 
         statusDialog = new ChoiceDialog<String>(currentStatus, status);
         statusDialog.setResultConverter((ButtonType type) -> {

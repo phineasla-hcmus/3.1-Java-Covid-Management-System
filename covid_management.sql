@@ -198,7 +198,7 @@ create table TransactionHistory
 	toID varchar(12),
 	paymentTime datetime,
 	totalMoney decimal(10,3),
-	primary key (transactionID),
+	primary key (transactionID)
 );
 -- SCHEMA CỦA PAYMENT SERVER
 

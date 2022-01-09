@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -80,38 +81,39 @@ public class ManagerDao {
 	private boolean addManagedUser(ManagedUser user) {
 		boolean result = false;
 		try (Connection c = BasicConnection.getConnection()) {
-			String addManagedUser = "INSERT INTO manageduser(idCard, fullName, yob, relatedPerson, debt, address, state) VALUES(?,?,?,?,?,?,?);";
+			String addManagedUser = "INSERT INTO manageduser(idCard, fullName, yob, relatedPerson, debt, address) VALUES(?,?,?,?,?,?);";
 			PreparedStatement ps = c.prepareStatement(addManagedUser);
 			ps.setString(1, user.getUserId());
 			ps.setString(2, user.getName());
 			ps.setInt(3, user.getBirthYear());
-			ps.setString(4, "null");
+			ps.setNull(4, Types.VARCHAR);
 			if (isUserExist(user.getRelatedId())) {
 				ps.setString(4, user.getRelatedId());
 			}
 			ps.setInt(5, user.getDebt());
 			ps.setString(6, user.getAddress());
-			ps.setInt(7, user.getState());
 			result = ps.executeUpdate() > 0;
-			c.close();
+			logger.info("User added : " + user.getUserId());
 		} catch (SQLException e) {
 			logger.error(e);
 		}
 		return result;
 	}
 
-	public boolean addNewUser(ManagedUser user, int treatID) throws SQLException {
-		return UserDao.register(new User(user.getUserId(), user.getUserId(), 3))
+	public boolean addNewUser(ManagedUser user, int state, int treatID) throws SQLException {
+		boolean result = false;
+		result = UserDao.register(new User(user.getUserId(), user.getUserId(), 3)) 
 				&& addManagedUser(user)
 				&& addTreatmentPlaceHistory(user.getUserId(), treatID)
 				&& addMesssage("Add new user (userID : " + user.getUserId() + ").");
-	}
-
-	public boolean addNewUser(ManagedUser user, int state, int treatID) throws SQLException {
-		if (addNewUser(user, treatID)) {
-			return setState(user.getUserId(), state);
+		if (result) {
+			if (user.getRelatedId() == "") {
+				result = setState(user.getUserId(), 0);
+			} else {
+				result = setState(user.getUserId(), state);
+			}
 		}
-		return false;
+		return result;
 	}
 
 	private static StateHistory parseStateHistory(ResultSet rs) throws SQLException {

@@ -1,78 +1,90 @@
 package com.seasidechachacha.client.models;
+import com.seasidechachacha.client.database.ManagerDao;
 
 public class ManagedUser {
 
-    private String userId;
-    private String name;
-    private int birthYear;
-    private String relatedId;
-    private int debt;
-    private String address;
-    private int state;
+	private String userId;
+	private String name;
+	private int birthYear;
+	private String relatedId;
+	private int debt;
+	private String address;
+	private int state;
 
-    public ManagedUser(String userId, String name, int birthYear, String relateId, int debt, String address, int state) {
-        this.userId = userId;
-        this.name = name;
-        this.birthYear = birthYear;
-        this.relatedId = relateId;
-        this.debt = debt;
-        this.address = address;
-        this.state = state;
-    }
+	public ManagedUser(String userId, String name, int birthYear, String relateId, int debt, String address,
+			int state) {
+		this.userId = userId;
+		this.name = name;
+		this.birthYear = birthYear;
+		this.relatedId = relateId;
+		this.debt = debt;
+		this.address = address;
+		this.state = state;
+	}
 
-    public String getUserId() {
-        return userId;
-    }
+	public ManagedUser(String userId, String name, int birthYear, String relateId, int debt, String address) {
+		this.userId = userId;
+		this.name = name;
+		this.birthYear = birthYear;
+		this.relatedId = relateId;
+		this.debt = debt;
+		this.address = address;
+		this.state = ManagerDao.getCurrentState(userId);
+	}
 
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
+	public String getUserId() {
+		return userId;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public int getBirthYear() {
-        return birthYear;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public void setBirthYear(int birthYear) {
-        this.birthYear = birthYear;
-    }
+	public int getBirthYear() {
+		return birthYear;
+	}
 
-    public String getRelatedId() {
-        return relatedId;
-    }
+	public void setBirthYear(int birthYear) {
+		this.birthYear = birthYear;
+	}
 
-    public void setRelatedId(String relatedId) {
-        this.relatedId = relatedId;
-    }
+	public String getRelatedId() {
+		return relatedId;
+	}
 
-    public int getDebt() {
-        return debt;
-    }
+	public void setRelatedId(String relatedId) {
+		this.relatedId = relatedId;
+	}
 
-    public void setDebt(int debt) {
-        this.debt = debt;
-    }
+	public int getDebt() {
+		return debt;
+	}
 
-    public String getAddress() {
-        return address;
-    }
+	public void setDebt(int debt) {
+		this.debt = debt;
+	}
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
-    
-    public int getState() {
-        return state;
-    }
-    
-    public void setState(int state) {
-        this.state = state;
-    }
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public int getState() {
+		return state;
+	}
+
+	public void setState(int state) {
+		this.state = state;
+	}
 }

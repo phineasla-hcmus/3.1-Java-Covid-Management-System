@@ -115,6 +115,6 @@ public class ManagedUserDao {
 
     private static ManagedUser parse(ResultSet rs) throws SQLException {
         return new ManagedUser(rs.getString("idCard"), rs.getString("fullName"), rs.getInt("yob"),
-                rs.getString("relatedPerson"), rs.getInt("debt"), rs.getString("address"), rs.getInt("state"));
+                rs.getString("relatedPerson"), rs.getInt("debt"), rs.getString("address"));
     }
 }

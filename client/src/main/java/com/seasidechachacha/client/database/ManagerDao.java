@@ -46,6 +46,12 @@ public class ManagerDao {
 		return managerID;
 	}
 
+	public static void main(String[] args) throws SQLException {
+//		ManagedUser user = new ManagedUser("555555555555", "Nguyen Van B", 1990, "111111111111", 0, "123 Tan Hoa");
+//		ManagerDao m = new ManagerDao("mod-18127077");
+//		System.out.println(m.addNewUser(user, 1, 79001));
+	}
+
 	private static Logger logger = LogManager.getLogger(ManagerDao.class);
 
 	private boolean addMesssage(String logMsg) {
@@ -81,7 +87,7 @@ public class ManagerDao {
 	private boolean addManagedUser(ManagedUser user) {
 		boolean result = false;
 		try (Connection c = BasicConnection.getConnection()) {
-			String addManagedUser = "INSERT INTO manageduser(idCard, fullName, yob, relatedPerson, debt, address, state) VALUES(?,?,?,?,?,?,?);";
+			String addManagedUser = "INSERT INTO manageduser(idCard, fullName, yob, relatedPerson, debt, address) VALUES(?,?,?,?,?,?);";
 			PreparedStatement ps = c.prepareStatement(addManagedUser);
 			ps.setString(1, user.getUserId());
 			ps.setString(2, user.getName());
@@ -92,7 +98,6 @@ public class ManagerDao {
 			}
 			ps.setInt(5, user.getDebt());
 			ps.setString(6, user.getAddress());
-			ps.setInt(7, user.getState());
 			result = ps.executeUpdate() > 0;
 			logger.info("User added : " + user.getUserId());
 		} catch (SQLException e) {
@@ -103,8 +108,7 @@ public class ManagerDao {
 
 	public boolean addNewUser(ManagedUser user, int state, int treatID) throws SQLException {
 		boolean result = false;
-		result = UserDao.register(new User(user.getUserId(), user.getUserId(), 3))
-				&& addManagedUser(user)
+		result = UserDao.register(new User(user.getUserId(), user.getUserId(), 3)) && addManagedUser(user)
 				&& addTreatmentPlaceHistory(user.getUserId(), treatID)
 				&& addMesssage("Add new user (userID : " + user.getUserId() + ").");
 		if (result) {
@@ -737,7 +741,14 @@ public class ManagerDao {
 		return result;
 	}
 
+	private static boolean isCurrentState(String userID, int state) {
+		return getCurrentState(userID) == state;
+	}
+
 	private static boolean setStateIndividual(String userID, int state) {
+		if (isCurrentState(userID, state)) {
+			return true;
+		}
 		boolean result = false;
 		try (Connection c = BasicConnection.getConnection()) {
 			try {
@@ -803,51 +814,51 @@ public class ManagerDao {
 	// Trạng thái → người liên đới phải thay đổi theo
 	public boolean setState(String userID, int state) {
 		switch (state) {
-			case -1: {
-				return setStateIndividual(userID, -1)
-						&& addMesssage("Update userID = " + userID + ", set state = " + String.valueOf(state));
-			}
-			case 0: {
-				ManagedUser father = getFather(userID);
-				if (father != null) {
-					int currentState = getCurrentState(userID);
-					if (currentState == 3) {
-						removeFather(userID);
-						setFather(father.getUserId(), userID);
-						setStateF1(father.getUserId());
-					} else {
-						removeFather(userID);
-					}
-				}
-				ArrayList<String> F1s = getChildrens(userID);
-				for (int i = 0; i < F1s.size(); i++) {
-					setStateF1(F1s.get(i));
-				}
-				return setStateIndividual(userID, 0)
-						&& addMesssage("Update userID = " + userID + ", set state = " + String.valueOf(state));
-			}
-			case 1: {
-				boolean result;
-				ManagedUser father = getFather(userID);
-				if (father != null) {
-					result = setState(father.getUserId(), 0);
+		case -1: {
+			return setStateIndividual(userID, -1)
+					&& addMesssage("Update userID = " + userID + ", set state = " + String.valueOf(state));
+		}
+		case 0: {
+			ManagedUser father = getFather(userID);
+			if (father != null) {
+				int currentState = getCurrentState(userID);
+				if (currentState == 3) {
+					removeFather(userID);
+					setFather(father.getUserId(), userID);
+					setStateF1(father.getUserId());
 				} else {
-					result = setStateF1(userID);
+					removeFather(userID);
 				}
-				return result && addMesssage("Update userID = " + userID + ", set state = " + String.valueOf(state));
 			}
-			case 2: {
-				return setStateIndividual(userID, state)
-						&& addMesssage("Update userID = " + userID + ", set state = " + String.valueOf(state));
+			ArrayList<String> F1s = getChildrens(userID);
+			for (int i = 0; i < F1s.size(); i++) {
+				setStateF1(F1s.get(i));
 			}
-			case 3: {
-				removeChildren(userID);
-				return setStateIndividual(userID, state)
-						&& addMesssage("Update userID = " + userID + ", set state = " + String.valueOf(state));
+			return setStateIndividual(userID, 0)
+					&& addMesssage("Update userID = " + userID + ", set state = " + String.valueOf(state));
+		}
+		case 1: {
+			boolean result;
+			ManagedUser father = getFather(userID);
+			if (father != null) {
+				result = setState(father.getUserId(), 0);
+			} else {
+				result = setStateF1(userID);
 			}
-			default: {
-				return false;
-			}
+			return result && addMesssage("Update userID = " + userID + ", set state = " + String.valueOf(state));
+		}
+		case 2: {
+			return setStateIndividual(userID, state)
+					&& addMesssage("Update userID = " + userID + ", set state = " + String.valueOf(state));
+		}
+		case 3: {
+			removeChildren(userID);
+			return setStateIndividual(userID, state)
+					&& addMesssage("Update userID = " + userID + ", set state = " + String.valueOf(state));
+		}
+		default: {
+			return false;
+		}
 		}
 	}
 
@@ -1102,77 +1113,77 @@ public class ManagerDao {
 		List<ManagedUser> users = new ArrayList<ManagedUser>();
 
 		switch (currentState) {
-			case 0:
-			case -1: {
-				ManagedUser F0 = getFather(userID);
-				if (F0 != null) {
-					users.add(F0);
-				}
+		case 0:
+		case -1: {
+			ManagedUser F0 = getFather(userID);
+			if (F0 != null) {
+				users.add(F0);
+			}
 
-				List<ManagedUser> F1 = getChildList(userID);
-				if (F1.size() != 0) {
-					users.addAll(F1);
+			List<ManagedUser> F1 = getChildList(userID);
+			if (F1.size() != 0) {
+				users.addAll(F1);
 
-					for (int i = 0; i < F1.size(); i++) {
-						List<ManagedUser> F2 = getChildList(F1.get(i).getUserId());
-						if (F2.size() != 0) {
-							users.addAll(F2);
+				for (int i = 0; i < F1.size(); i++) {
+					List<ManagedUser> F2 = getChildList(F1.get(i).getUserId());
+					if (F2.size() != 0) {
+						users.addAll(F2);
 
-							for (int k = 0; k < F2.size(); k++) {
-								List<ManagedUser> F3 = getChildList(F2.get(k).getUserId());
-								if (F3.size() != 0) {
-									users.addAll(F3);
-								}
+						for (int k = 0; k < F2.size(); k++) {
+							List<ManagedUser> F3 = getChildList(F2.get(k).getUserId());
+							if (F3.size() != 0) {
+								users.addAll(F3);
 							}
 						}
 					}
 				}
-				return users;
 			}
-			case 1: {
-				ManagedUser F0 = getFather(userID);
+			return users;
+		}
+		case 1: {
+			ManagedUser F0 = getFather(userID);
+			if (F0 != null) {
+				users.add(F0);
+			}
+
+			List<ManagedUser> F2 = getChildList(userID);
+			if (F2.size() != 0) {
+				users.addAll(F2);
+				for (int i = 0; i < F2.size(); i++) {
+					List<ManagedUser> F3 = getChildList(F2.get(i).getUserId());
+					if (F3.size() != 0) {
+						users.addAll(F3);
+					}
+				}
+			}
+			return users;
+		}
+
+		case 2: {
+			ManagedUser F1 = getFather(userID);
+			if (F1 != null) {
+				users.add(F1);
+				ManagedUser F0 = getFather(F1.getUserId());
 				if (F0 != null) {
 					users.add(F0);
 				}
-
-				List<ManagedUser> F2 = getChildList(userID);
-				if (F2.size() != 0) {
-					users.addAll(F2);
-					for (int i = 0; i < F2.size(); i++) {
-						List<ManagedUser> F3 = getChildList(F2.get(i).getUserId());
-						if (F3.size() != 0) {
-							users.addAll(F3);
-						}
-					}
-				}
-				return users;
 			}
-
-			case 2: {
-				ManagedUser F1 = getFather(userID);
-				if (F1 != null) {
-					users.add(F1);
-					ManagedUser F0 = getFather(F1.getUserId());
-					if (F0 != null) {
-						users.add(F0);
-					}
-				}
-				List<ManagedUser> F3 = getChildList(userID);
-				if (F3.size() != 0) {
-					users.addAll(F3);
-				}
-				return users;
+			List<ManagedUser> F3 = getChildList(userID);
+			if (F3.size() != 0) {
+				users.addAll(F3);
 			}
-			case 3: {
-				ManagedUser Fx = getFather(userID);
-				while (Fx != null) {
-					users.add(Fx);
-					Fx = getFather(Fx.getUserId());
-				}
-				return users;
+			return users;
+		}
+		case 3: {
+			ManagedUser Fx = getFather(userID);
+			while (Fx != null) {
+				users.add(Fx);
+				Fx = getFather(Fx.getUserId());
 			}
-			default:
-				throw new IllegalArgumentException("Unexpected value: " + currentState);
+			return users;
+		}
+		default:
+			throw new IllegalArgumentException("Unexpected value: " + currentState);
 		}
 	}
 
@@ -1202,7 +1213,7 @@ public class ManagerDao {
 
 	private static ManagedUser parse(ResultSet rs) throws SQLException {
 		return new ManagedUser(rs.getString("idCard"), rs.getString("fullName"), rs.getInt("yob"),
-				rs.getString("relatedPerson"), rs.getInt("debt"), rs.getString("address"), rs.getInt("state"));
+				rs.getString("relatedPerson"), rs.getInt("debt"), rs.getString("address"));
 	}
 
 	public static int getDebt(String userID) {

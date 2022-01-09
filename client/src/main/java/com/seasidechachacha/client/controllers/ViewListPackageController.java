@@ -97,7 +97,6 @@ public class ViewListPackageController {
             if (newValue.equals("")) {
                 keyword = "";
                 getListPackageThread();
-                btnFilter.setVisible(false);
             }
         });
     }

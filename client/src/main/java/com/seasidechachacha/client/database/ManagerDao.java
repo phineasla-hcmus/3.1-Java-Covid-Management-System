@@ -92,7 +92,7 @@ public class ManagerDao {
 			}
 			ps.setInt(5, user.getDebt());
 			ps.setString(6, user.getAddress());
-                        ps.setInt(7, user.getState());
+			ps.setInt(7, user.getState());
 			result = ps.executeUpdate() > 0;
 			logger.info("User added : " + user.getUserId());
 		} catch (SQLException e) {
@@ -103,7 +103,7 @@ public class ManagerDao {
 
 	public boolean addNewUser(ManagedUser user, int state, int treatID) throws SQLException {
 		boolean result = false;
-		result = UserDao.register(new User(user.getUserId(), user.getUserId(), 3)) 
+		result = UserDao.register(new User(user.getUserId(), user.getUserId(), 3))
 				&& addManagedUser(user)
 				&& addTreatmentPlaceHistory(user.getUserId(), treatID)
 				&& addMesssage("Add new user (userID : " + user.getUserId() + ").");
@@ -362,25 +362,25 @@ public class ManagerDao {
 		}
 		return t.getTreatID();
 	}
-        
-        public boolean updateTreatmentPlaceCapacity(int treatmentID) {
-                boolean result = false;
-                    try (Connection c = BasicConnection.getConnection()) {
-                            try {
-                                    // Update số lượng tiếp nhận hiện tại
-                                    String update = "UPDATE treatmentplace SET currentReception = currentReception + 1 WHERE treatID = ?;";
-                                    PreparedStatement pu = c.prepareStatement(update);
-                                    pu.setInt(1, treatmentID);
-                                    result = pu.executeUpdate() > 0;
-                                    c.close();
-                            } catch (SQLException e1) {
-                                    logger.error(e1);
-                            }
-                    } catch (SQLException e) {
-                            logger.error(e);
-                    }
-                return result;
-        }
+
+	public boolean updateTreatmentPlaceCapacity(int treatmentID) {
+		boolean result = false;
+		try (Connection c = BasicConnection.getConnection()) {
+			try {
+				// Update số lượng tiếp nhận hiện tại
+				String update = "UPDATE treatmentplace SET currentReception = currentReception + 1 WHERE treatID = ?;";
+				PreparedStatement pu = c.prepareStatement(update);
+				pu.setInt(1, treatmentID);
+				result = pu.executeUpdate() > 0;
+				c.close();
+			} catch (SQLException e1) {
+				logger.error(e1);
+			}
+		} catch (SQLException e) {
+			logger.error(e);
+		}
+		return result;
+	}
 
 	public boolean addTreatmentPlaceHistory(String userID, int treatmentID) {
 		boolean result = false;
@@ -693,7 +693,7 @@ public class ManagerDao {
 		} catch (SQLException e) {
 			logger.error(e);
 		}
-                return result && addMesssage("Add packageID = " + p.getPackageID() + ", set name = " + p.getName()
+		return result && addMesssage("Add packageID = " + p.getPackageID() + ", set name = " + p.getName()
 				+ ", set limitPerPerson = " + String.valueOf(p.getLimitPerPerson()) + ", set dayCooldown = "
 				+ String.valueOf(p.getDayCooldown()) + ", set price = " + String.valueOf(p.getPrice()));
 	}
@@ -1456,7 +1456,6 @@ public class ManagerDao {
 		} catch (SQLException e) {
 			logger.error(e);
 		}
-                System.out.println("result" + results.size());
 		return results;
 	}
 

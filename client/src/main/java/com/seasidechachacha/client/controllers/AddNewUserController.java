@@ -91,7 +91,6 @@ public class AddNewUserController {
         };
         getRelatedListTask.setOnSucceeded(e -> {
             List<String> relatedList = getRelatedListTask.getValue();
-            System.out.println(relatedList.size());
             // người đầu tiên bị nhiễm
             if (relatedList.size() == 0) {
                 labelRelated.setVisible(false);

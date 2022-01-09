@@ -18,7 +18,7 @@ public class BankDao {
 	private static Logger logger = LogManager.getLogger(BankDao.class);
 
 	public static boolean register(String userID, double amount) {
-		return register(userID, 0, "transactionaccount");
+		return register(userID, amount, "transactionaccount");
 	}
 
 	public static boolean registerAdmin(String userID) {

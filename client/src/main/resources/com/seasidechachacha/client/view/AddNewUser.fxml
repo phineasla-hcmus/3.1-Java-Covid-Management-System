@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="800.0" style="-fx-background-color: #fff;" xmlns="http://javafx.com/javafx/13" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.seasidechachacha.client.controllers.AddNewUserController">
+<VBox xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="800.0" style="-fx-background-color: #fff;" xmlns="http://javafx.com/javafx/13"  fx:controller="com.seasidechachacha.client.controllers.AddNewUserController">
     <children>
         <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="main-label" text="Thêm mới người liên quan Covid19">
             <VBox.margin>
@@ -41,7 +41,7 @@
                         <Font size="14.0" />
                     </font>
                 </Label>
-                <Label layoutX="350.0" layoutY="69.0" styleClass="sub-label" text="Người liên quan Covid19">
+                <Label fx:id="labelRelated" layoutX="350.0" layoutY="69.0" styleClass="sub-label" text="Người liên quan Covid19">
                     <font>
                         <Font size="14.0" />
                     </font>

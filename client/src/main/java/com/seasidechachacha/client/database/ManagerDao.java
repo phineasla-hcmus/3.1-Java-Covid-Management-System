@@ -1007,7 +1007,7 @@ public class ManagerDao {
 			String query = "SELECT * FROM city;";
 			PreparedStatement ps = c.prepareStatement(query);
 			ResultSet rs = ps.executeQuery();
-			if (rs.next()) {
+			if (rs != null) {
 				results = parseCityList(rs);
 			}
 			c.close();
@@ -1037,7 +1037,7 @@ public class ManagerDao {
 			PreparedStatement ps = c.prepareStatement(query);
 			ps.setString(1, cityID);
 			ResultSet rs = ps.executeQuery();
-			if (rs.next()) {
+			if (rs != null) {
 				results = parseDistrictList(rs);
 			}
 			c.close();
@@ -1066,7 +1066,7 @@ public class ManagerDao {
 			PreparedStatement ps = c.prepareStatement(query);
 			ps.setString(1, districtID);
 			ResultSet rs = ps.executeQuery();
-			if (rs.next()) {
+			if (rs != null) {
 				results = parseWardList(rs);
 			}
 			c.close();

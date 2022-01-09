@@ -39,11 +39,11 @@
             <Pane HBox.hgrow="ALWAYS">
                 <children>
                     <ComboBox fx:id="cbSort" layoutX="135.0" layoutY="2.0" prefWidth="150.0" style="-fx-background-color: transparent; -fx-border-color: #006abc;" />
-               <Button fx:id="btnFilter" layoutX="48.0" layoutY="2.0" mnemonicParsing="false">
-                  <graphic>
-                     <FontAwesomeIconView fill="WHITE" glyphName="FILTER" />
-                  </graphic>
-               </Button>
+                    <Button fx:id="btnFilter" layoutX="48.0" layoutY="2.0" mnemonicParsing="false">
+                        <graphic>
+                            <FontAwesomeIconView fill="WHITE" glyphName="FILTER" />
+                        </graphic>
+                    </Button>
                 </children>
             </Pane>
             <Button fx:id="btnAdd" style="-fx-background-color: #0098f1;" textFill="WHITE">
@@ -54,7 +54,12 @@
                     <FontAwesomeIconView fill="WHITE" glyphName="PLUS" />
                 </graphic>
             </Button>    
-        </HBox> 
+        </HBox>
+        <Label fx:id="labelEmpty" alignment="CENTER" prefHeight="30.0" prefWidth="750.0" styleClass="sub-label" text="Chưa có gói nhu yếu phẩm nào trong hệ thống." textAlignment="CENTER">
+            <font>
+                <Font size="10.0" />
+            </font>
+        </Label>  
         <Pagination fx:id="pagination">          
         </Pagination>
        

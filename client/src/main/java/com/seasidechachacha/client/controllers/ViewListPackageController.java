@@ -50,6 +50,9 @@ public class ViewListPackageController {
 
     @FXML
     private Pagination pagination;
+    
+    @FXML
+    private Label labelEmpty;
 
     private ManagerDao manager = new ManagerDao(Session.getUser().getUserId());
 
@@ -62,6 +65,12 @@ public class ViewListPackageController {
         });
 
         getListPackageThread();
+        if (data == null || data.isEmpty()) {
+            pagination.setVisible(false);
+        }
+        else {
+            labelEmpty.setVisible(false);
+        }
 
         btnAdd.setOnAction(event -> {
             try {
@@ -70,7 +79,7 @@ public class ViewListPackageController {
                 logger.fatal(ex);
             }
         });
-        
+
         btnSearch.setOnAction(event -> {
             keyword = tfSearch.getText();
             if (!keyword.equals("")) {
@@ -281,7 +290,7 @@ public class ViewListPackageController {
 
     public void resolveListPackage(WorkerStateEvent e, List<Package> list) throws IOException {
         if (list == null || list.isEmpty()) {
-            Alert.showAlert(AlertType.WARNING, "Quản lý nhu yếu phẩm", "Không tìm thấy gói nhu yếu phẩm phù hợp!");
+//            Alert.showAlert(AlertType.WARNING, "Quản lý nhu yếu phẩm", "Không tìm thấy gói nhu yếu phẩm phù hợp!");
             return;
         }
         data = list;

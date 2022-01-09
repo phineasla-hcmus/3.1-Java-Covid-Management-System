@@ -34,6 +34,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 public class AddNewUserController {
@@ -48,6 +49,9 @@ public class AddNewUserController {
 
     @FXML
     private ComboBox<String> cbCity, cbDistrict, cbWard, cbRelated, cbPlace;
+    
+    @FXML
+    private Label labelRelated;
 
     private ManagerDao manager = new ManagerDao(Session.getUser().getUserId());
 
@@ -86,8 +90,14 @@ public class AddNewUserController {
         };
         getRelatedListTask.setOnSucceeded(e -> {
             List<String> relatedList = getRelatedListTask.getValue();
-            for (int i = 0; i < relatedList.size(); i++) {
-                cbRelated.getItems().add(relatedList.get(i));
+            // người đầu tiên bị nhiễm
+            if (relatedList.size() == 0) {
+                labelRelated.setVisible(false);
+                cbRelated.setVisible(false);
+            } else {
+                for (int i = 0; i < relatedList.size(); i++) {
+                    cbRelated.getItems().add(relatedList.get(i));
+                }
             }
         });
 
@@ -244,7 +254,7 @@ public class AddNewUserController {
             Alert.showAlert(AlertType.WARNING, header, "Vui lòng điền đầy đủ thông tin!");
             valid = false;
         } else if (cbCity.getValue() == null || cbDistrict.getValue() == null || cbWard.getValue() == null
-                || cbRelated.getValue() == null || cbPlace.getValue() == null) {
+                || (cbRelated.isVisible() && cbRelated.getValue() == null) || cbPlace.getValue() == null) {
             Alert.showAlert(AlertType.WARNING, header,
                     "Vui lòng chọn trạng thái, địa chỉ nơi ở, người liên quan và địa điểm điều trị!");
             valid = false;
@@ -308,8 +318,14 @@ public class AddNewUserController {
         int birthYear = Integer.valueOf(tfBirthYear.getText());
         String address = cbCity.getValue() + ", " + cbDistrict.getValue() + ", " + cbWard.getValue();
 
-        currentState = ManagerDao.getCurrentState(cbRelated.getValue()) + 1;
-        user = new ManagedUser(ID, name, birthYear, cbRelated.getValue(), 0, address, currentState);
+        if (cbRelated.isVisible()) {
+            currentState = ManagerDao.getCurrentState(cbRelated.getValue()) + 1;
+            user = new ManagedUser(ID, name, birthYear, cbRelated.getValue(), 0, address, currentState);
+        } // người đầu tiên bị nhiễm
+        else {
+            currentState = 0;
+            user = new ManagedUser(ID, name, birthYear, null, 0, address, currentState);
+        }
 
         treatID = ManagerDao.getTreatmentPlaceIDByName(cbPlace.getValue());
 

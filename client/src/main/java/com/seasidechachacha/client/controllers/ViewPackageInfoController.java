@@ -89,11 +89,33 @@ public class ViewPackageInfoController {
         }
         return day;
     }
+    
+     public String parseDayCooldown(int day) {
+        String result = "";
+        if (day < 7) {
+            result += day + " ngày";
+        } else if (day >= 7 && day < 30) {
+            result += (day / 7) + " tuần ";
+            if (day % 7 > 0) {
+                result += (day % 7) + " ngày";
+            }
+        } else {
+            result += (day / 30) + " tháng ";
+            day = day % 30;
+            if (day >= 7 && day < 30) {
+                result += (day / 7) + " tuần ";
+                if (day % 7 > 0) {
+                    result += (day % 7) + " ngày";
+                }
+            }
+        }
+        return result;
+    }
 
     public void resolvePackage(WorkerStateEvent e, Package pack) throws IOException {
         labelName.setText(pack.getName());
         labelLimit.setText(String.valueOf(pack.getLimitPerPerson()));
-        labelDay.setText(String.valueOf(pack.getDayCooldown()));
+        labelDay.setText(parseDayCooldown(pack.getDayCooldown()));
         labelPrice.setText(String.valueOf(pack.getPrice()));
         btnChangeName.setOnAction(event -> {
             Dialog dialog = new TextInputDialog(pack.getName());

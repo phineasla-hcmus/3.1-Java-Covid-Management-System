@@ -20,6 +20,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.Pagination;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -36,6 +37,9 @@ public class ViewListUserController {
 
     @FXML
     private Button btnAdd, btnSearch;
+    
+    @FXML
+    private Label labelEmpty;
 
     @FXML
     private TextField tfSearch;
@@ -45,12 +49,19 @@ public class ViewListUserController {
 
     @FXML
     private Pagination pagination;
-    
+
     private String keyword = "";
 
     @FXML
     private void initialize() {
         getListManagedUserThread();
+        
+        if (data == null || data.isEmpty()) {
+            pagination.setVisible(false);
+        }
+        else {
+            labelEmpty.setVisible(false);
+        }
 
         btnAdd.setOnAction(event -> {
             try {
@@ -148,7 +159,7 @@ public class ViewListUserController {
 
     public void resolveListManagedUser(WorkerStateEvent e, List<ManagedUser> list) throws IOException {
         if (list == null || list.isEmpty()) {
-            Alert.showAlert(AlertType.WARNING, "Quản lý người liên quan Covid19", "Không tìm thấy người dùng phù hợp!");
+//            Alert.showAlert(AlertType.WARNING, "Quản lý người liên quan Covid19", "Không tìm thấy người dùng phù hợp!");
             return;
         }
         data = list;
@@ -219,65 +230,67 @@ public class ViewListUserController {
             addrCol.setMinWidth(240);
 
             TableColumn statusCol = new TableColumn("Trạng thái");
-            Callback<TableColumn<ManagedUser, String>, TableCell<ManagedUser, String>> cellFactory1 = //
+            Callback<TableColumn<ManagedUser, String>, TableCell<ManagedUser, String>> cellFactory1
+                    = //
                     new Callback<TableColumn<ManagedUser, String>, TableCell<ManagedUser, String>>() {
+                @Override
+                public TableCell call(final TableColumn<ManagedUser, String> param) {
+                    final TableCell<Object, String> cell = new TableCell<Object, String>() {
+
                         @Override
-                        public TableCell call(final TableColumn<ManagedUser, String> param) {
-                            final TableCell<Object, String> cell = new TableCell<Object, String>() {
-
-                                @Override
-                                public void updateItem(String item, boolean empty) {
-                                    super.updateItem(item, empty);
-                                    if (empty) {
-                                        setGraphic(null);
-                                        setText(null);
-                                    } else {
-                                        if (getTableRow() != null) {
-                                            ManagedUser user = (ManagedUser) getTableRow().getItem();
-                                            setText("F" + String.valueOf(ManagerDao.getCurrentState(user.getUserId())));
-                                        }
-
-                                    }
+                        public void updateItem(String item, boolean empty) {
+                            super.updateItem(item, empty);
+                            if (empty) {
+                                setGraphic(null);
+                                setText(null);
+                            } else {
+                                if (getTableRow() != null) {
+                                    ManagedUser user = (ManagedUser) getTableRow().getItem();
+                                    setText("F" + String.valueOf(ManagerDao.getCurrentState(user.getUserId())));
                                 }
-                            };
-                            cell.setAlignment(Pos.CENTER);
-                            return cell;
+
+                            }
                         }
                     };
+                    cell.setAlignment(Pos.CENTER);
+                    return cell;
+                }
+            };
             statusCol.setCellFactory(cellFactory1);
 
             TableColumn actionCol = new TableColumn("");
             actionCol.setCellValueFactory(new PropertyValueFactory<>(""));
-            Callback<TableColumn<ManagedUser, String>, TableCell<ManagedUser, String>> cellFactory = //
+            Callback<TableColumn<ManagedUser, String>, TableCell<ManagedUser, String>> cellFactory
+                    = //
                     new Callback<TableColumn<ManagedUser, String>, TableCell<ManagedUser, String>>() {
-                        @Override
-                        public TableCell call(final TableColumn<ManagedUser, String> param) {
-                            final TableCell<Object, String> cell = new TableCell<Object, String>() {
-                                final Button btn = new Button("Xem chi tiết");
+                @Override
+                public TableCell call(final TableColumn<ManagedUser, String> param) {
+                    final TableCell<Object, String> cell = new TableCell<Object, String>() {
+                        final Button btn = new Button("Xem chi tiết");
 
-                                @Override
-                                public void updateItem(String item, boolean empty) {
-                                    super.updateItem(item, empty);
-                                    if (empty) {
-                                        setGraphic(null);
-                                        setText(null);
-                                    } else {
-                                        btn.setOnAction(event -> {
-                                            try {
-                                                App.setCurrentPane("pn_all", "view/ViewPersonalInfo", getTableRow());
-                                            } catch (IOException ex) {
-                                                logger.fatal(ex);
-                                            }
-                                        });
-                                        setGraphic(btn);
-                                        setText(null);
+                        @Override
+                        public void updateItem(String item, boolean empty) {
+                            super.updateItem(item, empty);
+                            if (empty) {
+                                setGraphic(null);
+                                setText(null);
+                            } else {
+                                btn.setOnAction(event -> {
+                                    try {
+                                        App.setCurrentPane("pn_all", "view/ViewPersonalInfo", getTableRow());
+                                    } catch (IOException ex) {
+                                        logger.fatal(ex);
                                     }
-                                }
-                            };
-                            cell.setAlignment(Pos.CENTER);
-                            return cell;
+                                });
+                                setGraphic(btn);
+                                setText(null);
+                            }
                         }
                     };
+                    cell.setAlignment(Pos.CENTER);
+                    return cell;
+                }
+            };
 
             actionCol.setCellFactory(cellFactory);
 
